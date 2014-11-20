@@ -1,18 +1,93 @@
+@font-face {
+	font-family: 'Open Sans';
+	src: url('media/fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('media/fonts/OpenSans-Bold.ttf');
+	font-weight: bold;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('media/fonts/OpenSans-Italic.ttf');
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url('media/fonts/OpenSans-BoldItalic.ttf');
+	font-style: italic;
+	font-weight: bold;
+}
+
 .body {
 	margin: 0;
+	background: #f6f1eb;
+	min-width: 320px;
+	line-height: 1;
+	font-family: 'Open Sans', arial, sans-serif;
 	font-size: 16px;
 }
 
 .header {
 	position: fixed;
 	top: 0;
+	border-bottom: 1px solid #d2c7be;
+	background: #fff;
 	width: 100%;
 	text-align: center;
 }
 
 .logo {
-	display: inline-block;
+	display: block;
 	margin: 0;
-	padding: 1rem;
-	font-size: 2em;
+	text-transform: uppercase;
+	font-family: Consolas, Monaco, 'Lucida Console', monospace;
+	font-size: 2rem;
+}
+
+.logo-link {
+	display: inline-block;
+	height: 3.5rem;
+	text-decoration: none;
+	line-height: 3.5rem;
+	color: #00adaa;
+}
+
+.logo-img {
+	display: inline-block;
+	height: 3.5rem;
+	vertical-align: middle;
+}
+
+.logo-img-m {
+	color: #e37314;
+	font-size: 2.5rem;
+}
+
+.main {
+	border-top: 1px solid transparent;
+	padding: 4.5rem 1rem 2rem;
+}
+
+.main-wrapper {
+	margin: 0 auto;
+	max-width: 976px;
+}
+
+.button {
+	display: inline-block;
+	background: #e37314;
+	border-radius: 2px;
+	padding: .4rem;
+	text-decoration: none;
+	color: #fff;
+	font-weight: bold;
+	font-size: .8rem;
+}
+
+.button:focus {
+	background: #00adaa;
 }
