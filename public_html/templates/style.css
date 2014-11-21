@@ -105,12 +105,16 @@
 	font-weight: normal;
 }
 
+.label {
+	display: block;
+	margin: 8px 0;
+}
+
 .button {
 	display: inline-block;
-	margin: 0;
 	border-radius: 2px;
 	background: #e37314;
-	padding: .5em;
+	padding: .5em .6em;
 	text-decoration: none;
 	color: #fff;
 	font-weight: bold;
@@ -119,6 +123,16 @@
 
 .button:focus {
 	background: #00adaa;
+}
+
+.input-button {
+	border-width: 0;
+	cursor: pointer;
+}
+
+.input-button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
 }
 
 /* Tablet version */
