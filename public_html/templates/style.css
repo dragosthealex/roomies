@@ -24,7 +24,8 @@
 
 .body {
 	margin: 0;
-	background: #f6f1eb;
+	/*background: #f6f1eb;*/
+	background: #edeae9;
 	min-width: 320px;
 	line-height: 1;
 	font-family: 'Open Sans', arial, sans-serif;
@@ -34,7 +35,8 @@
 .header {
 	position: fixed;
 	top: 0;
-	border-bottom: 1px solid #d2c7be;
+	/*border-bottom: 1px solid #d2c7be;*/
+	border-bottom: 1px solid #d5d1d0;
 	background: #fff;
 	height: 56px;
 	width: 100%;
@@ -81,7 +83,10 @@
 .box {
 	margin: 16px;
 	border-radius: 2px;
-	border: 1px solid #d2c7be;
+	/*border: 1px solid #d2c7be;*/
+	border-width: 1px;
+	border-style: solid;
+	border-color: #e9e6e5 #e4e0df #d5d1d0;
 	background: #fff;
 }
 
