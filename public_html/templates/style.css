@@ -120,3 +120,32 @@
 .button:focus {
 	background: #00adaa;
 }
+
+/* Tablet version */
+@media (max-width: 975px) {
+	.main {
+		margin: 0 auto;
+		max-width: 624px;
+	}
+
+	.column-2 {
+		width: 286px;
+	}
+}
+
+/* Mobile version - inherits from tablet version */
+@media (max-width: 623px) {
+	.column-wrapper {
+		margin: 16px;
+	}
+
+	.column-2 {
+		margin: 0 0 16px;
+		float: none;
+		width: auto;
+	}
+
+	.column-2:last-child {
+		margin: 0;
+	}
+}
