@@ -135,6 +135,10 @@
 
 /* Mobile version - inherits from tablet version */
 @media (max-width: 623px) {
+	.header {
+		position: absolute;
+	}
+
 	.column-wrapper {
 		margin: 16px;
 	}
