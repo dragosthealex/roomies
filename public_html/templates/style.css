@@ -36,40 +36,41 @@
 	top: 0;
 	border-bottom: 1px solid #d2c7be;
 	background: #fff;
+	height: 56px;
 	width: 100%;
 	text-align: center;
-}
-
-.logo {
-	display: block;
-	margin: 0;
-	text-transform: uppercase;
-	font-family: Consolas, Monaco, 'Lucida Console', monospace;
-	font-size: 2rem;
+	line-height: 56px;
 }
 
 .logo-link {
 	display: inline-block;
-	height: 3.5rem;
+	position: relative;
 	text-decoration: none;
-	line-height: 3.5rem;
-	color: #00adaa;
+	color: #000;
+	font-variant: small-caps;
+	font-family: Consolas, Monaco, 'Lucida Console', monospace;
+	font-weight: normal;
+	font-size: 2rem;
+}
+
+.logo-link::after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	content: "";
 }
 
 .logo-img {
-	display: inline-block;
-	height: 3.5rem;
-	vertical-align: middle;
-}
-
-.logo-img-m {
-	color: #e37314;
-	font-size: 2.5rem;
+	border: 0;
+	height: 56px;
+	width: 200px;
 }
 
 .main {
 	border-top: 1px solid transparent;
-	padding: 4.5rem 1rem 2rem;
+	padding: 57px 0 16px;
 }
 
 .main-wrapper {
@@ -77,15 +78,43 @@
 	max-width: 976px;
 }
 
+.box {
+	margin: 16px;
+	border-radius: 2px;
+	border: 1px solid #d2c7be;
+	background: #fff;
+}
+
+.box-padding {
+	margin: 16px;
+}
+
+.column-wrapper {
+	margin: 16px 0;
+	overflow: hidden;
+}
+
+.column-2 {
+	float: left;
+	margin: 0 0 0 16px;
+	width: 462px;
+}
+
+.h2 {
+	margin: 16px 0;
+	font-weight: normal;
+}
+
 .button {
 	display: inline-block;
-	background: #e37314;
+	margin: 0;
 	border-radius: 2px;
-	padding: .4rem;
+	background: #e37314;
+	padding: .5em;
 	text-decoration: none;
 	color: #fff;
 	font-weight: bold;
-	font-size: .8rem;
+	font-size: .9rem;
 }
 
 .button:focus {
