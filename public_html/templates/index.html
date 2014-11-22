@@ -6,7 +6,7 @@
 	<title>Welcome to Roomies</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body class="body">
+<body class="body" onload="signin.email.focus()">
 	<!-- Top bar -->
 	<div class="header">
 		<a href="index.html" class="logo-link">
@@ -21,22 +21,27 @@
 				<!-- Sign in -->
 				<div class="box column-2">
 					<div class="box-padding">
-						<h2 class="h2">Sign in</h2>
-						<form method="POST">
-							<label for="email" class="label">Email:
-								<input type="email" name="signinEmail" placeholder="Email" id="email" class="text-input">
-							</label>
-							<label for="password" class="label">Password:
-								<input type="password" name="signinPassword" placeholder="Password" id="password" class="text-input">
-							</label>
-							<input type="submit" value="Sign in" class="button input-button">
+						<h2 class="h2" id="sign_in">Sign in</h2>
+						<form method="POST" name="signin" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
+							<input type="email" name="email" placeholder="Email" class="input text input-block" required>
+							<input type="password" name="password" placeholder="Password" class="input text input-block" required pattern=".{6,25}" title="6 to 25 characters">
+							<input type="submit" value="Sign in" class="button input input-button input-block">
 						</form>
 					</div>
 				</div>
 				<!-- Register -->
 				<div class="box column-2">
 					<div class="box-padding">
-						<h2 class="h2">Register</h2>
+						<h2 class="h2" id="register">Register</h2>
+						<form method="POST" name="register" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),false):(this.registerPassword.focus(),false):(this.registerEmail.focus(),false)">
+							<input type="email" name="registerEmail" placeholder="Email" class="input text input-block" required>
+							<input type="password" name="registerPassword" placeholder="Password" class="input text input-block" required pattern=".{6,25}" title="6 to 25 characters">
+							<input type="password" name="registerConfirmPassword" placeholder="Confirm Password" class="input text input-block" required pattern=".{6,25}" title="6 to 25 characters">
+							<p class="small-text">By registering, you are agreeing to the
+								<a href="#" class="link">terms and conditions</a>.
+							</p>
+							<input type="submit" value="Register" class="button input input-button input-block">
+						</form>
 					</div>
 				</div>
 			</div>
@@ -44,7 +49,14 @@
 			<div class="box">
 				<div class="box-padding">
 					<h2 class="h2">Accommodation Reviews</h2>
-					<a href="#" class="button">View All</a>
+					<a href="#" class="button float-right">View All</a>
+					<form method="GET">
+						<select class="input text input-inline select-has-submit" required>
+							<option class="option" value="" selected>Choose a University</option>
+							<option class="option" value="1">University of Manchester</option>
+						</select
+						><input type="submit" value="Filter" class="button input input-button input-inline select-submit">
+					</form>
 				</div>
 			</div>
 		</div>
