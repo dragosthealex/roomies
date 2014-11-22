@@ -75,7 +75,7 @@
 	margin: 0 auto;
 	border-top: 1px solid transparent;
 	padding: 57px 0 16px;
-	max-width: 1180px;
+	max-width: 976px;
 }
 
 .box {
@@ -219,6 +219,13 @@
 
 .hidden {
 	display: none;
+}
+
+/* Large version */
+@media (min-width: 1241px) {
+	.main {
+		max-width: 1180px;
+	}
 }
 
 /* Mobile version */
