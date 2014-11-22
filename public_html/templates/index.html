@@ -23,7 +23,7 @@
 				<!-- Sign in -->
 				<div class="box column-2">
 					<div class="box-padding">
-						<h2 class="h2" id="sign_in">Sign in</h2>
+						<h2 class="h2" id="Sign_in">Sign in</h2>
 						<form method="POST" name="signin" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
 							<input type="email" name="email" placeholder="Email" class="input text input-block" required>
 							<input type="password" name="password" placeholder="Password" class="input text input-block" required pattern=".{6,25}" title="6 to 25 characters">
@@ -34,7 +34,7 @@
 				<!-- Register -->
 				<div class="box column-2">
 					<div class="box-padding">
-						<h2 class="h2" id="register">Register</h2>
+						<h2 class="h2" id="Register">Register</h2>
 						<form method="POST" name="register" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),false):(this.registerPassword.focus(),false):(this.registerEmail.focus(),false)">
 							<input type="email" name="registerEmail" placeholder="Email" class="input text input-block" required>
 							<input type="password" name="registerPassword" placeholder="Password" class="input text input-block" required pattern=".{6,25}" title="6 to 25 characters">
@@ -50,7 +50,7 @@
 			<!-- Accommodation Reviews -->
 			<div class="box">
 				<div class="box-padding">
-					<h2 class="h2">Accommodation Reviews</h2>
+					<h2 class="h2" id="Accommodation_reviews">Accommodation reviews</h2>
 					<a href="#" class="button float-right">View All</a>
 					<form method="GET">
 						<select class="input text input-inline select-has-submit" required>
