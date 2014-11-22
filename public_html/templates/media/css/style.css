@@ -72,13 +72,10 @@
 }
 
 .main {
+	margin: 0 auto;
 	border-top: 1px solid transparent;
 	padding: 57px 0 16px;
-}
-
-.main-wrapper {
-	margin: 0 auto;
-	max-width: 976px;
+	max-width: 1204px;
 }
 
 .box {
@@ -103,7 +100,7 @@
 .column-2 {
 	float: left;
 	margin: 0 0 0 16px;
-	width: 462px;
+	width: 578px;
 }
 
 .h1 {
@@ -221,10 +218,20 @@
 	display: none;
 }
 
+/* Small desktop version */
+@media (max-width: 1203px) {
+	.main {
+		max-width: 976px;
+	}
+
+	.column-2 {
+		width: 462px;
+	}
+}
+
 /* Tablet version */
 @media (max-width: 975px) {
 	.main {
-		margin: 0 auto;
 		max-width: 624px;
 	}
 
