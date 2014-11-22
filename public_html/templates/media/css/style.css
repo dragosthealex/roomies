@@ -53,6 +53,7 @@
 .logo-link {
 	display: inline-block;
 	position: relative;
+	height: 56px;
 	text-decoration: none;
 	color: #000;
 	font-variant: small-caps;
