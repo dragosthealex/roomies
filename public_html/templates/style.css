@@ -27,6 +27,7 @@
 	/*background: #f6f1eb;*/
 	background: #edeae9;
 	min-width: 320px;
+	overflow-y: scroll;
 	line-height: 1;
 	font-family: 'Open Sans', arial, sans-serif;
 	font-size: 16px;
@@ -162,7 +163,7 @@
 .select-has-submit {
 	box-sizing: border-box;
 	border-color: #e37314;
-	border-right: 0;
+	border-right-width: 0;
 	padding: 0 .6em;
 	height: 2.3em;
 	vertical-align: top;
@@ -230,13 +231,6 @@
 	.column-2 {
 		width: 286px;
 	}
-
-	.float-right {
-		display: block;
-		float: none;
-		margin: 8px 0;
-		text-align: center;
-	}
 }
 
 /* Mobile version - inherits from tablet version */
@@ -257,5 +251,26 @@
 
 	.column-2:last-child {
 		margin: 0;
+	}
+
+	.float-right {
+		display: block;
+		float: none;
+		margin: 8px 0;
+		text-align: center;
+	}
+
+	.select-has-submit {
+		display: block;
+		margin: 8px 0;
+		border-right-width: 1px;
+		width: 100%;
+	}
+
+	.select-submit {
+		display: block;
+		margin: 8px 0;
+		border-radius: 2px;
+		width: 100%;
 	}
 }
