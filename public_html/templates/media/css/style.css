@@ -164,6 +164,11 @@
 	height: 2.3em;
 }
 
+.input-button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
 .has-submit {
 	margin: 0;
 	box-sizing: border-box;
