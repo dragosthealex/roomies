@@ -120,6 +120,13 @@
 	margin: 16px;
 }
 
+.h1-banner {
+	margin: 1em 0;
+	text-align: center;
+	font-weight: normal;
+	font-size: 2.5em;
+}
+
 .h2 {
 	margin: 16px 0;
 	font-weight: normal;
@@ -232,10 +239,6 @@
 	color: #00adaa;
 }
 
-.hidden {
-	display: none;
-}
-
 .footer {
 	padding: 0;
 	overflow: hidden;
@@ -287,6 +290,10 @@
 @media (max-width: 976px) {
 	.header {
 		position: absolute;
+	}
+
+	.desktop-only {
+		display: none;
 	}
 }
 
