@@ -16,14 +16,17 @@
 	<!-- Main content -->
 	<div class="main">
 		<!-- Hidden title -->
-		<div class="desktop-only">
-			<h1 class="h1-banner">Welcome to Roomies</h1>
+		<div class="desktop-only banner">
+			<header>
+				<h1 class="h1">Welcome to Roomies</h1>
+				<p class="text">Find the perfect room-mate.</p>
+			</header>
 		</div>
 		<!-- Sign in / Register -->
 		<div class="column-wrapper">
 			<!-- Sign in -->
 			<div class="column-2">
-				<div class="column">
+				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2" id="Sign_in">Sign in</h2>
 						<form method="POST" name="signin" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
@@ -36,7 +39,7 @@
 			</div>
 			<!-- Register -->
 			<div class="column-2">
-				<div class="column">
+				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2" id="Register">Register</h2>
 						<form method="POST" name="register" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),false):(this.registerPassword.focus(),false):(this.registerEmail.focus(),false)">
