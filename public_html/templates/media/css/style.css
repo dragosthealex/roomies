@@ -302,10 +302,6 @@
 	.header {
 		position: absolute;
 	}
-
-	.desktop-only {
-		display: none;
-	}
 }
 
 /* Mobile version - inherits from small version*/
@@ -348,5 +344,9 @@
 		margin: 8px 0;
 		border-radius: 2px;
 		width: 100%;
+	}
+
+	.not-mobile {
+		display: none;
 	}
 }
