@@ -169,6 +169,7 @@
 
 .input, .select {
 	border: 1px solid #d9d6d5;
+	background: #fff;
 	padding: .5em .6em;
 }
 
