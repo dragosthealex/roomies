@@ -10,4 +10,4 @@ ExpiresDefault        "access 1 month"
 
 # Deflate resources
 Options +Includes
-AddOutputFilter INCLUDES;DEFLATE php html css js woff ttf
+AddOutputFilter INCLUDES;DEFLATE php html css js woff ttf svg
