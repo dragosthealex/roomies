@@ -216,11 +216,6 @@
 	border-radius: 0 2px 2px 0;
 }
 
-.option {
-	line-height: 1;
-	font-size: .8em;
-}
-
 .option[value=""] {
 	color: #888;
 }
@@ -237,7 +232,7 @@
 }
 
 .small-text, .footer {
-	line-height: 1.3;
+	line-height: 2;
 	color: #888;
 	font-size: .8em;
 }
@@ -259,6 +254,7 @@
 	padding: 0;
 	overflow: hidden;
 	list-style-type: none;
+	line-height: 1.3;
 }
 
 .footer-item {
