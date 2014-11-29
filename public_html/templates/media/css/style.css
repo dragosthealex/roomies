@@ -51,17 +51,18 @@
 	/*border-bottom: 1px solid #d2c7be;*/
 	border-bottom: 1px solid #d5d1d0;
 	background: #fff;
-	height: 56px;
+	height: 69px;
 	width: 100%;
 	min-width: 320px;
 	text-align: center;
-	line-height: 56px;
+	line-height: 69px;
 }
 
 .logo-link {
 	display: inline-block;
 	position: relative;
-	height: 56px;
+	margin: 5px 0;
+	height: 59px;
 	text-decoration: none;
 	color: #000;
 	font-variant: small-caps;
@@ -81,14 +82,17 @@
 
 .logo-img {
 	border: 0;
-	height: 56px;
-	width: 200px;
+	height: 59px;
+}
+
+.header-space {
+	height: 70px;
 }
 
 .main {
 	margin: 0 auto;
 	border-top: 1px solid transparent;
-	padding: 57px 0 16px;
+	padding: 0 0 16px;
 	max-width: 976px;
 }
 
