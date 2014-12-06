@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Roomies_project_plan" company="X7" webLink="http://" view-date="2014-12-01" view-index="0" gantt-divider-location="379" resource-divider-location="300" version="2.0" locale="en_GB">
+<?xml version="1.0" encoding="UTF-8"?><project name="Roomies_project_plan" company="X7" webLink="http://" view-date="2014-12-01" view-index="0" gantt-divider-location="390" resource-divider-location="300" version="2.0" locale="en_GB">
     <description/>
     <view zooming-state="default:7" id="gantt-chart">
-        <field id="tpd3" name="Name" width="73" order="0"/>
+        <field id="tpd3" name="Name" width="71" order="0"/>
         <field id="tpd4" name="Begin date" width="15" order="1"/>
-        <field id="tpd5" name="End date" width="11" order="2"/>
+        <field id="tpd5" name="End date" width="12" order="2"/>
     </view>
     <view id="resource-table">
         <field id="0" name="Name" width="50" order="0"/>
@@ -50,16 +50,30 @@
             <notes><![CDATA[Will be provided with all the variable names/etc, once stubs are finalised.]]></notes>
         </task>
         <task id="22" name="7.Making the html for logged in/out index - mitali" color="#00ff00" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
-            <notes><![CDATA[See above task.]]></notes>
+            <notes><![CDATA[You are supposed to complete the two index.in.php and index.out.php already made templates.
+Most of the index.out.php is already there, as Dan already made stuff.
+Try to use minimal css, jus for positioning, as they will be properly styled later.
+The index.in.php should be what the user sees when he is logged in and accesses the website (the links to his profile, accommodation, etc)
+Don't bother with the header or footer, as they will be made sepparately.]]></notes>
         </task>
         <task id="30" name="8.Making the template for copyright/privacy - lilian" color="#0000cc" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
-            <notes><![CDATA[Stub already there, just needs to be implemented. Minimal CSS at this point.]]></notes>
+            <notes><![CDATA[You are to complete the terms_cond.php stub, with proper information. Think about the legal stuff you already said, and think how can you best express that. Please use other sites (such Facebook or Google) for research and see how they approach this matter)
+You are going to design the html for that page, in order to make it look visually appealing for users.]]></notes>
         </task>
         <task id="33" name="9.Making the html for header/footer/general - elnur" color="#990099" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
-            <notes><![CDATA[See above task.]]></notes>
+            <notes><![CDATA[You would make the header and footer for logged in and logged out. 
+The header for logged in should contain the user's name, and a drop-down menu with appropiate links to home, your profile, account settings and questionaire
+You have to include the "header.php" which was already made by daniel]]></notes>
         </task>
         <task id="47" name="10.Making the html for own and others' profile - liam" color="#ffff00" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
-            <notes><![CDATA[This will be discussed later, but we should have some sort of privacy policy from the start. We'll finalise it after.]]></notes>
+            <notes><![CDATA[You are going to design the profile page for the current logged user, where he can edit their informations. Use minimal CSS, just for positioning stuff. You don't really need to use PHP, just have the forms/boxes there
+Think about what information would be mandatory, and should be completed by every user, and make the profile according to that
+You won't make the questionaire, that will be made later
+Also, you are to make the details page for other users. When we (the logged in users) access others' page we need to see their details. That is what you are to do.
+
+Files that need to be completed:
+roomies/public_html/user/profile/index.php
+roomies/public_html/profile/index.php]]></notes>
         </task>
         <task id="48" name="11.Making the html &amp; CSS for search results - daniel" color="#ff9933" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
             <notes><![CDATA[Again, just making the html. Minimal CSS.]]></notes>
@@ -165,9 +179,9 @@
         <displaycolumn property-id="tpd9" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd1" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd0" order="-1" width="75" visible="false"/>
-        <displaycolumn property-id="tpd3" order="0" width="263" visible="true"/>
-        <displaycolumn property-id="tpd4" order="1" width="54" visible="true"/>
-        <displaycolumn property-id="tpd5" order="2" width="43" visible="true"/>
+        <displaycolumn property-id="tpd3" order="0" width="267" visible="true"/>
+        <displaycolumn property-id="tpd4" order="1" width="57" visible="true"/>
+        <displaycolumn property-id="tpd5" order="2" width="47" visible="true"/>
     </taskdisplaycolumns>
     <previous/>
     <roles roleset-name="Default"/>
