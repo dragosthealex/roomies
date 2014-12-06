@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Roomies_project_plan" company="X7" webLink="http://" view-date="2015-01-11" view-index="0" gantt-divider-location="532" resource-divider-location="300" version="2.0" locale="en_US">
+<?xml version="1.0" encoding="UTF-8"?><project name="Roomies_project_plan" company="X7" webLink="http://" view-date="2014-12-01" view-index="0" gantt-divider-location="379" resource-divider-location="300" version="2.0" locale="en_GB">
     <description/>
-    <view zooming-state="default:4" id="gantt-chart">
-        <field id="tpd3" name="Name" width="64" order="0"/>
-        <field id="tpd4" name="Begin date" width="23" order="1"/>
+    <view zooming-state="default:7" id="gantt-chart">
+        <field id="tpd3" name="Name" width="73" order="0"/>
+        <field id="tpd4" name="Begin date" width="15" order="1"/>
         <field id="tpd5" name="End date" width="11" order="2"/>
     </view>
     <view id="resource-table">
@@ -36,46 +36,46 @@
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
         <task id="2" name="1.Presentation" color="#8cb6ce" meeting="false" start="2014-12-04" duration="1" complete="0" priority="4" expand="true"/>
-        <task id="8" name="2.Creating the stubs" color="#8cb6ce" meeting="false" start="2014-12-04" duration="1" complete="0" expand="true">
+        <task id="8" name="2.Creating the stubs" color="#ff9933" meeting="false" start="2014-12-04" duration="1" complete="0" expand="true">
             <notes><![CDATA[Stubs already made, just need to be checked.]]></notes>
         </task>
         <task id="11" name="3.Important meeting" color="#8cb6ce" meeting="false" start="2014-12-05" duration="1" complete="0" expand="true"/>
-        <task id="17" name="4.Creating DB" color="#8cb6ce" meeting="false" start="2014-12-05" duration="1" complete="0" expand="true">
+        <task id="17" name="4.Creating DB" color="#ff0000" meeting="false" start="2014-12-05" duration="1" complete="0" expand="true">
             <notes><![CDATA[Db is already created, just needs to be checked.]]></notes>
         </task>
         <task id="5" name="5.Consolidating knowledge" color="#8cb6ce" meeting="false" start="2014-12-19" duration="33" complete="0" priority="4" expand="true">
             <notes><![CDATA[AND IT SHOULD BE F***ING CONSOLIDATED!]]></notes>
         </task>
-        <task id="19" name="6.Making the login &amp; register script - alex" color="#8cb6ce" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
+        <task id="19" name="6.Making the login &amp; register script - alex" color="#ff0000" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
             <notes><![CDATA[Will be provided with all the variable names/etc, once stubs are finalised.]]></notes>
         </task>
-        <task id="22" name="7.Making the html for logged in/out index - mitali" color="#8cb6ce" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
+        <task id="22" name="7.Making the html for logged in/out index - mitali" color="#00ff00" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
             <notes><![CDATA[See above task.]]></notes>
         </task>
-        <task id="30" name="8.Making the template for copyright/privacy - lilian" color="#8cb6ce" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
+        <task id="30" name="8.Making the template for copyright/privacy - lilian" color="#0000cc" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
             <notes><![CDATA[Stub already there, just needs to be implemented. Minimal CSS at this point.]]></notes>
         </task>
-        <task id="33" name="9.Making the html for header/footer/general - elnur" color="#8cb6ce" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
+        <task id="33" name="9.Making the html for header/footer/general - elnur" color="#990099" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
             <notes><![CDATA[See above task.]]></notes>
         </task>
-        <task id="47" name="10.Making the html for own and others' profile - liam" color="#8cb6ce" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
+        <task id="47" name="10.Making the html for own and others' profile - liam" color="#ffff00" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
             <notes><![CDATA[This will be discussed later, but we should have some sort of privacy policy from the start. We'll finalise it after.]]></notes>
         </task>
-        <task id="48" name="11.Making the html &amp; CSS for search results - daniel" color="#8cb6ce" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
+        <task id="48" name="11.Making the html &amp; CSS for search results - daniel" color="#ff9933" meeting="false" start="2014-12-05" duration="7" complete="0" expand="true">
             <notes><![CDATA[Again, just making the html. Minimal CSS.]]></notes>
         </task>
-        <task id="36" name="12.Making html &amp; CSS for erro pgs - lilian" color="#8cb6ce" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
+        <task id="36" name="12.Making html &amp; CSS for erro pgs - lilian" color="#0000cc" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
             <notes><![CDATA[This includes basically the forms that will be completed by the user.]]></notes>
         </task>
-        <task id="44" name="13.Styling the own/other ppl profile - alex" color="#8cb6ce" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
+        <task id="44" name="13.Styling the own/other ppl profile - alex" color="#ff0000" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
             <notes><![CDATA[This is what a user sees when they enter on someone's page]]></notes>
         </task>
-        <task id="46" name="14.Styling the logged out index - elnur" color="#8cb6ce" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
+        <task id="46" name="14.Styling the logged out index - elnur" color="#990099" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
             <notes><![CDATA[Properly styling the html, eventually completing it.]]></notes>
         </task>
-        <task id="49" name="15.Styling the logged in index - mitali" color="#8cb6ce" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true"/>
-        <task id="50" name="16.Styling the header/footer/general stuff - daniel" color="#8cb6ce" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true"/>
-        <task id="52" name="17.Connecting the index html w/ php - liam" color="#8cb6ce" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
+        <task id="49" name="15.Styling the logged in index - mitali" color="#00ff00" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true"/>
+        <task id="50" name="16.Styling the header/footer/general stuff - daniel" color="#ff9933" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true"/>
+        <task id="52" name="17.Connecting the index html w/ php - liam" color="#ffff00" meeting="false" start="2014-12-12" duration="7" complete="0" expand="true">
             <notes><![CDATA[Will provide the functionality of the forms, and add cool js to do stuff]]></notes>
         </task>
         <task id="70" name="18.Making script to edit profile - alex" color="#8cb6ce" meeting="false" start="2015-01-23" duration="7" complete="0" expand="true"/>
@@ -143,8 +143,17 @@
         <task id="169" name="53." color="#8cb6ce" meeting="false" start="2015-02-27" duration="7" complete="0" expand="true"/>
         <task id="171" name="54." color="#8cb6ce" meeting="false" start="2015-02-27" duration="7" complete="0" expand="true"/>
     </tasks>
-    <resources/>
-    <allocations/>
+    <resources>
+        <resource id="0" name="Alex" function="SoftwareDevelopment:2" contacts="" phone=""/>
+        <resource id="1" name="Daniel" function="SoftwareDevelopment:5" contacts="" phone=""/>
+        <resource id="2" name="Mitali" function="SoftwareDevelopment:5" contacts="" phone=""/>
+        <resource id="3" name="Elnur" function="SoftwareDevelopment:4" contacts="" phone=""/>
+        <resource id="4" name="Liam" function="SoftwareDevelopment:2" contacts="" phone=""/>
+        <resource id="5" name="Lilian" function="SoftwareDevelopment:4" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="19" resource-id="0" function="SoftwareDevelopment:2" responsible="true" load="100.0"/>
+    </allocations>
     <vacations/>
     <taskdisplaycolumns>
         <displaycolumn property-id="tpd2" order="-1" width="75" visible="false"/>
@@ -156,9 +165,9 @@
         <displaycolumn property-id="tpd9" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd1" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd0" order="-1" width="75" visible="false"/>
-        <displaycolumn property-id="tpd3" order="0" width="333" visible="true"/>
-        <displaycolumn property-id="tpd4" order="1" width="123" visible="true"/>
-        <displaycolumn property-id="tpd5" order="2" width="57" visible="true"/>
+        <displaycolumn property-id="tpd3" order="0" width="263" visible="true"/>
+        <displaycolumn property-id="tpd4" order="1" width="54" visible="true"/>
+        <displaycolumn property-id="tpd5" order="2" width="43" visible="true"/>
     </taskdisplaycolumns>
     <previous/>
     <roles roleset-name="Default"/>
