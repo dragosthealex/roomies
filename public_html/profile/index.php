@@ -17,9 +17,18 @@ include '/../inc/init.php';
 <?php include '/../inc/html/header.in.php';?>
 
 <!--Start building page from here-->
+<?php
+$loggedIn = $_GET['loggedIn'];
+$ownProfile = $_GET['profile'];
+if (loggedIn == 0) {
+  echo "Logged Out";
+} else {
+  echo "Logged In";
+}
 
-
-
-
+if (profile == 0) {
+  echo "Other Profile";
+} else {
+  echo "My Profile";
   </body>
 </html>
