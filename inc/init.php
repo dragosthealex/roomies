@@ -49,7 +49,7 @@ if(defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 }
 
 // Inclusion of the db config file
-require_once 'config.inc.php';
+require_once '../config.inc.php';
 
 // Connection to the db. Catch any error.
 // $con is the connection handler, PDO object.
