@@ -10,6 +10,14 @@ require_once '../inc/init.php';
 // If logged out, show homepage, then exit the script.
 if(!LOGGED_IN)
 {
+/* You may have the following php vars:
+
+-If error during register/login:
+$_GET('err') can be
+-> 'confpass', if confirm password does not match with password
+-> 'emailexists' if email already used
+
+*/
 ?>
 <!--html code for logged out homepage-->
 

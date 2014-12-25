@@ -1,7 +1,6 @@
 <?php
 /*
-You are going to make the html for the profile of the current 
-logged in user.
+You are going to make the html for the profile of other users.
 The header would already be included.
 Please read the gantt chart note for this task (task 10)
 
@@ -14,15 +13,12 @@ include '/../inc/init.php';
 ?>
 
 <!--The header bar-->
-<?php include '/../inc/html/header.in.php';?>
+<?php include '/../inc/html/header.in';?>
 
 <!--Start building page from here-->
-<?php
-if ($_GET[]loggedIn == 0 && $profile == 0) {
-  
-} elseif ($loggedIn == 1 && $profile == 0) {
-  
-} else {
+
+
+
 
   </body>
 </html>
