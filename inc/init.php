@@ -12,6 +12,9 @@ else if (!REQUIRE_SESSION && LOGGED_IN)
   //404
 */
 
+// The local root of the Roomies git repository:
+define('__ROOT__', dirname(dirname(__FILE__)));
+
 // Setting session name
 $session_name = 'some_name';
 
@@ -27,29 +30,32 @@ session_regenerate_id();
 
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
-/* 
-Initiates $ioStatus. If user is logged in, 'in', else 'out'.
-It is used for accessing files depending on the login status. e.g.
-header.in.php vs header.out.php
-*/
-$ioStatus = (LOGGED_IN ? "in" : "out");
 
 // If REQUIRE_SESSION is not set, we don't care about the login status
 // Cannot use isset() on constants; use defined() and is_bool():
-if(defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
+if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 {
-  if(REQUIRE_SESSION && !LOGGED_IN)
-  {
-    header('Location: /errors/400.php');
-  }
-  else if(!REQUIRE_SESSION && LOGGED_IN)
-  {
-    header('Location: /errors/404.php');
-  }
+    if (REQUIRE_SESSION && !LOGGED_IN)
+    {
+        header('HTTP/1.0 403 Forbidden', true, 403);
+        include __ROOT__.'/inc/html/forbidden.php'; // This file should exit()
+    }
+    elseif (!REQUIRE_SESSION && LOGGED_IN)
+    {
+        header('HTTP/1.0 404 Not Found', true, 404);
+        include __ROOT__.'/inc/html/notfound.php'; // This file should exit()
+    }
 }
+// Initiate $ioStatus. If user is logged in, 'in', else 'out'.
+// It is used for accessing files depending on the login status, e.g.
+// header.in.php vs header.out.php. Only used when the user is not required
+// to be specifically logged in or out.
+else
+    $ioStatus = (LOGGED_IN ? "in" : "out");
+
 
 // Inclusion of the db config file
-require_once '../config.inc.php';
+require_once __ROOT__.'/config.inc.php';
 
 // Connection to the db. Catch any error.
 // $con is the connection handler, PDO object.
