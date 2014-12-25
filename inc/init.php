@@ -37,12 +37,12 @@ if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 {
     if (REQUIRE_SESSION && !LOGGED_IN)
     {
-        header('HTTP/1.0 403 Forbidden', true, 403);
+        header('HTTP/1.1 403 Forbidden', true, 403);
         include __ROOT__.'/inc/html/forbidden.php'; // This file should exit()
     }
     elseif (!REQUIRE_SESSION && LOGGED_IN)
     {
-        header('HTTP/1.0 404 Not Found', true, 404);
+        header('HTTP/1.1 404 Not Found', true, 404);
         include __ROOT__.'/inc/html/notfound.php'; // This file should exit()
     }
 }
