@@ -17,7 +17,7 @@ $session_name = 'some_name';
 
 // Setting runtime ini cookie params (lifetime, path, domain, ssl or not, httponly or not)
 $cookieParams = session_get_cookie_params();
-session_set_cookie_params($cookieParams['lifetime'], cookieParams['path']
+session_set_cookie_params($cookieParams['lifetime'], $cookieParams['path'],
                           $cookieParams['domain'], false, true);
 
 // Starting session with a regenerated id
@@ -35,7 +35,8 @@ header.in.php vs header.out.php
 $ioStatus = (LOGGED_IN ? "in" : "out");
 
 // If REQUIRE_SESSION is not set, we don't care about the login status
-if(isset(REQUIRE_SESSION))
+// Cannot use isset() on constants; use defined() and is_bool():
+if(defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 {
   if(REQUIRE_SESSION && !LOGGED_IN)
   {
