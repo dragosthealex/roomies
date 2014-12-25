@@ -230,6 +230,10 @@
 	float: right;
 }
 
+.float-left {
+	float: left;
+}
+
 .small-text, .footer {
 	line-height: 2;
 	color: #888;
