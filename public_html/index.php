@@ -6,29 +6,113 @@ homepage content.
 
 // Includes the init file
 require_once '../inc/init.php';
-
+echo LOGGED_IN;
 // If logged out, show homepage, then exit the script.
 if(!LOGGED_IN)
 {
 /* You may have the following php vars:
 
 -If error during register/login:
-$_GET('err') can be
+>>>> $_GET('err') can be
 -> 'confpass', if confirm password does not match with password
 -> 'emailexists' if email already used
 
+>>>> $ioStatus can be
+-> 'in', if the user is logged in
+-> 'out', if the user is not logged in
 */
 ?>
 <!--html code for logged out homepage-->
 
-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Welcome to Roomies</title>
+	<link rel="stylesheet" type="text/css" href="media/css/style.css">
+</head>
+<body class="body" onload="window.location.hash||signin.email.focus()">
+	<?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
+	<!-- Main content -->
+	<div class="main">
+		<!-- Hidden title -->
+		<div class="not-mobile banner">
+			<header>
+				<h1 class="h1">Welcome to Roomies</h1>
+				<p class="text">Find the perfect room-mate.</p>
+			</header>
+		</div>
+		<!-- Sign in / Register -->
+		<div class="column-wrapper">
+			<!-- Sign in -->
+			<div class="column-2">
+				<div class="column-box">
+					<div class="box-padding">
+						<h2 class="h2" id="Sign_in">Sign in</h2>
+						<form method="POST" name="signin" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
+							<input type="email" name="email" placeholder="Email" class="input block" required>
+							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
+							<input type="submit" value="Sign in" class="input-button block">
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Register -->
+			<div class="column-2">
+				<div class="column-box">
+					<div class="box-padding">
+						<h2 class="h2" id="Register">Register</h2>
+						<form method="POST" name="register" action="./register/" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),false):(this.registerPassword.focus(),false):(this.registerEmail.focus(),false)">
+							<input type="email" name="registerEmail" placeholder="Email" class="input block" required>
+							<input type="password" name="registerPassword" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
+							<input type="password" name="registerConfirmPassword" placeholder="Confirm Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
+              <input type="text" name="registerUsername" placeholder="Username" class="input block" required pattern=".{4,25}" title="4 to 25 characters">
+							<p class="small-text">By registering, you agree to our
+								<a href="#terms" class="link">Terms</a> and
+								<a href="#privacy" class="link">Privacy Policy</a>, including our
+								<a href="#cookies" class="link">Cookie Use</a>.
+							</p>
+							<input type="submit" value="Register" class="input-button block">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Accommodation Reviews -->
+		<div class="box">
+			<div class="box-padding">
+				<h2 class="h2" id="Accommodation_reviews">Accommodation reviews</h2>
+				<form method="GET">
+					<select name="filter" class="select has-submit" required>
+						<option class="option" value="" selected>Choose a University</option>
+						<option class="option" value="1">University of Manchester</option>
+					</select
+					><input type="submit" value="Filter" class="input-button select-submit">
+					<a href="#" class="link-button float-right">View All</a>
+				</form>
+			</div>
+		</div>
+		<?php require_once __ROOT__."/inc/html/footer.php";?>
+	</div>
+</body>
+</html>
 
 
 <?php
-}// if(!LOGGED_IN)
 exit();
+}// if(!LOGGED_IN)
+
 
 // Else, we show the homepage for logged in users
 ?>
 <!--html code for logged in homepage-->
+
+<?php 
+if(isset($_GET['logout']))
+{
+  session_destroy();
+}
+?>
+
+<a href="?logout=yes">logout</a>

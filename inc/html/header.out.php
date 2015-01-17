@@ -6,3 +6,8 @@ To do:
 3 Close header
 */
 ?>
+<!-- Top bar -->
+<div class="header">
+	<?php require_once "header.php";?>
+</div>
+<div class="header-space"></div>

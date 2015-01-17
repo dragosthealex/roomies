@@ -50,8 +50,7 @@ if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 // It is used for accessing files depending on the login status, e.g.
 // header.in.php vs header.out.php. Only used when the user is not required
 // to be specifically logged in or out.
-else
-    $ioStatus = (LOGGED_IN ? "in" : "out");
+$ioStatus = (LOGGED_IN ? "in" : "out");
 
 
 // Inclusion of the db config file

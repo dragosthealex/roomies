@@ -20,7 +20,7 @@ if(isset($_GET['conf']))
       // Means the user inserted correct conf code, so insert into db
       $email = $_SESSION['tempUser']['email'];
       // Get pass and salt from temp table
-      $stmt = $con->prepare("SELECT temp_pass, temp_salt, temp_username FROM rtempusers WHERE temp_email = $email");
+      $stmt = $con->prepare("SELECT temp_pass, temp_salt, temp_username FROM rtempusers WHERE temp_email = '$email'");
       $stmt->execute();
       $stmt->bindColumn(1, $pass);
       $stmt->bindColumn(2, $salt);
@@ -28,24 +28,29 @@ if(isset($_GET['conf']))
       $stmt->fetch();
 
       // Insert new user into users table
-      $stmt = $con->prepare("INSERT INTO rusers (user_email, username, user_pass, user_salt) VALUES ($email, $username, $pass, $salt)");
+      $stmt = $con->prepare("INSERT INTO rusers (user_email, username, user_pass, user_salt) 
+                            VALUES ('$email', '$username', '$pass', '$salt')");
       $stmt->execute();
 
       // Delete from temp users
-      $stmt = $con->prepare("DELETE FROM rtempusers WHERE temp_email = $email");
-
+      $stmt = $con->prepare("DELETE FROM rtempusers WHERE temp_email = '$email'");
+      $stmt->execute();
+      
       // Get user's id, and set the user in session
-      $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_email = $email");
+      $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_email = '$email'");
       $stmt->execute();
       $stmt->bindColumn(1, $id);
       $stmt->fetch();
 
-      $_SESSION['user']['id'] = $id;
-      $_SESSION['user']['email'] = $email;
-      $_SESSION['user']['username'] = $username;
+      if($id)
+      {
+        $_SESSION['user']['id'] = $id;
+        $_SESSION['user']['email'] = $email;
+        $_SESSION['user']['username'] = $username;
+      }
 
       // Send user to index
-      header('Location:/');
+      header('Location: .');
       exit();
     }// if get[conf] == session [tempuser]
   }// if isset temp user
