@@ -102,7 +102,6 @@ if(!LOGGED_IN)
 </body>
 </html>
 
-
 <?php
 exit();
 }// if(!LOGGED_IN)
@@ -135,6 +134,7 @@ if(isset($_GET['logout']))
   <div class="main">
     THIS IS THE LOGGED IN PAGE
     <a href="./?logout=yes">logout</a>
+    <?php require_once __ROOT__."/inc/html/footer.php";?>
   </div>
 </body>
 </html>

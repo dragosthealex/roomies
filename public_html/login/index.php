@@ -35,11 +35,12 @@ if(isset($_POST['email'], $_POST['password']))
   $stmt->fetch();
 
 
-  if($stmt->rowCount() == 1 && (microtime($time) + 7200 > time()))
+  if($stmt->rowCount() == 1 && (strtotime($time) + 7200 > time()))
   {
     // Error acc blocked, must pass at least 2 hrs
     $stmt = null;
-    header("Location: ../?err=locked&t=".(microtime($time) + 2700 - time()));
+    $timeLeft = strtotime($time) + 7200 - time();
+    header("Location: ../?err=locked&t=".$timeLeft);
     exit();
   }
 
@@ -51,8 +52,6 @@ if(isset($_POST['email'], $_POST['password']))
   $stmt->bindColumn(3, $username);
   $stmt->bindColumn(4, $salt);
   $stmt->fetch();
-
-  echo "SELECT user_id, user_pass, username, user_salt FROM rusers WHERE user_email = '$email'";
 
   if(($stmt->rowCount() == 1) && (hash('sha256', $password.$salt) == $dbPassword))
   {
@@ -70,8 +69,8 @@ if(isset($_POST['email'], $_POST['password']))
     if($stmt->rowCount() == 1)
     {
       // The pass is wrong so log it
-      $timeStamp = gmdate("Y-m-d\TH:i:s\Z", time());
-      $stmt = $con->prepare("INSERT INTO rlog (log_id, log_email, log_time) VALUES ('$id', '$email', '$timeStamp')");
+      $timeStamp = gmdate("Y-m-d H:i:s", time());
+      $stmt = $con->prepare("INSERT INTO rlog (log_email, log_time) VALUES ('$email', '$timeStamp')");
       $stmt->execute();
 
       $stmt = null;
