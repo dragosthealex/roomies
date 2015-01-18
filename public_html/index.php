@@ -16,6 +16,10 @@ if(!LOGGED_IN)
 >>>> $_GET('err') can be
 -> 'confpass', if confirm password does not match with password
 -> 'emailexists' if email already used
+-> 'invalid' if the user inserted invalid characters
+-> 'locked' if the user got the pass wrong >= 5 times in last 2 hrs (acc locked)
+---> 't', the time in seconds until acc wil unlock
+-> 'incorrect' if the pass/email are incorrect OR if the email does not exist
 
 >>>> $ioStatus can be
 -> 'in', if the user is logged in
@@ -50,7 +54,7 @@ if(!LOGGED_IN)
 				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2" id="Sign_in">Sign in</h2>
-						<form method="POST" name="signin" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
+						<form method="POST" name="signin" action="./login/index.php" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
 							<input type="email" name="email" placeholder="Email" class="input block" required>
 							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
 							<input type="submit" value="Sign in" class="input-button block">
@@ -112,7 +116,25 @@ exit();
 if(isset($_GET['logout']))
 {
   session_destroy();
+  header("Location: .");
+  exit();
 }
 ?>
 
-<a href="?logout=yes">logout</a>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Roomies</title>
+  <link rel="stylesheet" type="text/css" href="media/css/style.css">
+</head>
+<body class="body">
+  <?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
+  <!--Main content-->
+  <div class="main">
+    THIS IS THE LOGGED IN PAGE
+    <a href="./?logout=yes">logout</a>
+  </div>
+</body>
+</html>

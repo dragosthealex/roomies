@@ -9,6 +9,8 @@ mail for validation (for now, just header to
 invalid, output error messages along with form.
 */
 
+// To implement CSRF token
+
 define('REQUIRE_SESSION', FALSE);
 require_once '../../inc/init.php';
 
@@ -20,6 +22,14 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   $email = htmlentities(filter_input(INPUT_POST, 'registerEmail', FILTER_VALIDATE_EMAIL));
   $password1 = htmlentities(filter_input(INPUT_POST, 'registerPassword', FILTER_SANITIZE_STRING));
   $password2 = htmlentities(filter_input(INPUT_POST, 'registerConfirmPassword', FILTER_SANITIZE_STRING));
+
+  // Check if invalid characters
+  if($password1 != $_POST['registerPassword'] || $password2 != $_POST['registerConfirmPassword'] 
+    || $email != $_POST['registerEmail'] || $username != $_POST['registerUsername'])
+  {
+    header('Location: ../?err=invalid');
+    exit();
+  }
 
   // Check if confirm pass == pass
   if($password1 != $password2)
@@ -34,6 +44,7 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   $stmt->execute();
   if($stmt->rowCount() == 1)
   {
+    $stmt = null;
     header('Location :../?err=emailexists');
     exit();
   }
@@ -76,6 +87,7 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   */
 
   // Send user to confirm page with correct conf code. Enabled for testing
+  $stmt = null;
   header('Location: ../confirm/?conf='.$confCode);
   exit();
 }

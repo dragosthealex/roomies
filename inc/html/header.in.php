@@ -7,3 +7,9 @@ To do:
 4 Close header
 */
 ?>
+<div class="header">
+  <?php require_once "header.php";?>
+
+  
+</div>
+<div class="header-space"></div>
