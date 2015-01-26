@@ -32,7 +32,7 @@ $title = 'Search';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <base href="http://localhost/">
+    <!--<base href="http://localhost/">-->
     <title><?=$title?></title>
     <link rel="stylesheet" href="media/css/style.css">
 </head>
@@ -40,7 +40,7 @@ $title = 'Search';
     <!-- Top bar -->
     <div class="header">
         <a href="." class="logo-link">
-            <img src="media/img/logo.svg" alt="Roomies" class="logo-img">
+            <img src="../media/img/logo.svg" alt="Roomies" class="logo-img">
         </a>
     </div>
     <div class="header-space"></div>
