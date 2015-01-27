@@ -88,6 +88,6 @@ if(isset($_POST['email'], $_POST['password']))
 else
 {
   // Should go to 404
-  echo "shit";
+  echo "fuck";
 }
 ?>
