@@ -15,14 +15,19 @@ include '/../inc/init.php';
 
 <!--The header bar-->
 <?php include '/../inc/html/header.in.php';?>
-
-<!--Start building page from here-->
-<?php
-if ($_GET[]loggedIn == 0 && $profile == 0) {
-  
-} elseif ($loggedIn == 1 && $profile == 0) {
-  
-} else {
-
+<html>
+  <body>
+  <!--Start building page from here-->
+  <p> Hello World </p>
+  <?php
+  echo "<p>Hello World</p>";
+  if ($_GET[LOGGEDIN] == 0) {
+  ?>
+  <?php  
+  } elseif ($_GET[LOGGEDIN] == 1 && $_GET[PROFILE] == 0) {
+  ?>
+  <?php  
+  } else {
+  ?>
   </body>
 </html>
