@@ -80,7 +80,7 @@ if(isset($_POST['email'], $_POST['password']))
     else
     {
       // No email was found. return with error
-      //header("Location: ../?err=incorrect");
+      header("Location: ../?err=incorrect");
       exit();
     }
   }
@@ -88,6 +88,6 @@ if(isset($_POST['email'], $_POST['password']))
 else
 {
   // Should go to 404
-  echo "fuck";
+  echo "fuck not found";
 }
 ?>
