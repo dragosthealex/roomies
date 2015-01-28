@@ -199,16 +199,15 @@ if(isset($_GET['logout']))
 
 ?>
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>
-      Welcome to Roomies!
-    </title>
-
-    <!--STUFF-->
-  </head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Roomies</title>
+  <link rel="stylesheet" type="text/css" href="../media/css/style.css">
+</head>
   <body>
-
+    <?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
     <!--Header, etc-->
 
     <!-- test form-->
@@ -217,5 +216,6 @@ if(isset($_GET['logout']))
       <button type="submit">Submit</button>
       <a href="./?logout=yes">logout</a>
     </form>
+    <?php require_once __ROOT__."/inc/html/footer.php";?>
   </body>
 </html>

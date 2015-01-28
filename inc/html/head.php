@@ -6,3 +6,12 @@ To do:
 3 Output title..body
 */
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><?php echo $title; ?></title>
+  <link rel="stylesheet" type="text/css" href="../media/css/style.css">
+</head>
+  <body class="body">

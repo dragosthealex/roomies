@@ -6,10 +6,8 @@ homepage content.
 
 // Includes the init file
 require_once '../inc/init.php';
-echo LOGGED_IN;
 // If logged out, show homepage, then exit the script.
-if(!LOGGED_IN)
-{
+
 /* You may have the following php vars:
 
 -If error during register/login:
@@ -25,19 +23,28 @@ if(!LOGGED_IN)
 -> 'in', if the user is logged in
 -> 'out', if the user is not logged in
 */
-?>
-<!--html code for logged out homepage-->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Welcome to Roomies</title>
-	<link rel="stylesheet" type="text/css" href="media/css/style.css">
-</head>
-<body class="body" onload="window.location.hash||signin.email.focus()">
-	<?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
+// Include the head
+require_once __ROOT__."/inc/html/head.php";?>
+?>
+
+	<div class="header">
+		<a href="/" class="logo-link" title="Home">
+			<img src="media/img/logo.svg" alt="Roomies" class="logo-img">
+		</a>
+<?php
+if($ioStatus == "in")
+{
+	// Output header in
+}
+?>
+	</div>
+<div class="header-space"></div>
+
+<?php
+if(!LOGGED_IN)
+{
+?>
 	<!-- Main content -->
 	<div class="main">
 		<!-- Hidden title -->
