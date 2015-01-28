@@ -34,18 +34,28 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   // Check if confirm pass == pass
   if($password1 != $password2)
   {
-    header('Location :../?err=confpass');
+    header('Location: ../?err=confpass');
     exit();
   }
 
-  // Check if email existing
-  $stmt = $con->prepare("SELECT user_id, temp_id, username, temp_username FROM rusers, rtempusers 
-                          WHERE email = $email");
+  // Check if email or username already registered
+  $stmt = $con->prepare("SELECT user_id FROM rusers 
+                          WHERE user_email = '$email' OR username = '$username'");
   $stmt->execute();
-  if($stmt->rowCount() == 1)
+  if($stmt->rowCount() >= 1)
   {
     $stmt = null;
-    header('Location :../?err=emailexists');
+    header('Location: ../?err=emailexists');
+    exit();
+  }
+
+  $stmt = $con->prepare("SELECT temp_id FROM rtempusers 
+                          WHERE temp_email = '$email' OR temp_username = '$username'");
+  $stmt->execute();
+  if($stmt->rowCount() >= 1)
+  {
+    $stmt = null;
+    header('Location: ../?err=emailexists');
     exit();
   }
 

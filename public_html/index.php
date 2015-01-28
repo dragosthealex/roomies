@@ -55,7 +55,7 @@ if(!LOGGED_IN)
 					<div class="box-padding">
 						<h2 class="h2" id="Sign_in">Sign in</h2>
 						<form method="POST" name="signin" action="./login/index.php" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
-							<input type="email" name="email" placeholder="Email" class="input block" required>
+							<input type="text" name="login" placeholder="Email/Username" class="input block" required>
 							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
 							<input type="submit" value="Sign in" class="input-button block">
 						</form>
@@ -67,7 +67,7 @@ if(!LOGGED_IN)
 				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2" id="Register">Register</h2>
-						<form method="POST" name="register" action="./register/" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),false):(this.registerPassword.focus(),false):(this.registerEmail.focus(),false)">
+						<form method="POST" name="register" action="./confirm/" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),false):(this.registerPassword.focus(),false):(this.registerEmail.focus(),false)">
 							<input type="email" name="registerEmail" placeholder="Email" class="input block" required>
 							<input type="password" name="registerPassword" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
 							<input type="password" name="registerConfirmPassword" placeholder="Confirm Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
@@ -135,6 +135,7 @@ if(isset($_GET['logout']))
     THIS IS THE LOGGED IN PAGE
     <a href="./?logout=yes">logout</a>
     <?php require_once __ROOT__."/inc/html/footer.php";?>
+    
   </div>
 </body>
 </html>

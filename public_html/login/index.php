@@ -13,13 +13,14 @@ define('REQUIRE_SESSION', FALSE);
 require_once '../../inc/init.php';
 echo "shit";
 // If these are set, proceed. Else, something wrong happened
-if(isset($_POST['email'], $_POST['password']))
+if(isset($_POST['login'], $_POST['password']))
 {
-  $email = htmlentities(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
+
+  $login = htmlentities($_POST['login']);
   $password = htmlentities(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING));
 
   // Check if valid chars
-  if($email != $_POST['email'] || $password != $_POST['password'])
+  if($login != $_POST['login'] || $password != $_POST['password'])
   {
     header("Location: ../?err=invalid");
     exit();
@@ -29,7 +30,8 @@ if(isset($_POST['email'], $_POST['password']))
   Check if brute-force attack. If user got the pass wrong over 5 times in last two hours
   then something is not right. So it will throw an error.
   */
-  $stmt = $con->prepare("SELECT log_time FROM rlog WHERE log_email = '$email' LIMIT 1 OFFSET 4");
+  $stmt = $con->prepare("SELECT log_time FROM rlog WHERE log_email = '$login' 
+                          OR log_username = '$login'  LIMIT 1 OFFSET 4");
   $stmt->execute();
   $stmt->bindColumn(1, $time);
   $stmt->fetch();
@@ -45,7 +47,8 @@ if(isset($_POST['email'], $_POST['password']))
   }
 
   // Check the pass against the one in db. If incorrect, will be logged
-  $stmt = $con->prepare("SELECT user_id, user_pass, username, user_salt FROM rusers WHERE user_email = '$email'");
+  $stmt = $con->prepare("SELECT user_id, user_pass, username, user_salt FROM rusers 
+                          WHERE user_email = '$login' OR username = '$login' ");
   $stmt->execute();
   $stmt->bindColumn(1, $id);
   $stmt->bindColumn(2, $dbPassword);
@@ -70,18 +73,45 @@ if(isset($_POST['email'], $_POST['password']))
     {
       // The pass is wrong so log it
       $timeStamp = gmdate("Y-m-d H:i:s", time());
-      $stmt = $con->prepare("INSERT INTO rlog (log_email, log_time) VALUES ('$email', '$timeStamp')");
+      $stmt = $con->prepare("INSERT INTO rlog (log_email, log_time, log_username) 
+                              VALUES ('$email', '$timeStamp', '$username')");
       $stmt->execute();
 
       $stmt = null;
-      header("Location: ../?err=incorrect");
+      header("Location: ../?err=incorrect1");
       exit();
     }
     else
     {
-      // No email was found. return with error
-      header("Location: ../?err=incorrect");
-      exit();
+      // No email was found. Check temp users
+      $stmt = $con->prepare("SELECT temp_username, temp_pass, temp_salt, conf, temp_email 
+                              FROM rtempusers
+                              WHERE temp_email = '$login' OR temp_username = '$login'");
+      $stmt->execute();
+      $stmt->bindColumn(1, $tempUsername);
+      $stmt->bindColumn(2, $tempDbPassword);
+      $stmt->bindColumn(3, $tempSalt);
+      $stmt->bindColumn(4, $confCode);
+      $stmt->bindColumn(5, $tempEmail);
+      $stmt->fetch();
+
+      if(($stmt->rowCount() == 1) && (hash('sha256', $password.$tempSalt) == $tempDbPassword))
+      {
+        // The user is in temp table, so send him to conf page
+        $_SESSION['tempUser']['username'] = $tempUsername;
+        $_SESSION['tempUser']['conf'] = $confCode;
+        $_SESSION['tempUser']['email'] = $tempEmail;
+
+        $stmt = null;
+        header("Location: ../confirm/");
+        exit();
+      }
+      else
+      {
+        $stmt = null;
+        header("Location: ../?err=incorrect2");
+        exit();
+      }
     }
   }
 }
