@@ -25,6 +25,8 @@ require_once '../inc/init.php';
 */
 
 // Include the head
+$title = "Welcome Roomies";
+$dots = "";
 require_once __ROOT__."/inc/html/head.php";?>
 ?>
 
@@ -35,7 +37,15 @@ require_once __ROOT__."/inc/html/head.php";?>
 <?php
 if($ioStatus == "in")
 {
-	// Output header in
+?>
+	<div class="header">
+  	<a href="/" class="logo-link" title="Home">
+			<img src="media/img/logo.svg" alt="Roomies" class="logo-img">
+		</a>
+  </div>
+  <div class="header-space"></div>
+  <a href="./?logout=yes">logout</a>
+<?php
 }
 ?>
 	</div>
@@ -125,22 +135,18 @@ if(isset($_GET['logout']))
   header("Location: .");
   exit();
 }
-?>
 
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Welcome to Roomies</title>
-  <link rel="stylesheet" type="text/css" href="media/css/style.css">
-</head>
-<body class="body">
-  <?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
+//Check if the user completed their profile
+if(isset($_SESSION['notComplete']))
+{
+	header("Location: complete-register/");
+  exit();
+}
+
+?>
   <!--Main content-->
   <div class="main">
     THIS IS THE LOGGED IN PAGE
-    <a href="./?logout=yes">logout</a>
     <?php require_once __ROOT__."/inc/html/footer.php";?>
     
   </div>

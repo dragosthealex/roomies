@@ -63,6 +63,21 @@ if(isset($_POST['login'], $_POST['password']))
     $_SESSION['user']['email'] = $email;
     $_SESSION['user']['username'] = $username;
 
+    // Check whether the user has completed his profile
+    $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE profile_filter_id = $id");
+    $stmt->execute();
+    $stmt->bindColumn(1, $profileId);
+    $stmt->fetch();
+
+    if(!$stmt->rowCount())
+    {
+      // The user has to complete his profile
+      $stmt = null;
+      $_SESSION['notComplete'] = true;
+      header("Location: ../complete-register/");
+      exit();
+    }
+
     $stmt = null;
     header("Location: ../");
     exit();

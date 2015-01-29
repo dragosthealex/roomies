@@ -9,7 +9,7 @@ To do:
 ?>
 <div class="header">
   <?php require_once "header.php";?>
-
   
 </div>
 <div class="header-space"></div>
+<a href="./?logout=yes">logout</a>
