@@ -43,10 +43,7 @@ $dots = "../";
     <?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
       <div class="main">
         <div id="error" style="display: none;">
-          Some error idk
-        </div>
-        <div id="optional_details" style="display: none;">
-          <?php require_once "optionalDetails.php";?>
+          Some error
         </div>
         <div id="mandatory_details" class="box">
           <div class="box-padding">
@@ -111,12 +108,15 @@ $dots = "../";
             </form>
           </div>
         </div>
+        <div id="optional_details" class="box" style="display: none;">
+          <?php require_once "optionalDetails.php";?>
+        </div>
+        <!--Scripts-->
+        <script type="text/javascript" src="../media/js/jquery.min.js"></script>
+        <script type="text/javascript" src="../media/js/birthday.js"></script>
+        <script type="text/javascript" src="../media/js/completeRegister.submit_ajax.js"></script>
+        <?php require_once __ROOT__."/inc/html/footer.php";?>
       </div>
-      <!--Scripts-->
-      <script type="text/javascript" src="../media/js/jquery.min.js"></script>
-      <script type="text/javascript" src="../media/js/birthday.js"></script>
-      <script type="text/javascript" src="../media/js/completeRegister.submit_ajax.js"></script>
-      <?php require_once __ROOT__."/inc/html/footer.php";?>
     </div>
   </body>
 </html>

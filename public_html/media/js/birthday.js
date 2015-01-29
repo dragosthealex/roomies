@@ -17,13 +17,12 @@ $(function()
 	{
 		getDays();
 	});
-
 });
 
 function getDays() 
 {
 	$('#bday').html('');
-	$('#bday').append($('<option class="option">').html('Select day') + "</option>");
+	$('#bday').append($('<option class="option">').html('Select day'));
 	month = $('#bmonth').val();
 	year = $('#byear').val();
 	days = daysInMonth(month, year);
