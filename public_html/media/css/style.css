@@ -97,13 +97,13 @@
 
 .box, .column-box {
 	margin: 16px;
+    box-shadow: 0px 6px 4px -4px rgba(0,0,0,0.04);
 	border-radius: 2px;
 	/*border: 1px solid #d2c7be;*/
 	border-width: 1px;
 	border-style: solid;
 	border-color: #e9e6e5 #e4e0df #d5d1d0;
 	background: #fff;
-    box-shadow: 0px 6px 4px -4px rgba(0,0,0,0.04);
 }
 
 .column-wrapper {
