@@ -1,39 +1,119 @@
 <?php
 require_once "../../inc/init.php";
 
-// If not logged in, wtf are you doin here brah?
+/*
+This script processes the data sent from the complete register page.
+It updates creates a profile for the current user and inserts the values.
+*/
+
 if(!LOGGED_IN)
 {
   require_once '../../inc/html/notfound.php';
   exit();
 }
 
-// Check whether the user has completed his profile
+//THE PROCESS STUFF
 $id = $_SESSION['user']['id'];
 $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE profile_filter_id = $id");
 $stmt->execute();
-$stmt->bindColumn(1, $profileId);
+$stmt->bindColumn(1, $dbId);
 $stmt->fetch();
 
-if($stmt->rowCount())
+// We check if all values are set. Most of these values are safe,
+// because are coming from selects. We'll check the names.
+if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
+         $_POST['b_month'],$_POST['b_day'],$_POST['country'],
+         $_POST['language'],$_POST['gender'],$_POST['randomKey'])) 
+  && ($_SESSION['randomKey'] == $_POST['randomKey']) && (!$stmt->rowCount()))
 {
-  // The user has completed his profile, redirect to home
+  // Get the values from POST
+  $firstName = htmlentities($_POST['first_name']);
+  $lastName = htmlentities($_POST['last_name']);
+  $bYear = $_POST['b_year'];
+  $bMonth = $_POST['b_month'];
+  $bDay = $_POST['b_day'];
+  $country = $_POST['country'];
+  $language = $_POST['language'];
+  $gender = $_POST['gender'];
+  $id = $_SESSION['user']['id'];
+
+  // Check if the ID exists. If not, it must be a problem
+  $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
+  $stmt->execute();
+  $stmt->bindColumn(1, $dbId);
+  $stmt->fetch();
+  if(!$stmt->rowCount())
+  {
+    // There was a problem
+    require_once __ROOT__."/inc/html/problem.php";
+    exit();
+  }
+
+  // Format the birthday
+  if($bDay < 10)
+  {
+    $bDay = "0".$bDay;
+  }
+  if($bMonth < 10)
+  {
+    $bMonth = "0".$bMonth;
+  }
+  $birthday = $bYear."-".$bMonth."-".$bDay;
+
+  // Get the values in ints from mapping
+  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_country = '$country'");
+  $stmt->execute();
+  $stmt->bindColumn(1, $mapCountry);
+  $stmt->fetch();
+  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_language = '$language'");
+  $stmt->execute();
+  $stmt->bindColumn(1, $mapLanguage);
+  $stmt->fetch();
+  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_gender = '$gender'");
+  $stmt->execute();
+  $stmt->bindColumn(1, $mapGender);
+  $stmt->fetch();
+
+  // Insert those values in rdetails
+  $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender)
+                          VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender')");
+  $stmt->execute();
+
   $stmt = null;
+  unset($_SESSION['notComplete']);
   header("Location: ../");
   exit();
 }
+else if($stmt->rowCount())
+{
+  header("Location: ../");
+  exit();
+}
+else if(isset($_POST['randomKey']))
+{
+  header("Location: ./?error");
+  exit();
+}
+
+
+
+// THE DISPLAY PAGE
+// Check whether the user has completed his profile
 
 // Logout
 if(isset($_GET['logout']))
 {
   session_destroy();
-  header("Location: .");
+  header("Location: ../");
   exit();
 }
-
+echo $_SESSION['randomKey'] == $_POST['randomKey'];
 // Generate random key, needed for accessing the process script
 $randKey = mt_rand();
-$_SESSION['randomKey'] = $randKey;
+if(!isset($_SESSION['randomKey']))
+{
+  $_SESSION['randomKey'] = $randKey;
+}
 
 $title = "Complete Registration";
 $dots = "../";
@@ -42,9 +122,6 @@ $dots = "../";
     <!--header-->
     <?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
       <div class="main">
-        <div id="error" style="display: none;">
-          Some error
-        </div>
         <div id="mandatory_details" class="box">
           <div class="box-padding">
             <h2 id="Complete_registration" class="h2">
@@ -53,7 +130,12 @@ $dots = "../";
             <p>
               The following details are mandatory for finishing your registration.
             </p>
-            <form action="process.php" name="details" method="POST">
+            <div id="error" <?php echo (isset($_GET['error']))?"":"style='display:none;'"?>>
+              <p style="color: red;">
+                You must complete all fields before continuing.
+              </p>
+            </div>
+            <form action="" name="details" method="POST">
               <div>
                 <input class="input" type="text" required="" title="2 to 20 characters" placeholder="First/Given Name" name="first_name"></input>
                 <input class="input input" type="text" required="" title="2 to 20 characters" placeholder="Last/Family Name" name="last_name"></input>
@@ -64,14 +146,14 @@ $dots = "../";
                       Birthday:
                     </p>
                   </span>
-                <select class="select has-submit" required="" id="byear" name="b_year" form="details">
-                  <option class="option" selected="" value="" >Select year</option>
+                <select class="select has-submit" id="byear" name="b_year">
+                  <option class="option" value="" selected="">Select year</option>
                 </select>
-                <select class="select has-submit" required="" id="bmonth" name="b_month" form="details">
-                  <option class="option" selected="" value="" >Select month</option>
+                <select class="select has-submit" id="bmonth" name="b_month">
+                  <option class="option" value="" selected="">Select month</option>
                 </select>
-                <select class="select has-submit" required="" id="bday" name="b_day" form="details">
-                  <option class="option" selected="" value="" >Select day</option>
+                <select class="select has-submit" id="bday" name="b_day">
+                  <option class="option" value="" selected="">Select day</option>
                 </select>
               </div>
               <div>
@@ -80,11 +162,11 @@ $dots = "../";
                     Nationality and language preference:
                   <p>
                 </span>
-                <select class="select has-submit" required="" name="country" form="details">
+                <select class="select has-submit" name="country">
                   <option class="option" value="" selected="">Select country</option>
                   <?php listCountryOptions();?>
                 </select>
-                <select class="select has-submit" required="" name="language" form="details">
+                <select class="select has-submit" name="language">
                   <option class="option" value="" selected="">Select language</option>
                   <?php listLanguageOptions();?>
                 </select>
@@ -95,16 +177,15 @@ $dots = "../";
                     I identify my gender as:
                   <p>
                 </span>
-                <select class="select has-submit" required="" name="gender" form="details">
+                <select class="select has-submit" name="gender">
                   <option class="option" value="">Select gender</option>
                   <option class="option" value="man">Man</option>
                   <option class="option" value="woman">Woman</option>
                   <option class="option" value="trans">Trans*</option>
                 </select>
               </div>
-              <input type="hidden" name="random_key" value="<?php echo $randKey;?>"></input>
-              <input type="hidden" name="id" value="<?php echo $_SESSION['user']['id'];?>"></input>
-              <input class="input-button block" type="button" value="Submit" onclick="return form_submit();"></input>
+              <input type="hidden" name="randomKey" value="<?php echo $_SESSION['randomKey'];?>"></input>
+              <input class="input-button block" type="submit" value="Submit"></input>
             </form>
           </div>
         </div>
@@ -114,7 +195,6 @@ $dots = "../";
         <!--Scripts-->
         <script type="text/javascript" src="../media/js/jquery.min.js"></script>
         <script type="text/javascript" src="../media/js/birthday.js"></script>
-        <script type="text/javascript" src="../media/js/completeRegister.submit_ajax.js"></script>
         <?php require_once __ROOT__."/inc/html/footer.php";?>
       </div>
     </div>

@@ -58,6 +58,55 @@
 	line-height: 69px;
 }
 
+.header-padding {
+	max-width: 976px;
+	margin: auto;
+}
+
+.header-div {
+	width: 40%;
+	height: 1px;
+	float: left;
+	display: inline-block;
+}
+
+.header-div.logo {
+	height: auto;
+	width: 20%;
+}
+
+.ul {
+	list-style: none;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+.header-menu {
+	padding: 0px 16px;
+	float: right;
+}
+
+.header-menu .li {
+	display: inline-block;
+	padding: 0px 5px;
+}
+
+.settings {
+	background-size: 25px 25px;
+	display: block;
+	width: 25px;
+	height: 25px;
+}
+
+.cog {
+	background-image: url('../img/gear.png');
+}
+
+.door {
+	background-image: url('../img/door.png');
+}
+
 .logo-link {
 	display: inline-block;
 	position: relative;
@@ -179,6 +228,11 @@
 .h2 {
 	font-weight: normal;
 	font-size: 1.5em;
+}
+
+.a {
+	text-decoration: none;
+	color: inherit;
 }
 
 .text {
@@ -338,6 +392,10 @@
 @media (min-width: 1441px) {
 	.main {
 		max-width: 1180px;
+	}
+
+	.header-padding {
+	max-width: 1180px;
 	}
 
 	.box-padding {

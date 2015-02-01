@@ -27,31 +27,10 @@ require_once '../inc/init.php';
 // Include the head
 $title = "Welcome Roomies";
 $dots = "";
-require_once __ROOT__."/inc/html/head.php";?>
-?>
+$home = 1;
+require_once __ROOT__."/inc/html/head.php";
+require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
-	<div class="header">
-		<a href="/" class="logo-link" title="Home">
-			<img src="media/img/logo.svg" alt="Roomies" class="logo-img">
-		</a>
-<?php
-if($ioStatus == "in")
-{
-?>
-	<div class="header">
-  	<a href="/" class="logo-link" title="Home">
-			<img src="media/img/logo.svg" alt="Roomies" class="logo-img">
-		</a>
-  </div>
-  <div class="header-space"></div>
-  <a href="./?logout=yes">logout</a>
-<?php
-}
-?>
-	</div>
-<div class="header-space"></div>
-
-<?php
 if(!LOGGED_IN)
 {
 ?>
@@ -143,12 +122,20 @@ if(isset($_SESSION['notComplete']))
   exit();
 }
 
+// Check if user has completed their details in $comp boolean
+$id = $_SESSION['user']['id'];
+$stmt = $con->prepare("SELECT completed FROM rdetails WHERE profile_filter_id = $id");
+$stmt->execute();
+$stmt->bindColumn(1, $comp);
+$stmt->fetch();
+
+
 ?>
   <!--Main content-->
   <div class="main">
-    THIS IS THE LOGGED IN PAGE
+    <?php if(!$comp){include "./complete-register/optionalDetails.php";}?>
+
     <?php require_once __ROOT__."/inc/html/footer.php";?>
-    
   </div>
 </body>
 </html>
