@@ -22,7 +22,7 @@ To do:
         </a>
       </li>
       <li class="li">
-        <a class="a settings door" href="/?logout=yes" title="Logout">
+        <a class="a settings door" href="?logout=yes" title="Logout">
         </a>
       </li>
       <li class="li">
