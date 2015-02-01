@@ -10,24 +10,29 @@ Please read the gantt chart note for this task (task 10)
 
 // Initialise the session (do not modify this)
 define("REQUIRE_SESSION", true);
-include '/../inc/init.php';
-?>
+include '../../inc/init.php';
 
-<!--The header bar-->
-<?php include '/../inc/html/header.in.php';?>
-<html>
-  <body>
-  <!--Start building page from here-->
-  <p> Hello World </p>
-  <?php
-  echo "<p>Hello World</p>";
-  if ($_GET[LOGGEDIN] == 0) {
-  ?>
-  <?php  
-  } elseif ($_GET[LOGGEDIN] == 1 && $_GET[PROFILE] == 0) {
-  ?>
-  <?php  
-  } else {
-  ?>
-  </body>
-</html>
+// Controls the relative path of the stylesheets in "head.php"
+$dots = "../";
+// The title of the page
+if(!isset($_GET['u']))
+{
+  // I'm on my profile
+  $title = "My profile";
+  $mine = true;
+}
+else
+{
+  // I'm on another user's profile
+  $title = "$_GET[u]'s profile";
+}
+// Include head and header
+require_once __ROOT__."/inc/html/head.php";
+require_once __ROOT__."/inc/html/header.$ioStatus.php";
+// Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footer
+?>
+<!-- Main content -->
+<div class="main">
+  Something
+
+<?php require_once __ROOT__."/inc/html/footer.php";?>

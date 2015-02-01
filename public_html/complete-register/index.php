@@ -29,13 +29,12 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
   // Get the values from POST
   $firstName = htmlentities($_POST['first_name']);
   $lastName = htmlentities($_POST['last_name']);
-  $bYear = $_POST['b_year'];
-  $bMonth = $_POST['b_month'];
-  $bDay = $_POST['b_day'];
-  $country = $_POST['country'];
-  $language = $_POST['language'];
-  $gender = $_POST['gender'];
-  $id = $_SESSION['user']['id'];
+  $bYear = htmlentities($_POST['b_year']);
+  $bMonth = htmlentities($_POST['b_month']);
+  $bDay = htmlentities($_POST['b_day']);
+  $country = htmlentities($_POST['country']);
+  $language = htmlentities($_POST['language']);
+  $gender = htmlentities($_POST['gender']);
 
   // Check if the ID exists. If not, it must be a problem
   $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
@@ -121,86 +120,81 @@ $dots = "../";
 <?php require_once __ROOT__."/inc/html/head.php";?>
     <!--header-->
     <?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
-      <div class="main">
-        <div id="mandatory_details" class="box">
-          <div class="box-padding">
-            <h2 id="Complete_registration" class="h2">
-              Complete registration
-            </h2>
-            <p>
-              The following details are mandatory for finishing your registration.
+    <div class="main">
+      <div id="mandatory_details" class="box">
+        <div class="box-padding">
+          <h2 id="Complete_registration" class="h2">
+            Complete registration
+          </h2>
+          <p>
+            The following details are mandatory for finishing your registration.
+          </p>
+          <div id="error" <?php echo (isset($_GET['error']))?"":"style='display:none;'"?>>
+            <p style="color: red;">
+              You must complete all fields before continuing.
             </p>
-            <div id="error" <?php echo (isset($_GET['error']))?"":"style='display:none;'"?>>
-              <p style="color: red;">
-                You must complete all fields before continuing.
-              </p>
-            </div>
-            <form action="" name="details" method="POST">
-              <div>
-                <input class="input" type="text" required="" title="2 to 20 characters" placeholder="First/Given Name" name="first_name"></input>
-                <input class="input input" type="text" required="" title="2 to 20 characters" placeholder="Last/Family Name" name="last_name"></input>
-              </div>
-              <div>
-                  <span>
-                    <p>
-                      Birthday:
-                    </p>
-                  </span>
-                <select class="select has-submit" id="byear" name="b_year">
-                  <option class="option" value="" selected="">Select year</option>
-                </select>
-                <select class="select has-submit" id="bmonth" name="b_month">
-                  <option class="option" value="" selected="">Select month</option>
-                </select>
-                <select class="select has-submit" id="bday" name="b_day">
-                  <option class="option" value="" selected="">Select day</option>
-                </select>
-              </div>
-              <div>
-                <span>
-                  <p>
-                    Nationality and language preference:
-                  <p>
-                </span>
-                <select class="select has-submit" name="country">
-                  <option class="option" value="" selected="">Select country</option>
-                  <?php listCountryOptions();?>
-                </select>
-                <select class="select has-submit" name="language">
-                  <option class="option" value="" selected="">Select language</option>
-                  <?php listLanguageOptions();?>
-                </select>
-              </div>
-              <div>
-                <span>
-                  <p>
-                    I identify my gender as:
-                  <p>
-                </span>
-                <select class="select has-submit" name="gender">
-                  <option class="option" value="">Select gender</option>
-                  <option class="option" value="man">Man</option>
-                  <option class="option" value="woman">Woman</option>
-                  <option class="option" value="trans">Trans*</option>
-                </select>
-              </div>
-              <input type="hidden" name="randomKey" value="<?php echo $_SESSION['randomKey'];?>"></input>
-              <input class="input-button block" type="submit" value="Submit"></input>
-            </form>
           </div>
+          <form action="" name="details" method="POST">
+            <div>
+              <input class="input" type="text" required="" title="2 to 20 characters" placeholder="First/Given Name" name="first_name"></input>
+              <input class="input input" type="text" required="" title="2 to 20 characters" placeholder="Last/Family Name" name="last_name"></input>
+            </div>
+            <div>
+                <span>
+                  <p>
+                    Birthday:
+                  </p>
+                </span>
+              <select class="select has-submit" id="byear" name="b_year">
+                <option class="option" value="" selected="">Select year</option>
+              </select>
+              <select class="select has-submit" id="bmonth" name="b_month">
+                <option class="option" value="" selected="">Select month</option>
+              </select>
+              <select class="select has-submit" id="bday" name="b_day">
+                <option class="option" value="" selected="">Select day</option>
+              </select>
+            </div>
+            <div>
+              <span>
+                <p>
+                  Nationality and language preference:
+                <p>
+              </span>
+              <select class="select has-submit" name="country">
+                <option class="option" value="" selected="">Select country</option>
+                <?php listCountryOptions();?>
+              </select>
+              <select class="select has-submit" name="language">
+                <option class="option" value="" selected="">Select language</option>
+                <?php listLanguageOptions();?>
+              </select>
+            </div>
+            <div>
+              <span>
+                <p>
+                  I identify my gender as:
+                <p>
+              </span>
+              <select class="select has-submit" name="gender">
+                <option class="option" value="">Select gender</option>
+                <option class="option" value="man">Man</option>
+                <option class="option" value="woman">Woman</option>
+                <option class="option" value="trans">Trans*</option>
+              </select>
+            </div>
+            <input type="hidden" name="randomKey" value="<?php echo $_SESSION['randomKey'];?>"></input>
+            <input class="input-button block" type="submit" value="Submit"></input>
+          </form>
         </div>
-        <div id="optional_details" class="box" style="display: none;">
-          <?php require_once "optionalDetails.php";?>
-        </div>
-        <!--Scripts-->
-        <script type="text/javascript" src="../media/js/jquery.min.js"></script>
-        <script type="text/javascript" src="../media/js/birthday.js"></script>
-        <?php require_once __ROOT__."/inc/html/footer.php";?>
       </div>
-    </div>
-  </body>
-</html>
-
+      <div id="optional_details" class="box" style="display: none;">
+        <?php require_once "optionalDetails.php";?>
+      </div>
+      <!--Scripts-->
+      <script type="text/javascript" src="../media/js/jquery.min.js"></script>
+      <script type="text/javascript" src="../media/js/birthday.js"></script>
+<?php require_once __ROOT__."/inc/html/footer.php";?>
 <?php
 function listCountryOptions()
 {

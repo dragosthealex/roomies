@@ -93,11 +93,7 @@ if(!LOGGED_IN)
 				</form>
 			</div>
 		</div>
-		<?php require_once __ROOT__."/inc/html/footer.php";?>
-	</div>
-</body>
-</html>
-
+<?php require_once __ROOT__."/inc/html/footer.php";?>
 <?php
 exit();
 }// if(!LOGGED_IN)

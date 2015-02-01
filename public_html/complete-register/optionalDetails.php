@@ -8,7 +8,7 @@
     </p>
     <form action="processOpt.php" name="opt_details" method="POST">
       <div>
-        <input class="input" type="text" required="" title="2 to 20 characters" placeholder="Mock stuff here" name="fi"></input>
+        <input class="input" type="text" title="2 to 20 characters" placeholder="Mock stuff here" name="fi"></input>
       </div>
       <div>
         <span>
@@ -16,16 +16,16 @@
             Again mock:
           </p>
         </span>
-        <select class="select has-submit" required="" id="shit1" name="sel1" form="opt_details">
+        <select class="select has-submit" id="shit1" name="sel1" form="opt_details">
           <option class="option" selected="" value="" >Default Stuff</option>
         </select>
-        <select class="select has-submit" required="" id="shit2" name="sel2" form="opt_details">
+        <select class="select has-submit" id="shit2" name="sel2" form="opt_details">
           <option class="option" selected="" value="" >Select this stuff</option>
           <option class="option" value="2" >No, select this</option>
         </select>
       </div>
       <input class="input-button" type="submit" style="margin: 16px 0px 0px;" value="Submit"></input>
-      <button class="input-button" style="margin: 16px 0px 0px; float: right;" onclick="document.getElementById('opt-details').style.display='none';">Hide</button>
+      <button class="input-button" style="margin: 16px 0px 0px; float: right;" onclick="document.getElementById('opt-details').style.display='none'; return false;">Hide</button>
     </form>
   </div>
 </div>

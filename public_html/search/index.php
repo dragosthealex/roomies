@@ -19,6 +19,8 @@ $user = array(
 
 // Include the head of the page
 $title = 'Search';
+// Variable wich controls the relative path of /inc/media folder (used in head.php)
+$dots = "../";
 //include __ROOT__.'/inc/html/head.php';
 
 // Include the header of the page
@@ -26,26 +28,12 @@ $title = 'Search';
 //include __ROOT__.'/inc/html/header.in.php';
 
 // While head.php and header.in.php haven't been made, I'll just do them here myself
+// Made.
+require_once __ROOT__."/inc/html/head.php";
+require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<base href="http://localhost/">-->
-    <title><?=$title?></title>
-    <link rel="stylesheet" href="media/css/style.css">
-</head>
-<body class="body" onload="window.location.hash||(window.signin&&window.signin.email.focus())">
-    <!-- Top bar -->
-    <div class="header">
-        <a href="." class="logo-link">
-            <img src="../media/img/logo.svg" alt="Roomies" class="logo-img">
-        </a>
-    </div>
-    <div class="header-space"></div>
-    <!-- Main content -->
-    <div class="main">
+<!-- Main content -->
+<div class="main">
 <?php
 
 // TODO: Output the top of the search page, with the ignore form

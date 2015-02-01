@@ -16,3 +16,7 @@ For the sake of layout, let the body/html be closed on every page
 		<li class="footer-item"><a href="#" class="footer-link">Cookies</a></li>
 	</ul>
 </div>
+
+</div>
+</body>
+</html>
