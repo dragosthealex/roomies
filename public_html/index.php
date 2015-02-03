@@ -111,7 +111,7 @@ if(isset($_GET['logout']))
 }
 
 //Check if the user completed their profile
-if(isset($_SESSION['notComplete']))
+if(isset($_SESSION['notComplete']) && ($_SESSION['notComplete'] == true))
 {
 	header("Location: complete-register/");
   exit();
@@ -123,7 +123,6 @@ $stmt = $con->prepare("SELECT completed FROM rdetails WHERE profile_filter_id = 
 $stmt->execute();
 $stmt->bindColumn(1, $comp);
 $stmt->fetch();
-
 
 ?>
   <!--Main content-->
