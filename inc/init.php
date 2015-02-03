@@ -63,7 +63,8 @@ try
   $con = new PDO("mysql:host=$database_host;dbname=$group_dbnames[0]", $database_user, $database_pass);
 } catch (PDOException $e)
 {
-  echo 'Connection failed: ' . $e->getMessage();
+  // Exit the script if the database conneciton fails.
+  exit('Connection failed: ' . $e->getMessage());
 }
 
 ?>
