@@ -129,10 +129,7 @@ $stmt->fetch();
   <!--Main content-->
   <div class="main">
     <?php if(!$comp){include "./complete-register/optionalDetails.php";}?>
-
-
-
-    <?php require_once __ROOT__."/inc/html/footer.php";?>
+<?php require_once __ROOT__."/inc/html/footer.php";?>
   </div>
 </body>
 </html>
