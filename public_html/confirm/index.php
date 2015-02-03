@@ -126,6 +126,7 @@ function completeReg($con, $username)
   $stmt = $con->prepare("SELECT user_id FROM rusers WHERE username = '$username'");
   $stmt->execute();
   $stmt->bindColumn(1, $id);
+  $stmt->fetch();
 
   $stmt = $con->prepare("DELETE FROM rtempusers WHERE temp_username = '$username'");
   $stmt->execute();
@@ -134,6 +135,7 @@ function completeReg($con, $username)
   $_SESSION['user']['username'] = $username;
   $_SESSION['user']['id'] = $id;
   $_SESSION['user']['email'] = $result['temp_email'];
+  $_SESSION['notComplete'] = true;
 
   $stmt = null;
   header('Location: ../complete-register/');
