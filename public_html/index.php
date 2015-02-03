@@ -3,7 +3,6 @@
 Do not initialise REQUIRE_SESSION. We do not need to check that. Initialise. Output
 homepage content.
 */
-
 // Includes the init file
 require_once '../inc/init.php';
 // If logged out, show homepage, then exit the script.
@@ -130,6 +129,8 @@ $stmt->fetch();
   <!--Main content-->
   <div class="main">
     <?php if(!$comp){include "./complete-register/optionalDetails.php";}?>
+
+
 
     <?php require_once __ROOT__."/inc/html/footer.php";?>
   </div>

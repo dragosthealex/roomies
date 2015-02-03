@@ -187,14 +187,29 @@
 	color: #534e4d;
 }
 
+.details-box {
+	float : left;
+}
 .profile-box {
 	overflow: hidden;
 }
 
 .profile-picture {
 	float: left;
+	/*height: 180px;
+	width:180px;*/
 	margin: 0 .8em 1em 0;
-	height: 3.6em;
+ height: 3.6em;
+}
+
+.main-pic {
+	display: block;
+	height: 6em;
+	width: 6em;
+	margin: 0 .8em 0 0;
+	background-image: url('../img/profile-picture-placeholder.gif');
+	background-size: auto 6em;
+	float: left;
 }
 
 .details {
