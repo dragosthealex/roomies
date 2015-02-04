@@ -166,7 +166,7 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 			<div class="column-2">
 				<div class="column-box">
 					<div class="box-padding">
-			    	<p class="titletext">
+			    	<p class="h2">
 			    		Recent Matches
 			    	</p> 
 				    <ul class="ul">
@@ -211,7 +211,7 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 			<div class="column-2">
 				<div class="column-box">
 					<div class="box-padding"> 
-			    	<p class="titletext"> Popular Accommodation </p>
+			    	<p class="h2"> Popular Accommodation </p>
 			    	<ul class="ul">
 			    		<li class="box accommodation"> 
 			    			<div class="box-padding">
