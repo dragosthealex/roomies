@@ -53,7 +53,7 @@ class Question
     
     foreach($answerIds as $answerId)
     {
-      $answer = new Answer($answerId);
+      $answer = new Answer($con, $answerId);
       array_push($answers, $answer);
     }
 
@@ -147,10 +147,8 @@ class Question
     if(isset($this->answersForMe) && $this->answerForMe)
     {
       // Get the text of the answer for me
-      $forMeId = $this->answerForMe;
-      $forMe = new Answer($forMeId)->getText();
-
-      $answers = $this->answers;
+      $forMe = new Answer($con, $this->answerForMe);
+      $forMe = $forMe->getText();
 
       $forThem = $this->answersForThem;
       $forThem = explode(",", $forThem);
@@ -159,8 +157,8 @@ class Question
       $forThemText = array();
       foreach ($forThem as $answerId)
       {
-        $acceptedAnswerText = new Answer($answerId)->getText();
-        array_push($forThemText, $acceptedAnswerText);
+        $acceptedAnswer = new Answer($con, $answerId);
+        array_push($forThemText, $acceptedAnswer->getText());
       }
 
       $importance = $this->importance;

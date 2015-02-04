@@ -22,7 +22,7 @@ class Answer
   public function __construct($con, $id)
   {
     // Query the database for the answer with the given $id
-    $stmt = $con->prepare("SELECT answer_text FROM answers WHERE answer_id = '$id'");
+    $stmt = $con->prepare("SELECT answer_text FROM ranswers WHERE answer_id = '$id'");
     $stmt->execute();
 
     // If the answer does not exist, throw an exception and return
@@ -56,7 +56,7 @@ class Answer
    *
    * @return $text The text of the answer.
    */
-  public function gettext(message)()
+  public function getText()
   {
     return $this->text;
   }
