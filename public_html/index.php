@@ -128,10 +128,76 @@ $stmt->fetch();
   <!--Main content-->
   <div class="main">
     <?php if(!$comp){include "./complete-register/optionalDetails.php";}?>
+    <div class = "left-box">
+
+		<p class = "greeting"> Hello, username! </p>
+		<div class = "profile-box">
+		<img class = "profile-picture" src="profile.jpg" alt="profile picture" style="width:125px;height:125px;" >
+		</div>
+		
+	    	<ul class = "ul">
+	    	
+	    		<li class = "link-button"> <a href = "#friends" class = "links">Friend Requests </a></li>
+	    		<br>
+	    		<li class = "link-button"> <a href = "#inbox" class = "links">Messages </a></li>
+	    		<br>
+	    		<li class = "link-button"> <a href = "#reviews" class = "links">Review </a></li>
+	    		<br>
+	    	
+	    	</ul>
+	    </div>
+	</div>
+
+
+				<div class = "box-padding">
+				    <div class = "searches"> 
+				    	<p class = "titletext">Recent Matches</p> 
+					    <ul class = "search-element">
+					    <li class = "box">
+					    	<div class = "profile-box">
+					    		<img class = "profile-picture" src="profile.jpg" alt="profile picture"> 
+					    		<p> Lana del Ray </p>
+					    	</div> 
+					    	<br>
+					    <li class = "box"> 
+					    	<div class = "profile-box">
+					    		<img class = "profile-picture" src="profile.jpg" alt="profile picture">
+					    		<p>John Smith</p>
+					    	</div>
+					    	
+					    	<p class = "details"> details stuff </p>
+					    </li>
+					    <br>
+						</ul>
+					</div>
+				</div>
 
 
 
-    <?php require_once __ROOT__."/inc/html/footer.php";?>
+
+    <div class = "reviews"> 
+    	<p class = "titletext"> Popular Accommodation </p>
+    	<ul class = "review-element">
+    		<li class = "box", class = "box-padding"> <p> Whitworth Park </p>
+    			<img class = "housepic" src = "C:\Users\Mitali\Pictures\1938805.jpg" alt="pic">
+    		</li>
+    		<br>
+    		<li class = "box", class = "box-padding"> 
+    			<p>Dalton-Ellis</p>
+    			<img class = "housepic" src = "C:\Users\Mitali\Pictures\1938805.jpg" alt="pic">
+    		</li>
+
+    		<br>
+    		<li class = "box", class = "box-padding">    			
+    			<p>Dalton-Ellis</p>
+    			<img class = "housepic" src = "C:\Users\Mitali\Pictures\1938805.jpg" alt="pic"
+    		></li>
+
+    	</ul>
+
+    </div>
+
+<?php require_once __ROOT__."/inc/html/footer.php";?>
   </div>
 </body>
 </html>
