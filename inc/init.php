@@ -31,6 +31,10 @@ session_regenerate_id();
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
 
+if(LOGGED_IN)
+{
+  $user = new User($con, $_SESSION['user']['id']);
+}
 // The variable that determines if current user is admin. for now, true by default
 define("ADMIN", TRUE);
 
