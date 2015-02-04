@@ -147,7 +147,7 @@
 
 .box, .column-box {
 	margin: 16px;
-    box-shadow: 0px 6px 4px -4px rgba(0,0,0,0.04);
+	box-shadow: 0px 6px 4px -4px rgba(0,0,0,0.1);
 	border-radius: 2px;
 	/*border: 1px solid #d2c7be;*/
 	border-width: 1px;
@@ -157,7 +157,8 @@
 }
 
 .column-wrapper {
-	margin: 16px 0 16px 16px;
+	margin: 16px 0 -16px 16px;
+	padding: 0 0 16px;
 	overflow: hidden;
 }
 
