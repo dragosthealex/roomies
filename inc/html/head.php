@@ -11,7 +11,7 @@ To do:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?php echo $title; ?></title>
-  <link rel="stylesheet" type="text/css" href="<?php echo $dots;?>media/css/style.css">
+  <title><?=$title?></title>
+  <link rel="stylesheet" type="text/css" href="<?=$webRoot?>/media/css/style.css">
 </head>
-  <body class="body">
+<body class="body">

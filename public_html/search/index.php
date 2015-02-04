@@ -19,22 +19,11 @@ $user = array(
 
 // Include the head of the page
 $title = 'Search';
-// Variable wich controls the relative path of /inc/media folder (used in head.php)
-$dots = "../";
-//include __ROOT__.'/inc/html/head.php';
+include __ROOT__.'/inc/html/head.php';
 
 // Include the header of the page
 // We don't need to use $ioStatus here, since it MUST be "in"
-//include __ROOT__.'/inc/html/header.in.php';
-
-// While head.php and header.in.php haven't been made, I'll just do them here myself
-// Made.
-require_once __ROOT__."/inc/html/head.php";
-require_once __ROOT__."/inc/html/header.$ioStatus.php";
-?>
-<!-- Main content -->
-<div class="main">
-<?php
+include __ROOT__.'/inc/html/header.in.php';
 
 // TODO: Output the top of the search page, with the ignore form
 // If the user is ignoring some filters, put them into $ignore

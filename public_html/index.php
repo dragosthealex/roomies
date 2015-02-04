@@ -25,16 +25,13 @@ require_once '../inc/init.php';
 
 // Include the head
 $title = "Welcome Roomies";
-$dots = "";
-$home = 1;
+$rootDirectory = 1;
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
 if(!LOGGED_IN)
 {
 ?>
-	<!-- Main content -->
-	<div class="main">
 		<!-- Hidden title -->
 		<div class="not-mobile banner">
 			<header>
@@ -92,88 +89,85 @@ if(!LOGGED_IN)
 				</form>
 			</div>
 		</div>
-<?php require_once __ROOT__."/inc/html/footer.php";?>
 <?php
-exit();
-}// if(!LOGGED_IN)
-
-
+} // if (!LOGGED_IN)
 // Else, we show the homepage for logged in users
+else
+{
+	if(isset($_GET['logout']))
+	{
+	  session_destroy();
+	  header("Location: .");
+	  exit();
+	}
+
+	//Check if the user completed their profile
+	if(isset($_SESSION['notComplete']) && ($_SESSION['notComplete'] == true))
+	{
+		header("Location: complete-register/");
+	  exit();
+	}
+
+	// Check if user has completed their details in $comp boolean
+	$id = $_SESSION['user']['id'];
+	$stmt = $con->prepare("SELECT completed FROM rdetails WHERE profile_filter_id = $id");
+	$stmt->execute();
+	$stmt->bindColumn(1, $comp);
+	$stmt->fetch();
+
+	// For mock
+	$userImagePath = $webRoot.'/media/img/profile-picture-placeholder.gif';
 ?>
 <!--html code for logged in homepage-->
-
-<?php 
-if(isset($_GET['logout']))
-{
-  session_destroy();
-  header("Location: .");
-  exit();
-}
-
-//Check if the user completed their profile
-if(isset($_SESSION['notComplete']) && ($_SESSION['notComplete'] == true))
-{
-	header("Location: complete-register/");
-  exit();
-}
-
-// Check if user has completed their details in $comp boolean
-$id = $_SESSION['user']['id'];
-$stmt = $con->prepare("SELECT completed FROM rdetails WHERE profile_filter_id = $id");
-$stmt->execute();
-$stmt->bindColumn(1, $comp);
-$stmt->fetch();
-
-// For mock
-$userImagePath = 'media/img/profile-picture-placeholder.gif';
-?>
-  <!--Main content-->
-  <div class="main">
     <div class="box">
     	<div class="box-padding">
 				<div class="profile-box">
-					<div class="main-pic" style="background-image: url('<?php echo $userImagePath;?>');">
-					</div>
+					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');"></div>
 					<div style="float:left;">
 						<h2 class="h2">
 							Shit Fuck
 						</h2>
 						<div class="links-wrapper">
 				    	<ul class="ul">
-				    		<li class="float-left"> 
+				    		<li class="float-left">
 				    			<a class="link-button" href="#friends">
 				    				Friend Requests
 				    			</a>
 				    		</li>
-				    		<li class="float-left"> 
+				    		<li class="float-left">
 				    			<a href="#inbox" class="link-button">
 				    				Messages
 				    			</a>
 				    		</li>
-				    		<li class="float-left"> 
+				    		<li class="float-left">
 				    			<a href="#reviews" class="link-button">
 				    				Review
 				    			</a>
 				    		</li>
-				    		<li class="float-left"> 
+				    		<li class="float-left">
 				    			<a href="search/" class="link-button">
 				    				Search
 				    			</a>
-				    		</li>   	
+				    		</li>
 				    	</ul>
 			    	</div>
 		    	</div>
 		    </div>
 		  </div>
 		</div>
-		<?php if(!$comp){include "./complete-register/optionalDetails.php";}?>
+<?php
+if (!$comp)
+{
+	include "./complete-register/optionalDetails.php";
+}
+?>
 		<div class="column-wrapper">
 			<div class="column-2">
 				<div class="column-box">
 					<div class="box-padding">
 			    	<p class="h2">
 			    		Recent Matches
-			    	</p> 
+			    	</p>
 				    <ul class="ul">
 				    	<li class="box">
 					    	<div class="box-padding">
@@ -192,7 +186,7 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 					    			</span>
 					    	</div>
 				    	</li>
-				    	<li class="box"> 
+				    	<li class="box">
 				    		<div class="box-padding">
 					    		<p class="text">
 					    			<a href="profile?id=5436" class="link">
@@ -215,12 +209,12 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 			</div>
 			<div class="column-2">
 				<div class="column-box">
-					<div class="box-padding"> 
+					<div class="box-padding">
 			    	<p class="h2"> Popular Accommodation </p>
 			    	<ul class="ul">
-			    		<li class="box accommodation"> 
+			    		<li class="box accommodation">
 			    			<div class="box-padding">
-				    			<p> 
+				    			<p>
 				    				Whitworth Park
 				    			</p>
 				    			<img class="housepic" src="media/img/banana.jpeg">
@@ -231,7 +225,7 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 				    			</div>
 			    			</div>
 			    		</li>
-			    		<li class="box accommodation"> 
+			    		<li class="box accommodation">
 			    			<div class="box-padding">
 				    			<p>
 				    				Dalton-Ellis
@@ -244,10 +238,10 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 				    			</div>
 			    			</div>
 			    		</li>
-			    		<li class="box accommodation"> 
-			    			<div class="box-padding">    			
+			    		<li class="box accommodation">
+			    			<div class="box-padding">
 				    			<p>
-				    				Rusholme 
+				    				Rusholme
 				    			</p>
 				    			<img class="housepic" src="media/img/banana.jpeg">
 				    			<div class="house-description">
@@ -262,7 +256,7 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 			</div>
 		</div>
 	</div>
-	<?php require_once __ROOT__."/inc/html/footer.php";?>
-  </div>
-</body>
-</html>
+<?php
+} // else
+require_once __ROOT__."/inc/html/footer.php";
+?>

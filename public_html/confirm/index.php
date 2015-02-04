@@ -15,7 +15,7 @@ define('REQUIRE_SESSION', FALSE);
 require_once '../../inc/init.php';
 
 // If these are set, proceed. Else, something wrong happened
-if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerConfirmPassword'], 
+if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerConfirmPassword'],
   $_POST['registerUsername']))
 {
   $username = htmlentities(filter_input(INPUT_POST, 'registerUsername', FILTER_SANITIZE_STRING));
@@ -24,7 +24,7 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   $password2 = htmlentities(filter_input(INPUT_POST, 'registerConfirmPassword', FILTER_SANITIZE_STRING));
 
   // Check if invalid characters
-  if($password1 != $_POST['registerPassword'] || $password2 != $_POST['registerConfirmPassword'] 
+  if($password1 != $_POST['registerPassword'] || $password2 != $_POST['registerConfirmPassword']
     || $email != $_POST['registerEmail'] || $username != $_POST['registerUsername'])
   {
     header('Location: ../?err=invalid');
@@ -39,7 +39,7 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   }
 
   // Check if email or username already registered
-  $stmt = $con->prepare("SELECT user_id FROM rusers 
+  $stmt = $con->prepare("SELECT user_id FROM rusers
                           WHERE user_email = '$email' OR username = '$username'");
   $stmt->execute();
   if($stmt->rowCount() >= 1)
@@ -49,7 +49,7 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
     exit();
   }
 
-  $stmt = $con->prepare("SELECT temp_id FROM rtempusers 
+  $stmt = $con->prepare("SELECT temp_id FROM rtempusers
                           WHERE temp_email = '$email' OR temp_username = '$username'");
   $stmt->execute();
   if($stmt->rowCount() >= 1)
@@ -67,7 +67,7 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   // Create confirmation code, insert user in temp table
   $confCode = substr(mt_rand(), 0, 6);
 
-  $stmt = $con->prepare("INSERT INTO rtempusers (temp_email, temp_username, temp_pass, temp_salt, conf) 
+  $stmt = $con->prepare("INSERT INTO rtempusers (temp_email, temp_username, temp_pass, temp_salt, conf)
                          VALUES ('$email', '$username', '$password', '$salt', '$confCode')");
   $stmt->execute();
 
@@ -79,18 +79,18 @@ if(isset($_POST['registerEmail'], $_POST['registerPassword'], $_POST['registerCo
   header("Location: ./?user=$username&conf=$confCode");
   // Send mail to user with conf code, disabled for now
   /*
-  
+
   $to = "$email";
   $subject = "Confirmation Token";
-  
+
   $message = "Hello, dear user,<br><br> Here is your confirmation token. Please copy
               it in the confirmation box and submit.<br>    $confCode<br><br>Regards,
                Roomies team.
-  
+
   $headers = "MIME-Version: 1.0" . "\r\n";
   $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
   $headers .= 'From: <webmaster@roomies.co.uk >';
-  
+
   if(!mail($to, $subject, $message, $headers))
   {
     $error_msg .= "Problem with sending mail";
@@ -200,11 +200,10 @@ if(isset($_GET['logout']))
 }
 
 $title = "Confirm";
-$dots = "../"
 
 ?>
 <?php require_once __ROOT__."/inc/html/head.php";?>
-    <?php require_once __ROOT__."/inc/html/header.".$ioStatus.".php";?>
+    <?php require_once __ROOT__."/inc/html/header.$ioStatus.php";?>
     <!--Header, etc-->
 
     <!-- test form-->
@@ -214,5 +213,3 @@ $dots = "../"
       <a href="./?logout=yes">logout</a>
     </form>
     <?php require_once __ROOT__."/inc/html/footer.php";?>
-  </body>
-</html>

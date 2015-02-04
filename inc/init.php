@@ -70,4 +70,6 @@ try
   exit('Connection failed: ' . $e->getMessage());
 }
 
+// If called from the root directory, set $webRoot to "", otherwise to "../"
+$webRoot = isset($rootDirectory) ? "." : "..";
 ?>
