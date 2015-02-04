@@ -44,7 +44,7 @@ class User
     $stmt->execute();
     $stmt->bindColumn(1,$id);
     $stmt->bindColumn(2,$username);
-    $user_email->bindColumn(3,$email);
+    $stmt->bindColumn(3,$email);
     $stmt->fetch();
 
     $this->id = $id;
@@ -80,11 +80,11 @@ class User
     $details = $this->details;
 
     // We do not need the first five, because they are already unmapped
-    $details[0] = '';
-    $details[1] = '';
-    $details[2] = '';
-    $details[3] = '';
-    $details[4] = '';
+    $details['profile_filter_id'] = '';
+    $details['first_name'] = '';
+    $details['last_name'] = '';
+    $details['completed'] = '';
+    $details['birthday'] = '';
 
     $trueDetails = array();
 
@@ -92,10 +92,11 @@ class User
     {
       if($value)
       {
-        $stmt = $con->prepare("SELECT $key FROM rfiltersmap WHERE filter_value = $value");
+        $stmt = $con->prepare("SELECT map_".$key." FROM rfiltersmap WHERE filter_value = $value");
         $stmt->execute();
         $stmt->bindColumn(1,$filter);
-        array_push($trueDetails, $filter);
+        $stmt->fetch();
+        array_push($trueDetails, ucwords($filter));
       }
     }
 
@@ -183,16 +184,16 @@ class User
     $con = $this->con;
     $userId = $this->id;
 
-    $stmt = $con->prepare("SELECT value FROM rsiteinfo WHERE info = 'no_questions'");
+    //return new Question($con, 1, $userId);
+    $stmt = $con->prepare("SELECT question_id FROM rquestionsmap");
     $stmt->execute();
-    $stmt->bindColumn(1, $no_questions);
-    $stmt->fetch();
+    $no_questions = $stmt->rowCount();
 
     $questions = array();
-    for($i=1; $i<=$no_questions; $i++)
+    for($i=0; $i<$no_questions; $i++)
     {
       // Create a new question with the given id, retreiving the values for the user
-      $question = new Question($con, $i, $userId);
+      $question = new Question($con, $i+1, $userId);
       array_push($questions, $question);
     }
 
@@ -209,18 +210,27 @@ class User
   * @param - $number, if a valid number, represents the question id
   * @return - $question(s) either one question or all questions in array
   */
-  public function getQuestion($number)
+  public function getQuestion($number=-1)
   {
     $questions = $this->questions;
-    if(isset($questions["$number"]))
+    if(isset($questions[$number]))
     {
-      return $questions["$number"];
+      $number--;
+      return $questions[$number];
     }
     else
     {
       return $questions;
     }
   }
+
+  /**
+  * Function detilsString()
+  *
+  * Returns the details formated for output
+  *
+  * @return - $details, the string containing html formatted output
+  */
 }
 
 ?>

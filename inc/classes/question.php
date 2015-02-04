@@ -162,7 +162,7 @@ class Question
       }
 
       $importance = $this->importance;
-
+      
       $question = 
       "
       <div class='question'>
