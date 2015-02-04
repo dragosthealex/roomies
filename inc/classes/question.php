@@ -7,7 +7,7 @@
 * Represents a question. Has question text, question answers (with text and values), has importance
 *
 */
-class Question()
+class Question
 {
   // The db handler
   private $con;
@@ -44,7 +44,7 @@ class Question()
     $stmt = $con->prepare("SELECT question_text FROM rquestionsmap WHERE question_id = $id");
     $stmt->execute();
     $stmt->bindColumn(1, $text);
-    $stmt->execute();
+    $stmt->fetch();
 
     $this->text = $text;
 
@@ -52,7 +52,8 @@ class Question()
     $answers = array();
     $stmt = $con->prepare("SELECT answer_text FROM ranswers WHERE answer_question_id = $id");
     $stmt->execute();
-    while ($answer = $stmt->fetch())
+    $stmt->bindColumn(1, $answer);
+    while ($stmt->fetch())
     {
       array_push($answers, $answer);
     }
@@ -67,11 +68,17 @@ class Question()
     The third will be the importance of the question
     */
 
-    $stmt = $con->prepare("SELECT question".$id." FROM ruser_qa WHERE qa_user_id = ".$userId);
-    $stmt->execute();
-    $stmt->bindColumn(1, $questionInfo);
-    $stmt->fetch();
-
+    if($userId)
+    {
+      $stmt = $con->prepare("SELECT question".$id." FROM ruser_qa WHERE qa_user_id = ".$userId);
+      $stmt->execute();
+      $stmt->bindColumn(1, $questionInfo);
+      $stmt->fetch();
+    }
+    else
+    {
+      $questionInfo = 0;
+    }
     // Check if the question was answered
     if($questionInfo)
     {
@@ -83,6 +90,7 @@ class Question()
       $this->answersForThem = $answersForThem;
       $this->importance = $questionInfo[2];
     }
+
     $stmt = null;
   }
 
@@ -175,7 +183,7 @@ class Question()
       "
         </div>
         <div class='question-answers for-others'>
-      "
+      ";
       foreach ($forThemText as $value => $answer)
       {
         $question .=
@@ -224,7 +232,7 @@ class Question()
       "
         </div>
         <div class='question-answers for-others'>
-      "
+      ";
       foreach ($answers as $value => $answer)
       {
         $question .=
@@ -276,6 +284,30 @@ class Question()
     {
       return 0;
     }
+  }
+
+  /**
+  * Function getAllAnswers()
+  *
+  * Returns an array with the answers, in their order
+  *
+  * @return - $answers, the array containing each answer
+  */
+  public function getAllAnswers()
+  {
+    return $this->answers;
+  }
+
+  /**
+  * Function getText()
+  *
+  * Returns the question text
+  *
+  * @return - $text, the question text
+  */
+  public function getText()
+  {
+    return $this->text;
   }
 }
 ?>

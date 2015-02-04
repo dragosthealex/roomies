@@ -31,6 +31,9 @@ session_regenerate_id();
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
 
+// The variable that determines if current user is admin. for now, true by default
+define("ADMIN", TRUE);
+
 // If REQUIRE_SESSION is not set, we don't care about the login status
 // Cannot use isset() on constants; use defined() and is_bool():
 if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))

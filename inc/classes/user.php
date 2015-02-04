@@ -6,7 +6,7 @@ require_once 'question.php';
 *
 * Has id, username, email, first and last name, birthday, details, and questions
 */
-class User()
+class User
 {
   // The db connection handler
   private $con;

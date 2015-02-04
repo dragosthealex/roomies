@@ -131,9 +131,6 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
   <div class="main">
     <div class="box">
     	<div class="box-padding">
-				<p class="greeting"> 
-					Hello, <?php echo $_SESSION['user']['username'];?>
-				</p>
 				<div class="profile-box">
 					<div class="main-pic" style="background-image: url('<?php echo $userImagePath;?>');">
 					</div>

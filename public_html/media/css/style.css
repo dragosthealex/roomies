@@ -219,6 +219,23 @@
 	vertical-align: middle;
 }
 
+.table, .td, .th {
+	border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.questions-admin {
+	width: 100%;
+}
+
+.tab {
+	display: inline-block;
+}
+
+.box-content {
+	display: none;
+}
+
 .main-pic {
 	display: block;
 	height: 6em;
@@ -278,9 +295,11 @@
 	border-radius: 2px;
 	background: #e37314;
 	padding: 0 .8em;
+	margin-bottom: 16px;
 	text-align: center;
 	line-height: 2.3;
 	color: #fff;
+	cursor: pointer;
 }
 
 .link-button {
