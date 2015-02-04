@@ -26,8 +26,6 @@ if(!isset($_GET['u']) || (isset($_GET['u']) && $_GET['u'] == $_SESSION['user']['
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
   // Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footer
 
-  $user = new User($con, $_SESSION['user']['id']);
-
 ?>
 <!-- html for my profile -->
 <!-- Main content -->
