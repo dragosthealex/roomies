@@ -34,9 +34,12 @@ $no_questions = $stmt->rowCount();
       echo "<tr><td class='td'>".$i."</td>";
       echo "<td class='td'>".$text."</td>";
       echo "<td class='td'><ul class='ul'>";
-      foreach ($answers as $value => $answer)
+      $index = 1;
+      foreach ($answers as $answer)
       {
-        echo "<li class='li'>".$value.". ".$answer."</li>";
+        $answerText = $answer->getText();
+        echo "<li class='li'>".$index.". ".$answerText."</li>";
+        $index++;
       }
       echo "</ul></td></tr>";
     }

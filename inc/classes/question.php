@@ -1,6 +1,6 @@
 <?php
 // HAVE TO COMPLETE QUESTION TOSTRING WITH PROPER CLASS NAMES
-
+include __ROOT__."/inc/classes/answer.php";
 /**
 * Question class
 *
@@ -48,23 +48,16 @@ class Question
     $stmt->fetch();
 
     $this->text = $text;
-
     $answers = array();
     $answerIds = explode(":", $answerIds);
-    $condition = "0";
-    foreach ($answerIds as $answerId)
+    
+    foreach($answerIds as $answerId)
     {
-      $condition .= " OR answer_id = $answerId";
-    }
-    $stmt = $con->prepare("SELECT * FROM ranswers WHERE $condition");
-    $stmt->execute();
-    while($answer = $stmt->fetch(PDO::FETCH_ASSOC))
-    {
-      $answers[$answer['answer_id']] = $answer['answer_text'];
+      $answer = new Answer($answerId);
+      array_push($answers, $answer);
     }
 
-
-    // The answeres are in order of the indexes (from 0 to 5)
+    // The answeres are OBJECTS. have ids and texts
     $this->answers = $answers;
 
     /*
@@ -153,10 +146,9 @@ class Question
 
     if(isset($this->answersForMe) && $this->answerForMe)
     {
-      $forMe = $this->answerForMe;
       // Get the text of the answer for me
-
-      $forMe = $answers[$forMe];
+      $forMeId = $this->answerForMe;
+      $forMe = new Answer($forMeId)->getText();
 
       $answers = $this->answers;
 
@@ -167,7 +159,8 @@ class Question
       $forThemText = array();
       foreach ($forThem as $answerId)
       {
-        array_push($forThemText, $answers[$answerId]);
+        $acceptedAnswerText = new Answer($answerId)->getText();
+        array_push($forThemText, $acceptedAnswerText);
       }
 
       $importance = $this->importance;
@@ -176,7 +169,7 @@ class Question
       "
       <div class='question'>
         <div class='question-text'>
-          <p>
+          <p class='text'>
             $text
           </p>
         </div>
@@ -185,7 +178,7 @@ class Question
       $question .=
       "
         <div class='answer answered'>
-          <p>
+          <p class='text'>
             $forMe
           </p>
         </div>
@@ -200,7 +193,7 @@ class Question
         $question .=
         "
           <div class='answer answered'>
-            <p>
+            <p class='text'>
               $answer
             </p>
           </div>
@@ -210,7 +203,7 @@ class Question
       "
         </div>
         <div class='importance answered'>
-          <p>$importance</p>
+          <p class='text'>$importance</p>
         </div>
       </div>
       ";
@@ -221,19 +214,21 @@ class Question
       "
       <div class='question'>
         <div class='question-text'>
-          <p>
+          <p class='text'>
             $text
           </p>
         </div>
         <div class='question-answers for-me'>
       ";
-      foreach ($answers as $answerId => $answer)
+      foreach ($answers as $answer)
       {
+        $answerText = $answer->getText();
+        $answerId = $answer->getId();
         $question .=
         "
           <div class='answer'>
-            <p>
-              $answer
+            <p class='text'>
+              $answerText
             </p>
             <input class='answer-radio' name='question$id' type='radio' value='$answerId'></input>
           </div>
@@ -246,11 +241,13 @@ class Question
       ";
       foreach ($answers as $answerId => $answer)
       {
+        $answerText = $answer->getText();
+        $answerId = $answer->getId();
         $question .=
         "
           <div class='answer'>
-            <p>
-              $answer
+            <p class='text'>
+              $answerText
             </p>
             <input class='answer-checkbox' name='question$id' type='checkbox' value='$answerId'></input>
           </div>
@@ -260,17 +257,18 @@ class Question
       "
         </div>
         <div class='importance'>
-          <p>Irellevant</p>
+          <p class='text'>Irellevant</p>
           <input class='importance-radio' name='importance_questions_$id' type='radio' value='0'></input>
-          <p>Not too important</p>
+          <p class='text'>Not too important</p>
           <input class='importance-radio' name='importance_questions_$id' type='radio' value='1'></input>
-          <p>Somewhat important</p>
+          <p class='text'>Somewhat important</p>
           <input class='importance-radio' name='importance_questions_$id' type='radio' value='2'></input>
-          <p>Very important</p>
+          <p class='text'>Very important</p>
           <input class='importance-radio' name='importance_questions_$id' type='radio' value='3'></input>
         </div>
       </div>
       ";
+      return $question;
     }
   }
 
