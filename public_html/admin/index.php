@@ -9,13 +9,10 @@ if(!LOGGED_IN && !ADMIN)
   require_once __ROOT__."/inc/html/notfound.php";
 }
 
-$dots = '../';
 $title = 'Admin';
 require_once __ROOT__."/inc/html/head.php";
 //require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
-<!--main content-->
-<div class="main">
   <div class="box">
     <div class="box-padding">
       <div class="box-tab">
