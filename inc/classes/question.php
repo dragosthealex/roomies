@@ -158,6 +158,8 @@ class Question
 
       $forMe = $answers[$forMe];
 
+      $answers = $this->answers;
+
       $forThem = $this->answersForThem;
       $forThem = explode(",", $forThem);
 
@@ -167,7 +169,7 @@ class Question
       {
         array_push($forThemText, $answers[$answerId]);
       }
-      
+
       $importance = $this->importance;
 
       $question = 
@@ -193,7 +195,7 @@ class Question
         </div>
         <div class='question-answers for-others'>
       ";
-      foreach ($forThemText as $value => $answer)
+      foreach ($forThemText as $answer)
       {
         $question .=
         "
@@ -225,7 +227,7 @@ class Question
         </div>
         <div class='question-answers for-me'>
       ";
-      foreach ($answers as $value => $answer)
+      foreach ($answers as $answerId => $answer)
       {
         $question .=
         "
@@ -233,7 +235,7 @@ class Question
             <p>
               $answer
             </p>
-            <input class='answer-radio' name='question$id' type='radio' value='$value'></input>
+            <input class='answer-radio' name='question$id' type='radio' value='$answerId'></input>
           </div>
         ";      
       }
@@ -242,7 +244,7 @@ class Question
         </div>
         <div class='question-answers for-others'>
       ";
-      foreach ($answers as $value => $answer)
+      foreach ($answers as $answerId => $answer)
       {
         $question .=
         "
@@ -250,7 +252,7 @@ class Question
             <p>
               $answer
             </p>
-            <input class='answer-checkbox' name='question$id' type='checkbox' value='$value'></input>
+            <input class='answer-checkbox' name='question$id' type='checkbox' value='$answerId'></input>
           </div>
         ";
       }
