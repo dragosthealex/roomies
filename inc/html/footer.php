@@ -17,6 +17,7 @@ For the sake of layout, let the body/html be closed on every page
 	</ul>
 </div>
 
+<!--closing main-->
 </div>
 </body>
 </html>
