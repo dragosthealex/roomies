@@ -559,26 +559,21 @@ background: #fff;
 
 }
 
+
 .search-element
 {
-	font-family: 'Open Sans', arial, sans-serif;
-	text-align: left;
-	font-size: 15px;
+
 	list-style: none;
-	padding-bottom: 10px;
-	padding-left: 30%;
+
 
 }
 
 .review-element
 {
-	font-family: 'Open Sans', arial, sans-serif;
-	text-align: left;
-	font-size: 20px;
-	list-style: none;
-	padding-bottom: 10px;
-}
 
+	list-style: none;
+
+}
 .titletext
 {
 
