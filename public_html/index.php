@@ -4,6 +4,7 @@ Do not initialise REQUIRE_SESSION. We do not need to check that. Initialise. Out
 homepage content.
 */
 // Includes the init file
+$rootDirectory = 1;
 require_once '../inc/init.php';
 // If logged out, show homepage, then exit the script.
 
@@ -25,7 +26,6 @@ require_once '../inc/init.php';
 
 // Include the head
 $title = "Welcome Roomies";
-$rootDirectory = 1;
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 

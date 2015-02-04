@@ -230,6 +230,19 @@ class User
   }
 
   /**
+  * Function getUsername()
+  *
+  * Returns the username
+  *
+  * @return - $username, the username
+  *
+  */
+  public function getUsername()
+  {
+    return $this->username;
+  }
+
+  /**
   * Function detilsString()
   *
   * Returns the details formated for output

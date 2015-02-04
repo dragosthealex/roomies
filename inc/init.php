@@ -14,7 +14,7 @@ else if (!REQUIRE_SESSION && LOGGED_IN)
 
 // The local root of the Roomies git repository:
 define('__ROOT__', dirname(dirname(__FILE__)));
-
+include __ROOT__.'/inc/classes/user.php';
 // Setting session name
 $session_name = 'some_name';
 
@@ -31,10 +31,6 @@ session_regenerate_id();
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
 
-if(LOGGED_IN)
-{
-  $user = new User($con, $_SESSION['user']['id']);
-}
 // The variable that determines if current user is admin. for now, true by default
 define("ADMIN", TRUE);
 
@@ -73,7 +69,10 @@ try
   // Exit the script if the database conneciton fails.
   exit('Connection failed: ' . $e->getMessage());
 }
-
+if(LOGGED_IN)
+{
+  $user = new User($con, $_SESSION['user']['id']);
+}
 // If called from the root directory, set $webRoot to "", otherwise to "../"
 $webRoot = isset($rootDirectory) ? "." : "..";
 ?>

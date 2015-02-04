@@ -11,7 +11,6 @@ Please read the gantt chart note for this task (task 10)
 // Initialise the session (do not modify this)
 //define("REQUIRE_SESSION", true);
 include '../../inc/init.php';
-include __ROOT__.'/inc/classes/user.php';
 
 // The title of the page
 
