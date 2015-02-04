@@ -134,29 +134,34 @@ $userImagePath = 'media/img/profile-picture-placeholder.gif';
 				<div class="profile-box">
 					<div class="main-pic" style="background-image: url('<?php echo $userImagePath;?>');">
 					</div>
-					<div class="links-wrapper">
-			    	<ul class="ul">
-			    		<li class="link-button"> 
-			    			<a href="#friends" class="links">
-			    				Friend Requests
-			    			</a>
-			    		</li>
-			    		<li class="link-button"> 
-			    			<a href="#inbox" class="links">
-			    				Messages
-			    			</a>
-			    		</li>
-			    		<li class="link-button"> 
-			    			<a href="#reviews" class="links">
-			    				Review
-			    			</a>
-			    		</li>
-			    		<li class="link-button"> 
-			    			<a href="search/" class="links">
-			    				Search
-			    			</a>
-			    		</li>   	
-			    	</ul>
+					<div style="float:left;">
+						<h2 class="h2">
+							Shit Fuck
+						</h2>
+						<div class="links-wrapper">
+				    	<ul class="ul">
+				    		<li class="float-left"> 
+				    			<a class="link-button" href="#friends">
+				    				Friend Requests
+				    			</a>
+				    		</li>
+				    		<li class="float-left"> 
+				    			<a href="#inbox" class="link-button">
+				    				Messages
+				    			</a>
+				    		</li>
+				    		<li class="float-left"> 
+				    			<a href="#reviews" class="link-button">
+				    				Review
+				    			</a>
+				    		</li>
+				    		<li class="float-left"> 
+				    			<a href="search/" class="link-button">
+				    				Search
+				    			</a>
+				    		</li>   	
+				    	</ul>
+			    	</div>
 		    	</div>
 		    </div>
 		  </div>

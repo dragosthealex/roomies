@@ -5,10 +5,9 @@ This file is to be included, not used by itself
 // Include the question class
 include __ROOT__."/inc/classes/question.php";
 
-$stmt = $con->prepare("SELECT value FROM rsiteinfo WHERE info = 'no_questions'");
+$stmt = $con->prepare("SELECT question_id FROM rquestionsmap");
 $stmt->execute();
-$stmt->bindColumn(1, $no_questions);
-$stmt->fetch();
+$no_questions = $stmt->rowCount();
 ?>
 <table class="table questions-admin">
   <thead>

@@ -12,7 +12,7 @@ if(!LOGGED_IN && !ADMIN)
 $dots = '../';
 $title = 'Admin';
 require_once __ROOT__."/inc/html/head.php";
-require_once __ROOT__."/inc/html/header.$ioStatus.php";
+//require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 <!--main content-->
 <div class="main">

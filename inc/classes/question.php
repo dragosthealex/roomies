@@ -41,22 +41,28 @@ class Question
     $this->userId = $userId;
 
     // Get the question answer
-    $stmt = $con->prepare("SELECT question_text FROM rquestionsmap WHERE question_id = $id");
+    $stmt = $con->prepare("SELECT question_text, question_answers FROM rquestionsmap WHERE question_id = $id");
     $stmt->execute();
     $stmt->bindColumn(1, $text);
+    $stmt->bindColumn(2, $answerIds);
     $stmt->fetch();
 
     $this->text = $text;
 
-    // Get the answers
     $answers = array();
-    $stmt = $con->prepare("SELECT answer_text FROM ranswers WHERE answer_question_id = $id");
-    $stmt->execute();
-    $stmt->bindColumn(1, $answer);
-    while ($stmt->fetch())
+    $answerIds = explode(":", $answerIds);
+    $condition = "0";
+    foreach ($answerIds as $answerId)
     {
-      array_push($answers, $answer);
+      $condition .= " OR answer_id = $answerId";
     }
+    $stmt = $con->prepare("SELECT * FROM ranswers WHERE $condition");
+    $stmt->execute();
+    while($answer = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $answers[$answer['answer_id']] = $answer['answer_text'];
+    }
+
 
     // The answeres are in order of the indexes (from 0 to 5)
     $this->answers = $answers;
@@ -149,16 +155,19 @@ class Question
     {
       $forMe = $this->answerForMe;
       // Get the text of the answer for me
-      $forMe = $answers["$forMe"];
+
+      $forMe = $answers[$forMe];
+
       $forThem = $this->answersForThem;
       $forThem = explode(",", $forThem);
 
       // Get the text of the answers for them
       $forThemText = array();
-      foreach ($forThem as $key => $answerValue)
+      foreach ($forThem as $answerId)
       {
-        array_push($forThemText, $answers['$answerValue']);
+        array_push($forThemText, $answers[$answerId]);
       }
+      
       $importance = $this->importance;
 
       $question = 

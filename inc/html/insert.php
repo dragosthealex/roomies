@@ -5,52 +5,62 @@ To be used just included in another file
 displays a form that lets us insert a new question in the db
 */
 // Check if question submitted
-if(isset($_POST['question_text'], $_POST['no_answers']))
+if(isset($_POST['question_text']))
 {
-  $no_answers = htmlentities($_POST['no_answers']);
   $question_text = htmlentities($_POST['question_text']);
   $answers = array();
 
-  if($question_text != htmlentities($_POST['question_text']))
+  $errMsg = '';
+
+  if($question_text != addcslashes($_POST['question_text'], "'"))
   {
-    $errMsg = "Invalid characters ";
+    $errMsg .= 'Invalid characters';
   }
 
-  for($value=0; $value<$no_answers; $value++)
+  if(!$errMsg)
   {
-    array_push($answers, htmlentities($_POST['answer'.$value]));
-    if($answers["$value"] == "")
+    for($value=0; $value<8; $value++)
     {
-      $errMsg .= "Invalid answer ";
-      break;
+      if(isset($_POST['answer'.$value]) && ($_POST['answer'.$value]))
+      {
+        array_push($answers, addcslashes($_POST['answer'.$value], "'"));
+      }
     }
   }
 
   if(!$question_text)
   {
-    $errMsg .= "Invalid question ";
+    $errMsg .= 'Invalid question ';
   }
-  $stmt = $con->prepare("INSERT INTO rquestionsmap (question_text) VALUES ('$question_text')");
-  $stmt->execute();
-  
-  $stmt =$con->prepare("SELECT question_id FROM rquestionsmap ORDER BY question_id DESC LIMIT 1");
-  $stmt->execute();
-  $stmt->bindColumn(1, $question_id);
-  $stmt->fetch();
 
-  $stmt = $con->prepare("ALTER TABLE rusers_qa ADD question".$question_id." VARCHAR(50)");
-  $stmt->execute();
-
-  foreach ($$answers as $value => $answer)
+  if(!$errMsg)
   {
-    $stmt = $con->prepare("INSERT INTO ranswers (answer_question_id, answer_text) VALUES ($question_id, '$answer')");
+    $stmt = $con->prepare("INSERT INTO rquestionsmap (question_text) VALUES ('$question_text')");
     $stmt->execute();
-  }
+    
+    $stmt =$con->prepare("SELECT question_id FROM rquestionsmap ORDER BY question_id DESC");
+    $stmt->execute();
+    $stmt->bindColumn(1, $question_id);
+    $stmt->fetch();
 
-  $stmt = $con->prepare("UPDATE rsiteinfo SET no_questions=no_questions+1");
-  $stmt->execute();
+    $question_to_add = "question".$question_id;
+
+    $stmt = $con->prepare("ALTER TABLE ruser_qa ADD $question_to_add VARCHAR(50)");
+    $stmt->execute();
+
+    foreach ($answers as $value => $answer)
+    {
+      $stmt = $con->prepare("INSERT INTO ranswers (answer_question_id, answer_text) VALUES ($question_id, '$answer')");
+      $stmt->execute();
+    }
+  }
 
   $stmt = null;
+
+  if(isset($errMsg))
+  {
+    echo $errMsg;
+  }
 }
 ?>
 <form class="form" method="POST" action="">
@@ -63,14 +73,14 @@ if(isset($_POST['question_text'], $_POST['no_answers']))
   </p>
     <select class="select has-submit" name="no_answers">
       <option class="option" value="">Select</option>
-      <option class="option" value="">1</option>
-      <option class="option" value="">2</option>
-      <option class="option" value="">3</option>
-      <option class="option" value="">4</option>
-      <option class="option" value="">5</option>
-      <option class="option" value="">6</option>
-      <option class="option" value="">7</option>
-      <option class="option" value="">8</option>
+      <option class="option" value="1">1</option>
+      <option class="option" value="2">2</option>
+      <option class="option" value="3">3</option>
+      <option class="option" value="4">4</option>
+      <option class="option" value="5">5</option>
+      <option class="option" value="6">6</option>
+      <option class="option" value="7">7</option>
+      <option class="option" value="8">8</option>
     </select>
   <p>
     Question answers:
@@ -84,5 +94,5 @@ if(isset($_POST['question_text'], $_POST['no_answers']))
   <input class="input block" name="answer6" type="text"></input>
   <input class="input block" name="answer7" type="text"></input>
   <input class="input block" name="answer8" type="text"></input>
-  <input class="input button block" type="submit"></input>
+  <input class="input-button block" type="submit"></input>
 </form>
