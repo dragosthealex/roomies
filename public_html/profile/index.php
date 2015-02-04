@@ -55,8 +55,7 @@ if(!isset($_GET['u']) || (isset($_GET['u']) && $_GET['u'] == $_SESSION['user']['
 				<div class="box-padding">
 					<h2 class="h2">Questionnaire</h2>
 					<!-- php to retrieve 'Questionnaire' from database should be here' -->
-					<?php 
-					$user->setQuestions();
+					<?php
 					$questions = $user->getQuestion();
 					foreach($questions as $question)
 					{

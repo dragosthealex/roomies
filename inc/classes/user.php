@@ -179,7 +179,7 @@ class User
   * because it should be pretty heavy.
   *
   */
-  public function setQuestions()
+  private function setQuestions()
   {
     $con = $this->con;
     $userId = $this->id;
@@ -212,6 +212,11 @@ class User
   */
   public function getQuestion($number=-1)
   {
+    if(!isset($this->questions))
+    {
+      $this->setQuestions();
+    }
+
     $questions = $this->questions;
     if(isset($questions[$number]))
     {
