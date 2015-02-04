@@ -192,6 +192,7 @@
 }
 .profile-box {
 	overflow: hidden;
+	display: table;
 }
 
 .profile-picture {
@@ -199,7 +200,23 @@
 	/*height: 180px;
 	width:180px;*/
 	margin: 0 .8em 1em 0;
- height: 3.6em;
+ 	height: 3.6em;
+}
+
+.housepic {
+	width: 4em;
+	height: 4em;
+	float: left;
+	margin: 0 10px 10px 0
+}
+
+.accommodation {
+	overflow: hidden;
+}
+
+.links-wrapper {
+	display: table-cell;
+	vertical-align: middle;
 }
 
 .main-pic {
@@ -267,7 +284,12 @@
 }
 
 .link-button {
+	display: inline-block;
+}
+
+.link-button a{
 	text-decoration: none;
+	color: inherit;
 }
 
 .link-button:focus, .input-button:focus {
@@ -503,10 +525,6 @@
 	height: 60%;
 	background: #fff;
 	float: left;
-	margin-right: 30px;
-	padding-bottom: 10px;
-	padding-left: 8px;
-	padding-right: 8px;
 }
 
 

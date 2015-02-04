@@ -124,80 +124,143 @@ $stmt->execute();
 $stmt->bindColumn(1, $comp);
 $stmt->fetch();
 
+// For mock
+$userImagePath = 'media/img/profile-picture-placeholder.gif';
 ?>
   <!--Main content-->
   <div class="main">
-    <?php if(!$comp){include "./complete-register/optionalDetails.php";}?>
-    <div class = "left-box">
-
-		<p class = "greeting"> Hello, username! </p>
-		<div class = "profile-box">
-		<img class = "profile-picture" src="profile.jpg" alt="profile picture" style="width:125px;height:125px;" >
+    <div class="box">
+    	<div class="box-padding">
+				<p class="greeting"> 
+					Hello, <?php echo $_SESSION['user']['username'];?>
+				</p>
+				<div class="profile-box">
+					<div class="main-pic" style="background-image: url('<?php echo $userImagePath;?>');">
+					</div>
+					<div class="links-wrapper">
+			    	<ul class="ul">
+			    		<li class="link-button"> 
+			    			<a href="#friends" class="links">
+			    				Friend Requests
+			    			</a>
+			    		</li>
+			    		<li class="link-button"> 
+			    			<a href="#inbox" class="links">
+			    				Messages
+			    			</a>
+			    		</li>
+			    		<li class="link-button"> 
+			    			<a href="#reviews" class="links">
+			    				Review
+			    			</a>
+			    		</li>
+			    		<li class="link-button"> 
+			    			<a href="search/" class="links">
+			    				Search
+			    			</a>
+			    		</li>   	
+			    	</ul>
+		    	</div>
+		    </div>
+		  </div>
 		</div>
-		
-	    	<ul class = "ul">
-	    	
-	    		<li class = "link-button"> <a href = "#friends" class = "links">Friend Requests </a></li>
-	    		<br>
-	    		<li class = "link-button"> <a href = "#inbox" class = "links">Messages </a></li>
-	    		<br>
-	    		<li class = "link-button"> <a href = "#reviews" class = "links">Review </a></li>
-	    		<br>
-	    	
-	    	</ul>
-	    </div>
-	</div>
-
-
-				<div class = "box-padding">
-				    <div class = "searches"> 
-				    	<p class = "titletext">Recent Matches</p> 
-					    <ul class = "search-element">
-					    <li class = "box">
-					    	<div class = "profile-box">
-					    		<img class = "profile-picture" src="profile.jpg" alt="profile picture"> 
-					    		<p> Lana del Ray </p>
-					    	</div> 
-					    	<br>
-					    <li class = "box"> 
-					    	<div class = "profile-box">
-					    		<img class = "profile-picture" src="profile.jpg" alt="profile picture">
-					    		<p>John Smith</p>
+		<?php if(!$comp){include "./complete-register/optionalDetails.php";}?>
+		<div class="column-wrapper">
+			<div class="column-2">
+				<div class="column-box">
+					<div class="box-padding">
+			    	<p class="titletext">
+			    		Recent Matches
+			    	</p> 
+				    <ul class="ul">
+				    	<li class="box">
+					    	<div class="box-padding">
+					    		<p class="text">
+					    			<a href="profile?id=5436" class="link">
+					    				<img src="media/img/anonymous.jpg" class="profile-picture" alt="">
+					    				testJohn21
+					    			</a>
+					    			<button class="input-button button2">
+					    				Add
+					    			</button>
+					    		</p>
+					    		<p class="text">
+					    			<span style="font-size:1.5em;line-height:0;color:rgba(0,160,0,1)">
+					    				100%
+					    			</span>
 					    	</div>
-					    	
-					    	<p class = "details"> details stuff </p>
-					    </li>
-					    <br>
+				    	</li>
+				    	<li class="box"> 
+				    		<div class="box-padding">
+					    		<p class="text">
+					    			<a href="profile?id=5436" class="link">
+					    				<img src="media/img/anonymous.jpg" class="profile-picture" alt="">
+					    				testJohn22
+					    			</a>
+					    			<button class="input-button button2">
+					    				Add
+					    			</button>
+					    		</p>
+					    		<p class="text">
+					    			<span style="font-size:1.5em;line-height:0;color:rgba(0,160,0,1)">
+					    				99%
+					    			</span>
+					    	</div>
+				    	</li>
 						</ul>
 					</div>
 				</div>
-
-
-
-
-    <div class = "reviews"> 
-    	<p class = "titletext"> Popular Accommodation </p>
-    	<ul class = "review-element">
-    		<li class = "box", class = "box-padding"> <p> Whitworth Park </p>
-    			<img class = "housepic" src = "C:\Users\Mitali\Pictures\1938805.jpg" alt="pic">
-    		</li>
-    		<br>
-    		<li class = "box", class = "box-padding"> 
-    			<p>Dalton-Ellis</p>
-    			<img class = "housepic" src = "C:\Users\Mitali\Pictures\1938805.jpg" alt="pic">
-    		</li>
-
-    		<br>
-    		<li class = "box", class = "box-padding">    			
-    			<p>Dalton-Ellis</p>
-    			<img class = "housepic" src = "C:\Users\Mitali\Pictures\1938805.jpg" alt="pic"
-    		></li>
-
-    	</ul>
-
-    </div>
-
-<?php require_once __ROOT__."/inc/html/footer.php";?>
+			</div>
+			<div class="column-2">
+				<div class="column-box">
+					<div class="box-padding"> 
+			    	<p class="titletext"> Popular Accommodation </p>
+			    	<ul class="ul">
+			    		<li class="box accommodation"> 
+			    			<div class="box-padding">
+				    			<p> 
+				    				Whitworth Park
+				    			</p>
+				    			<img class="housepic" src="media/img/banana.jpeg">
+				    			<div class="house-description">
+				    				<p>
+				    					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec nibh lectus. Nam convallis a eros in finibus. Suspendisse varius, turpis eget mollis consectetur, neque erat tincidunt diam, sed porttitor lorem nunc sed eros.
+				    				</p>
+				    			</div>
+			    			</div>
+			    		</li>
+			    		<li class="box accommodation"> 
+			    			<div class="box-padding">
+				    			<p>
+				    				Dalton-Ellis
+				    			</p>
+				    			<img class="housepic" src="media/img/banana.jpeg">
+				    			<div class="house-description">
+				    				<p>
+				    					Nulla facilisi. Donec eu ante auctor ipsum tempus consequat ut ut ante. Integer a laoreet tortor, at volutpat nibh. Aliquam erat volutpat. Vestibulum eget commodo justo. Quisque ipsum ipsum, ph
+				    				</p>
+				    			</div>
+			    			</div>
+			    		</li>
+			    		<li class="box accommodation"> 
+			    			<div class="box-padding">    			
+				    			<p>
+				    				Rusholme 
+				    			</p>
+				    			<img class="housepic" src="media/img/banana.jpeg">
+				    			<div class="house-description">
+				    				<p>
+				    					Nunc cursus enim a vulputate
+				    				</p>
+				    			</div>
+			    			</div>
+			    		</li>
+			    	</ul>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<?php require_once __ROOT__."/inc/html/footer.php";?>
   </div>
 </body>
 </html>
