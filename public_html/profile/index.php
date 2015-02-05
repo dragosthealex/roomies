@@ -34,7 +34,7 @@ if(!isset($_GET['u']) || (isset($_GET['u']) && $_GET['u'] == $_SESSION['user']['
 					</div>
 					<div class="details-box">
 						<div class="box-padding">
-							<h2 class="h2"><?php echo $user->getName();?></h2>
+							<h2 class="h2"><?=$user->getName();?></h2>
 							<!-- php to retrieve information from the database should replace this -->
 							<p class="text">Main details e.g Gender and Stuff</p>
 						</div>
@@ -85,25 +85,81 @@ if(!isset($_GET['u']) || (isset($_GET['u']) && $_GET['u'] == $_SESSION['user']['
   exit();
 }
 // I'm on another user's profile
-$user = htmlentities($_GET['u']);
-$title = "$user's profile";
-$stmt = $con->prepare("SELECT user_id FROM rusers WHERE username = '$user'");
-$stmt->execute();
-$stmt->bindColumn(1, $id);
-$stmt->fetch();
+// Get the user and heck if exists;
+$otherUsername = $_GET['u'];
 
-if(!$stmt->rowCount())
+$otherUser = new User($con, $otherUsername);
+$otherUserId = $otherUser->getIdentifier('id');
+$userId = $user->getIdentifier('id');
+
+if(!isset($otherUserId) || !$otherUserId)
 {
   $stmt = null;
   include __ROOT__."/inc/html/notfound.php";
   exit();
 }
-
 $stmt = null;
+
+// Echo the appropiate possible buttons for friends
+$addFriend = "<li class='float-left'><a id='add_friends_button' class='link-button' onclick='return add_friend();'>Add Friend</a></li>";
+$alreadyFriends = "<li class='float-left'><a id='already_friends_button' class='link-button' onclick='return add_friend();'>Friends!</a></li>";
+$requestSent = "<li class='float-left'><a id='sent_friends_button' class='link-button' onclick='return add_friend();'>Request sent</a></li>";
+$requestReceived = "<li class='float-left'><a id='received_friends_button' class='link-button' onclick='return add_friend();'>Request received</a></li>";
+/* Check friendship and set the button accordingly
+0 -> not friends
+1 -> friends
+2 -> I sent the request
+3 -> I received request
+*/
+$status = $user->friendshipStatus($otherUser);
+switch ($status)
+{
+	case 0:
+		$friendsButton = $addFriend;
+		break;
+	case 1:
+		$friendsButton = $alreadyFriends;
+		break;
+	case 2:
+		$friendsButton = $requestSent;
+		break;
+	case 3:
+		$friendsButton = $requestReceived;
+		break;
+	default:
+		$friendsButton = $addFriend;
+		break;
+}
+$nameOrUsername = ($status == 1)?$otherUser->getName():$otherUsername;
+
+$title = "$otherUsername's profile";
+
 // Include head and header
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
   <!-- html for others' profile -->
-  <h1 class="h1">You are on <?php echo $user;?>'s profile</h1>
+  <div class="box">
+		<div class="box-padding">
+			<div class="profile-box">
+					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');">
+					</div>
+					<div style="float:left;">
+						<h2 class="h2">
+							<?=$nameOrUsername;?>
+						</h2>
+						<div class="links-wrapper">
+				    	<ul class="ul">
+				    		<?=$friendsButton?>
+				    	</ul>
+			    	</div>
+		    	</div>
+		    </div>
+		</div>
+	</div>
+	<div id="error">
+	</div>
+	<input id="userId" type="hidden" value="<?=$userId?>"></input>
+	<input id="otherUserId" type="hidden" value="<?=$otherUserId?>"></input>
+	<script type="text/javascript" src="../media/js/friendsButton.js"></script>
 <?php require_once __ROOT__."/inc/html/footer.php";?>

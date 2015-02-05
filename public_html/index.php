@@ -122,7 +122,8 @@ else
     <div class="box">
     	<div class="box-padding">
 				<div class="profile-box">
-					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');"></div>
+					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');">
+					</div>
 					<div style="float:left;">
 						<h2 class="h2">
 							Shit Fuck

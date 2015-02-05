@@ -38,6 +38,8 @@ class User
   */
   public function __construct($con, $key)
   {
+    // Filter the key
+    $key = htmlentities($key);
     // Get the basic info for the user from the db
     $stmt = $con->prepare("SELECT user_id, username, user_email FROM rusers 
                             WHERE user_id = '$key' OR username = '$key' OR user_email = '$key'");
@@ -230,25 +232,79 @@ class User
   }
 
   /**
-  * Function getUsername()
-  *
-  * Returns the username
-  *
-  * @return - $username, the username
-  *
-  */
-  public function getUsername()
-  {
-    return $this->username;
-  }
-
-  /**
   * Function detilsString()
   *
   * Returns the details formated for output
   *
   * @return - $details, the string containing html formatted output
   */
+
+  /**
+  * Function addFriend($otherUser)
+  * 
+  * Sends a request from this user to other user
+  *
+  * @param - $otherUser, the other user object
+  */
+  public function addFriend($otherUser)
+  {
+    $otherUserId = $otherUser->getIdentifier('id');
+    $con = $this->con;
+    $thisUserId = $this->id;
+    $status = $this->friendshipStatus($otherUser);
+
+    // Check if request already sent
+    if(!$status)
+    {
+      $stmt = $con->prepare("INSERT INTO rconexions (conexion_user_id1, conexion_user_id2, conexion_status)
+                              VALUES ($thisUserId, $otherUserId, 2)");
+      $stmt->execute();
+    }
+  }
+
+  /**
+  * Function friendshipStatus($otherUser)
+  *
+  * Returns 0 if not friends, 1 if friends, 2 if request pending, 3 if request received
+  *
+  * @param - $otherUser, the user that we check the friendship with
+  * @return - $status, the status of the connexion
+  */
+  public function friendshipStatus($otherUser)
+  {
+    $otherUserId = $otherUser->getIdentifier('id');
+    $con = $this->con;
+    $thisUserId = $this->id;
+
+    $stmt = $con->prepare("SELECT conexion_status, conexion_user_id1 FROM rconexions 
+      WHERE (conexion_user_id1 = $thisUserId AND conexion_user_id2 = $otherUserId)
+      OR (conexion_user_id1 = $otherUserId AND conexion_user_id2 = $thisUserId)");
+    $stmt->execute();
+    // If no row is found, means no friends
+    if(!$stmt->rowCount())
+    {
+      return 0;
+    }
+    $stmt->bindColumn(1, $status);
+    $stmt->bindColumn(2, $id1);
+    $stmt->fetch();
+
+    // Check if they are friends
+    if($status == 1)
+    {
+      return true;
+    }
+    
+    // Check if this user already sent request
+    if($id1 == $thisUserId)
+    {
+      return 2;
+    }
+
+    return 3;
+  }
+
+
 }
 
 ?>

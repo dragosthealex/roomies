@@ -12,7 +12,7 @@ require_once "header.php";
     <div class="header-div">
       <ul class="ul header-menu" style="height:auto;">
       <li class="li">
-        <a class="a" href="<?=$webRoot?>/profile/" title="My profile"><?=$user->getUsername()?></a>
+        <a class="a" href="<?=$webRoot?>/profile/" title="My profile"><?=$user->getIdentifier('username')?></a>
       </li>
       <li class="li">
         <a class="a settings door" href="?logout=yes" title="Logout"></a>
