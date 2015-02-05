@@ -3,7 +3,7 @@
 This file is to be included, not used by itself
 */
 // Include the question class
-include __ROOT__."/inc/classes/question.php";
+//include __ROOT__."/inc/classes/question.php";
 
 $stmt = $con->prepare("SELECT question_id FROM rquestionsmap");
 $stmt->execute();
