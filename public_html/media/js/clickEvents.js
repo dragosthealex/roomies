@@ -3,49 +3,45 @@
   var doc = win.document,
       newError = function (message) {
         // Add an error box to #error and set timeout to remove
+        alert(message);
       },
       ajax = function (element) {
         if (!element.hasAttribute('data-action')) {
+
           return;
         }
-
         var action = element.getAttribute('data-action'),
             originalText = element.innerHTML,
             xmlhttp = win.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
         xmlhttp.onreadystatechange = function () {
-          switch (xmlhttp.readyState) {
-            1: 2: 3: // Loading
-              if (element.hasAttribute('data-text-pending')) {
-                element.innerHTML = element.getAttribute('data-text-pending');
-              }
-              break;
-            4:       // Loaded
-              // If there was anything output, new error
-              if (xmlhttp.responseText) {
-                newError(xmlhttp.responseText);
-              } else {
-                if (element.hasAttribute('data-action-toggle') && element.hasAttribute('data-text-toggle')) {
-                  var originalAction = element.getAttribute('data-action');
+          if (xmlhttp.readyState === 4) {
+            // If there was anything output, new error
+            if(xmlhttp.status === 404) {
+              newError("Not found suck balls");
+            }
+            else if (xmlhttp.responseText) {
+              newError(xmlhttp.responseText);
+            }
+            else if(element.hasAttribute('data-action-toggle') && element.hasAttribute('data-text-toggle') && xmlhttp.status === 200) {
+              var originalAction = element.getAttribute('data-action');
 
-                  // Set the next action and text
-                  element.setAttribute('data-action', element.getAttribute('data-action-toggle'));
-                  element.innerHTML = element.getAttribute('data-text-toggle');
+              // Set the next action and text
+              element.setAttribute('data-action', element.getAttribute('data-action-toggle'));
+              element.innerHTML = element.getAttribute('data-text-toggle');
 
-                  // Cache the old action and text
-                  element.setAttribute('data-text-toggle', originalText);
-                  element.setAttribute('data-action-toggle', originalAction);
-                }
-              }
-
-              // Reset the text of the button
-              element.innerHTML = originalText;
-              break;
+              // Cache the old action and text
+              element.setAttribute('data-text-toggle', originalText);
+              element.setAttribute('data-action-toggle', originalAction);
+            }
           }
         };
 
         xmlhttp.open("GET", action);
         xmlhttp.send();
+        if (element.hasAttribute('data-text-pending')) {
+          element.innerHTML = element.getAttribute('data-text-pending');
+        }
       };
 
   var hoverStack = [];
@@ -55,7 +51,7 @@
     var className = e.target.className;
 
     // If we are to ajax the target, do so.
-    if (/ ajax\-this /.exec(className)) {
+    if (/ ajax /.exec(className)) {
       ajax(e.target);
     }
   };

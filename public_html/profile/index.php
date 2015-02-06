@@ -101,7 +101,7 @@ if(!isset($otherUserId) || !$otherUserId)
 $stmt = null;
 
 // Echo the appropiate possible buttons for friends
-$addFriend = "<li class='float-left'><a id='add_friends_button' data-action-toggle='../php/friends.process.php?a=2&id=$otherUserId' data-text-toggle='Request sent' data-action='../php/friends.process.php?a=1&id=$otherUserId' class='link-button ajax '>Add Friend</a></li>";
+$addFriend = "<li class='float-left'><a id='add_friends_button' data-text-pending='sending request' data-action-toggle='../php/friends.process.php?a=2&id=$otherUserId' data-text-toggle='Request sent' data-action='../php/friends.process.php?a=1&id=$otherUserId' class='link-button ajax '>Add Friend</a></li>";
 $alreadyFriends = "<li class='float-left'><a id='already_friends_button' class='link-button ajax '>Friends!</a></li>";
 $requestSent = "<li class='float-left'><a id='sent_friends_button' data-action='../php/friends.process.php?a=2&id=$otherUserId' data-action-toggle='../php/friends.process.php?a=1&id=$otherUserId' data-text-toggle='Add Friend' class='link-button ajax '>Request sent</a></li>";
 $requestReceived = "<li class='float-left'><a id='received_friends_button' data-action='../php/friends.process.php?a=3&id=$otherUserId' data-action-toggle='../php/friends.process.php?a=0&id=&otherUserId' data-text-toggle='Friends!' class='link-button ajax '>Request received</a></li>";
@@ -168,5 +168,5 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 	</div>
 	<input id="userId" type="hidden" value="<?=$userId?>"></input>
 	<input id="otherUserId" type="hidden" value="<?=$otherUserId?>"></input>
-	<script type="text/javascript" src="../media/js/friendsButton.js"></script>
+	<script type="text/javascript" src="../media/js/clickEvents.js"></script>
 <?php require_once __ROOT__."/inc/html/footer.php";?>

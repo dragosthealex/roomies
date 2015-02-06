@@ -287,6 +287,7 @@ class User
         {
           echo "Error. Weird status in database.";
         }
+        break;
       default:
         # code...
         break;
