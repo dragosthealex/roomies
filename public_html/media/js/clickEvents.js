@@ -54,10 +54,7 @@
   };
 
   // Function to toggle the visibility of an element
-  var toggleElement = function (element) {
-    // Get the target
-    var target = doc.getElementById(element.getAttribute('data-target'));
-
+  var toggleElement = function (target) {
     // If the target is hidden, show it, else hide it
     if (/ hidden /.exec(target.className)) {
       target.className = target.className.replace(/ hidden /, ' ');
@@ -82,12 +79,12 @@
 
     // If we are to toggle visibility of something, do so.
     if (/ toggle /.exec(className) && e.target.hasAttribute('data-target')) {
-      toggleElement(e.target);
+      toggleElement(doc.getElementById(e.target.getAttribute('data-target')));
     }
 
-    // If we are to delete the parent, do so.
-    if (/ deleteParent /.exec(className)) {
-      deleteElement(e.target.parentNode);
+    // If we are to delete something, do so.
+    if (/ delete /.exec(className) && e.target.hasAttribute('data-target')) {
+      deleteElement(doc.getElementById(e.target.getAttribute('data-target')));
     }
 
     // If we are to ajax the target, do so.

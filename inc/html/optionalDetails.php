@@ -25,7 +25,7 @@
         </select>
       </div>
       <input class="input-button" type="submit" style="margin: 16px 0px 0px;" value="Submit"></input>
-      <button class="input-button" style="margin: 16px 0px 0px; float: right;" onclick="document.getElementById('opt-details').style.display='none'; return false;">Hide</button>
+      <button class="input-button delete " data-target="opt-details" style="margin: 16px 0px 0px; float: right;">Hide</button>
     </form>
   </div>
 </div>
