@@ -2,16 +2,22 @@
   // Localise the document
   var doc = win.document;
 
+  var errorList = doc.getElementById('error');
+
   var newError = function (message) {
     // Add an error box to #error and set timeout to remove
+    var errorBox = doc.createElement('div');
+    errorBox.className = 'errorBox';
+    errorBox.innerHTML = message;
+    errorList.appendChild(errorBox);
+
+    setTimeout(function () {
+      errorList.removeChild(errorBox);
+    });
     alert(message);
   };
 
   var ajax = function (element) {
-    if (!element.hasAttribute('data-action')) {
-      return;
-    }
-
     var action = element.getAttribute('data-action'),
         originalText = element.innerHTML,
         xmlhttp = win.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
@@ -49,20 +55,20 @@
 
   // Function to toggle the visibility of an element
   var toggleElement = function (element) {
-    // If the subject does not have a target, do nothing
-    if (!element.hasAttribute('data-target')) {
-      return;
-    }
-
     // Get the target
-    var target = document.getElementById(element.getAttribute('data-target'));
+    var target = doc.getElementById(element.getAttribute('data-target'));
 
     // If the target is hidden, show it, else hide it
     if (/ hidden /.exec(target.className)) {
-      target.className.replace(/ hidden /, ' ');
+      target.className = target.className.replace(/ hidden /, ' ');
     } else {
-      target.className += ' hidden ';
+      target.className += 'hidden ';
     }
+  };
+
+  // Function to delete a specific element
+  var deleteElement = function (element) {
+    element.parentNode.removeChild(element);
   };
 
   win.onclick = function (e) {
@@ -75,7 +81,7 @@
     var className = e.target.className;
 
     // If we are to toggle visibility of something, do so.
-    if (/ toggle /.exec(className)) {
+    if (/ toggle /.exec(className) && e.target.hasAttribute('data-target')) {
       toggleElement(e.target);
     }
 
@@ -85,7 +91,7 @@
     }
 
     // If we are to ajax the target, do so.
-    if (/ ajax /.exec(className)) {
+    if (/ ajax /.exec(className) && e.target.hasAttribute('data-action')) {
       ajax(e.target);
       // Prevent links
       return false;
