@@ -1,14 +1,14 @@
 <!-- Header for logged in users -->
 <div class="header">
-  <div class="header-padding">
+  <!-- <div class="header-padding">
     <div class="header-div">
     </div>
-    <div class="header-div logo">
+    <div class="header-div logo"> -->
 <?php
 // Include the logo
 require_once "header.php";
 ?>
-    </div>
+    <!-- </div>
     <div class="header-div">
       <ul class="ul header-menu" style="height:auto;">
       <li class="li">
@@ -22,7 +22,7 @@ require_once "header.php";
       </li>
     </ul>
     </div>
-  </div>
+  </div> -->
 </div>
 <!-- Space for the header -->
 <div class="header-space"></div>
