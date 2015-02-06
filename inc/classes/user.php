@@ -248,7 +248,8 @@ class User
   * 1 -> add friend
   * 2 -> cancel request
   * 3 -> accept request
-  * ...
+  * 4 -> block user
+  * 5 -> unblock user
   *
   * @param - $otherUser, the other user object
   * @param - $action, the action that determines the processing 
@@ -281,6 +282,10 @@ class User
                                   WHERE conexion_user_id2 = $thisUserId AND conexion_user_id1 = $otherUserId");
           $stmt->execute();
           $stmt = null;
+        }
+        else
+        {
+          echo "Error. Weird status in database.";
         }
       default:
         # code...
