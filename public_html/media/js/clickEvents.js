@@ -47,12 +47,19 @@
   var hovered = {element:false,oldText:""};
 
   win.onclick = function (e) {
+    // If the button press is not the left button, then return true.
+    if ((e.which && e.which !== 1) || (e.button !== 1 && e.button !== 0)) {
+      return true;
+    }
+
     // Localise the class string of the target
     var className = e.target.className;
 
     // If we are to ajax the target, do so.
     if (/ ajax /.exec(className)) {
       ajax(e.target);
+      // Prevent links
+      return false;
     }
   };
 
@@ -64,7 +71,7 @@
       hovered.element = false;
     }
 
-    if (tgt.hasAttribute('data-hover-text')) {
+    if (!hovered.element && tgt.hasAttribute('data-hover-text')) {
       hovered.element = tgt;
       hovered.oldText = tgt.innerHTML;
       tgt.innerHTML = tgt.getAttribute('data-hover-text');
