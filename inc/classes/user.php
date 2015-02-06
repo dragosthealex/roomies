@@ -271,9 +271,24 @@ class User
           $stmt->execute();
           $stmt = null;
         }
+        else
+        {
+          echo "Error. Apparently you are already friends.";
+        }
         break;
-      case 2:
-        #code...
+      case 0:
+        if($status)
+        {
+          $stmt = $con->prepare("DELETE FROM rconexions
+                                  WHERE (conexion_user_id2 = $thisUserId AND conexion_user_id1 = $otherUserId)
+                                  OR (conexion_user_id1 = $thisUserId AND conexion_user_id2 = $otherUserId)");
+          $stmt-> execute();
+          $stmt = null;
+        }
+        else
+        {
+          echo "You are not friends. Stalker!";
+        }
         break;
       case 3:
         if($status == 3)

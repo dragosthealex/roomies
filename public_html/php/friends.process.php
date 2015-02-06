@@ -3,9 +3,8 @@
 Contains the functions used by friends system
 Action can have multiple values:
 
-0 -> remove friend
+0 -> remove friend, cancel request
 1 -> add friend
-2 -> cancel request
 3 -> accept request
 4 -> block user
 5 -> unblock user
@@ -24,9 +23,9 @@ if(isset($_GET['a']))
     $user->addFriend($otherUser, $action);
     $status = $user->friendshipStatus($otherUser);
 
-    if(!$status)
+    if(!$status && $action)
     {
-      echo "Error. Friends adding failed.";
+      echo "Error. Operation failed.";
     }
   }
   else
