@@ -131,7 +131,7 @@ else
 						<div class="links-wrapper">
 				    	<ul class="ul">
 				    		<li class="float-left">
-				    			<a class="link-button">
+									<a class="link-button toggle " data-target="notifications">
 				    				Notifications
 				    			</a>
 				    		</li>
