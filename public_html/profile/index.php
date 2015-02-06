@@ -101,10 +101,10 @@ if(!isset($otherUserId) || !$otherUserId)
 $stmt = null;
 
 // Echo the appropiate possible buttons for friends
-$addFriend = "<li class='float-left'><a id='add_friends_button' class='link-button' onclick='return add_friend();'>Add Friend</a></li>";
-$alreadyFriends = "<li class='float-left'><a id='already_friends_button' class='link-button' onclick='return add_friend();'>Friends!</a></li>";
-$requestSent = "<li class='float-left'><a id='sent_friends_button' class='link-button' onclick='return add_friend();'>Request sent</a></li>";
-$requestReceived = "<li class='float-left'><a id='received_friends_button' class='link-button' onclick='return add_friend();'>Request received</a></li>";
+$addFriend = "<li class='float-left'><a id='add_friends_button' class='link-button' onclick='return add_friend(1);'>Add Friend</a></li>";
+$alreadyFriends = "<li class='float-left'><a id='already_friends_button' class='link-button' onclick='return add_friend(0);'>Friends!</a></li>";
+$requestSent = "<li class='float-left'><a id='sent_friends_button' class='link-button' onclick='return add_friend(2);'>Request sent</a></li>";
+$requestReceived = "<li class='float-left'><a id='received_friends_button' class='link-button' onclick='return add_friend(3);'>Request received</a></li>";
 /* Check friendship and set the button accordingly
 0 -> not friends
 1 -> friends

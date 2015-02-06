@@ -11,7 +11,7 @@ Check the password against the db pass
 
 define('REQUIRE_SESSION', FALSE);
 require_once '../../inc/init.php';
-echo "shit";
+
 // If these are set, proceed. Else, something wrong happened
 if(isset($_POST['login'], $_POST['password']))
 {

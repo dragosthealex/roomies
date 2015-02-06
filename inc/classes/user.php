@@ -242,23 +242,49 @@ class User
   /**
   * Function addFriend($otherUser)
   * 
-  * Sends a request from this user to other user
+  * Modifies the friendship status between this user and $other user, depending on $action parameter
+  * Action can be:
+  * 0 -> remove friend
+  * 1 -> add friend
+  * 2 -> cancel request
+  * 3 -> accept request
+  * ...
   *
   * @param - $otherUser, the other user object
+  * @param - $action, the action that determines the processing 
   */
-  public function addFriend($otherUser)
+  public function addFriend($otherUser, $action)
   {
     $otherUserId = $otherUser->getIdentifier('id');
     $con = $this->con;
     $thisUserId = $this->id;
     $status = $this->friendshipStatus($otherUser);
 
-    // Check if request already sent
-    if(!$status)
+    switch ($action)
     {
-      $stmt = $con->prepare("INSERT INTO rconexions (conexion_user_id1, conexion_user_id2, conexion_status)
-                              VALUES ($thisUserId, $otherUserId, 2)");
-      $stmt->execute();
+      case 1:
+        if(!$status)
+        {
+          $stmt = $con->prepare("INSERT INTO rconexions (conexion_user_id1, conexion_user_id2, conexion_status)
+                                  VALUES ($thisUserId, $otherUserId, 2)");
+          $stmt->execute();
+          $stmt = null;
+        }
+        break;
+      case 2:
+        #code...
+        break;
+      case 3:
+        if($status == 3)
+        {
+          $stmt = $con->prepare("UPDATE rconexions SET conexion_status=1
+                                  WHERE conexion_user_id2 = $thisUserId AND conexion_user_id1 = $otherUserId");
+          $stmt->execute();
+          $stmt = null;
+        }
+      default:
+        # code...
+        break;
     }
   }
 
@@ -292,7 +318,7 @@ class User
     // Check if they are friends
     if($status == 1)
     {
-      return true;
+      return 1;
     }
     
     // Check if this user already sent request
