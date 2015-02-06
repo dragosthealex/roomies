@@ -19,5 +19,8 @@ For the sake of layout, let the body/html be closed on every page
 
 <!--closing main-->
 </div>
+
+<!-- Scripts -->
+<script type="text/javascript" src="../media/js/clickEvents.js"></script>
 </body>
 </html>

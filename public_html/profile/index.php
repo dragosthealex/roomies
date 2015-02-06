@@ -168,5 +168,4 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 	</div>
 	<input id="userId" type="hidden" value="<?=$userId?>"></input>
 	<input id="otherUserId" type="hidden" value="<?=$otherUserId?>"></input>
-	<script type="text/javascript" src="../media/js/clickEvents.js"></script>
 <?php require_once __ROOT__."/inc/html/footer.php";?>
