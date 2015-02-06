@@ -64,7 +64,7 @@
       hovered.element = false;
     }
 
-    if (tgt.hasAttribute('data-hover-text')) {
+    if (tgt.hasAttribute('data-hover-text') && !hovered.element) {
       hovered.element = tgt;
       hovered.oldText = tgt.innerHTML;
       tgt.innerHTML = tgt.getAttribute('data-hover-text');
