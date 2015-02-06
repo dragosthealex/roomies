@@ -11,6 +11,8 @@ Action can have multiple values:
 ...
 */
 
+require_once '../../inc/init.php';
+
 $headers = getallheaders();
 if (!$headers || !isset($headers['Roomies']) || $headers['Roomies'] !== 'cactus')
 {
@@ -19,7 +21,6 @@ if (!$headers || !isset($headers['Roomies']) || $headers['Roomies'] !== 'cactus'
   // Exits
 }
 
-require_once '../../inc/init.php';
 require_once __ROOT__.'/inc/classes/user.php';
 
 if(isset($_GET['a']))
