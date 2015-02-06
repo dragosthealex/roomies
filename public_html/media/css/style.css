@@ -446,6 +446,10 @@
 	text-decoration: underline;
 }
 
+.hidden {
+	display: none;
+}
+
 /* Large version */
 @media (min-width: 1441px) {
 	.main {

@@ -1,51 +1,69 @@
 (function(win, undefined){
   // Localise the document
-  var doc = win.document,
-      newError = function (message) {
-        // Add an error box to #error and set timeout to remove
-        alert(message);
-      },
-      ajax = function (element) {
-        if (!element.hasAttribute('data-action')) {
+  var doc = win.document;
 
-          return;
+  var newError = function (message) {
+    // Add an error box to #error and set timeout to remove
+    alert(message);
+  };
+
+  var ajax = function (element) {
+    if (!element.hasAttribute('data-action')) {
+      return;
+    }
+
+    var action = element.getAttribute('data-action'),
+        originalText = element.innerHTML,
+        xmlhttp = win.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+    xmlhttp.onreadystatechange = function () {
+      if (xmlhttp.readyState === 4) {
+        // If there was anything output, new error
+        if (xmlhttp.status === 404) {
+          newError("Not found suck balls");
+        } else if (xmlhttp.responseText) {
+          newError(xmlhttp.responseText);
+        } else if (   element.hasAttribute('data-action-toggle')
+                   && element.hasAttribute('data-text-toggle')
+                   && xmlhttp.status === 200) {
+          var originalAction = element.getAttribute('data-action');
+
+          // Set the next action and text
+          element.setAttribute('data-action', element.getAttribute('data-action-toggle'));
+          element.innerHTML = element.getAttribute('data-text-toggle');
+
+          // Cache the old action and text
+          element.setAttribute('data-text-toggle', originalText);
+          element.setAttribute('data-action-toggle', originalAction);
         }
-        var action = element.getAttribute('data-action'),
-            originalText = element.innerHTML,
-            xmlhttp = win.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+      }
+    };
 
-        xmlhttp.onreadystatechange = function () {
-          if (xmlhttp.readyState === 4) {
-            // If there was anything output, new error
-            if(xmlhttp.status === 404) {
-              newError("Not found suck balls");
-            }
-            else if (xmlhttp.responseText) {
-              newError(xmlhttp.responseText);
-            }
-            else if(element.hasAttribute('data-action-toggle') && element.hasAttribute('data-text-toggle') && xmlhttp.status === 200) {
-              var originalAction = element.getAttribute('data-action');
+    xmlhttp.open('GET', action);
+    xmlhttp.setRequestHeader('Roomies','cactus');
+    xmlhttp.send();
+    if (element.hasAttribute('data-text-pending')) {
+      element.innerHTML = element.getAttribute('data-text-pending');
+    }
+  };
 
-              // Set the next action and text
-              element.setAttribute('data-action', element.getAttribute('data-action-toggle'));
-              element.innerHTML = element.getAttribute('data-text-toggle');
+  // Function to toggle the visibility of an element
+  var toggleElement = function (element) {
+    // If the subject does not have a target, do nothing
+    if (!element.hasAttribute('data-target')) {
+      return;
+    }
 
-              // Cache the old action and text
-              element.setAttribute('data-text-toggle', originalText);
-              element.setAttribute('data-action-toggle', originalAction);
-            }
-          }
-        };
+    // Get the target
+    var target = document.getElementById(element.getAttribute('data-target'));
 
-        xmlhttp.open('GET', action);
-        xmlhttp.setRequestHeader('Roomies','cactus');
-        xmlhttp.send();
-        if (element.hasAttribute('data-text-pending')) {
-          element.innerHTML = element.getAttribute('data-text-pending');
-        }
-      };
-
-  var hovered = {element:false,oldText:""};
+    // If the target is hidden, show it, else hide it
+    if (/ hidden /.exec(target.className)) {
+      target.className.replace(/ hidden /, ' ');
+    } else {
+      target.className += ' hidden ';
+    }
+  };
 
   win.onclick = function (e) {
     // If the button press is not the left button, then return true.
@@ -56,6 +74,16 @@
     // Localise the class string of the target
     var className = e.target.className;
 
+    // If we are to toggle visibility of something, do so.
+    if (/ toggle /.exec(className)) {
+      toggleElement(e.target);
+    }
+
+    // If we are to delete the parent, do so.
+    if (/ deleteParent /.exec(className)) {
+      deleteElement(e.target.parentNode);
+    }
+
     // If we are to ajax the target, do so.
     if (/ ajax /.exec(className)) {
       ajax(e.target);
@@ -63,6 +91,8 @@
       return false;
     }
   };
+
+  var hovered = {element:false,oldText:""};
 
   win.onmousemove = function (e) {
     var tgt = e.target;
