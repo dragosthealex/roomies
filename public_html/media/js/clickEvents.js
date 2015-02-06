@@ -44,7 +44,7 @@
         }
       };
 
-  var hoverStack = [];
+  var hovered = {element:false,oldText:""};
 
   win.onclick = function (e) {
     // Localise the class string of the target
@@ -59,14 +59,14 @@
   win.onmousemove = function (e) {
     var tgt = e.target;
 
-    for (var i = hoverStack.length - 1; i >= 0; i--) {
-      if (hoverStack[i].tgt !== tgt) {
-        hoverStack[i].tgt.innerHTML = hoverStack[i].originalText;
-      }
+    if (hovered.element && hovered.element !== tgt) {
+      hovered.element.innerHTML = hovered.oldText;
+      hovered.element = false;
     }
 
     if (tgt.hasAttribute('data-hover-text')) {
-      hoverStack.push({tgt:tgt,originalText:tgt.innerHTML});
+      hovered.element = tgt;
+      hovered.oldText = tgt.innerHTML;
       tgt.innerHTML = tgt.getAttribute('data-hover-text');
     }
   };
