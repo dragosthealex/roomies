@@ -131,13 +131,8 @@ else
 						<div class="links-wrapper">
 				    	<ul class="ul">
 				    		<li class="float-left">
-				    			<a class="link-button" href="#friends">
-				    				Friend Requests
-				    			</a>
-				    		</li>
-				    		<li class="float-left">
-				    			<a href="#inbox" class="link-button">
-				    				Messages
+				    			<a class="link-button">
+				    				Notifications
 				    			</a>
 				    		</li>
 				    		<li class="float-left">
@@ -150,6 +145,11 @@ else
 				    				Search
 				    			</a>
 				    		</li>
+				    		<li class="float-left">
+				    			<a href="messages/" class="link-button">
+				    				Messages
+				    			</a>
+				    		</li>
 				    	</ul>
 			    	</div>
 		    	</div>
@@ -159,7 +159,8 @@ else
 <?php
 if (!$comp)
 {
-	include "./complete-register/optionalDetails.php";
+	include __ROOT__."/inc/html/optionalDetails.php";
+	include __ROOT__."/inc/html/notifications.php";
 }
 ?>
 		<div class="column-wrapper">
