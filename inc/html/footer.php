@@ -21,6 +21,6 @@ For the sake of layout, let the body/html be closed on every page
 </div>
 
 <!-- Scripts -->
-<script type="text/javascript" src="../media/js/clickEvents.js"></script>
+<script src="<?=$webRoot?>/media/js/clickEvents.js"></script>
 </body>
 </html>
