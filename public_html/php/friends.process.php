@@ -7,19 +7,20 @@ Action can have multiple values:
 1 -> add friend
 2 -> cancel request
 3 -> accept request
+4 -> block user
+5 -> unblock user
 ...
 */
 require_once '../../inc/init.php';
 require_once __ROOT__.'/inc/classes/user.php';
 
-if(isset($_POST['action']))
+if(isset($_GET['a']))
 {
-  $action = htmlentities($_POST['action']);
+  $action = htmlentities($_GET['a']);
 
-  if(isset($_POST['userId'], $_POST['otherUserId']))
+  if(isset($_GET['id']))
   {
-    $user = new User($con, $_POST['userId']);
-    $otherUser = new User($con, $_POST['otherUserId']);
+    $otherUser = new User($con, $_GET['id']);
     $user->addFriend($otherUser, $action);
     $status = $user->friendshipStatus($otherUser);
 

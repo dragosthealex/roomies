@@ -4,7 +4,7 @@
 require_once '../../inc/init.php';
 // Temporary user array (supposed to get from /inc/init.php)
 // Gonna just fill the values in as myself
-$user = array(
+$testUser = array(
     'name' =>    'Daniel Hodgson',
     'picture' => 'anonymous.jpg',
     'filters' => array(
@@ -161,15 +161,15 @@ foreach ($results as $person)
     echo ' <a class="link details details-down" onclick="showHideDetails(this)">Details</a>';
     echo '</p>';
     echo '<ul class="text" style="display: none">';
-    foreach ($user['filters'] as $key => $value)
+    foreach ($testUser['filters'] as $key => $value)
     {
         // If the user is ignoring this filter, ignore it
         if (isset($ignore[$key]) && $ignore[$key])
             continue;
 
         echo '<li style="list-style-image: url(\'/media/img/'.($person['filters'][$key] ? 'tick' : 'cross').'.png\')" class="small-text">';
-        $userFilterString = is_bool($user['filters'][$key]) ? ($user['filters'][$key] ? 'True' : 'False') : $user['filters'][$key];
-        echo $filters[$key]['name'].' ('.$userFilterString.')';
+        $testUserFilterString = is_bool($testUser['filters'][$key]) ? ($testUser['filters'][$key] ? 'True' : 'False') : $testUser['filters'][$key];
+        echo $filters[$key]['name'].' ('.$testUserFilterString.')';
         echo '</li>';
     }
     echo '</ul></p>';

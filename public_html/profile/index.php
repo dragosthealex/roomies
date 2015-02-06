@@ -101,16 +101,22 @@ if(!isset($otherUserId) || !$otherUserId)
 $stmt = null;
 
 // Echo the appropiate possible buttons for friends
-$addFriend = "<li class='float-left'><a id='add_friends_button' class='link-button' onclick='return add_friend(1);'>Add Friend</a></li>";
-$alreadyFriends = "<li class='float-left'><a id='already_friends_button' class='link-button' onclick='return add_friend(0);'>Friends!</a></li>";
-$requestSent = "<li class='float-left'><a id='sent_friends_button' class='link-button' onclick='return add_friend(2);'>Request sent</a></li>";
-$requestReceived = "<li class='float-left'><a id='received_friends_button' class='link-button' onclick='return add_friend(3);'>Request received</a></li>";
+$addFriend = "<li class='float-left'><a id='add_friends_button' data-action-toggle='../php/friends.process.php?a=2&id=$otherUserId' data-text-toggle='Request sent' data-action='../php/friends.process.php?a=1&id=$otherUserId' class='link-button ajax '>Add Friend</a></li>";
+$alreadyFriends = "<li class='float-left'><a id='already_friends_button' class='link-button ajax '>Friends!</a></li>";
+$requestSent = "<li class='float-left'><a id='sent_friends_button' data-action='../php/friends.process.php?a=2&id=$otherUserId' data-action-toggle='../php/friends.process.php?a=1&id=$otherUserId' data-text-toggle='Add Friend' class='link-button ajax '>Request sent</a></li>";
+$requestReceived = "<li class='float-left'><a id='received_friends_button' data-action='../php/friends.process.php?a=3&id=$otherUserId' data-action-toggle='../php/friends.process.php?a=0&id=&otherUserId' data-text-toggle='Friends!' class='link-button ajax '>Request received</a></li>";
+$blockButton = "<li class='float-left'><a id='received_friends_button' data-action='../php/friends.process.php?a=4&id=$otherUserId' data-action-toggle='../php/friends.process.php?a=5&id=&otherUserId' data-text-toggle='Unblock' class='link-button ajax '>Block user</a></li>";
+$unblockButton = "<li class='float-left'><a id='received_friends_button' data-action='../php/friends.process.php?a=5&id=$otherUserId' data-action-toggle='../php/friends.process.php?a=1&id=&otherUserId' data-text-toggle='Add Friend' class='link-button ajax '>Unblock user</a></li>";
 /* Check friendship and set the button accordingly
 0 -> not friends
 1 -> friends
 2 -> I sent the request
 3 -> I received request
+4 -> Blocked
 */
+// for testing, blocked is definded false
+$blocked = 0;
+
 $status = $user->friendshipStatus($otherUser);
 switch ($status)
 {
@@ -151,6 +157,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 						<div class="links-wrapper">
 				    	<ul class="ul">
 				    		<?=$friendsButton?>
+				    		<?=$blocked?$unblockButton:$blockButton?>
 				    	</ul>
 			    	</div>
 		    	</div>
