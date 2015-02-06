@@ -48,6 +48,7 @@
 
   win.onclick = function (e) {
     // If the button press is not the left button, then return true.
+    alert('which: ' + e.which + '; button:' + e.button);
     if (e.which !== 1 && e.button !== 1 && e.button !== 0) {
       return true;
     }
