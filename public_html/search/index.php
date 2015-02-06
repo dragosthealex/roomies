@@ -2,6 +2,7 @@
 // Initialise the page, requiring the user to be logged in
 // define('REQUIRE_SESSION', true);
 require_once '../../inc/init.php';
+if (!LOGGED_IN) die();
 // Temporary user array (supposed to get from /inc/init.php)
 // Gonna just fill the values in as myself
 $testUser = array(
