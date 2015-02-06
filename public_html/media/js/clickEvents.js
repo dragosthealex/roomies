@@ -37,7 +37,8 @@
           }
         };
 
-        xmlhttp.open("GET", action);
+        xmlhttp.open('GET', action);
+        xmlhttp.setRequestHeader('Roomies','cactus');
         xmlhttp.send();
         if (element.hasAttribute('data-text-pending')) {
           element.innerHTML = element.getAttribute('data-text-pending');

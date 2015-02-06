@@ -10,6 +10,14 @@ Action can have multiple values:
 5 -> unblock user
 ...
 */
+
+$headers = getallheaders();
+if (!$headers || !isset($headers['Roomies']) || $headers['Roomies'] !== 'cactus')
+{
+  require_once __ROOT__.'/inc/html/notfound.php';
+  // Exits
+}
+
 require_once '../../inc/init.php';
 require_once __ROOT__.'/inc/classes/user.php';
 
