@@ -14,6 +14,7 @@ Action can have multiple values:
 $headers = getallheaders();
 if (!$headers || !isset($headers['Roomies']) || $headers['Roomies'] !== 'cactus')
 {
+  echo 'lol';
   require_once __ROOT__.'/inc/html/notfound.php';
   // Exits
 }
