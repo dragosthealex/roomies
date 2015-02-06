@@ -167,6 +167,9 @@ class User
       case 'email':
         return $this->email;
         break;
+      case 'city':
+        return $this->details['uni_city'];
+        break;
       default:
         return "Wrong key";
         break;
@@ -229,6 +232,21 @@ class User
     {
       return $questions;
     }
+  }
+
+  /**
+  * Function getQuestionInfo($questionNo)
+  *
+  * Returns the question info string from the table, without setting all questions
+  *
+  * @return - $answer, the string
+  */
+  public function getQuestionAnswer($questionNo)
+  {
+    $con = $this->con;
+    $userId = $this->id;
+    $question = new Question($con, $questionNo, $userId);
+    return $question->getInfo();
   }
 
   /**

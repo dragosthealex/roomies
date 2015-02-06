@@ -25,6 +25,8 @@ class Question
   private $importance;
   // The user id;
   private $userId;
+  // The answers as string
+  private $questionInfo;
 
   /**
   * Constructor
@@ -89,8 +91,21 @@ class Question
       $this->answersForThem = $answersForThem;
       $this->importance = $questionInfo[2];
     }
+    $this->questionInfo = $questionInfo;
 
     $stmt = null;
+  }
+
+  /**
+  * Function getInfo()
+  *
+  * Returns the info string
+  *
+  * @return - $info, the string
+  */
+  public function getInfo()
+  {
+    return $this->questionInfo;
   }
 
   /**

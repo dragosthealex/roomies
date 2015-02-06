@@ -26,7 +26,7 @@ while($stmt->fetch())
   <li class='box'>
     <div class='box-padding'>
       <p class='text'>
-        <a class='link' href='profile?id=5436'>
+        <a class='link' href='profile/?u=$otherUsername'>
           <img alt='' class='profile-picture' src='media/img/anonymous.jpg'>
           $otherUsername
         </a>
