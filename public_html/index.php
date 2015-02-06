@@ -126,7 +126,7 @@ else
 					</div>
 					<div style="float:left;">
 						<h2 class="h2">
-							Shit Fuck
+							<?=$user->getName();?>
 						</h2>
 						<div class="links-wrapper">
 				    	<ul class="ul">
