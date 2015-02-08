@@ -55,7 +55,7 @@
 	width: 100%;
 	min-width: 320px;
 	text-align: center;
-	line-height: 69px;
+	/*line-height: 69px*/;
 }
 
 .header-padding {
