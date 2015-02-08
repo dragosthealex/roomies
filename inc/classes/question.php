@@ -71,7 +71,7 @@ class Question
 
     if($userId)
     {
-      $stmt = $con->prepare("SELECT question".$id." FROM ruser_qa WHERE qa_user_id = ".$userId);
+      $stmt = $con->prepare("SELECT question".$id." FROM ruser_qa WHERE answer_user_id = ".$userId);
       $stmt->execute();
       $stmt->bindColumn(1, $questionInfo);
       $stmt->fetch();
