@@ -23,7 +23,7 @@ $stmt->fetch();
 // because are coming from selects. We'll check the names.
 if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
          $_POST['b_month'],$_POST['b_day'],$_POST['country'],
-         $_POST['language'],$_POST['gender'],$_POST['randomKey']))
+         $_POST['language'],$_POST['gender'],$_POST['randomKey'],$_POST['city']))
   && ($_SESSION['randomKey'] == $_POST['randomKey']) && (!$stmt->rowCount()))
 {
   // Get the values from POST
@@ -35,6 +35,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
   $country = htmlentities($_POST['country']);
   $language = htmlentities($_POST['language']);
   $gender = htmlentities($_POST['gender']);
+  $city = htmlentities($_POST['city']);
 
   // Check if the ID exists. If not, it must be a problem
   $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
@@ -72,10 +73,27 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
   $stmt->execute();
   $stmt->bindColumn(1, $mapGender);
   $stmt->fetch();
+  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_uni_city = '$city'");
+  $stmt->execute();
+  $stmt->bindColumn(1, $mapCity);
+  $stmt->fetch();
+
+  // Get all the users in the same city
+  $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE uni_city=$mapCity");
+  $stmt->execute();
+  $usersInCity = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+  foreach ($usersInCity as $otherUserId)
+  {
+    // Insert new rows in db, initialising the percentages for this user and others in their city with 0
+    $stmt = $con->prepare("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
+                            VALUES ($otherUserId, $id, $mapCity)");
+    $stmt->execute();
+  }
 
   // Insert those values in rdetails
-  $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender)
-                          VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender')");
+  $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender, uni_city )
+                          VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender', '$mapCity')");
   $stmt->execute();
 
   $stmt = null;
@@ -179,6 +197,17 @@ $title = "Complete Registration";
                 <option class="option" value="man">Man</option>
                 <option class="option" value="woman">Woman</option>
                 <option class="option" value="trans">Trans*</option>
+              </select>
+            </div>
+            <div>
+              <span>
+                <p>
+                  The city which I want to live(find a roomie) in is:
+                <p>
+              </span>
+              <select class="select has-submit" name="city">
+                <option class="option" value="">Select city</option>
+                <option class="option" value="Manchester">Manchester</option>
               </select>
             </div>
             <input type="hidden" name="randomKey" value="<?php echo $_SESSION['randomKey'];?>"></input>
