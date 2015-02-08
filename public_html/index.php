@@ -171,40 +171,7 @@ if (!$comp)
 			    		Recent Matches
 			    	</p>
 				    <ul class="ul">
-				    	<li class="box">
-					    	<div class="box-padding">
-					    		<p class="text">
-					    			<a href="profile?id=5436" class="link">
-					    				<img src="media/img/anonymous.jpg" class="profile-picture" alt="">
-					    				testJohn21
-					    			</a>
-					    			<button class="input-button button2">
-					    				Add
-					    			</button>
-					    		</p>
-					    		<p class="text">
-					    			<span style="font-size:1.5em;line-height:0;color:rgba(0,160,0,1)">
-					    				100%
-					    			</span>
-					    	</div>
-				    	</li>
-				    	<li class="box">
-				    		<div class="box-padding">
-					    		<p class="text">
-					    			<a href="profile?id=5436" class="link">
-					    				<img src="media/img/anonymous.jpg" class="profile-picture" alt="">
-					    				testJohn22
-					    			</a>
-					    			<button class="input-button button2">
-					    				Add
-					    			</button>
-					    		</p>
-					    		<p class="text">
-					    			<span style="font-size:1.5em;line-height:0;color:rgba(0,160,0,1)">
-					    				99%
-					    			</span>
-					    	</div>
-				    	</li>
+				    	<?php require_once __ROOT__.'/inc/html/recent_matches.php';?>
 						</ul>
 					</div>
 				</div>

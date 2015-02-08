@@ -26,80 +26,92 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
          $_POST['language'],$_POST['gender'],$_POST['randomKey'],$_POST['city']))
   && ($_SESSION['randomKey'] == $_POST['randomKey']) && (!$stmt->rowCount()))
 {
-  // Get the values from POST
-  $firstName = htmlentities($_POST['first_name']);
-  $lastName = htmlentities($_POST['last_name']);
-  $bYear = htmlentities($_POST['b_year']);
-  $bMonth = htmlentities($_POST['b_month']);
-  $bDay = htmlentities($_POST['b_day']);
-  $country = htmlentities($_POST['country']);
-  $language = htmlentities($_POST['language']);
-  $gender = htmlentities($_POST['gender']);
-  $city = htmlentities($_POST['city']);
-
-  // Check if the ID exists. If not, it must be a problem
-  $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
-  $stmt->execute();
-  $stmt->bindColumn(1, $dbId);
-  $stmt->fetch();
-  if(!$stmt->rowCount())
+  // Check if values are not null
+  if($_POST['first_name'] && $_POST['last_name'] && $_POST['b_year'] && ['b_month']
+    && $_POST['b_day'] && $_POST['country'] && $_POST['language'] && $_POST['gender']
+    && $_POST['city'])
   {
-    // There was a problem
-    require_once __ROOT__."/inc/html/problem.php";
+    // Get the values from POST
+    $firstName = htmlentities($_POST['first_name']);
+    $lastName = htmlentities($_POST['last_name']);
+    $bYear = htmlentities($_POST['b_year']);
+    $bMonth = htmlentities($_POST['b_month']);
+    $bDay = htmlentities($_POST['b_day']);
+    $country = htmlentities($_POST['country']);
+    $language = htmlentities($_POST['language']);
+    $gender = htmlentities($_POST['gender']);
+    $city = htmlentities($_POST['city']);
+
+
+    // Check if the ID exists. If not, it must be a problem
+    $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
+    $stmt->execute();
+    $stmt->bindColumn(1, $dbId);
+    $stmt->fetch();
+    if(!$stmt->rowCount())
+    {
+      // There was a problem
+      require_once __ROOT__."/inc/html/problem.php";
+      exit();
+    }
+
+    // Format the birthday
+    if($bDay < 10)
+    {
+      $bDay = "0".$bDay;
+    }
+    if($bMonth < 10)
+    {
+      $bMonth = "0".$bMonth;
+    }
+    $birthday = $bYear."-".$bMonth."-".$bDay;
+
+    // Get the values in ints from mapping
+    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_country = '$country'");
+    $stmt->execute();
+    $stmt->bindColumn(1, $mapCountry);
+    $stmt->fetch();
+    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_language = '$language'");
+    $stmt->execute();
+    $stmt->bindColumn(1, $mapLanguage);
+    $stmt->fetch();
+    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_gender = '$gender'");
+    $stmt->execute();
+    $stmt->bindColumn(1, $mapGender);
+    $stmt->fetch();
+    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_uni_city = '$city'");
+    $stmt->execute();
+    $stmt->bindColumn(1, $mapCity);
+    $stmt->fetch();
+
+    // Get all the users in the same city
+    $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE uni_city=$mapCity");
+    $stmt->execute();
+    $usersInCity = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+    foreach ($usersInCity as $otherUserId)
+    {
+      // Insert new rows in db, initialising the percentages for this user and others in their city with 0
+      $stmt = $con->prepare("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
+                              VALUES ($otherUserId, $id, $mapCity)");
+      $stmt->execute();
+    }
+
+    // Insert those values in rdetails
+    $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender, uni_city )
+                            VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender', '$mapCity')");
+    $stmt->execute();
+
+    $stmt = null;
+    unset($_SESSION['notComplete']);
+    header("Location: ../");
     exit();
   }
-
-  // Format the birthday
-  if($bDay < 10)
+  else
   {
-    $bDay = "0".$bDay;
+    header("Location: ./?error");
+    exit();
   }
-  if($bMonth < 10)
-  {
-    $bMonth = "0".$bMonth;
-  }
-  $birthday = $bYear."-".$bMonth."-".$bDay;
-
-  // Get the values in ints from mapping
-  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_country = '$country'");
-  $stmt->execute();
-  $stmt->bindColumn(1, $mapCountry);
-  $stmt->fetch();
-  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_language = '$language'");
-  $stmt->execute();
-  $stmt->bindColumn(1, $mapLanguage);
-  $stmt->fetch();
-  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_gender = '$gender'");
-  $stmt->execute();
-  $stmt->bindColumn(1, $mapGender);
-  $stmt->fetch();
-  $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_uni_city = '$city'");
-  $stmt->execute();
-  $stmt->bindColumn(1, $mapCity);
-  $stmt->fetch();
-
-  // Get all the users in the same city
-  $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE uni_city=$mapCity");
-  $stmt->execute();
-  $usersInCity = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-
-  foreach ($usersInCity as $otherUserId)
-  {
-    // Insert new rows in db, initialising the percentages for this user and others in their city with 0
-    $stmt = $con->prepare("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
-                            VALUES ($otherUserId, $id, $mapCity)");
-    $stmt->execute();
-  }
-
-  // Insert those values in rdetails
-  $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender, uni_city )
-                          VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender', '$mapCity')");
-  $stmt->execute();
-
-  $stmt = null;
-  unset($_SESSION['notComplete']);
-  header("Location: ../");
-  exit();
 }
 else if($stmt->rowCount())
 {

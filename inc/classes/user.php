@@ -369,6 +369,34 @@ class User
     return 3;
   }
 
+  /**
+  * Function getPercentageWith($otherUser)
+  *
+  * Returns the percetange match between this user and $otherUser
+  *
+  * @param - $otherUser(User), the other user for percentage
+  * @return - $percentage(int), the percentage rounded
+  */
+  public function getPercentageWith($otherUser)
+  {
+    $con = $this->con;
+
+    // Localise stuff
+    $thisUserId = $this->id;
+    $otherUserId = $otherUser->getIdentifier('id');
+    $city = $this->getIdentifier('city');
+
+    // Get the percentage from db
+    $stmt = $con->prepare("SELECT percentage FROM rpercentages
+                            WHERE (percentage_user_id1=$thisUserId AND percentage_user_id2=$otherUserId)
+                              OR  (percentage_user_id1=$otherUserId AND percentage_user_id2=$thisUserId)
+                              AND percentage_city=$city");
+    $stmt-> execute();
+    $stmt->bindColumn(1, $percentage);
+    $stmt->fetch();
+
+    return $percentage;
+  }
 
 }
 

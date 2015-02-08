@@ -20,7 +20,7 @@ while($stmt->fetch())
 {
   $otherUser = new User($con, $otherUserId);
   $otherUsername = $otherUser->getIdentifier('username');
-
+  $percentage = $user->getPercentageWith($otherUser);
   echo 
   "
   <li class='box'>
@@ -39,7 +39,7 @@ while($stmt->fetch())
       </p>
       <p class='text'>
         <span style='font-size:1.5em;line-height:0;color:rgba(0,160,0,1)'>
-          100%
+          $percentage%
         </span>
       </p>
     </div>
