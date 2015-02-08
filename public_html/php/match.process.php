@@ -8,8 +8,8 @@ $headers = getallheaders();
 if(!LOGGED_IN || !$_GET['id'] || !isset($headers['roomies']) || $headers['roomies'] != 'cactus'
   || !isset($_GET['q_no']) || !isset($_GET['q_ans']) || !isset($_GET['q_acc']) || !isset($_get['q_imp']))
 {
-  //include __ROOT__."/inc/html/notfound.php";
-  //exit();
+  include __ROOT__."/inc/html/notfound.php";
+  exit();
 }
 
 if(!is_numeric($_GET['id']))
@@ -26,8 +26,6 @@ $myAnswer = htmlentities($_GET['q_ans']);
 $myAccepted = htmlentities($_GET['q_acc']);
 $myAccepted = explode(",", $myAccepted);
 $myImportance = htmlentities($_GET['q_imp']);
-
-echo "city: $city <br> my ans: $myAnswer <br> $myAccepted[0] <br> $myImportance <br>";
 
 $stmt = $con->prepare("SELECT percentage_user_id1, percentage_user_id2, id1_1, id1_10, id1_50, id2_1, id2_10, id2_50, id1_max, id2_max
                         FROM rpercentages
