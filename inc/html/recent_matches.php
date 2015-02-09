@@ -32,7 +32,8 @@ while($stmt->fetch())
   }
   
 
-  $otherUsername = $otherUser->getIdentifier('username');
+  $otherUserName = $otherUser->getIdentifier('username');
+  $otherUsername = $otherUserName;
   $friendsButtons = "<button class='input-button button2'>
                         Add
                       </button>
@@ -41,7 +42,7 @@ while($stmt->fetch())
   $status = $user->friendshipStatus($otherUser);
   if($status == 1)
   {
-    $otherUsername = $otherUser->getName;
+    $otherUserName = $otherUser->getName();
     $friendsButtons = "<button class='input-button button2'>
                         Friends!
                       </button>
@@ -70,15 +71,15 @@ while($stmt->fetch())
     <li class='box'>
       <div class='box-padding'>
         <p class='text'>
-          <a href='profile?id=5436' class='link'>
+          <a href='profile?u=$otherUsername' class='link'>
             <img src='media/img/anonymous.jpg' class='profile-picture' alt=''>
-            $otherUsername
+            $otherUserName
           </a>
           $friendsButtons
         </p>
         <p class='text'>
           <span style='font-size:1.5em;line-height:0;color:rgba(0,160,0,1)'>
-            $percentage
+            $percentage%
           </span>
       </div>
     </li>
