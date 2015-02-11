@@ -1,12 +1,12 @@
-(function(win, undefined){
+(function(window, undefined){
   // Localise the document
-  var doc = win.document;
+  var document = window.document;
 
-  var errorList = doc.getElementById('error');
+  var errorList = document.getElementById('error');
 
   var newError = function (message) {
     // Add an error box to #error and set timeout to remove
-    var errorBox = doc.createElement('div');
+    var errorBox = document.createElement('div');
     errorBox.className = 'errorBox';
     errorBox.innerHTML = message;
     errorList.appendChild(errorBox);
@@ -20,7 +20,7 @@
   var ajax = function (element) {
     var action = element.getAttribute('data-action'),
         originalText = element.innerHTML,
-        xmlhttp = win.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
     xmlhttp.onreadystatechange = function () {
       if (xmlhttp.readyState === 4) {
@@ -68,7 +68,7 @@
     element.parentNode.removeChild(element);
   };
 
-  win.onclick = function (e) {
+  window.onclick = function (e) {
     // If the button press is not the left button, then return true.
     if ((e.which && e.which !== 1) || (e.button !== 1 && e.button !== 0)) {
       return true;
@@ -79,12 +79,12 @@
 
     // If we are to toggle visibility of something, do so.
     if (/ toggle /.exec(className) && e.target.hasAttribute('data-target')) {
-      toggleElement(doc.getElementById(e.target.getAttribute('data-target')));
+      toggleElement(document.getElementById(e.target.getAttribute('data-target')));
     }
 
     // If we are to delete something, do so.
     if (/ delete /.exec(className) && e.target.hasAttribute('data-target')) {
-      deleteElement(doc.getElementById(e.target.getAttribute('data-target')));
+      deleteElement(document.getElementById(e.target.getAttribute('data-target')));
     }
 
     // If we are to ajax the target, do so.
@@ -97,7 +97,7 @@
 
   var hovered = {element:false,oldText:""};
 
-  win.onmousemove = function (e) {
+  window.onmousemove = function (e) {
     var tgt = e.target;
 
     if (hovered.element && hovered.element !== tgt) {
