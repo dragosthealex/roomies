@@ -111,4 +111,10 @@
       tgt.innerHTML = tgt.getAttribute('data-hover-text');
     }
   };
+  //TERNARY
+  window.onscroll = function () {
+    var percent = (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollType || 0) / 114;
+    percent = percent > 1 ? 1 : percent;
+    document.getElementsByClassName("header")[0].style.boxShadow="0px 6px 4px -4px rgba(0,0,0," + (percent * 0.08) + ")";
+  };
 }(window)); // Localise the window
