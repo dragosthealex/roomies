@@ -524,14 +524,11 @@
 		margin: 8px;
 	}
 
-	.h1, .h2 {
-		margin: 8px 0 12px;
-		line-height: 1;
-	}
-
 	.h2 {
+		margin: 10px 0;
 		border-bottom: 1px solid #d5d1d0;
-		padding: 0 0 8px;
+		padding: 0 0 10px;
+		line-height: 1;
 		color: #a39791;
 		font-weight: bold;
 		font-size: .92em;
