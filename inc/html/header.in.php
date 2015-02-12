@@ -2,7 +2,7 @@
 <div id="errorList"></div>
 <script src="<?=$webRoot?>/media/js/newError.js"></script>
 <!-- Header for logged in users -->
-<div class="header" data-logged-in>
+<div class="header">
   <div class="header-padding">
 <?php
 // Include the logo
@@ -45,7 +45,7 @@ require_once "header.php";
   </div>
 </div>
 <!-- Space for the header -->
-<div class="header-space"></div>
+<div class="header-space header-space-extra"></div>
 <!-- Main content -->
 <div class="main">
 <?php
