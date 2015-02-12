@@ -10,19 +10,19 @@ require_once "header.php";
 ?>
     <ul class="header-nav">
       <li class="header-item">
+        <a href="<?=$webRoot?>/profile" class="icon-holder" title="Profile">
+          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')"></span>
+        </a>
+      </li>
+      <li class="header-item">
         <!-- TODO: Make the following thingy open a notification box -->
         <span class="icon-holder" title="Notifications">
           <span class="icon icon-notif" data-src="<?=$webRoot?>/media/img/icon_notifications.png"></span>
         </span>
       </li>
-      <li class="header-split"></li>
+      <!-- <li class="header-split"></li> -->
       <li class="header-item">
-        <a href="<?=$webRoot?>/profile" class="icon-holder" title="Profile">
-          <span class="icon" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')"></span>
-        </a>
-      </li>
-      <li class="header-item">
-        <a href="#" class="icon-holder" title="Find Roomies">
+        <a href="<?=$webRoot?>/search" class="icon-holder" title="Find Roomies">
           <span class="icon icon-roomies"></span>
         </a>
       </li>

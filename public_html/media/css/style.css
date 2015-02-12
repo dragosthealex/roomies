@@ -85,10 +85,11 @@
 .icon-holder {
 	position: relative;
 	display: block;
-	margin: 12px 0;
+	margin: 12px auto;
 	padding: 10px;
 	height: 16px;
 	width: 16px;
+	cursor: pointer;
 }
 
 .icon {
@@ -96,6 +97,15 @@
 	background-size: 16px;
 	height: 16px;
 	width: 16px;
+	opacity: 0.55;
+}
+
+.icon-holder:hover .icon {
+	opacity: 0.85;
+}
+
+.icon-user {
+	opacity: 1;
 }
 
 .icon-notif {
@@ -515,6 +525,31 @@
 
 /* Mobile version - inherits from small version*/
 @media (max-width: 623px) {
+	.header-nav {
+		position: relative;
+	}
+
+	.header-item {
+		width: 16.666%;
+		text-align: center;
+	}
+
+	.header-split {
+		display: none;
+	}
+
+	.header-space {
+		height: 120px;
+	}
+
+	.header-fixed {
+		position: fixed;
+	}
+
+	.header-fixed .logo-link {
+		display: none;
+	}
+
 	.main {
 		padding-bottom: 0;
 	}

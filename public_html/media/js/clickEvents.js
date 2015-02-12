@@ -11,11 +11,11 @@
    * @return size The size of the page. (0: desktop; 1: tablet; 2: mobile)
    */
   var checkSize = function () {
-    // TODO: Get the width of the body element and return 0/1/2 depending on the size
     // 0 = if width > 976
     // 1 = else if width > 623
     // 2 = else
-    return 0; // stub
+    var width = document.body.innerWidth;
+    return width > 976 ? 0 : width > 623 ? 1 : 2;
   }; // checkSize
 
   var ajax = function (element) {
@@ -122,36 +122,37 @@
     } // if
   }; // onmousemove
 
+  // Get the header element
+  var header = document.getElementsByClassName("header")[0];
+
   /**
    * Function which fires whenever the user scrolls on the page
    *
    * Fade in the box shadows when a desktop PC scrolls down
    */
   window.onscroll = function () {
+    // Get the distance to the top of the page
+    var scrollTop = (   window.pageYOffset
+                     || document.documentElement.scrollTop
+                     || document.body.scrollType || 0);
+
     // Get the percentage distance from the top of the page
-    var percent = (   window.pageYOffset
-                   || document.documentElement.scrollTop
-                   || document.body.scrollType || 0) / 57;
-
-    var size = checkSize();
-
-    // If the current size of the window is not a desktop size, ensure box shadows are off
-    if (size) {
-      percent = 0;
-
-      // If the current size of the window is for mobiles, slide the navigate bar down
-      if (size == 2) {
-        // Slide le nav bar.
-      }
-    } // if
+    var percent = scrollTop / 57;
 
     // Create the string for the box shadows
     var boxShadow = "0px 6px 4px -4px rgba(0,0,0," + ((percent > 1 ? 1 : percent) * 0.08) + ")";
 
+    // If the current size of the window is for mobiles, slide the navigate bar down
+    if (checkSize() === 2) {
+      header.style.boxShadow = boxShadow;
+      header.className = scrollTop < 60 ? "header" : "header header-fixed";
+      return;
+    }
+
     // Set the box-shadow of the header to the boxShadow string
     // TODO: Create an array of elements with class (box, column-box or header),
     //       and for each element in the array, apply the box shadow.
-    document.getElementsByClassName("header")[0].style.boxShadow = boxShadow;
+    header.style.boxShadow = boxShadow;
   }; // onscroll
 
 }(window)); // Localise the window
