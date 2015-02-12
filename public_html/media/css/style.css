@@ -507,7 +507,7 @@
 	}
 
 	.column-2 {
-		margin: 10px;
+		margin: 8px;
 		float: none;
 		width: auto;
 	}
@@ -517,11 +517,11 @@
 	}
 
 	.box, .box-padding {
-		margin: 10px;
+		margin: 8px;
 	}
 
 	.h1, .h2 {
-		margin: 10px 0;
+		margin: 8px 0;
 		line-height: 1.3;
 	}
 
