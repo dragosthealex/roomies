@@ -1,8 +1,6 @@
 <div class="box" id="opt-details">
   <div class="box-padding">
-    <h2 class="h2" name="Optional_details">
-      More details
-    </h2>
+    <h2 class="h2" name="Optional_details">More details</h2>
     <p>
       The following details are optional and can be completed later, from your profile settings. They are helping other potential roomies to find you.
     </p>

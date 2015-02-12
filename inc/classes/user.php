@@ -119,6 +119,19 @@ class User
   }
 
   /**
+  * Function getFirstName()
+  *
+  * Gets the first name
+  *
+  * @return - $name, the name.
+  */
+  public function getFirstName()
+  {
+    $name = $this->firstName;
+    return $name;
+  }
+
+  /**
   * Function getBirthday($format)
   *
   * Gets the birthday, formated either as dd-mm-yyyy or as age, approximated in years

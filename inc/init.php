@@ -31,6 +31,14 @@ session_regenerate_id();
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
 
+// Define whether or not the user has just logged in, for later use.
+define("JUST_LOGGED_IN", isset($_SESSION['justLoggedIn']));
+if (JUST_LOGGED_IN)
+{
+  // Don't display next time
+  unset($_SESSION['justLoggedIn']);
+} // if
+
 // The variable that determines if current user is admin. for now, true by default
 define("ADMIN", TRUE);
 

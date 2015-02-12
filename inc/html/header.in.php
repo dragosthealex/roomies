@@ -31,3 +31,29 @@ require_once "header.php";
 <div class="header-space"></div>
 <!-- Main content -->
 <div class="main">
+<?php
+// Welcome back message.
+if (JUST_LOGGED_IN)
+{
+?>
+  <div class="not-mobile banner">
+    <header>
+      <h1 class="h1">Welcome back, <?=$user->getFirstName()?>!</h1>
+      <?php
+      // TODO:
+      // SELECT * FROM  [message table]
+      //          WHERE the recipient is this user AND unread = true
+      // If rowCount > 0, then output the following:
+      // <p class="text">You have [rowCount] unread messages.</p>
+
+      // TODO:
+      // SELECT * FROM  [conexion table]
+      //          WHERE the recipient is this user AND status is awaiting approval
+      // If rowCount > 0, then output the following:
+      // <p class="text">You have [rowCount] friend requests.</p>
+      ?>
+    </header>
+  </div>
+<?php
+} // if
+?>

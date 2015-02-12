@@ -1,6 +1,6 @@
 <?php
 /*
-Set REQUIRE_SESSION (false). Set REQUIRE_NO_SESSION (true). Initalise. 
+Set REQUIRE_SESSION (false). Set REQUIRE_NO_SESSION (true). Initalise.
 Receive by POST 'email' and 'password'
 Check the log table to see if brute-force attack (more than 5 wrong pass in last 2 hours)
 -> if it is, show error (possibly blocking the account for time/sending email)
@@ -30,7 +30,7 @@ if(isset($_POST['login'], $_POST['password']))
   Check if brute-force attack. If user got the pass wrong over 5 times in last two hours
   then something is not right. So it will throw an error.
   */
-  $stmt = $con->prepare("SELECT log_time FROM rlog WHERE log_email = '$login' 
+  $stmt = $con->prepare("SELECT log_time FROM rlog WHERE log_email = '$login'
                           OR log_username = '$login'  LIMIT 1 OFFSET 4");
   $stmt->execute();
   $stmt->bindColumn(1, $time);
@@ -47,7 +47,7 @@ if(isset($_POST['login'], $_POST['password']))
   }
 
   // Check the pass against the one in db. If incorrect, will be logged
-  $stmt = $con->prepare("SELECT user_id, user_pass, username, user_salt FROM rusers 
+  $stmt = $con->prepare("SELECT user_id, user_pass, username, user_salt FROM rusers
                           WHERE user_email = '$login' OR username = '$login' ");
   $stmt->execute();
   $stmt->bindColumn(1, $id);
@@ -62,6 +62,7 @@ if(isset($_POST['login'], $_POST['password']))
     $_SESSION['user']['id'] = $id;
     $_SESSION['user']['email'] = $email;
     $_SESSION['user']['username'] = $username;
+    $_SESSION['justLoggedIn'] = true; // For header.in.php
 
     // Check whether the user has completed his profile
     $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE profile_filter_id = $id");
@@ -88,7 +89,7 @@ if(isset($_POST['login'], $_POST['password']))
     {
       // The pass is wrong so log it
       $timeStamp = gmdate("Y-m-d H:i:s", time());
-      $stmt = $con->prepare("INSERT INTO rlog (log_email, log_time, log_username) 
+      $stmt = $con->prepare("INSERT INTO rlog (log_email, log_time, log_username)
                               VALUES ('$email', '$timeStamp', '$username')");
       $stmt->execute();
 
@@ -99,7 +100,7 @@ if(isset($_POST['login'], $_POST['password']))
     else
     {
       // No email was found. Check temp users
-      $stmt = $con->prepare("SELECT temp_username, temp_pass, temp_salt, conf, temp_email 
+      $stmt = $con->prepare("SELECT temp_username, temp_pass, temp_salt, conf, temp_email
                               FROM rtempusers
                               WHERE temp_email = '$login' OR temp_username = '$login'");
       $stmt->execute();

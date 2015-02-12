@@ -123,7 +123,7 @@ else
 	// For mock
 	$userImagePath = $webRoot.'/media/img/profile-picture-placeholder.gif';
 ?>
-<!--html code for logged in homepage-->
+<!--html code for logged in homepage--><!--
     <div class="box">
     	<div class="box-padding">
 				<div class="profile-box">
@@ -160,11 +160,14 @@ else
 		    	</div>
 		    </div>
 		  </div>
-		</div>
+		</div>-->
 <?php
 if (!$comp)
 {
-	include __ROOT__."/inc/html/optionalDetails.php";
+	if (JUST_LOGGED_IN)
+	{
+		include __ROOT__."/inc/html/optionalDetails.php";
+	}
 	include __ROOT__."/inc/html/notifications.php";
 }
 ?>
