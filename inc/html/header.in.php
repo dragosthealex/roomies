@@ -2,7 +2,7 @@
 <div id="errorList"></div>
 <script src="<?=$webRoot?>/media/js/newError.js"></script>
 <!-- Header for logged in users -->
-<div class="header">
+<div class="header" data-logged-in>
   <div class="header-padding">
 <?php
 // Include the logo

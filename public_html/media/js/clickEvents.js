@@ -145,7 +145,9 @@
     // If the current size of the window is for mobiles, slide the navigate bar down
     if (checkSize() === 2) {
       header.style.boxShadow = boxShadow;
-      header.className = scrollTop < 60 ? "header" : "header header-fixed";
+      if (header.hasAttribute('data-logged-in')) {
+        header.className = scrollTop < 60 ? "header" : "header header-fixed";
+      }
       return;
     }
 
