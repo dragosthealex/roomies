@@ -64,7 +64,7 @@ if(!LOGGED_IN)
 				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2" id="Register">Register</h2>
-						<form method="POST" name="register" action="./confirm/" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),false):(this.registerPassword.focus(),false):(this.registerEmail.focus(),false)">
+						<form method="POST" name="register" action="./confirm/" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),newError('Passwords must match!'),false):(this.registerPassword.focus(),newError('A password is required.'),false):(this.registerEmail.focus(),newError('An email is required.'),false)">
 							<input type="email" name="registerEmail" placeholder="Email" class="input block" required>
 							<input type="password" name="registerPassword" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
 							<input type="password" name="registerConfirmPassword" placeholder="Confirm Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
@@ -120,56 +120,14 @@ else
 	$stmt->bindColumn(1, $comp);
 	$stmt->fetch();
 
-	// For mock
-	$userImagePath = $webRoot.'/media/img/profile-picture-placeholder.gif';
-?>
-<!--html code for logged in homepage--><!--
-    <div class="box">
-    	<div class="box-padding">
-				<div class="profile-box">
-					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');">
-					</div>
-					<div style="float:left;">
-						<h2 class="h2">
-							<?=$user->getName();?>
-						</h2>
-						<div class="links-wrapper">
-				    	<ul class="ul">
-				    		<li class="float-left">
-									<a class="link-button toggle " data-target="notifications">
-				    				Notifications
-				    			</a>
-				    		</li>
-				    		<li class="float-left">
-				    			<a href="#reviews" class="link-button">
-				    				Review
-				    			</a>
-				    		</li>
-				    		<li class="float-left">
-				    			<a href="search/" class="link-button">
-				    				Search
-				    			</a>
-				    		</li>
-				    		<li class="float-left">
-				    			<a href="messages/" class="link-button">
-				    				Messages
-				    			</a>
-				    		</li>
-				    	</ul>
-			    	</div>
-		    	</div>
-		    </div>
-		  </div>
-		</div>-->
-<?php
-if (!$comp)
-{
-	if (JUST_LOGGED_IN)
+	if (!$comp)
 	{
-		include __ROOT__."/inc/html/optionalDetails.php";
+		if (JUST_LOGGED_IN)
+		{
+			include __ROOT__."/inc/html/optionalDetails.php";
+		}
+		include __ROOT__."/inc/html/notifications.php";
 	}
-	include __ROOT__."/inc/html/notifications.php";
-}
 ?>
 		<div class="column-wrapper">
 			<div class="column-2">
