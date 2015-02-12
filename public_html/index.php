@@ -25,7 +25,12 @@ require_once '../inc/init.php';
 */
 
 // Include the head
-$title = "Welcome Roomies";
+$title = "Roomies";
+if (!LOGGED_IN)
+{
+	// If the user is not logged in, then welcome them
+	$title = "Welcome to " . $title;
+}
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
