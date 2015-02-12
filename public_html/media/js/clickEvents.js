@@ -5,19 +5,24 @@
   var newError = window.newError;
 
   /**
-   * A function to check the size of the page
+   * A function to get the size of the page
    *
-   * This function checks the width of the page and returns an integer
-   * @return size The size of the page. (0: desktop; 1: tablet; 2: mobile)
+   * This function gets the width and height of the page
    */
-  var checkSize = function () {
-    // 0 = if width > 976
-    // 1 = else if width > 623
-    // 2 = else
-    var width = document.body.innerWidth;
-    return width > 976 ? 0 : width > 623 ? 1 : 2;
-  }; // checkSize
+  var size = function () {
+    var width  =    window.innerWidth
+                 || document.documentElement.clientWidth
+                 || document.body.clientWidth;
+    var height =    window.innerHeight
+                 || document.documentElement.clientHeight
+                 || document.body.clientHeight;
 
+    return {width: width, height: height};
+  }; // size
+
+  /**
+   * A function to use ajax on an element (using its data attributes)
+   */
   var ajax = function (element) {
     var action = element.getAttribute('data-action'),
         originalText = element.innerHTML,
@@ -142,10 +147,14 @@
     // Create the string for the box shadows
     var boxShadow = "0px 6px 4px -4px rgba(0,0,0," + ((percent > 1 ? 1 : percent) * 0.08) + ")";
 
+    // Get the dimensions of the window
+    var dim = size();
+
     // If the current size of the window is for mobiles, slide the navigate bar down
-    if (checkSize() === 2) {
+    if (dim.width < 624) {
       header.style.boxShadow = boxShadow;
-      header.className = scrollTop < 60 ? "header" : "header header-fixed";
+      // Only fix the navigation bar if the height of the window is big enough
+      header.className = (scrollTop < 60 || dim.height < 360) ? "header" : "header header-fixed";
       return;
     }
 
