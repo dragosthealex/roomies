@@ -512,16 +512,16 @@
 		width: auto;
 	}
 
+	.column-box, .box {
+		border-radius: 0;
+	}
+
 	.column-box {
 		margin: 0;
 	}
 
 	.box, .box-padding {
 		margin: 8px;
-	}
-
-	.box {
-		border-radius: 0;
 	}
 
 	.h1, .h2 {
