@@ -154,7 +154,7 @@
     if (dim.width < 624) {
       header.style.boxShadow = boxShadow;
       // Only fix the navigation bar if the height of the window is big enough
-      header.className = (scrollTop < 60 || dim.height < 360) ? "header" : "header header-fixed";
+      header.className = (scrollTop > 60 && dim.height > 320) ? "header header-fixed" : "header";
       return;
     }
 
