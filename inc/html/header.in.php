@@ -3,29 +3,46 @@
 <script src="<?=$webRoot?>/media/js/newError.js"></script>
 <!-- Header for logged in users -->
 <div class="header">
-  <!-- <div class="header-padding">
-    <div class="header-div">
-    </div>
-    <div class="header-div logo"> -->
+  <div class="header-padding">
 <?php
 // Include the logo
 require_once "header.php";
 ?>
-    <!-- </div>
-    <div class="header-div">
-      <ul class="ul header-menu" style="height:auto;">
-      <li class="li">
-        <a class="a" href="<?=$webRoot?>/profile/" title="My profile"><?=$user->getIdentifier('username')?></a>
+    <ul class="header-nav">
+      <li class="header-item">
+        <!-- TODO: Make the following thingy open a notification box -->
+        <span class="icon-holder" title="Notifications">
+          <span class="icon icon-notif" data-src="<?=$webRoot?>/media/img/icon_notifications.png"></span>
+        </span>
       </li>
-      <li class="li">
-        <a class="a settings door" href="?logout=yes" title="Logout"></a>
+      <li class="header-split"></li>
+      <li class="header-item">
+        <a href="<?=$webRoot?>/profile" class="icon-holder" title="Profile">
+          <span class="icon" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')"></span>
+        </a>
       </li>
-      <li class="li">
-        <a class="a settings cog" href="<?=$webRoot?>/settings/" title="Account Settings"></a>
+      <li class="header-item">
+        <a href="#" class="icon-holder" title="Find Roomies">
+          <span class="icon icon-roomies"></span>
+        </a>
+      </li>
+      <li class="header-item">
+        <a href="#" class="icon-holder" title="Accommodation">
+          <span class="icon icon-accomm"></span>
+        </a>
+      </li>
+      <li class="header-item">
+        <a href="<?=$webRoot?>/settings" class="icon-holder" title="Settings">
+          <span class="icon icon-settings"></span>
+        </a>
+      </li>
+      <li class="header-item">
+        <a href="<?=$webRoot?>?logout" class="icon-holder" title="Sign out">
+          <span class="icon icon-logout"></span>
+        </a>
       </li>
     </ul>
-    </div>
-  </div> -->
+  </div>
 </div>
 <!-- Space for the header -->
 <div class="header-space"></div>

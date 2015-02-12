@@ -22,8 +22,8 @@
     // Append the new error box to the list of errors
     errorList.appendChild(errorBox);
 
-    // Default the timeout to 3 seconds
-    timeout = timeout || 3000;
+    // Default the timeout to 5 seconds
+    timeout = timeout || 5000;
 
     // Set a timeout to remove the error box after "timeout" milliseconds
     setTimeout(function () {

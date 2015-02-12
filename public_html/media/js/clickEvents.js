@@ -133,9 +133,16 @@
                    || document.documentElement.scrollTop
                    || document.body.scrollType || 0) / 57;
 
+    var size = checkSize();
+
     // If the current size of the window is not a desktop size, ensure box shadows are off
-    if (checkSize()) {
+    if (size) {
       percent = 0;
+
+      // If the current size of the window is for mobiles, slide the navigate bar down
+      if (size == 2) {
+        // Slide le nav bar.
+      }
     } // if
 
     // Create the string for the box shadows

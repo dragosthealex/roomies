@@ -47,70 +47,82 @@
 .header {
 	position: fixed;
 	top: 0;
-	/*border-bottom: 1px solid #d2c7be;*/
 	border-bottom: 1px solid #d5d1d0;
 	background: #fff;
-	/*height: 69px;*/
 	width: 100%;
 	min-width: 320px;
 	text-align: center;
-	/*line-height: 69px*/;
 }
 
 .header-padding {
+	position: relative;
+	margin: 0 auto;
 	max-width: 944px;
-	margin: auto;
 }
 
-.header-div {
-	width: 40%;
-	height: 1px;
-	float: left;
-	display: inline-block;
-}
-
-.header-div.logo {
-	height: auto;
-	width: 20%;
-}
-
-.ul {
+.header-nav {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
 	list-style: none;
-	list-style-type: none;
-	margin: 0px;
-	padding: 0px;
+	line-height: 60px;
 }
 
-.header-menu {
-	padding: 0px 16px;
-	float: right;
+.header-item {
+	float: left;
 }
 
-.header-menu .li {
-	display: inline-block;
-	padding: 0px 5px;
+.header-split {
+	float: left;
+	margin: 18px 8px;
+	border-right: 1px solid #d5d1d0;
+	height: 24px;
+	width: 0px;
 }
 
-.settings {
-	background-size: 25px 25px;
+.icon-holder {
+	position: relative;
 	display: block;
-	width: 25px;
-	height: 25px;
+	margin: 12px 0;
+	padding: 10px;
+	height: 16px;
+	width: 16px;
 }
 
-.cog {
-	background-image: url('../img/gear.png');
+.icon {
+	display: block;
+	background-size: 16px;
+	height: 16px;
+	width: 16px;
 }
 
-.door {
-	background-image: url('../img/door.png');
+.icon-notif {
+	background-image: url('../img/icon_notifications.png');
+}
+
+.icon-roomies {
+	background-image: url('../img/icon_find_roomies.png');
+}
+
+.icon-accomm {
+	background-image: url('../img/icon_accommodation.png');
+}
+
+.icon-settings {
+	background-image: url('../img/icon_settings.png');
+}
+
+.icon-logout {
+	background-image: url('../img/icon_logout.png');
 }
 
 .logo-link {
 	display: inline-block;
 	position: relative;
 	margin: 5px 0;
-	height: 59px;
+	height: 50px;
 	text-decoration: none;
 	color: #000;
 	font-variant: small-caps;
@@ -130,11 +142,11 @@
 
 .logo-img {
 	border: 0;
-	height: 59px;
+	height: 50px;
 }
 
 .header-space {
-	height: 70px;
+	height: 61px;
 }
 
 .main {
@@ -375,6 +387,13 @@
 	box-sizing: border-box;
 	margin: 8px 0;
 	width: 100%;
+}
+
+.ul {
+	list-style: none;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
 }
 
 .float-right {
