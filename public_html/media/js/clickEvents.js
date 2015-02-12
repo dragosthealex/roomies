@@ -150,11 +150,16 @@
     // Get the dimensions of the window
     var dim = size();
 
-    // If the current size of the window is for mobiles, slide the navigate bar down
+    // If the current size of the window is for mobiles, slide the navigation bar down
+    // Only fix the navigation bar if the height of the window is big enough
     if (dim.width < 624) {
-      header.style.boxShadow = boxShadow;
-      // Only fix the navigation bar if the height of the window is big enough
-      header.className = (scrollTop > 60 && dim.height > 320) ? "header header-fixed" : "header";
+      if (dim.height > 320) {
+        header.style.boxShadow = boxShadow;
+        header.className = (scrollTop > 60 && dim.height > 320) ? "header header-fixed" : "header";
+      } else {
+        header.style.boxShadow = "none";
+        header.className = "header";
+      }
       return;
     }
 
