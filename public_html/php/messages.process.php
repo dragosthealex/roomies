@@ -24,11 +24,13 @@ else
   $values[0] = $id1;
   $values[1] = $id2;
   $values[2] = $messageText;
-  // Insert message in DB
-  $message = new Message($con, 'text', $values);
 
   // Read all messages in this conv
   $conversation = new Conversation($con, $id1, $id2);
   $conversation->readMessages();
+
+  // Insert message in DB
+  $message = new Message($con, 'text', $values);
+
 }
 ?>

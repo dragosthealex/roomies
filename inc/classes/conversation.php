@@ -186,8 +186,7 @@ class Conversation
 
     // Update db
     $stmt = $con->prepare("UPDATE rmessages SET messages_read = 1
-                            WHERE (message_user_id1 = $id1 AND message_user_id2 = $id2)
-                              OR (message_user_id1 = $id2 AND message_user_id2 = $id1)
+                            WHERE (message_user_id1 = $id2 AND message_user_id1 = $id2)
                               AND messages_read = 0");
     $stmt->execute();
     $stmt = null;
