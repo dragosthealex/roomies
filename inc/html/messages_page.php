@@ -30,6 +30,7 @@ if(!isset($_GET['conv']))
 
     $conversation = new Conversation ($con, $id1, $id2);
     $conv = $conversation->toString();
+    $otherUserId = $id2;
   }
 }
 else

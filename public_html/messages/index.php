@@ -62,7 +62,8 @@ include __ROOT__."/inc/html/messages_page.php";
             <textarea rows="4" cols="50" class="textarea" id="message"></textarea>
             <input type="submit" class="input-button" value="Send" onclick="this.previousSibling.value = '';"
             data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
-            data-ajax-post="message">
+            data-ajax-post="message"
+            data-ajax-callback="update messages ../php/update_message.process.php?otherId=<?=$otherUserId?> message">
           </div>
         </div>
       </div>

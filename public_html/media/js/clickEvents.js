@@ -63,16 +63,16 @@
                 }
                 newHTML[i] += obj.template[obj.template.length - 1];
               }
-            }
 
-            newError(newHTML);
+              newError(newHTML[i]);
+            }
           }
         } // if
       }; // onreadystatechange
 
-      xmlhttp.open('GET', url);
+      xmlhttp.open('GET', url + "&offset=" + document.getElementsByClassName(className).length);
       xmlhttp.setRequestHeader('Roomies','cactus');
-      xmlhttp.send('offset=' + document.getElementsByClassName(className).length);
+      xmlhttp.send();
     },
 
     // A function to use ajax on an element
@@ -100,8 +100,6 @@
 
             document.getElementById(hideText[1]).removeAttribute('style');
           } // if
-
-          // TODO: data-ajax-callback
         } // if
       }; // onreadystatechange
 
@@ -129,6 +127,12 @@
 
       if (element.hasAttribute('data-ajax-text')) {
         element.innerHTML = element.getAttribute('data-ajax-text');
+      } // if
+
+      var callBack;
+      if (callBack = element.getAttribute('data-ajax-callback')) {
+        callBack = callBack.split(" ");
+        func[callBack[0]](callBack[1], callBack[2], callBack[3]);
       } // if
     }
   };
