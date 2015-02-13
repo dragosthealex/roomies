@@ -71,4 +71,8 @@ include __ROOT__."/inc/html/messages_page.php";
   </div>
 
 
-<?php include __ROOT__."/inc/html/footer.php";?>
+<?php include __ROOT__."/inc/html/footer.php";
+    // Read all messages in this conv
+  $conversation = new Conversation($con, $user->getIdentifier('id'), $otherUserId);
+  $conversation->readMessages();
+?>
