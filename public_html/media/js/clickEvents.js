@@ -162,11 +162,18 @@
       }
       return;
     }
-
     // Set the box-shadow of the header to the boxShadow string
     // TODO: Create an array of elements with class (box, column-box or header),
     //       and for each element in the array, apply the box shadow.
-    header.style.boxShadow = boxShadow;
+    //var slice = Array.prototype.slice.call;
+    var sliced = Array.prototype.slice.call(document.getElementsByClassName("header"))
+                                .concat(Array.prototype.slice.call(document.getElementsByClassName("box")))
+                                .concat(Array.prototype.slice.call(document.getElementsByClassName("column-box")));
+
+    sliced.forEach(
+                function addShadow(value){
+                  value.style.boxShadow = boxShadow;
+                });
   }; // onscroll
 
 }(window)); // Localise the window
