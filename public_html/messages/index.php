@@ -12,6 +12,20 @@ if(!LOGGED_IN)
 // Include head and header
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
+
+$err = "";
+$conv = "";
+
+/*
+This script provides variables:
+-> $conv, the conversation as html
+-> $otherUser, the other user
+-> $otherName, the other user name
+-> $otherUserId, the other user id
+*/
+include "../php/conversation.process.php";
+
+
 // Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footers
 ?>
 
@@ -21,7 +35,9 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
       <div class="column-box">
         <div class="box-padding">
           <h2 class="h2">Conversations</h2>
-          <?php /*get conversation*/?>
+            <ul class='ul'>
+              <?=$allConversations?>
+            </ul>
           <p class="text">
 
           </p>
@@ -32,15 +48,16 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
     <div class="column-2">
       <div class="column-box">
         <div class="box-padding">
-          <h2 class="h2">My Details</h2>
-          <?php
-          // retrieve list from database
-          $details = $user->getDetails();
-          foreach ($details as $detail)
-          {
-            echo "$detail <br>";
-          }
-          ?>
+          <h2 class="h2"><?=$otherName?></h2>
+          <?=($err)?$err:$conv?>
+          <div class="message-input">
+            <textarea rows="4" cols="50" class="textarea">
+
+            </textarea>
+            <span class="input-button">
+              Send
+            </span>
+          </div>
         </div>
       </div>
     </div>
