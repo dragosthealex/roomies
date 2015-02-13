@@ -7,8 +7,6 @@
   var newError = window.newError;
   // Localise Array.prototype
   var aProto = Array.prototype;
-  // Set a variable which contains the current hovered button, and its old text
-  var hovered = {element:false,oldText:""};
   // Get the header element
   var header = document.getElementsByClassName("header")[0];
 
@@ -23,62 +21,61 @@
   }; // size
 
   /**
-   * A function to use ajax on an element (using its data attributes)
+   * An object which holds javascript functions for interactivity
    */
-  var ajax = function (element) {
-    var action = element.getAttribute('data-action'),
-        originalText = element.innerHTML,
-        xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+  var func = {
+    // A function to toggle the visibility of an element
+    'toggle': function (element) {
+      // If the element is hidden, show it, else hide it
+      if (/ hidden /.exec(element.className)) {
+        element.className = element.className.replace(/ hidden /, ' ');
+      } else {
+        element.className += 'hidden ';
+      } // else
+    },
 
-    xmlhttp.onreadystatechange = function () {
-      if (xmlhttp.readyState === 4) {
-        // If there was anything output, new error
-        if (xmlhttp.status === 404) {
-          newError("Not found suck balls");
-        } else if (xmlhttp.responseText) {
-          newError(xmlhttp.responseText);
-        } else if (   element.hasAttribute('data-action-toggle')
-                   && element.hasAttribute('data-text-toggle')
-                   && xmlhttp.status === 200) {
-          var originalAction = element.getAttribute('data-action');
+    // A function to delete an element
+    'delete': function (element) {
+      element.parentNode.removeChild(element);
+    },
 
-          // Set the next action and text
-          element.setAttribute('data-action', element.getAttribute('data-action-toggle'));
-          element.innerHTML = element.getAttribute('data-text-toggle');
+    // A function to use ajax on an element
+    'ajax': function (element) {
+      var action = element.getAttribute('data-action'),
+          originalText = element.innerHTML,
+          xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
-          // Cache the old action and text
-          element.setAttribute('data-text-toggle', originalText);
-          element.setAttribute('data-action-toggle', originalAction);
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4) {
+          // If there was anything output, new error
+          if (xmlhttp.status === 404) {
+            newError("Not found suck balls");
+          } else if (xmlhttp.responseText) {
+            newError(xmlhttp.responseText);
+          } else if (   element.hasAttribute('data-action-toggle')
+                     && element.hasAttribute('data-text-toggle')
+                     && xmlhttp.status === 200) {
+            var originalAction = element.getAttribute('data-action');
+
+            // Set the next action and text
+            element.setAttribute('data-action', element.getAttribute('data-action-toggle'));
+            element.innerHTML = element.getAttribute('data-text-toggle');
+
+            // Cache the old action and text
+            element.setAttribute('data-text-toggle', originalText);
+            element.setAttribute('data-action-toggle', originalAction);
+          } // if
         } // if
+      }; // onreadystatechange
+
+      xmlhttp.open('GET', action);
+      xmlhttp.setRequestHeader('Roomies','cactus');
+      xmlhttp.send();
+      if (element.hasAttribute('data-text-pending')) {
+        element.innerHTML = element.getAttribute('data-text-pending');
       } // if
-    }; // onreadystatechange
-
-    xmlhttp.open('GET', action);
-    xmlhttp.setRequestHeader('Roomies','cactus');
-    xmlhttp.send();
-    if (element.hasAttribute('data-text-pending')) {
-      element.innerHTML = element.getAttribute('data-text-pending');
-    } // if
-  }; // ajax
-
-  /**
-   * A function to toggle the visibility of an element
-   */
-  var toggleElement = function (target) {
-    // If the target is hidden, show it, else hide it
-    if (/ hidden /.exec(target.className)) {
-      target.className = target.className.replace(/ hidden /, ' ');
-    } else {
-      target.className += 'hidden ';
-    } // else
-  }; // toggleElement
-
-  /**
-   * A function to delete a specific element
-   */
-  var deleteElement = function (element) {
-    element.parentNode.removeChild(element);
-  }; // deleteElement
+    }
+  };
 
   /**
    * A function to handle click events on the window
@@ -89,48 +86,30 @@
       return true;
     } // if
 
+    // Localise the element that was clicked and its className
+    var element = e.target;
     // Localise the class string of the target
-    var className = e.target.className;
+    var className = element.className;
 
-    // If we are to toggle visibility of something, do so.
-    if (/ toggle /.exec(className) && e.target.hasAttribute('data-target')) {
-      toggleElement(document.getElementById(e.target.getAttribute('data-target')));
+    // Localise a variable for later use
+    var target;
+
+    // If a target needs toggling, do so.
+    if (target = document.getElementById(element.getAttribute('data-toggle'))) {
+      func['toggle'](target);
     } // if
 
-    // If we are to delete something, do so.
-    if (/ delete /.exec(className) && e.target.hasAttribute('data-target')) {
-      deleteElement(document.getElementById(e.target.getAttribute('data-target')));
+    // If a target needs deleting, do so.
+    if (target = document.getElementById(element.getAttribute('data-delete'))) {
+      func['delete'](target);
     } // if
 
-    // If we are to ajax the target, do so.
-    if (/ ajax /.exec(className) && e.target.hasAttribute('data-action')) {
-      ajax(e.target);
-      // Prevent links
+    // If the element employs ajax, do some ajax.
+    if (element.hasAttribute('data-ajax-url')) {
+      func['ajax'](element);
       return false;
     } // if
   }; // onclick
-
-  /**
-   * Function to detect mouse movement.
-   */
-  window.onmousemove = function (e) {
-    // Localise the target
-    var target = e.target;
-
-    // If the hovered element is not the target element (or false), then reset it
-    if (hovered.element && hovered.element !== target) {
-      hovered.element.innerHTML = hovered.oldText;
-      hovered.element = false;
-    } // if
-
-    // If there is no hovered element and the target has a data-hover-text attribute, toggle the
-    // text of the hovered element.
-    if (!hovered.element && target.hasAttribute('data-hover-text')) {
-      hovered.element = target;
-      hovered.oldText = target.innerHTML;
-      target.innerHTML = target.getAttribute('data-hover-text');
-    } // if
-  }; // onmousemove
 
   /**
    * A function to apply box-shadows to certain elements, dependent upon the distance from the top.
