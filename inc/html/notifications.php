@@ -1,5 +1,5 @@
 
-<div class="column-wrapper hidden " id="notifications">
+<div class="column-wrapper" id="notifications">
   <!--About me-->
   <div class="column-2">
     <div class="column-box">
