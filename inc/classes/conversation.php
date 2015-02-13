@@ -29,16 +29,18 @@ class Conversation
   * @param - $id1(int), the id of the first user
   * @param - $id2(int), the id of the other user
   */
-  public function __construct($con, $id1, $id2)
+  public function __construct($con, $id1, $id2, $offset=0)
   {
     // Initialise messages array
     $messages = array();
+
+    $limit = $offset + 50;
 
     $stmt = $con->prepare("SELECT * FROM rmessages
                             WHERE (message_user_id1 = $id1 AND message_user_id2 = $id2)
                               OR (message_user_id1 = $id2 AND message_user_id2 = $id1)
                             ORDER BY message_timestamp ASC
-                            LIMIT 50");
+                            LIMIT $offset, $limit");
 
     $stmt->execute();
     while($messageDetails = $stmt->fetch(PDO::FETCH_ASSOC))
@@ -61,7 +63,7 @@ class Conversation
   *
   * @return - $conv(json), the json
   */
-  public function getAsJSON()
+  public function getAsJSON($offset=0)
   {
     // Localise stuff
     $id1 = $this->id1;
