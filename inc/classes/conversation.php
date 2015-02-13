@@ -90,7 +90,7 @@ class Conversation
     foreach ($messages as $key => $message)
     {
       // Replace '\n' with '<br>'
-      $message['message_text'] = nl2br($message['message_text']);
+      $message['message_text'] = preg_replace('/\r\n|\r|\n/', '<br>', $message['message_text']);
 
       $read = ($message['messages_read'])?'read':'unread';
 

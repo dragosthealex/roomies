@@ -63,8 +63,13 @@
                 }
                 newHTML[i] += obj.template[obj.template.length - 1];
               }
+            }
 
-              newError(newHTML[i]);
+            switch (part) {
+              case 'messages':
+                document.getElementById('conv').innerHTML = newHTML[0];
+                document.getElementById('allConversations').innerHTML = newHTML[1];
+                break;
             }
           }
         } // if
