@@ -49,16 +49,20 @@
           if (xmlhttp.status === 404) {
             newError("Not found suck balls");
           } else if (xmlhttp.status === 200 && xmlhttp.responseText) {
-            var obj = JSON.parse(xmlhttp.responseText);
+            var objs = JSON.parse(xmlhttp.responseText);
+            var obj;
+            var newHTML = [];
 
-            var newHTML = obj.template;
+            for (var i = 0; i < objs.length; i += 1) {
+              obj = objs[i];
+              newHTML[i] = "";
 
-            for (var i = 0; i < obj.length; i += 1) {
-              for (var j = 0; j < obj.template.length - 1; j += 1) {
-                newHTML += obj.template[j] + obj[i][j];
+              for (var j = 0; j < obj.length; j += 1) {
+                for (var k = 0; k < obj.template.length - 1; k += 1) {
+                  newHTML[i] += obj.template[k] + obj[j][k];
+                }
+                newHTML[i] += obj.template[obj.template.length - 1];
               }
-
-              newHTML += obj.template[obj.template.length - 1];
             }
 
             newError(newHTML);
