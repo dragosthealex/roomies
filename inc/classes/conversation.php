@@ -75,7 +75,7 @@ class Conversation
 
     // The conversation as text
     $conv = "{\"template\": [\"<div class='message \", 
-                         \"'><a class='message-name block'>\" 
+                         \"'><a class='message-name block'>\", 
                          \"</a><p class='text'>\",
                          \"</p></div>\"
                          ],
