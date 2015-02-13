@@ -52,7 +52,10 @@ include "../php/conversation.process.php";
           <?=($err)?$err:$conv?>
           <div class="message-input">
             <!--TODO: CHANGE METHOD TO POST-->
-            <textarea rows="4" cols="50" class="textarea" onchange="this.nextSibling.setAttribute('data-action', '../php/messages.process.php?receiver=<?=$otherUserId?>');"></textarea><input type="submit" class="input-button ajax " value="Send" onclick="this.previousSibling.value = '';">
+            <textarea rows="4" cols="50" class="textarea" id="message"></textarea>
+            <input type="submit" class="input-button" value="Send" onclick="this.previousSibling.value = '';"
+            data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
+            data-ajax-post="message">
           </div>
         </div>
       </div>

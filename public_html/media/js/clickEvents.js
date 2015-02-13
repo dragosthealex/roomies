@@ -39,10 +39,43 @@
       element.parentNode.removeChild(element);
     },
 
+    // A function to update something in the page
+    'update': function (part, url, className) {
+      var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4) {
+          // If there was anything output, new error
+          if (xmlhttp.status === 404) {
+            newError("Not found suck balls");
+          } else if (xmlhttp.status === 200 && xmlhttp.responseText) {
+            var obj = JSON.parse(xmlhttp.responseText);
+
+            var newHTML = obj.template;
+
+            for (var i = 0; i < obj.length; i += 1) {
+              for (var j = 0; j < obj.template.length - 1; j += 1) {
+                newHTML += obj.template[j] + obj[i][j];
+              }
+
+              newHTML += obj.template[obj.template.length - 1];
+            }
+
+            newError(newHTML);
+          }
+        } // if
+      }; // onreadystatechange
+
+      xmlhttp.open('GET', url);
+      xmlhttp.setRequestHeader('Roomies','cactus');
+      xmlhttp.send('offset=' + document.getElementsByClassName(className).length);
+    },
+
     // A function to use ajax on an element
     'ajax': function (element) {
-      var action = element.getAttribute('data-action'),
+      var url = element.getAttribute('data-ajax-url'),
           originalText = element.innerHTML,
+          hideText,
           xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
       xmlhttp.onreadystatechange = function () {
@@ -52,27 +85,46 @@
             newError("Not found suck balls");
           } else if (xmlhttp.responseText) {
             newError(xmlhttp.responseText);
-          } else if (   element.hasAttribute('data-action-toggle')
-                     && element.hasAttribute('data-text-toggle')
-                     && xmlhttp.status === 200) {
-            var originalAction = element.getAttribute('data-action');
+          } else if (hideText = element.getAttribute('data-ajax-hide') && xmlhttp.status === 200) {
+            hideText = hideText.split(" ");
 
-            // Set the next action and text
-            element.setAttribute('data-action', element.getAttribute('data-action-toggle'));
-            element.innerHTML = element.getAttribute('data-text-toggle');
+            var elementsToHide = aProto.splice.call(document.getElementsByClassName(hideText[0]));
 
-            // Cache the old action and text
-            element.setAttribute('data-text-toggle', originalText);
-            element.setAttribute('data-action-toggle', originalAction);
+            elementsToHide.forEach(function (element) {
+              element.style.visibility = "none";
+            });
+
+            document.getElementById(hideText[1]).removeAttribute('style');
           } // if
+
+          // TODO: data-ajax-callback
         } // if
       }; // onreadystatechange
 
-      xmlhttp.open('GET', action);
+      var post = element.getAttribute('data-ajax-post');
+
+      xmlhttp.open((post ? 'POST' : 'GET'), url);
       xmlhttp.setRequestHeader('Roomies','cactus');
-      xmlhttp.send();
-      if (element.hasAttribute('data-text-pending')) {
-        element.innerHTML = element.getAttribute('data-text-pending');
+      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+      if (post) {
+        var letter = "kiwi=awesome";
+
+        post = post.split(" ");
+
+        post.forEach(function (id) {
+          var element = document.getElementById(id);
+
+          letter += "&" + id + "=" + encodeURIComponent(element.value);
+        });
+
+        xmlhttp.send(letter);
+      } else {
+        xmlhttp.send();
+      }
+
+      if (element.hasAttribute('data-ajax-text')) {
+        element.innerHTML = element.getAttribute('data-ajax-text');
       } // if
     }
   };
