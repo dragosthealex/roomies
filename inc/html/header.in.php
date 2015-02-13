@@ -16,7 +16,7 @@ require_once "header.php";
       </li>
       <li class="header-item">
         <!-- TODO: Make the following thingy open a notification box -->
-        <span class="icon-holder" title="Notifications">
+        <span class="icon-holder toggle " title="Notifications" data-target="message-drop">
           <span class="icon icon-notif" data-src="<?=$webRoot?>/media/img/icon_notifications.png"></span>
         </span>
       </li>
