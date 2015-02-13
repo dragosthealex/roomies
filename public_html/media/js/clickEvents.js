@@ -133,11 +133,10 @@
   }; // onmousemove
 
   /**
-   * Function which fires whenever the user scrolls on the page
-   *
-   * Fade in the box shadows when a desktop PC scrolls down
+   * A function to apply box-shadows to certain elements, dependent upon the distance from the top.
+   * If the window is mobile-sized, then work on the header instead
    */
-  window.onscroll = function () {
+  var setBoxShadows = function () {
     // Get the distance to the top of the page
     var scrollTop = (   window.pageYOffset
                      || document.documentElement.scrollTop
@@ -152,28 +151,45 @@
     // Get the dimensions of the window
     var dim = size();
 
-    // If the current size of the window is for mobiles, slide the navigation bar down
-    // Only fix the navigation bar if the height of the window is big enough
+    // Preset a variable to allow modififying the header boxshadow
+    var modifyHeader = true;
+
+    // If the current size of the window if for mobiles, handle things differently
     if (dim.width < 624) {
+      // Apply the box shadow to the header, and fix the navigation bar for phones
+      // (Only if the window is big enough: if not, ensure it isn't fixed)
       if (dim.height > 320) {
         header.style.boxShadow = boxShadow;
-        header.className = (scrollTop > 60 && dim.height > 320) ? "header header-fixed" : "header";
+        header.className = (scrollTop > 60) ? "header header-fixed" : "header";
+
+        // Prevent the header from being changed again
+        modifyHeader = false;
       } else {
-        header.style.boxShadow = "none";
+        // Ensure the header is not fixed
         header.className = "header";
       }
-      return;
+
+      // If on phones, box-shadows are 'none'
+      boxShadow = "none";
     }
 
     // Get all of the elements which need a box-shadow
-    var boxShadowElements =         aProto.slice.call(document.getElementsByClassName("header"    ))
-                            .concat(aProto.slice.call(document.getElementsByClassName("box"       )))
+    var boxShadowElements =         aProto.slice.call(document.getElementsByClassName("box"))
                             .concat(aProto.slice.call(document.getElementsByClassName("column-box")));
+
+    // If we are to also get the header, then do so
+    if (modifyHeader) {
+      boxShadowElements.concat(aProto.slice.call(document.getElementsByClassName("header")));
+    }
 
     // For each element which needs a box-shadow, apply one
     boxShadowElements.forEach(function (element) {
       element.style.boxShadow = boxShadow;
     });
-  }; // onscroll
+  };
 
+  // When the user scrolls, set the box shadows
+  // If the window is resized, set the box shadows
+  // Upon page load, set the box shadows
+  window.onscroll = window.onresize = window.onload = setBoxShadows;
 }(window)); // Localise the window
