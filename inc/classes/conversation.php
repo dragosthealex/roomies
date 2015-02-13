@@ -72,6 +72,7 @@ class Conversation
     // The conversation as text
     $conv = "";
 
+    // Make the users and localise stuff
     $user1 = new User($con, $id1);
     $user2 = new User($con, $id2);
     $user1Name = $user1->getName();
@@ -79,13 +80,16 @@ class Conversation
 
     foreach ($messages as $message)
     {
+      // Replace '\n' with '<br>'
+      $message['message_text'] = nl2br($message['message_text']);
+
       if($message['message_user_id1'] == $this->id1)
       {
-        $conv .= "$user1Name : $message[message_text] <br>";
+        $conv .= "$user1Name: $message[message_text] <br>";
       }
       else
       {
-        $conv .= "$user2Name : $message[message_text] <br>";
+        $conv .= "$user2Name: $message[message_text] <br>";
       }
     }
 
