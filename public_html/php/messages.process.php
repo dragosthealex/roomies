@@ -4,9 +4,10 @@ Process a message and inserts it into db
 */
 require_once '../../inc/init.php';
 require_once __ROOT__.'/inc/classes/message.php';
+require_once __ROOT__.'/inc/classes/conversation.php';
 
 $headers = getallheaders();
-if(!isset($_GET['message']) || !isset($_GET['receiver']) || !isset($headers['Roomies']) || $headers['Roomies'] != 'cactus')
+if(!isset($_POST['message']) || !isset($_GET['receiver']) || !isset($headers['Roomies']) || $headers['Roomies'] != 'cactus')
 {
   include __ROOT__."/inc/html/notfound.php";
   exit();
@@ -17,7 +18,7 @@ else
   $id2 = htmlentities($_GET['receiver']);
 
   // Escape stuff
-  $messageText = htmlspecialchars($_GET['message']);
+  $messageText = htmlspecialchars($_POST['message']);
 
   // Values for setting the message
   $values[0] = $id1;
@@ -25,5 +26,9 @@ else
   $values[2] = $messageText;
   // Insert message in DB
   $message = new Message($con, 'text', $values);
+
+  // Read all messages in this conv
+  $conversation = new Conversation($con, $id1, $id2);
+  $conversation->readMessages();
 }
 ?>
