@@ -547,11 +547,11 @@ class User
     }
     $noOfMessagePartners = count($messagePartners);
 
-    $conversations = "{template: [\"<li class='li'><p><a href='?conv=\",
+    $conversations = "{\"template\": [\"<li class='li'><p><a href='?conv=\",
                                   \"'>\",
                                   \"</a></p></li>\"
                                  ],
-                       length: $noOfMessagePartners";
+                       \"length\": $noOfMessagePartners";
 
     foreach ($messagePartners as $key => $otherUserId)
     {
@@ -559,7 +559,7 @@ class User
       $otherUserName = $otherUser->getName();
       $noNewMessages = $apparitionArray[$otherUserId];
 
-      $conversations .=", $key: [\"$otherUserId\", \"$otherUserName\"]";
+      $conversations .=", \"$key\": [\"$otherUserId\", \"$otherUserName\"]";
     }
     $conversations .= "}";
     
