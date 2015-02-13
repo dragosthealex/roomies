@@ -5,7 +5,7 @@ Gets user  ID of other user through AJAX. Update percentages in table.
 require_once "../../inc/init.php";
 $headers = getallheaders();
 
-if(!LOGGED_IN || !$_GET['id'] || !isset($headers['roomies']) || $headers['roomies'] != 'cactus'
+if(!LOGGED_IN || !$_GET['id'] || !isset($headers['Roomies']) || $headers['Roomies'] != 'cactus'
   || !isset($_GET['q_no']) || !isset($_GET['q_ans']) || !isset($_GET['q_acc']) || !isset($_get['q_imp']))
 {
   include __ROOT__."/inc/html/notfound.php";

@@ -90,6 +90,7 @@ $otherUsername = $_GET['u'];
 
 $otherUser = new User($con, $otherUsername);
 $otherUserId = $otherUser->getIdentifier('id');
+$otherUsername = $otherUser->getIdentifier('username');
 $userId = $user->getIdentifier('id');
 
 if(!isset($otherUserId) || !$otherUserId)

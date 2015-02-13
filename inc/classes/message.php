@@ -9,15 +9,15 @@
 class Message
 {
   // The text of the message
-  private $text
+  private $text;
   // The time and date of the message as dd-mm-yyyy-hh-mm-ss
-  private $timeStamp
+  private $timeStamp;
   // The unique id of the message
-  private $id
+  private $id;
   // The id of the user that has written the message
-  private $author
+  private $author;
   // The db connection handler
-  private $con
+  private $con;
 
   /**
   *

@@ -51,12 +51,8 @@ include "../php/conversation.process.php";
           <h2 class="h2"><?=$otherName?></h2>
           <?=($err)?$err:$conv?>
           <div class="message-input">
-            <textarea rows="4" cols="50" class="textarea">
-
-            </textarea>
-            <span class="input-button">
-              Send
-            </span>
+            <!--TODO: CHANGE METHOD TO POST-->
+            <textarea rows="4" cols="50" class="textarea" onchange="this.nextSibling.setAttribute('data-action', '../php/messages.process.php?receiver=<?=$otherUserId?>');"></textarea><input type="submit" class="input-button ajax " value="Send" onclick="this.previousSibling.value = '';">
           </div>
         </div>
       </div>
