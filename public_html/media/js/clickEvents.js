@@ -236,4 +236,9 @@
   // If the window is resized, set the box shadows
   // Upon page load, set the box shadows
   window.onscroll = window.onresize = window.onload = setBoxShadows;
+
+  document.getElementById('conv') && setTimeout(function updateConv() {
+    func.update('messages', '../php/update_message.process.php?otherId=' + window.location.href.split("=")[1]);
+    setTimeout(updateConv, 5000);
+  }, 5000);
 }(window)); // Localise the window
