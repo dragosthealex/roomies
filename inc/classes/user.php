@@ -476,6 +476,8 @@ class User
       $otherUser = new User($con, $id2);
       $otherUserName = $otherUser->getName();
 
+      $firstLine = explode("<br>", $text)[0];
+
       $messages .= 
       "
       <li class='li'>
@@ -483,7 +485,7 @@ class User
           <a href='./messages/?conv=$id2'>$otherUserName ($noNewMessages)</a>
         </p>
         <p>
-          $text
+          $firstLine
         </p>
       </li>
       ";
@@ -492,6 +494,72 @@ class User
     $messages .= "</ul></div>";
 
     return $messages;
+  }
+
+  /**
+  * Function getAllConversations()
+  *
+  * Returns an string of conversations
+  *
+  * @param - $conversations(string), contain conversations
+  */
+  public function getAllConversations($offset)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // The limit used for getting the conversations
+    $limit = $offset + 10;
+
+    // The users that this user has a conversation with
+    $messagePartners = array();
+    // The array that remembers how many messages we have from a user
+    // aka the number of apparitions of a certain user id in our select
+    $apparitionArray = array();
+
+    $stmt = $con->prepare("SELECT message_user_id1 FROM rmessages 
+                            WHERE message_user_id2 = $userId
+                            ORDER BY message_timestamp DESC
+                            LIMIT $offset, $limit");
+    $stmt->execute();
+    $stmt->bindColumn(1, $id2);
+
+    // Check if we have any message at all
+    if(!$stmt->rowCount())
+    {
+      return "";
+    }
+
+    while ($stmt->fetch())
+    {
+      if(!in_array($id2, $messagePartners))
+      {
+        array_push($messagePartners, $id2);
+        $apparitionArray[$id2] = 1;
+      }
+      else
+      {
+        $apparitionArray[$id2] ++;
+      }
+    }
+    $conversations = "";
+    foreach ($messagePartners as $otherUserId)
+    {
+      $otherUser = new User($con, $otherUserId);
+      $otherUserName = $otherUser->getName();
+      $noNewMessages = $apparitionArray[$otherUserId];
+
+      $conversations .=
+      "
+      <li data-id='$otherUserId' class='li'>
+        <p>
+          <a href='?conv=$otherUserId'>$otherUserName ($noNewMessages)</a>
+        </p>
+      </li>
+      ";
+    }
+    return $conversations;
   }
 }
 
