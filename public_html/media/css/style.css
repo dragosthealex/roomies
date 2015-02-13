@@ -290,6 +290,10 @@
 	border-width: 0 3px 3px;
 }
 
+.unread {
+	color: red;
+}
+
 .h1, .h2 {
 	margin: 16px 0;
 	font-size: 2em;

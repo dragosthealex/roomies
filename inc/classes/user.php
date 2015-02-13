@@ -419,11 +419,12 @@ class User
   * @return - $messages(array), the unread messages
   *
   */
-  public function getNewMessages()
+  public function getNotifMessages($offset)
   {
     // Localise stuff
     $con = $this->con;
     $userId = $this->id;
+    $limit = $offset + 10;
 
     // The users that this user has a conversation with
     $messagePartners = array();
@@ -431,8 +432,7 @@ class User
     $apparitionArray = array();
 
     $stmt = $con->prepare("SELECT message_user_id1 FROM rmessages 
-                            WHERE message_user_id2 = $userId 
-                              AND messages_read = 0
+                            WHERE message_user_id2 = $userId
                             ORDER BY message_timestamp DESC");
     $stmt->execute();
     $stmt->bindColumn(1, $id2);
@@ -457,14 +457,13 @@ class User
 
     $messages = "<div class='messages'><ul class='ul'>";
 
-    for($index=0; $index<count($messagePartners) && $index<5; $index++)
+    for($index=0; $index<count($messagePartners) && $index<10; $index++)
     {
       $id2 = $messagePartners[$index];
       $stmt = $con->prepare("SELECT message_text, message_timestamp FROM rmessages 
                               WHERE message_user_id1 = $id2 AND message_user_id2 = $userId
-                                AND messages_read = 0
                               ORDER BY message_timestamp DESC
-                              LIMIT 1");
+                              LIMIT $offset, $limit");
       $stmt->execute();
       $stmt->bindColumn(1, $text);
       $stmt->bindColumn(2, $timestamp);
@@ -486,6 +485,9 @@ class User
         </p>
         <p>
           $firstLine
+        </p>
+        <p>
+          At $timestamp
         </p>
       </li>
       ";

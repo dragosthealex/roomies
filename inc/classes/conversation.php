@@ -89,11 +89,11 @@ class Conversation
       // Stuff changeable for CSS
       if($message['message_user_id1'] == $this->id1)
       {
-        $conv .= "<a class='message-name'>$user1Name</a>:<span class='message $read'> $message[message_text]</span>";
+        $conv .= "<div class='message'><a class='message-name'>$user1Name</a>:<span class='message'> $message[message_text]</span></message>";
       }
       else
       {
-        $conv .= "<a class='message-name'>$user2Name</a>:<span class='message $read'> $message[message_text]</span>";
+        $conv .= "<div class='message $read'><a class='message-name'>$user2Name</a>:<span class='message'> $message[message_text]</span></div>";
       }
       $conv .= "</li>";
     }
