@@ -14,7 +14,10 @@ require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
 $err = "";
+// The current opened conversation
 $conv = "";
+// Handlers for all conversations
+$allConversations = "";
 
 /*
 This script provides variables:
@@ -23,7 +26,7 @@ This script provides variables:
 -> $otherName, the other user name
 -> $otherUserId, the other user id
 */
-include "../php/conversation.process.php";
+include __ROOT__."/inc/html/messages_page.php";
 
 
 // Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footers
@@ -36,7 +39,9 @@ include "../php/conversation.process.php";
         <div class="box-padding">
           <h2 class="h2">Conversations</h2>
             <ul class='ul'>
-              <?=$allConversations?>
+              <div id="allConversations">
+                <?=$allConversations?>
+              </div>
             </ul>
           <p class="text">
 
@@ -49,7 +54,9 @@ include "../php/conversation.process.php";
       <div class="column-box">
         <div class="box-padding">
           <h2 class="h2"><?=$otherName?></h2>
-          <?=($err)?$err:$conv?>
+            <div id="conv">
+              <?=($err)?$err:$conv?>
+            </div>
           <div class="message-input">
             <!--TODO: CHANGE METHOD TO POST-->
             <textarea rows="4" cols="50" class="textarea" id="message"></textarea>

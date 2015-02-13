@@ -498,6 +498,75 @@ class User
     return $messages;
   }
 
+    /**
+  * Function getAllConversationsJSON()
+  *
+  * Returns a JSON of conversations
+  *
+  * @return - $conversations(string), contain conversations
+  */
+  public function getAllConversationsJSON($offset)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // The limit used for getting the conversations
+    $limit = $offset + 10;
+
+    // The users that this user has a conversation with
+    $messagePartners = array();
+    // The array that remembers how many messages we have from a user
+    // aka the number of apparitions of a certain user id in our select
+    $apparitionArray = array();
+
+    $stmt = $con->prepare("SELECT message_user_id1 FROM rmessages 
+                            WHERE message_user_id2 = $userId
+                            ORDER BY message_timestamp DESC
+                            LIMIT $offset, $limit");
+    $stmt->execute();
+    $stmt->bindColumn(1, $id2);
+
+    // Check if we have any message at all
+    if(!$stmt->rowCount())
+    {
+      return "";
+    }
+
+    while ($stmt->fetch())
+    {
+      if(!in_array($id2, $messagePartners))
+      {
+        array_push($messagePartners, $id2);
+        $apparitionArray[$id2] = 1;
+      }
+      else
+      {
+        $apparitionArray[$id2] ++;
+      }
+    }
+    $noOfMessagePartners = count($messagePartners);
+
+    $conversations = "{template: [\"<li class='li'><p><a href='?conv=\",
+                                  \"'>\",
+                                  \"</a></p></li>\"
+                                 ],
+                       length: $noOfMessagePartners";
+
+    foreach ($messagePartners as $key => $otherUserId)
+    {
+      $otherUser = new User($con, $otherUserId);
+      $otherUserName = $otherUser->getName();
+      $noNewMessages = $apparitionArray[$otherUserId];
+
+      $conversations .=", $key: [\"$otherUserId\", \"$otherUserName\"]";
+    }
+    $conversations .= "}";
+    
+    return $conversations;
+  }
+
+
   /**
   * Function getAllConversations()
   *
