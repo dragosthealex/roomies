@@ -55,6 +55,72 @@ class Conversation
   }
 
   /**
+  * Function getAsJSON()
+  *
+  * Returns the same stuff as before, but in JSON
+  *
+  * @return - $conv(json), the json
+  */
+  public function getAsJSON()
+  {
+    // Localise stuff
+    $id1 = $this->id1;
+    $id2 = $this->id2;
+    $con = $this->con;
+    // The array of messages
+    $messages = $this->messages;
+    $numberOfLoadedMessages = count($messages);
+
+    // The conversation as text
+    $conv = "{template: [\"<div class='message \", 
+                         \"'><a class='message-name block'>\" 
+                         \"</a><p class='text'>\",
+                         \"</p></div>\",
+                         ],
+              length: $numberOfLoadedMessages";
+
+    // Make the users and localise stuff
+    $user1 = new User($con, $id1);
+    $user2 = new User($con, $id2);
+    $user1Name = $user1->getName();
+    $user2Name = $user2->getName();
+
+    foreach ($messages as $key => $message)
+    {
+      // Replace '\n' with '<br>'
+      $message['message_text'] = nl2br($message['message_text']);
+
+      $read = ($message['messages_read'])?'read':'unread';
+
+      // Stuff changeable for CSS
+      if($message['message_user_id1'] == $this->id1)
+      {
+        $conv .= ",
+                  $key: [0: \"\",
+                         1: \"$user1Name\",
+                         2: \"$message[message_text]\",
+                         3: \"$message[message_timestamp]\"
+                         ]";
+      }
+      else
+      {
+        $conv .= ",
+                  $key: [0: \"$read\",
+                         1: \"$user2Name\",
+                         2: \"$message[message_text]\",
+                         3: \"$message[message_timestamp]\"
+                         ]";
+      }
+    }
+    $conv .= "}";
+
+    $stmt = null;
+    return $conv;
+  }
+
+
+  
+  /**
   * Function toString()
   *
   * Returns conversation as string (html) formatted
@@ -63,7 +129,7 @@ class Conversation
   */
   public function toString()
   {
-    // Localise stuff
+        // Localise stuff
     $id1 = $this->id1;
     $id2 = $this->id2;
     $con = $this->con;

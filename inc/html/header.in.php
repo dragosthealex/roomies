@@ -27,7 +27,7 @@ require_once "header.php";
         </a>
       </li>
       <li class="header-item">
-        <a href="#" class="icon-holder" title="Accommodation">
+        <a href="<?=$webRoot?>/accommodation" class="icon-holder" title="Accommodation">
           <span class="icon icon-accomm"></span>
         </a>
       </li>
