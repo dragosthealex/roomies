@@ -63,7 +63,7 @@ include __ROOT__."/inc/html/messages_page.php";
             <input type="submit" class="input-button" value="Send" onclick="this.previousSibling.value = '';"
             data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
             data-ajax-post="message"
-            data-ajax-callback="update messages ../php/update_message.process.php?otherId=<?=$otherUserId?> message">
+            data-ajax-callback="update messages ../php/update_message.process.php?otherId=<?=$otherUserId?>">
           </div>
         </div>
       </div>
