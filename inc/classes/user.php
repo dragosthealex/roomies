@@ -430,10 +430,18 @@ class User
     // The array that remembers how many unread messages we have from a user
     $apparitionArray = array();
 
-    $stmt = $con->prepare("SELECT message_user_id2 FROM rmessages 
-                            WHERE message_user_id1 = $userId AND message_read = 0");
+    $stmt = $con->prepare("SELECT message_user_id1 FROM rmessages 
+                            WHERE message_user_id2 = $userId 
+                              AND messages_read = 0
+                            ORDER BY message_timestamp DESC");
     $stmt->execute();
     $stmt->bindColumn(1, $id2);
+
+    if(!$stmt->rowCount())
+    {
+      return "";
+    }
+
     while ($stmt->fetch())
     {
       if(!in_array($id2, $messagePartners))
@@ -447,10 +455,43 @@ class User
       }
     }
 
-    for($index=0; $index<count($messagePartners); $index++)
+    $messages = "<div class='messages'><ul class='ul'>";
+
+    for($index=0; $index<count($messagePartners) && $index<5; $index++)
     {
-      $message = "";
+      $id2 = $messagePartners[$index];
+      $stmt = $con->prepare("SELECT message_text, message_timestamp FROM rmessages 
+                              WHERE message_user_id1 = $id2 AND message_user_id2 = $userId
+                                AND messages_read = 0
+                              ORDER BY message_timestamp DESC
+                              LIMIT 1");
+      $stmt->execute();
+      $stmt->bindColumn(1, $text);
+      $stmt->bindColumn(2, $timestamp);
+      $stmt->fetch();
+
+      $noNewMessages = $apparitionArray[$id2];
+
+      // Get name
+      $otherUser = new User($con, $id2);
+      $otherUserName = $otherUser->getName();
+
+      $messages .= 
+      "
+      <li class='li'>
+        <p>
+          <a href='./messages/?conv=$id2'>$otherUserName ($noNewMessages)</a>
+        </p>
+        <p>
+          $text
+        </p>
+      </li>
+      ";
     }
+
+    $messages .= "</ul></div>";
+
+    return $messages;
   }
 }
 

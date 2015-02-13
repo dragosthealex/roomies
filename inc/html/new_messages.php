@@ -4,8 +4,8 @@ Script retrievs messages from db for this user, that have not been read yet,
 ordering them by timestamp (newest first)
 */
 
-// Get messages from db for this user
-
-
-
 ?>
+
+<div class="new-messages">
+  <?=($user->getNewMessages())?$user->getNewMessages():"No messages. Nobody loves you.";?>
+</div>
