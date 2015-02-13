@@ -433,7 +433,7 @@ class User
     $stmt = $con->prepare("SELECT message_user_id2 FROM rmessages 
                             WHERE message_user_id1 = $userId AND message_read = 0");
     $stmt->execute();
-    $stmt->bindColumn(1, $id2)
+    $stmt->bindColumn(1, $id2);
     while ($stmt->fetch())
     {
       if(!in_array($id2, $messagePartners))
