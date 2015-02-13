@@ -436,6 +436,12 @@ class User
                             ORDER BY message_timestamp DESC");
     $stmt->execute();
     $stmt->bindColumn(1, $id2);
+
+    if(!$stmt->rowCount())
+    {
+      return "";
+    }
+
     while ($stmt->fetch())
     {
       if(!in_array($id2, $messagePartners))
