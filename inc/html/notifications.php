@@ -5,7 +5,9 @@
     <div class="column-box">
       <div class="box-padding">
         <h2 class="h2">Messages</h2>
-        <!-- php to retrieve 'messages' from database should be here' -->
+        <?php
+          include __ROOT__."/inc/html/new_messages.php";
+        ?>
         <p class="text">
         </p>
       </div>

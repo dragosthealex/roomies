@@ -411,6 +411,47 @@ class User
     return $percentage;
   }
 
+  /**
+  * Function getNewMessages()
+  *
+  * Returns all the messages that have not been read yet, into an array
+  *
+  * @return - $messages(array), the unread messages
+  *
+  */
+  public function getNewMessages()
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // The users that this user has a conversation with
+    $messagePartners = array();
+    // The array that remembers how many unread messages we have from a user
+    $apparitionArray = array();
+
+    $stmt = $con->prepare("SELECT message_user_id2 FROM rmessages 
+                            WHERE message_user_id1 = $userId AND message_read = 0");
+    $stmt->execute();
+    $stmt->bindColumn(1, $id2)
+    while ($stmt->fetch())
+    {
+      if(!in_array($id2, $messagePartners))
+      {
+        array_push($messagePartners, $id2);
+        $apparitionArray[$id2] = 1;
+      }
+      else
+      {
+        $apparitionArray[$id2] ++;
+      }
+    }
+
+    for($index=0; $index<count($messagePartners); $index++)
+    {
+      $message = "";
+    }
+  }
 }
 
 ?>
