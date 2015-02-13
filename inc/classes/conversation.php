@@ -72,12 +72,12 @@ class Conversation
     $numberOfLoadedMessages = count($messages);
 
     // The conversation as text
-    $conv = "{template: [\"<div class='message \", 
+    $conv = "{\"template\": [\"<div class='message \", 
                          \"'><a class='message-name block'>\" 
                          \"</a><p class='text'>\",
-                         \"</p></div>\",
+                         \"</p></div>\"
                          ],
-              length: $numberOfLoadedMessages";
+              \"length\": $numberOfLoadedMessages";
 
     // Make the users and localise stuff
     $user1 = new User($con, $id1);
@@ -96,19 +96,19 @@ class Conversation
       if($message['message_user_id1'] == $this->id1)
       {
         $conv .= ",
-                  $key: [0: \"\",
-                         1: \"$user1Name\",
-                         2: \"$message[message_text]\",
-                         3: \"$message[message_timestamp]\"
+                  \"$key\": [\"\",
+                         \"$user1Name\",
+                         \"$message[message_text]\",
+                         \"$message[message_timestamp]\"
                          ]";
       }
       else
       {
         $conv .= ",
-                  $key: [0: \"$read\",
-                         1: \"$user2Name\",
-                         2: \"$message[message_text]\",
-                         3: \"$message[message_timestamp]\"
+                  \"$key\": [\"$read\",
+                         \"$user2Name\",
+                         \"$message[message_text]\",
+                         \"$message[message_timestamp]\"
                          ]";
       }
     }
