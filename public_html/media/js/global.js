@@ -23,7 +23,7 @@
   /**
    * An object which holds javascript functions for interactivity
    */
-  var func = {
+  var roomies = {
     // A function to toggle the visibility of an element
     'toggle': function (element) {
       // If the element is hidden, show it, else hide it
@@ -40,7 +40,7 @@
     },
 
     // A function to update something in the page
-    'update': function (part, url, className) {
+    'update': function (part, url, className1, className2, callBack) {
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
       xmlhttp.onreadystatechange = function () {
@@ -72,10 +72,15 @@
                 break;
             }
           }
+
+          typeof callBack === 'function' && callBack();
         } // if
       }; // onreadystatechange
 
-      xmlhttp.open('GET', url + "&offset=" + document.getElementsByClassName(className).length);
+      var delimiter = /\?/.exec(url) ? '&' : '?';
+
+      xmlhttp.open('GET', url + delimiter + "offset1=" + document.getElementsByClassName(className1).length
+                                          + "&offset2=" + document.getElementsByClassName(className2).length);
       xmlhttp.setRequestHeader('Roomies','cactus');
       xmlhttp.send();
     },
@@ -137,7 +142,7 @@
       var callBack;
       if (callBack = element.getAttribute('data-ajax-callback')) {
         callBack = callBack.split(" ");
-        func[callBack[0]](callBack[1], callBack[2], callBack[3]);
+        roomies[callBack[0]](callBack[1], callBack[2], callBack[3], callBack[4]);
       } // if
     }
   };
@@ -161,17 +166,17 @@
 
     // If a target needs toggling, do so.
     if (target = document.getElementById(element.getAttribute('data-toggle'))) {
-      func['toggle'](target);
+      roomies['toggle'](target);
     } // if
 
     // If a target needs deleting, do so.
     if (target = document.getElementById(element.getAttribute('data-delete'))) {
-      func['delete'](target);
+      roomies['delete'](target);
     } // if
 
     // If the element employs ajax, do some ajax.
     if (element.hasAttribute('data-ajax-url')) {
-      func['ajax'](element);
+      roomies['ajax'](element);
       return false;
     } // if
   }; // onclick
@@ -237,10 +242,5 @@
   // Upon page load, set the box shadows
   window.onscroll = window.onresize = window.onload = setBoxShadows;
 
-  window.func = func;
-
-  document.getElementById('conv') && setTimeout(function updateConv() {
-    func.update('messages', '../php/update_message.process.php?otherId=' + window.location.href.split("=")[1]);
-    setTimeout(updateConv, 5000);
-  }, 5000);
+  window.roomies = roomies;
 }(window)); // Localise the window

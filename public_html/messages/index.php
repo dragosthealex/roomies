@@ -69,8 +69,11 @@ include __ROOT__."/inc/html/messages_page.php";
       </div>
     </div>
   </div>
-<?php include __ROOT__."/inc/html/footer.php";
-    // Read all messages in this conv
-  $conversation = new Conversation($con, $user->getIdentifier('id'), $otherUserId);
-  $conversation->readMessages();
+<?php
+$scripts = array('update_message');
+include __ROOT__."/inc/html/footer.php";
+
+// Read all messages in this conv
+$conversation = new Conversation($con, $user->getIdentifier('id'), $otherUserId);
+$conversation->readMessages();
 ?>

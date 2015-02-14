@@ -1,1 +1,1 @@
-delete window.func;
+delete window.roomies;
