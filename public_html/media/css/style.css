@@ -446,16 +446,17 @@
 
 .scroll-wrapper {
 	position: relative;
+	border-top: 1px solid #e4e0df;
+	border-bottom: 1px solid #e4e0df;
 	overflow: hidden;
 }
 
 .scroll-area {
 	margin-right: -30px;
 	padding-right: 30px;
-	border-top: 1px solid #e4e0df;
-	border-bottom: 1px solid #e4e0df;
 	/* Will adjust this with JS */
 	height: 400px;
+	overflow-x: hidden;
 	overflow-y: scroll;
 }
 
@@ -499,13 +500,7 @@
 }
 
 .conversation {
-	padding-right: 8px;
-}
-
-.conversation:before, .conversation:after {
-	display: block;
-	height: 8px;
-	content: "";
+	padding: 8px 8px 8px 0;
 }
 
 .message {

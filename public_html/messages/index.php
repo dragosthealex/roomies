@@ -60,7 +60,7 @@ include __ROOT__."/inc/html/messages_page.php";
             <div id="conv" class="conversation">
               <?=($err)?$err:$conv?>
             </div>
-            <a class="scroll-bar" ondragstart="event.preventDefault()"><div class="scroll-tracker"></div></a>
+            <div class="scroll-bar"><div class="scroll-tracker"></div></div>
           </div>
         </div>
         <div class="box-padding">

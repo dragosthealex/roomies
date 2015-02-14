@@ -29,7 +29,7 @@
   };
 
   var updateMessages = function () {
-    update('messages', '../php/update_message.process.php?unread=true&otherId=' + window.location.href.split("=")[1], 'header', null, updateMessagesAgain);
+    update('messages', '../php/update_message.process.php?timestamp=' + encodeURIComponent(new Date()) + '&otherId=' + window.location.href.split("=")[1], 'header', null, updateMessagesAgain);
   };
 
   var updateMessagesAgain = function () {
