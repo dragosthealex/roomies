@@ -21,6 +21,27 @@ For the sake of layout, let the body/html be closed on every page
 </div>
 
 <!-- Scripts -->
-<script src="<?=$webRoot?>/media/js/clickEvents.js"></script>
+<?php
+$headers = getallheaders();
+if (isset($headers['Roomies']) && $headers['Roomies'] == 'kiwi')
+{
+    // Output the iframe script
+} // if
+else
+{
+    // Output the global scripts
+    echo "<script src='$webRoot/media/js/global.js'></script>";
+    // If there are other scripts to output, output those too
+    if (isset($scripts))
+    {
+        foreach ($scripts as $script)
+        {
+            echo "<script src='$webRoot/media/js/$script.js'></script>";
+        }
+    }
+    // Output the script to delete the global methods (prevent users using them)
+    echo "<script src='$webRoot/media/js/close.js'></script>";
+} // else
+?>
 </body>
 </html>

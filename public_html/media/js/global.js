@@ -237,6 +237,8 @@
   // Upon page load, set the box shadows
   window.onscroll = window.onresize = window.onload = setBoxShadows;
 
+  window.func = func;
+
   document.getElementById('conv') && setTimeout(function updateConv() {
     func.update('messages', '../php/update_message.process.php?otherId=' + window.location.href.split("=")[1]);
     setTimeout(updateConv, 5000);
