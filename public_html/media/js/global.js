@@ -67,7 +67,11 @@
 
             switch (part) {
               case 'messages':
-                document.getElementById('conv').innerHTML = newHTML[0];
+                var conv = document.getElementById('conv')
+                conv.innerHTML = newHTML[0];
+                if (conv.scrollHeight - conv.scrollTop - conv.offsetHeight === 0) {
+                  conv.scrollTop = conv.scrollHeight;
+                }
                 document.getElementById('allConversations').innerHTML = newHTML[1];
                 break;
             }
