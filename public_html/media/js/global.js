@@ -161,6 +161,7 @@
           var element = document.getElementById(id);
 
           letter += "&" + id + "=" + encodeURIComponent(element.value);
+          element.value = '';
         });
 
         xmlhttp.send(letter);

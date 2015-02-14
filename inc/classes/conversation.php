@@ -150,6 +150,7 @@ class Conversation
     $user1Name = $user1->getName();
     $user2Name = $user2->getName();
 
+    $messages = array_reverse($messages);
     foreach ($messages as $message)
     {
       // Replace '\n' with '<br>'

@@ -424,36 +424,12 @@ class User
     // Localise stuff
     $con = $this->con;
     $userId = $this->id;
-    $limit = $offset + 10;
 
-    // The users that this user has a conversation with
-    $messagePartners = array();
-    // The array that remembers how many unread messages we have from a user
-    $apparitionArray = array();
+    $return = $this->getConv($offset);
+    $apparitionArray = $return['apparitionArray'];
+    $messagePartners = $return['messagePartners'];
+    $unreadArray = $return['unreadArray'];
 
-    $stmt = $con->prepare("SELECT message_user_id1 FROM rmessages 
-                            WHERE message_user_id2 = $userId
-                            ORDER BY message_timestamp DESC");
-    $stmt->execute();
-    $stmt->bindColumn(1, $id2);
-
-    if(!$stmt->rowCount())
-    {
-      return "";
-    }
-
-    while ($stmt->fetch())
-    {
-      if(!in_array($id2, $messagePartners))
-      {
-        array_push($messagePartners, $id2);
-        $apparitionArray[$id2] = 1;
-      }
-      else
-      {
-        $apparitionArray[$id2] ++;
-      }
-    }
 
     $messages = "<div class='messages'><ul class='ul'>";
 
@@ -461,15 +437,18 @@ class User
     {
       $id2 = $messagePartners[$index];
       $stmt = $con->prepare("SELECT message_text, message_timestamp FROM rmessages 
-                              WHERE message_user_id1 = $id2 AND message_user_id2 = $userId
+                              WHERE (message_user_id1 = $id2 AND message_user_id2 = $userId)
+                                OR (message_user_id1 = $userId AND message_user_id2 = $id2)
                               ORDER BY message_timestamp DESC
-                              LIMIT $offset, $limit");
+                              LIMIT 1");
       $stmt->execute();
       $stmt->bindColumn(1, $text);
       $stmt->bindColumn(2, $timestamp);
       $stmt->fetch();
 
-      $noNewMessages = $apparitionArray[$id2];
+      // Get the number of unread messages from this user
+      $noNewMessages = (isset($unreadArray[$id2]) && $unreadArray[$id2])?"({$unreadArray[$id2]})":"";
+      $addReadClass = ($noNewMessages)?"read":"";
 
       // Get name
       $otherUser = new User($con, $id2);
@@ -479,9 +458,9 @@ class User
 
       $messages .= 
       "
-      <li class='li'>
+      <li class='li $addReadClass'>
         <p>
-          <a href='./messages/?conv=$id2'>$otherUserName ($noNewMessages)</a>
+          <a href='./messages/?conv=$id2'>$otherUserName $noNewMessages</a>
         </p>
         <p>
           $firstLine
@@ -507,82 +486,14 @@ class User
   */
   public function getAllConversationsJSON($offset)
   {
-    // Localise stuff
+    // Localise con
     $con = $this->con;
-    $userId = $this->id;
+    
+    $return = $this->getConv($offset);
+    $apparitionArray = $return['apparitionArray'];
+    $messagePartners = $return['messagePartners'];
+    $unreadArray = $return['unreadArray'];
 
-    // The limit used for getting the conversations
-    $limit = $offset + 10;
-
-    // The users that this user has a conversation with
-    $messagePartners = array();
-    // The array that remembers how many messages we have from a user
-    // aka the number of apparitions of a certain user id in our select
-    $apparitionArray = array();
-    // The array that remembers how many unread messages we have from a user
-    $unreadArray = array();
-
-
-    $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read FROM rmessages 
-                            WHERE message_user_id2 = $userId
-                              OR message_user_id1 = $userId
-                            ORDER BY message_timestamp DESC");
-    $stmt->execute();
-    $stmt->bindColumn(1, $id1);
-    $stmt->bindColumn(2, $id2);
-    $stmt->bindColumn(3, $read);
-
-    // Check if we have any message at all
-    if(!$stmt->rowCount())
-    {
-      return "";
-    }
-
-    while ($stmt->fetch())
-    {
-      if($id1 == $userId)
-      {
-        if(!in_array($id2, $messagePartners))
-        {
-          array_push($messagePartners, $id2);
-          $apparitionArray[$id2] = 1;
-          $unreadArray[$id2] = 0;
-        }
-        else
-        {
-          $apparitionArray[$id2] ++;
-        }
-        // Count if the message is unread
-        ($read)?:$unreadArray[$id2]++;
-        // Wait 'till we reach 10 conversations
-        if(count($messagePartners) == $limit)
-        {
-          break;
-        }
-      }
-      else
-      {
-        if(!in_array($id1, $messagePartners))
-        {
-          array_push($messagePartners, $id1);
-          $apparitionArray[$id1] = 1;
-          $unreadArray[$id1] = 0;
-        }
-        else
-        {
-          $apparitionArray[$id1] ++;
-        }
-        // Count if the message is unread
-        ($read)?:$unreadArray[$id1]++;
-        // Wait 'till we reach 10 conversations
-        if(count($messagePartners) == $limit)
-        {
-          break;
-        }
-      }
-    }
-
-    $noNewMessages = ($unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
     $noOfMessagePartners = count($messagePartners);
 
     $conversations = "{\"template\": [\"<li class='li'><p><a href='?conv=\",
@@ -595,8 +506,8 @@ class User
     {
       $otherUser = new User($con, $otherUserId);
       $otherUserName = $otherUser->getName();
-      $noNewMessages = $apparitionArray[$otherUserId];
-
+      $noNewMessages = (isset($unreadArray[$otherUserId]) && $unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
+      
       $conversations .=", \"$key\": [\"$otherUserId\", \"$otherUserName $noNewMessages\"]";
     }
     $conversations .= "}";
@@ -614,7 +525,38 @@ class User
   */
   public function getAllConversations($offset)
   {
-    // Localise stuff
+    // Localise con
+    $con = $this->con;
+
+    $return = $this->getConv($offset);
+    $apparitionArray = $return['apparitionArray'];
+    $messagePartners = $return['messagePartners'];
+    $unreadArray = $return['unreadArray'];
+
+    $conversations = "";
+    foreach ($messagePartners as $otherUserId)
+    {
+      $otherUser = new User($con, $otherUserId);
+      $otherUserName = $otherUser->getName();
+      $noNewMessages = (isset($unreadArray[$otherUserId]) && $unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
+
+      $conversations .=
+      "
+      <li data-id='$otherUserId' class='li'>
+        <p>
+          <a href='?conv=$otherUserId'>$otherUserName $noNewMessages</a>
+        </p>
+      </li>
+      ";
+    }
+    return $conversations;
+  }
+
+
+// Gets the conversations
+private function getConv($offset)
+{
+      // Localise stuff
     $con = $this->con;
     $userId = $this->id;
 
@@ -652,15 +594,11 @@ class User
         if(!in_array($id2, $messagePartners))
         {
           array_push($messagePartners, $id2);
-          $apparitionArray[$id2] = 1;
-          $unreadArray[$id2] = 0;
-        }
+          $apparitionArray[$id2] = 1;        }
         else
         {
           $apparitionArray[$id2] ++;
         }
-        // Count if the message is unread
-        ($read)?:$unreadArray[$id2]++;
         // Wait 'till we reach 10 conversations
         if(count($messagePartners) == $limit)
         {
@@ -689,24 +627,12 @@ class User
       }
     }
 
-    $conversations = "";
-    foreach ($messagePartners as $otherUserId)
-    {
-      $otherUser = new User($con, $otherUserId);
-      $otherUserName = $otherUser->getName();
-      $noNewMessages = ($unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
+    $return['messagePartners'] = $messagePartners;
+    $return['unreadArray'] = $unreadArray;
+    $return['apparitionArray'] = $apparitionArray;
 
-      $conversations .=
-      "
-      <li data-id='$otherUserId' class='li'>
-        <p>
-          <a href='?conv=$otherUserId'>$otherUserName $noNewMessages</a>
-        </p>
-      </li>
-      ";
-    }
-    return $conversations;
+    return $return;
   }
-}
+}// class
 
 ?>
