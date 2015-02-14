@@ -54,17 +54,22 @@ include __ROOT__."/inc/html/messages_page.php";
       <div class="column-box">
         <div class="box-padding">
           <h2 class="h2"><?=$otherName?></h2>
-            <div id="conv">
+        </div>
+        <div class="scroll-wrapper">
+          <div class="scroll-area">
+            <div id="conv" class="conversation">
               <?=($err)?$err:$conv?>
             </div>
-          <div class="message-input">
-            <!--TODO: CHANGE METHOD TO POST-->
-            <textarea rows="4" cols="50" class="textarea" id="message"></textarea>
-            <input type="submit" class="input-button" value="Send" onclick="this.previousSibling.value = '';"
-            data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
-            data-ajax-post="message"
-            data-ajax-callback="update messages ../php/update_message.process.php?otherId=<?=$otherUserId?>">
+            <a class="scroll-bar" ondragstart="event.preventDefault()"><div class="scroll-tracker"></div></a>
           </div>
+        </div>
+        <div class="box-padding">
+          <!--TODO: CHANGE METHOD TO POST-->
+          <div class="textarea-holder"><textarea class="textarea" id="message" placeholder="Write a message..."></textarea>
+          </div><input type="submit" class="input-button block" value="Send" onclick="this.previousSibling.firstChild.value = '';"
+          data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
+          data-ajax-post="message"
+          data-ajax-callback="update messages ../php/update_message.process.php?otherId=<?=$otherUserId?>">
         </div>
       </div>
     </div>

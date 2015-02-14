@@ -74,8 +74,8 @@ class Conversation
     $numberOfLoadedMessages = count($messages);
 
     // The conversation as text
-    $conv = "{\"template\": [\"<div class='message \", 
-                         \"'><a class='message-name block'>\", 
+    $conv = "{\"template\": [\"<div class='message \",
+                         \"'><a class='message-name'>\",
                          \"</a><p class='text'>\",
                          \"</p></div>\"
                          ],
@@ -157,11 +157,11 @@ class Conversation
       // Stuff changeable for CSS
       if($message['message_user_id1'] == $this->id1)
       {
-        $conv .= "<div class='message'><a class='message-name'>$user1Name</a>:<span class='message'> $message[message_text]</span></message>";
+        $conv .= "<div class='message'><a class='message-name'>$user1Name</a><p class='text'>$message[message_text]</p></message>";
       }
       else
       {
-        $conv .= "<div class='message $read'><a class='message-name'>$user2Name</a>:<span class='message'> $message[message_text]</span></div>";
+        $conv .= "<div class='message $read'><a class='message-name'>$user2Name</a><p class='text'>$message[message_text]</p></div>";
       }
       $conv .= "</li>";
     }

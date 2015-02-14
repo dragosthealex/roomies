@@ -47,6 +47,7 @@
 .header {
 	position: fixed;
 	top: 0;
+	z-index: 98;
 	border-bottom: 1px solid #d5d1d0;
 	background: #fff;
 	width: 100%;
@@ -443,10 +444,68 @@
 	color: #00adaa;
 }
 
-#conv {
-	/* Need to fix this with JS... maybe */
-	max-height: 400px;
+.scroll-wrapper {
+	position: relative;
+	overflow: hidden;
+}
+
+.scroll-area {
+	margin-right: -30px;
+	padding-right: 30px;
+	border-top: 1px solid #e4e0df;
+	border-bottom: 1px solid #e4e0df;
+	/* Will adjust this with JS */
+	height: 400px;
 	overflow-y: scroll;
+}
+
+.scroll-bar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 12px;
+	overflow: hidden;
+}
+
+.scroll-bar:before {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 100%;
+	content: "";
+	transition: background 0.2s;
+}
+
+.scroll-bar:hover:before {
+	background: rgba(0,0,0,0.08);
+}
+
+.scroll-tracker {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border-radius: 2px 0 0 2px;
+	background: #e4e0df;
+	height: 20%;
+	width: 25%;
+	transition: background 0.2s, width 0.2s;
+}
+
+.scroll-bar:hover .scroll-tracker {
+	background: #d5d1d0;
+	width: 100%;
+}
+
+.conversation {
+	padding-right: 8px;
+}
+
+.conversation:before, .conversation:after {
+	display: block;
+	height: 8px;
+	content: "";
 }
 
 .message {
@@ -454,6 +513,7 @@
 }
 
 .message-name {
+	display: block;
 	margin: 0 0 4px;
 	font-weight: bold;
 	font-size: .9em;
@@ -466,6 +526,23 @@
 
 .message .text + .text {
 	margin: 8px 0 0;
+}
+
+.textarea-holder {
+	border: 1px solid #d5d1d0;
+}
+
+.textarea {
+	display: block;
+	box-sizing: border-box;
+	border: 0;
+	padding: .5em;
+	height: 5.2em;
+	width: 100%;
+	resize: none;
+	line-height: 1.3;
+	font-family: inherit;
+	font-size: .9em;
 }
 
 .footer {

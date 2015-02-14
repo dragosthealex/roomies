@@ -9,6 +9,9 @@
   var aProto = Array.prototype;
   // Get the header element
   var header = document.getElementsByClassName("header")[0];
+  // Set a variable for whether the mouse is down
+  var mouseIsDown = false;
+  var target;
 
   /**
    * A function to get the current size of the page
@@ -19,6 +22,20 @@
       height: window.innerHeight || html.clientHeight || body.clientHeight
     };
   }; // size
+
+  /**
+   * A function to return the offset of an element from the document
+   */
+  var offset = function (element) {
+    var x = 0;
+    var y = 0;
+    while (element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
+        x += element.offsetLeft - element.scrollLeft;
+        y += element.offsetTop - element.scrollTop;
+        element = element.offsetParent;
+    }
+    return {top: y, left: x};
+  };
 
   /**
    * An object which holds javascript functions for interactivity
@@ -37,6 +54,15 @@
     // A function to delete an element
     'delete': function (element) {
       element.parentNode.removeChild(element);
+    },
+
+    // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
+    'scroll': function (element, mouseY) {
+      mouseY += (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollType || 0);
+      mouseY -= offset(element).top;
+      var boxHeight = element.offsetHeight;
+      var scrollHeight = element.parentNode.scrollHeight;
+      element.parentNode.scrollTop = (scrollHeight - boxHeight) * ((mouseY - 0.1 * boxHeight) / 0.8) / boxHeight;
     },
 
     // A function to update something in the page
@@ -67,11 +93,14 @@
 
             switch (part) {
               case 'messages':
-                var conv = document.getElementById('conv')
+                var conv = document.getElementById('conv');
+                var convParent = conv.parentNode;
                 conv.innerHTML = newHTML[0];
-                if (className1 || conv.scrollHeight-conv.scrollTop-conv.offsetHeight===0) {
-                  conv.scrollTop = conv.scrollHeight;
-                }
+                setTimeout(function () {
+                  if (convParent.scrollHeight - convParent.scrollTop - convParent.offsetHeight === 0) {
+                    convParent.scrollTop = convParent.scrollHeight;
+                  }
+                }, 100);
                 document.getElementById('allConversations').innerHTML = newHTML[1];
                 break;
             }
@@ -183,7 +212,74 @@
       roomies['ajax'](element);
       return false;
     } // if
+
+    // If the element is a scroll bar, scroll something.
+    // if (element.className === 'scroll-tracker') {
+    //   roomies['scroll'](element.parentNode, e.clientY);
+    //   return false;
+    // } else if (element.className === 'scroll-bar') {
+    //   roomies['scroll'](element, e.clientY);
+    //   return false;
+    // }
   }; // onclick
+
+  /**
+   * A function to detect if the mouse has been pressed
+   */
+  window.onmousedown = function (e) {
+    target = e.target;
+    var element = target;
+    mouseIsDown = true;
+    if (element.className === 'scroll-tracker') {
+      roomies['scroll'](element.parentNode, e.clientY);
+      return false;
+    } else if (element.className === 'scroll-bar') {
+      roomies['scroll'](element, e.clientY);
+      return false;
+    }
+  };
+
+  /**
+   * A function to detect if the mouse has been released
+   */
+  window.onmouseup = function () {
+    mouseIsDown = false;
+  };
+
+  /**
+   * A function to clear the selected text
+   */
+  var clearSelection = function (element) {
+    var selection;
+
+    if (document.selection && document.selection.empty) {
+      document.selection.empty();
+    } else if (window.getSelection && (selection = window.getSelection()) && selection.removeAllRanges) {
+      selection.removeAllRanges();
+    }
+  };
+
+  /**
+   * A function to detect mouse movement
+   */
+  window.onmousemove = function (e) {
+    // Shortcut the element
+    var element = target;
+
+    // If the mouse is down and the target is a scrollbar or the like, then scroll
+    if (mouseIsDown) {
+      // If the element is a scroll bar, scroll something.
+      if (element.className === 'scroll-tracker') {
+        element = element.parentNode;
+      }
+
+      if (element.className === 'scroll-bar') {
+        roomies['scroll'](element, e.clientY);
+        clearSelection();
+        e.preventDefault();
+      }
+    }
+  }
 
   /**
    * A function to apply box-shadows to certain elements, dependent upon the distance from the top.
