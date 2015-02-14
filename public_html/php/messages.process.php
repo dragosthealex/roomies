@@ -18,8 +18,7 @@ else
   $id2 = htmlentities($_GET['receiver']);
 
   // Escape stuff
-  $messageText = htmlspecialchars($_POST['message']);
-
+  $messageText = htmlentities($_POST['message']);
   // Values for setting the message
   $values[0] = $id1;
   $values[1] = $id2;

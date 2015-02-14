@@ -56,7 +56,7 @@ class Message
 
       // Insert new message in db
       $stmt = $con->prepare("INSERT INTO rmessages (message_text, message_user_id1, message_user_id2)
-                              VALUES ('$message_text', $message_user_id1, $message_user_id2)");
+                              VALUES (\"$message_text\", $message_user_id1, $message_user_id2)");
       $stmt->execute();
 
       // Assign instance variables
