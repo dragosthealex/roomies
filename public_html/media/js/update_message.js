@@ -33,8 +33,8 @@
   };
 
   var updateMessagesAgain = function () {
-    // Give 3 seconds before updating again
-    setTimeout(updateMessages, 3000);
+    // Give 4 seconds before updating again
+    setTimeout(updateMessages, 4000);
   };
 
   updateMessagesAgain();
