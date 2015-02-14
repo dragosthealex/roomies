@@ -519,13 +519,18 @@ class User
     // The array that remembers how many messages we have from a user
     // aka the number of apparitions of a certain user id in our select
     $apparitionArray = array();
+    // The array that remembers how many unread messages we have from a user
+    $unreadArray = array();
 
-    $stmt = $con->prepare("SELECT message_user_id1 FROM rmessages 
+
+    $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read FROM rmessages 
                             WHERE message_user_id2 = $userId
-                            ORDER BY message_timestamp DESC
-                            LIMIT $offset, $limit");
+                              OR message_user_id1 = $userId
+                            ORDER BY message_timestamp DESC");
     $stmt->execute();
-    $stmt->bindColumn(1, $id2);
+    $stmt->bindColumn(1, $id1);
+    $stmt->bindColumn(2, $id2);
+    $stmt->bindColumn(3, $read);
 
     // Check if we have any message at all
     if(!$stmt->rowCount())
@@ -535,16 +540,49 @@ class User
 
     while ($stmt->fetch())
     {
-      if(!in_array($id2, $messagePartners))
+      if($id1 == $userId)
       {
-        array_push($messagePartners, $id2);
-        $apparitionArray[$id2] = 1;
+        if(!in_array($id2, $messagePartners))
+        {
+          array_push($messagePartners, $id2);
+          $apparitionArray[$id2] = 1;
+          $unreadArray[$id2] = 0;
+        }
+        else
+        {
+          $apparitionArray[$id2] ++;
+        }
+        // Count if the message is unread
+        ($read)?:$unreadArray[$id2]++;
+        // Wait 'till we reach 10 conversations
+        if(count($messagePartners) == $limit)
+        {
+          break;
+        }
       }
       else
       {
-        $apparitionArray[$id2] ++;
+        if(!in_array($id1, $messagePartners))
+        {
+          array_push($messagePartners, $id1);
+          $apparitionArray[$id1] = 1;
+          $unreadArray[$id1] = 0;
+        }
+        else
+        {
+          $apparitionArray[$id1] ++;
+        }
+        // Count if the message is unread
+        ($read)?:$unreadArray[$id1]++;
+        // Wait 'till we reach 10 conversations
+        if(count($messagePartners) == $limit)
+        {
+          break;
+        }
       }
     }
+
+    $noNewMessages = ($unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
     $noOfMessagePartners = count($messagePartners);
 
     $conversations = "{\"template\": [\"<li class='li'><p><a href='?conv=\",
@@ -559,7 +597,7 @@ class User
       $otherUserName = $otherUser->getName();
       $noNewMessages = $apparitionArray[$otherUserId];
 
-      $conversations .=", \"$key\": [\"$otherUserId\", \"$otherUserName\"]";
+      $conversations .=", \"$key\": [\"$otherUserId\", \"$otherUserName $noNewMessages\"]";
     }
     $conversations .= "}";
     
@@ -588,13 +626,18 @@ class User
     // The array that remembers how many messages we have from a user
     // aka the number of apparitions of a certain user id in our select
     $apparitionArray = array();
+    // The array that remembers how many unread messages we have from a user
+    $unreadArray = array();
 
-    $stmt = $con->prepare("SELECT message_user_id1 FROM rmessages 
+
+    $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read FROM rmessages 
                             WHERE message_user_id2 = $userId
-                            ORDER BY message_timestamp DESC
-                            LIMIT $offset, $limit");
+                              OR message_user_id1 = $userId
+                            ORDER BY message_timestamp DESC");
     $stmt->execute();
-    $stmt->bindColumn(1, $id2);
+    $stmt->bindColumn(1, $id1);
+    $stmt->bindColumn(2, $id2);
+    $stmt->bindColumn(3, $read);
 
     // Check if we have any message at all
     if(!$stmt->rowCount())
@@ -604,28 +647,60 @@ class User
 
     while ($stmt->fetch())
     {
-      if(!in_array($id2, $messagePartners))
+      if($id1 == $userId)
       {
-        array_push($messagePartners, $id2);
-        $apparitionArray[$id2] = 1;
+        if(!in_array($id2, $messagePartners))
+        {
+          array_push($messagePartners, $id2);
+          $apparitionArray[$id2] = 1;
+          $unreadArray[$id2] = 0;
+        }
+        else
+        {
+          $apparitionArray[$id2] ++;
+        }
+        // Count if the message is unread
+        ($read)?:$unreadArray[$id2]++;
+        // Wait 'till we reach 10 conversations
+        if(count($messagePartners) == $limit)
+        {
+          break;
+        }
       }
       else
       {
-        $apparitionArray[$id2] ++;
+        if(!in_array($id1, $messagePartners))
+        {
+          array_push($messagePartners, $id1);
+          $apparitionArray[$id1] = 1;
+          $unreadArray[$id1] = 0;
+        }
+        else
+        {
+          $apparitionArray[$id1] ++;
+        }
+        // Count if the message is unread
+        ($read)?:$unreadArray[$id1]++;
+        // Wait 'till we reach 10 conversations
+        if(count($messagePartners) == $limit)
+        {
+          break;
+        }
       }
     }
+
     $conversations = "";
     foreach ($messagePartners as $otherUserId)
     {
       $otherUser = new User($con, $otherUserId);
       $otherUserName = $otherUser->getName();
-      $noNewMessages = $apparitionArray[$otherUserId];
+      $noNewMessages = ($unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
 
       $conversations .=
       "
       <li data-id='$otherUserId' class='li'>
         <p>
-          <a href='?conv=$otherUserId'>$otherUserName ($noNewMessages)</a>
+          <a href='?conv=$otherUserId'>$otherUserName $noNewMessages</a>
         </p>
       </li>
       ";

@@ -39,8 +39,8 @@ class Conversation
     $stmt = $con->prepare("SELECT * FROM rmessages
                             WHERE (message_user_id1 = $id1 AND message_user_id2 = $id2)
                               OR (message_user_id1 = $id2 AND message_user_id2 = $id1)
-                            ORDER BY message_timestamp ASC
-                            LIMIT $offset, $limit");
+                            ORDER BY message_timestamp DESC
+                            LIMIT $limit");
 
     $stmt->execute();
     while($messageDetails = $stmt->fetch(PDO::FETCH_ASSOC))
@@ -86,6 +86,9 @@ class Conversation
     $user2 = new User($con, $id2);
     $user1Name = $user1->getName();
     $user2Name = $user2->getName();
+
+    // We need to reverse the array
+    $messages = array_reverse($messages);
 
     foreach ($messages as $key => $message)
     {

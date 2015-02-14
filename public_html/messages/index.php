@@ -66,7 +66,7 @@ include __ROOT__."/inc/html/messages_page.php";
         <div class="box-padding">
           <!--TODO: CHANGE METHOD TO POST-->
           <div class="textarea-holder"><textarea class="textarea" id="message" placeholder="Write a message..."></textarea>
-          </div><input type="submit" class="input-button block" value="Send" onclick="this.previousSibling.firstChild.value = '';"
+          </div><input type="submit" class="input-button block" value="Send"
           data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
           data-ajax-post="message"
           data-ajax-callback="update messages ../php/update_message.process.php?otherId=<?=$otherUserId?>">
