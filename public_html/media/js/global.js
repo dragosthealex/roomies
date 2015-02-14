@@ -69,7 +69,7 @@
               case 'messages':
                 var conv = document.getElementById('conv')
                 conv.innerHTML = newHTML[0];
-                if (conv.scrollHeight - conv.scrollTop - conv.offsetHeight === 0) {
+                if (className1 || conv.scrollHeight-conv.scrollTop-conv.offsetHeight===0) {
                   conv.scrollTop = conv.scrollHeight;
                 }
                 document.getElementById('allConversations').innerHTML = newHTML[1];

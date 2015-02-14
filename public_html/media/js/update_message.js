@@ -4,7 +4,7 @@
   var update = window.roomies.update;
 
   var updateMessages = function () {
-    update('messages', '../php/update_message.process.php?otherId=' + window.location.href.split("=")[1], null, null, updateMessagesAgain);
+    update('messages', '../php/update_message.process.php?unread=true&otherId=' + window.location.href.split("=")[1], null, null, updateMessagesAgain);
   };
 
   var updateMessagesAgain = function () {
