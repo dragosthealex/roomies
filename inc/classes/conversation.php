@@ -74,10 +74,11 @@ class Conversation
     $numberOfLoadedMessages = count($messages);
 
     // The conversation as text
-    $conv = "{\"template\": [\"<div class='message \",
+    $conv = "{\"template\": [\"<li class='li message \",
+                         \"' data-message-id='\",
                          \"'><a class='message-name'>\",
                          \"</a><p class='text'>\",
-                         \"</p></div>\"
+                         \"</p></li>\"
                          ],
               \"length\": $numberOfLoadedMessages";
 
@@ -102,6 +103,7 @@ class Conversation
       {
         $conv .= ",
                   \"$key\": [\"\",
+                         $message[message_id],
                          \"$user1Name\",
                          \"$message[message_text]\",
                          \"$message[message_timestamp]\"
@@ -111,6 +113,7 @@ class Conversation
       {
         $conv .= ",
                   \"$key\": [\"$read\",
+                         $message[message_id],
                          \"$user2Name\",
                          \"$message[message_text]\",
                          \"$message[message_timestamp]\"
@@ -142,7 +145,7 @@ class Conversation
     $messages = $this->messages;
 
     // The conversation as text
-    $conv = "<ul class='ul'>";
+    $conv = "<ul class='ul conversation' id='conv'>";
 
     // Make the users and localise stuff
     $user1 = new User($con, $id1);
@@ -155,19 +158,17 @@ class Conversation
     {
       // Replace '\n' with '<br>'
       $message['message_text'] = nl2br($message['message_text']);
-      $conv .= "<li class='li'>";
       $read = ($message['messages_read'])?'read':'unread';
 
       // Stuff changeable for CSS
       if($message['message_user_id1'] == $this->id1)
       {
-        $conv .= "<div class='message'><a class='message-name'>$user1Name</a><p class='text'>$message[message_text]</p></message>";
+        $conv .= "<li class='li message ' data-message-id='$message[message_id]'><a class='message-name'>$user1Name</a><p class='text'>$message[message_text]</p></li>";
       }
       else
       {
-        $conv .= "<div class='message $read'><a class='message-name'>$user2Name</a><p class='text'>$message[message_text]</p></div>";
+        $conv .= "<li class='li message $read' data-message-id='$message[message_id]'><a class='message-name'>$user2Name</a><p class='text'>$message[message_text]</p></li>";
       }
-      $conv .= "</li>";
     }
     $conv .= "</ul>";
 

@@ -57,9 +57,7 @@ include __ROOT__."/inc/html/messages_page.php";
         </div>
         <div class="scroll-wrapper">
           <div class="scroll-area">
-            <div id="conv" class="conversation">
-              <?=($err)?$err:$conv?>
-            </div>
+            <?=($err)?$err:$conv?>
             <div class="scroll-bar"><div class="scroll-tracker"></div></div>
           </div>
         </div>
@@ -68,8 +66,7 @@ include __ROOT__."/inc/html/messages_page.php";
           <div class="textarea-holder"><textarea class="textarea" id="message" placeholder="Write a message..."></textarea>
           </div><input type="submit" class="input-button block" value="Send"
           data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
-          data-ajax-post="message"
-          data-ajax-callback="update messages ../php/update_message.process.php?otherId=<?=$otherUserId?>">
+          data-ajax-post="message">
         </div>
       </div>
     </div>

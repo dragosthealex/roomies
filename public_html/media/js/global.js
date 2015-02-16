@@ -12,6 +12,8 @@
   // Set a variable for whether the mouse is down
   var mouseIsDown = false;
   var target;
+  var newMessageCount = 0;
+  var originalTitle = document.title;
 
   /**
    * A function to get the current size of the page
@@ -90,18 +92,35 @@
                 newHTML[i] += obj.template[obj.template.length - 1];
               }
             }
+            
+            var conv = document.getElementById('conv');
+            var convParent = conv.parentNode;
 
             switch (part) {
-              case 'messages':
-                var conv = document.getElementById('conv');
-                var convParent = conv.parentNode;
-                conv.innerHTML = newHTML[0];
-                setTimeout(function () {
-                  if (convParent.scrollHeight - convParent.scrollTop - convParent.offsetHeight === 0) {
+              case 'messageNew':
+                if (objs[0].length) {
+                  var scrolledAtBottom = convParent.scrollHeight - convParent.scrollTop - convParent.offsetHeight === 0;
+                  conv.innerHTML += newHTML[0];
+                  if (scrolledAtBottom) {
                     convParent.scrollTop = convParent.scrollHeight;
                   }
-                }, 100);
-                document.getElementById('allConversations').innerHTML = newHTML[1];
+                  // if (objs[0].newMessageCount) {
+                    newMessageCount += objs[0].length;
+                    var newTitle = newMessageCount ? "(" + newMessageCount + ") " : "";
+                    newTitle += originalTitle;
+                    document.title = newTitle;
+                  // }
+                }
+                if (objs[1].length) {
+                  document.getElementById('allConversations').innerHTML = newHTML[1];
+                }
+                break;
+              case 'messageOld':
+                if (objs[0].length) {
+                  var previousScrollHeight = convParent.scrollHeight - convParent.scrollTop;
+                  conv.innerHTML = newHTML[0] + conv.innerHTML;
+                  convParent.scrollTop = convParent.scrollHeight - previousScrollHeight;
+                }
                 break;
             }
           }
