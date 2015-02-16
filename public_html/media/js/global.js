@@ -105,7 +105,7 @@
                     convParent.scrollTop = convParent.scrollHeight;
                   }
                   // if (objs[0].newMessageCount) {
-                    newMessageCount += objs[0].length;
+                    newMessageCount = document.getElementsByClassName('unread').length;
                     var newTitle = newMessageCount ? "(" + newMessageCount + ") " : "";
                     newTitle += originalTitle;
                     document.title = newTitle;

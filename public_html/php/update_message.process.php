@@ -47,8 +47,10 @@ else
 
         // Get the unread messages sent by $otherUser to $user.
         $stmt = $con->prepare("SELECT * FROM rmessages
-                                       WHERE message_user_id1 = $otherUserId
-                                         AND message_user_id2 = $userId
+                                       WHERE ((message_user_id1 = $otherUserId
+                                         AND message_user_id2 = $userId)
+                                          OR  (message_user_id1 = $userId
+                                         AND message_user_id2 = $otherUserId))
                                          AND message_id > '$lastId'
                                     ORDER BY message_timestamp ASC");
         $stmt->execute();
