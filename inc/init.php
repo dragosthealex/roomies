@@ -71,7 +71,7 @@ require_once __ROOT__.'/config.inc.php';
 // $con is the connection handler, PDO object.
 try
 {
-  $con = new PDO("mysql:host=$database_host;dbname=$group_dbnames[0]", $database_user, $database_pass);
+  $con = new PDO("mysql:host=$database_host;dbname=$database_name", $database_user, $database_pass);
 } catch (PDOException $e)
 {
   // Exit the script if the database conneciton fails.
