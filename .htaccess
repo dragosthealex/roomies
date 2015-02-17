@@ -1,0 +1,5 @@
+SetEnv PHP_VER 5_3
+SetEnv REGISTER_GLOBALS 0
+
+RewriteEngine on
+RewriteRule .? - [E=HTTP_ROOMIES:%{HTTP:Roomies}]

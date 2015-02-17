@@ -2,9 +2,8 @@
 require_once '../../inc/init.php';
 session_write_close();
 require_once '../../inc/classes/conversation.php';
-$headers = getallheaders();
 
-if(!isset($_GET['otherId']) || ! isset($headers['Roomies']) || $headers['Roomies'] != 'cactus')
+if(!isset($_GET['otherId']) || ! isset($_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include_once __ROOT__."/inc/html/notfound.php";
   exit();

@@ -22,8 +22,7 @@ For the sake of layout, let the body/html be closed on every page
 
 <!-- Scripts -->
 <?php
-$headers = getallheaders();
-if (isset($headers['Roomies']) && $headers['Roomies'] == 'kiwi')
+if (isset($_SERVER['HTTP_ROOMIES']) && $_SERVER['HTTP_ROOMIES'] == 'kiwi')
 {
     // Output the iframe script
     echo "<!-- Iframe!!! -->";
