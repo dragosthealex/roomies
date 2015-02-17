@@ -26,6 +26,7 @@ $headers = getallheaders();
 if (isset($headers['Roomies']) && $headers['Roomies'] == 'kiwi')
 {
     // Output the iframe script
+    echo "<!-- Iframe!!! -->"
 } // if
 else
 {
