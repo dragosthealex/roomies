@@ -13,7 +13,7 @@ Action can have multiple values:
 
 require_once '../../inc/init.php';
 
-if (!$headers || !isset($_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] !== 'cactus')
+if (!isset($_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] !== 'cactus')
 {
   echo 'lol';
   require_once __ROOT__.'/inc/html/notfound.php';

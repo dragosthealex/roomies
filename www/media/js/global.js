@@ -146,18 +146,21 @@
 
       xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4) {
+          // Return the text to its original state
+          element.innerHTML = originalText;
+
           // If there was anything output, new error
           if (xmlhttp.status === 404) {
             newError("Not found suck balls");
           } else if (xmlhttp.responseText) {
             newError(xmlhttp.responseText);
-          } else if (hideText = element.getAttribute('data-ajax-hide') && xmlhttp.status === 200) {
+          } else if ((hideText = element.getAttribute('data-ajax-hide')) && xmlhttp.status === 200) {
             hideText = hideText.split(" ");
 
-            var elementsToHide = aProto.splice.call(document.getElementsByClassName(hideText[0]));
+            var elementsToHide = aProto.slice.call(document.getElementsByClassName(hideText[0]));
 
             elementsToHide.forEach(function (element) {
-              element.style.visibility = "none";
+              element.style.display = "none";
             });
 
             document.getElementById(hideText[1]).removeAttribute('style');
