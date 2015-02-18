@@ -104,12 +104,10 @@
                   if (scrolledAtBottom) {
                     convParent.scrollTop = convParent.scrollHeight;
                   }
-                  // if (objs[0].newMessageCount) {
-                    newMessageCount = document.getElementsByClassName('unread').length;
-                    var newTitle = newMessageCount ? "(" + newMessageCount + ") " : "";
-                    newTitle += originalTitle;
-                    document.title = newTitle;
-                  // }
+                  newMessageCount = document.getElementsByClassName('unread received').length;
+                  var newTitle = newMessageCount ? "(" + newMessageCount + ") " : "";
+                  newTitle += originalTitle;
+                  document.title = newTitle;
                 }
                 if (objs[1].length) {
                   document.getElementById('allConversations').innerHTML = newHTML[1];

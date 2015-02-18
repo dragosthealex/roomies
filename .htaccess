@@ -3,3 +3,6 @@ SetEnv REGISTER_GLOBALS 0
 
 RewriteEngine on
 RewriteRule .? - [E=HTTP_ROOMIES:%{HTTP:Roomies}]
+
+Options +ExecCGI
+AddHandler cgi-script .py

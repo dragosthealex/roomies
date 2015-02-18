@@ -77,6 +77,18 @@ try
   // Exit the script if the database conneciton fails.
   exit('Connection failed: ' . $e->getMessage());
 }
+
+// Fix timezones
+date_default_timezone_set('Europe/London');
+$now = new DateTime();
+$mins = $now->getOffset() / 60;
+$sgn = ($mins < 0 ? -1 : 1);
+$mins = abs($mins);
+$hrs = floor($mins / 60);
+$mins -= $hrs * 60;
+$offset = sprintf('%+d:%02d', $hrs*$sgn, $mins);
+$stmt = $con->prepare("SET time_zone = '$offset'");
+
 if(LOGGED_IN)
 {
   $user = new User($con, $_SESSION['user']['id']);
