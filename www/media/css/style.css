@@ -291,10 +291,6 @@
 	border-width: 0 3px 3px;
 }
 
-.unread {
-	color: red;
-}
-
 .h1, .h2 {
 	margin: 16px 0;
 	font-size: 2em;
@@ -500,11 +496,36 @@
 }
 
 .conversation {
-	padding: 8px 8px 8px 0;
+	padding: 0 8px 16px 0;
 }
 
 .message {
-	padding: 8px 16px;
+	position: relative;
+	padding: 16px 16px 0 60px;
+}
+
+.sent + .sent, .received + .received {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.sent + .sent:before, .received + .received:before {
+	display: none;
+}
+
+.message-pic {
+	display: block;
+	position: absolute;
+	top: 18px;
+	left: 16px;
+	background-color: #EFEFEF;
+	background-size: 33px 33px;
+	width: 33px;
+	height: 33px;
+}
+
+.sent + .sent .message-pic, .received + .received .message-pic {
+	display: none;
 }
 
 .message-name {
@@ -514,13 +535,30 @@
 	font-size: .9em;
 }
 
+.sent + .sent .message-name, .received + .received .message-name {
+	display: none;
+}
+
 .message .text {
 	margin: 0;
 	font-size: .9em;
 }
 
-.message .text + .text {
+.sent + .sent .text, .received + .received .text {
 	margin: 8px 0 0;
+}
+
+./*sent {
+}
+
+.received {
+}
+
+.read {
+}*/
+
+.received.unread {
+	color: red;
 }
 
 .textarea-holder {
