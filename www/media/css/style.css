@@ -73,6 +73,7 @@
 
 .header-item {
 	float: left;
+	position: relative;
 }
 
 .header-split {
@@ -105,12 +106,20 @@
 	opacity: 0.85;
 }
 
+.icon-home {
+	background-image: url('../img/icon_home.png');
+}
+
 .icon-user {
 	opacity: 1 !important;
 }
 
-.icon-notif {
-	background-image: url('../img/icon_notifications.png');
+.icon-frequests {
+	background-image: url('../img/icon_frequests.png');
+}
+
+.icon-messages {
+	background-image: url('../img/icon_messages.png');
 }
 
 .icon-roomies {
@@ -161,50 +170,61 @@
 }
 
 /* CSS for drop down menu*/
-.message-drop {
+
+.drop {
+	position: absolute;
+	right: 0;
+	box-shadow: 3px 3px 2px -1px rgba(0,0,0,0.8);
 	width: 350px;
 	height: 363px;
-	float: right;
-	box-shadow: 3px 3px 2px -1px rgba(0,0,0,0.8);
+	line-height: 1;
 }
 
 .drop-box {
 	border-radius: 2px;
-	/*border: 1px solid #d2c7be;*/
 	border-width: 1px;
 	border-style: solid;
 	border-color: #e9e6e5 #e4e0df #d5d1d0;
+	background: #ffffff;
 	height: 100%;
 }
 
 .drop-header, .drop-footer {
-	float: top;
-	height: 20px;
 	padding: 3px;
+	height: 20px;
 }
- .drop-list-wrapper {
- 	height: 310px;
- 	float: top;
- 	overflow-y: hidden;
 
- }
+.drop-header-text {
+	font-size: 12px;
+	padding: 0;
+	margin: 0;
+	font-family: inherit;
+	text-align: center;
+}
 
- .drop-list {
- 	list-style-type: none;
- 	padding: 0;
- 	margin: 0;
- 	height: 100%;
- 	overflow-y: scroll;
- }
+.drop-list-wrapper {
+	height: 310px;
+	float: top;
+	overflow-y: hidden;
 
- .drop-item {
- 	height: 64px;
- }
+}
 
- .message-icon {
- 	float:top;
- 	float: left;
- 	display: inline-block;
+.drop-list {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	overflow-y: scroll;
+}
+
+.drop-item {
+	height: 64px;
+}
+
+.message-icon {
+	float:top;
+	float: left;
+	display: inline-block;
 	background-size: 30px;
 	height: 30px;
 	width: 30px;
@@ -213,34 +233,28 @@
 	margin-top: 17px;
 	margin-bottom: 17px;
 	margin-right: 15px;
- }
+}
 
- .drop-text {
- 	/*overflow: hidden;*/
- 	font-size: 12px;
- 	padding: 0;
- 	margin: 0;
- 	font-family: inherit;
- }
+.drop-text {
+	/*overflow: hidden;*/
+	font-size: 12px;
+	padding: 0;
+	margin: 0;
+	font-family: inherit;
+}
 
- .drop-text-span {
- 	height: 14px;
- 	width: 250px;
- 	overflow: hidden;
- 	margin-top: 25px;
+.drop-text-span {
+	height: 14px;
+	width: 250px;
+	overflow: hidden;
+	margin-top: 25px;
 	margin-bottom: 25px;
 	float:left;
 	display: inline-block;
- }
+}
 
- .drop-header-text {
- 	font-size: 12px;
- 	padding: 0;
- 	margin: 0;
- 	font-family: inherit;
- 	text-align: center;
- }
 /*End CSS for drop menu*/
+
 .main {
 	margin: 0 auto;
 	border-top: 1px solid transparent;
