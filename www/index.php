@@ -31,6 +31,7 @@ if (!LOGGED_IN)
 	// If the user is not logged in, then welcome them
 	$title = "Welcome to " . $title;
 }
+
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
@@ -99,12 +100,6 @@ if(!LOGGED_IN)
 // Else, we show the homepage for logged in users
 else
 {
-	if(isset($_GET['logout']))
-	{
-	  session_destroy();
-	  header("Location: .");
-	  exit();
-	}
 
 	//Check if the user completed their profile
 	if(isset($_SESSION['notComplete']) && ($_SESSION['notComplete'] == true))

@@ -90,10 +90,17 @@ $offset = sprintf('%+d:%02d', $hrs*$sgn, $mins);
 $stmt = $con->prepare("SET time_zone = '$offset'");
 $stmt->execute();
 
-if(LOGGED_IN)
-{
-  $user = new User($con, $_SESSION['user']['id']);
-}
 // If called from the root directory, set $webRoot to "", otherwise to "../"
 $webRoot = isset($rootDirectory) ? "." : "..";
+
+if(LOGGED_IN)
+{
+  if(isset($_GET['logout']))
+  {
+    session_destroy();
+    header("Location: $webRoot");
+    exit();
+  }
+  $user = new User($con, $_SESSION['user']['id']);
+}
 ?>

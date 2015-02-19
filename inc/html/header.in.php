@@ -9,11 +9,6 @@
         </a>
       </li>
       <li class="header-item">
-        <a href="<?=$webRoot?>/profile/<?=$user->getIdentifier('username')?>" class="icon-holder" title="Profile">
-          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')"></span>
-        </a>
-      </li>
-      <li class="header-item">
         <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop">
           <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
         </span>
@@ -23,8 +18,8 @@
             <div class="drop-header">
               <p class="drop-header-text">Friend Requests</p>
             </div>
-            <div class="drop-list-wrapper">
-              <ul class="drop-list">
+            <div class="drop-list-wrapper scroll-wrapper">
+              <ul class="drop-list scroll-area">
                 <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
               </ul>
             </div>
@@ -43,8 +38,8 @@
             <div class="drop-header">
               <p class="drop-header-text">Messages</p>
             </div>
-            <div class="drop-list-wrapper">
-              <ul class="drop-list">
+            <div class="drop-list-wrapper scroll-wrapper">
+              <ul class="drop-list scroll-area">
                 <?php include __ROOT__."/inc/html/new_messages.php"; ?>
                 <!-- <div class="drop-item">
                   <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
@@ -89,23 +84,26 @@
       <!-- <li class="header-split"></li> -->
       <li class="header-item">
         <span class="icon-holder" data-toggle="extra-drop" data-hide="drop">
-          <span class="icon icon-down" data-toggle="extra-drop" data-hide="drop"></span>
+          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')" data-toggle="extra-drop" data-hide="drop"></span>
         </span>
         <div id="extra-drop" class="drop hidden ">
           <div class="drop-box">
-            <ul class="drop-list">
-              <div class="drop-item">
-                <a href="<?=$webRoot?>/search" class="link">Find Roomies</a>
-              </div>
-              <div class="drop-item">
-                <a href="<?=$webRoot?>/accommodation" class="link">Accommodation</a>
-              </div>
-              <div class="drop-item">
-                <a href="<?=$webRoot?>/settings" class="link">Settings</a>
-              </div>
-              <div class="drop-item">
-                <a href="<?=$webRoot?>/logout" class="link">Sign out</a>
-              </div>
+            <ul class="drop-list box-padding">
+              <li class="drop-item">
+                <a href="<?=$webRoot?>/profile/<?=$user->getIdentifier('username')?>" class="link-button block"><?=$user->getName()?></a>
+              </li>
+              <li class="drop-item">
+                <a href="<?=$webRoot?>/search" class="link-button block">Find Roomies</a>
+              </li>
+              <li class="drop-item split-after">
+                <a href="<?=$webRoot?>/accommodation" class="link-button block">Accommodation</a>
+              </li>
+              <li class="drop-item">
+                <a href="<?=$webRoot?>/settings" class="link-button block">Settings</a>
+              </li>
+              <li class="drop-item">
+                <a href="?logout" class="link-button block">Sign out</a>
+              </li>
             </ul>
           </div>
         </div>

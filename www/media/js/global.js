@@ -15,6 +15,16 @@
   var newMessageCount = 0;
   var originalTitle = document.title;
 
+  var everyElement = aProto.slice.call(body.getElementsByTagName('*'));
+  everyElement.forEach(function (element) {
+    if (!/^ /.exec(element.className)) {
+      element.className = ' ' + element.className;
+    }
+    if (!/ $/.exec(element.className)) {
+      element.className += ' ';
+    }
+  });
+
   /**
    * A function to get the current size of the page
    */
@@ -57,6 +67,11 @@
       // If the element is hidden, show it, else hide it
       if (/ hidden /.exec(element.className)) {
         element.className = element.className.replace(/ hidden /, ' ');
+        // Get any scroll areas and ensure they have a scrollbar
+        var scrollAreas = aProto.slice.call(element.getElementsByClassName('scroll-area'));
+        scrollAreas.forEach(function (scrollArea) {
+          scrollAreaFunc(scrollArea);
+        });
       } else {
         element.className += 'hidden ';
       } // else
@@ -65,6 +80,11 @@
     // A function to delete an element
     'delete': function (element) {
       element.parentNode.removeChild(element);
+    },
+
+    // A function to return an array of all parent drops and minidrops
+    'getDrops': function getDrops(element) {
+      return element === body ? [] : (/ drop /.exec(element.className) || / minidrop /.exec(element.className)) ? [element].concat(getDrops(element.parentNode)) : getDrops(element.parentNode);
     },
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
@@ -101,7 +121,7 @@
                 newHTML[i] += obj.template[obj.template.length - 1];
               }
             }
-            
+
             var conv = document.getElementById('conv');
             var convParent = conv.parentNode;
 
@@ -227,14 +247,22 @@
     // Localise a variable for later use
     var target, targets, targetWasAlreadyHidden = false;
 
-    // If a target needs toggling, do so.
+    // If a target needs toggling, check if it was already hidden
     if (target = document.getElementById(element.getAttribute('data-toggle'))) {
       targetWasAlreadyHidden = / hidden /.exec(target.className);
     }
 
+    // Get an array of all the minidrops and drops that the current element is in
+    var elementsToShowAgain = roomies['getDrops'](element);
+    // Hide all drops and minidrops
     roomies['hide'](document.getElementsByClassName('drop'));
     roomies['hide'](document.getElementsByClassName('minidrop'));
+    // Show the previous elements again
+    elementsToShowAgain.forEach(function (elementToShow) {
+      roomies['toggle'](elementToShow);
+    });
 
+    // If a target was hidden and needs toggling, toggle it
     if (target && targetWasAlreadyHidden) {
       roomies['toggle'](target);
     } // if
@@ -378,6 +406,48 @@
   // If the window is resized, set the box shadows
   // Upon page load, set the box shadows
   window.onscroll = window.onresize = window.onload = setBoxShadows;
+
+  var gettingNextSet = false; // for message box
+  var scrollAreaFunc = function (element) {
+    if (!element.getElementsByClassName('scroll-bar').length && element.scrollHeight > element.offsetHeight) {
+      element.innerHTML += "<div class='scroll-bar'><div class='scroll-tracker'></div></div>";
+    }
+
+    if (element.hasAttribute('data-message-id') && element.scrollTop < 100 && !gettingNextSet) {
+      gettingNextSet = true;
+      roomies['update']('messageOld', '../php/update_message.process.php?type=old&otherId=' + element.getAttribute('data-message-id'), 'message', null,
+        function () {
+          gettingNextSet = false;
+        }
+      );
+    }
+
+    var boxShadow = "none";
+    if (element.scrollTop < element.scrollHeight - element.offsetHeight) {
+        boxShadow = "inset 0 -6px 4px -4px rgba(0,0,0,0.12)";
+        if (element.scrollTop > 0) {
+            boxShadow += ", inset 0 6px 4px -4px rgba(0,0,0,0.12)";
+        }
+    } else if (element.scrollTop > 0) {
+        boxShadow = "inset 0 6px 4px -4px rgba(0,0,0,0.12)";
+    }
+    element.style.boxShadow = boxShadow;
+
+    var scrollTrackers;
+    if ((scrollTrackers = element.getElementsByClassName('scroll-tracker')).length) {
+      scrollTrackers[0].style.top = (80 * element.scrollTop / (element.scrollHeight - element.offsetHeight)) + "%";
+    }
+  };
+
+  var scrollAreas = aProto.slice.call(document.getElementsByClassName('scroll-area'));
+  scrollAreas.forEach(function (scrollArea) {
+    if (scrollArea.scrollHeight > scrollArea.offsetHeight) {
+      scrollArea.innerHTML += "<div class='scroll-bar'><div class='scroll-tracker'></div></div>";
+    }
+    scrollArea.onscroll = function () {
+      scrollAreaFunc(this);
+    };
+  });
 
   window.roomies = roomies;
 }(window)); // Localise the window

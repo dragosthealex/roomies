@@ -86,10 +86,10 @@
 .icon-holder {
 	position: relative;
 	display: block;
-	margin: 12px auto;
+	margin: 7px auto;
 	padding: 10px;
-	height: 16px;
-	width: 16px;
+	height: 26px;
+	width: 26px;
 	cursor: pointer;
 }
 
@@ -98,8 +98,8 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;
-	height: 16px;
-	width: 16px;
+	height: 26px;
+	width: 26px;
 	opacity: 0.55;
 }
 
@@ -193,17 +193,15 @@
 }
 
 .drop-list-wrapper {
-	max-height: 310px;
-	float: top;
+	height: 310px;
 	overflow: hidden;
-
 }
 
 .drop-list {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
-	height: 100%;
+	height: 100% !important;
 }
 
 .drop-item {
@@ -796,7 +794,7 @@
 	}
 
 	.header-item {
-		width: 20%;
+		width: 25%;
 		text-align: center;
 	}
 

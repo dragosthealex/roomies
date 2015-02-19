@@ -56,9 +56,8 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
           <h2 class="h2"><?=$otherName?></h2>
         </div>
         <div class="scroll-wrapper">
-          <div class="scroll-area">
+          <div class="scroll-area" data-message-id="<?=$otherUserId?>">
             <?=($err)?$err:$conv?>
-            <div class="scroll-bar"><div class="scroll-tracker"></div></div>
           </div>
         </div>
         <div class="box-padding">

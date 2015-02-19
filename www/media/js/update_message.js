@@ -4,30 +4,6 @@
   var update = window.roomies.update;
   var conv = document.getElementById('conv');
   var convParent = conv.parentNode;
-  var convTracker = convParent.getElementsByClassName('scroll-tracker')[0];
-  var gettingNextSet = false;
-
-  convParent.onscroll = function () {
-    if (convParent.scrollTop < 100 && !gettingNextSet)  {
-        gettingNextSet = true;
-        update('messageOld', '../php/update_message.process.php?type=old&otherId=' + /messages\/([^\?]+)/.exec(window.location.href)[1], 'message', null, function () {
-            gettingNextSet = false;
-        });
-    }
-
-    var boxShadow = "none";
-    if (convParent.scrollTop < convParent.scrollHeight - convParent.offsetHeight) {
-        boxShadow = "inset 0 -6px 4px -4px rgba(0,0,0,0.12)";
-        if (convParent.scrollTop > 0) {
-            boxShadow += ", inset 0 6px 4px -4px rgba(0,0,0,0.12)";
-        }
-    } else if (convParent.scrollTop > 0) {
-        boxShadow = "inset 0 6px 4px -4px rgba(0,0,0,0.12)";
-    }
-    convParent.style.boxShadow = boxShadow;
-
-    convTracker.style.top = (80 * convParent.scrollTop / (convParent.scrollHeight - convParent.offsetHeight)) + "%";
-  };
 
   var updateMessages = function () {
     update('messageNew', '../php/update_message.process.php?type=new&lastId=' + conv.lastChild.getAttribute('data-message-id') + '&otherId=' + /messages\/([^\?]+)/.exec(window.location.href)[1], null, null, updateMessages);
