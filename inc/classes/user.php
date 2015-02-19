@@ -32,7 +32,7 @@ class User
   * Constructor
   *
   * Assigns the id, username, email, first name, last name and birthday of the user
-  * 
+  *
   * @param - $con, the connection to db
   * @param - $key, the key that is used for getting the user. Can be id, email or username
   */
@@ -41,7 +41,7 @@ class User
     // Filter the key
     $key = htmlentities($key);
     // Get the basic info for the user from the db
-    $stmt = $con->prepare("SELECT user_id, username, user_email FROM rusers 
+    $stmt = $con->prepare("SELECT user_id, username, user_email FROM rusers
                             WHERE user_id = '$key' OR username = '$key' OR user_email = '$key'");
     $stmt->execute();
     $stmt->bindColumn(1,$id);
@@ -107,7 +107,7 @@ class User
 
   /**
   * Function getName()
-  * 
+  *
   * Gets the name, formated as <first name> <last name>.
   *
   * @return - $name, the name.
@@ -135,7 +135,7 @@ class User
   * Function getBirthday($format)
   *
   * Gets the birthday, formated either as dd-mm-yyyy or as age, approximated in years
-  * 
+  *
   * @param - $format, can be 'birthday' or 'age'
   */
   public function getBirthday($format)
@@ -161,7 +161,7 @@ class User
 
   /**
   * Function getIdentifier($key)
-  * 
+  *
   * Gets either id, email or username, depending on the given $key parameter
   *
   * @param - $key, can be either 'id', 'email', 'username'
@@ -169,7 +169,7 @@ class User
   */
   public function getIdentifier($key)
   {
-    switch ($key) 
+    switch ($key)
     {
       case 'id':
         return $this->id;
@@ -272,7 +272,7 @@ class User
 
   /**
   * Function addFriend($otherUser)
-  * 
+  *
   * Modifies the friendship status between this user and $other user, depending on $action parameter
   * Action can be:
   * 0 -> remove friend
@@ -283,7 +283,7 @@ class User
   * 5 -> unblock user
   *
   * @param - $otherUser, the other user object
-  * @param - $action, the action that determines the processing 
+  * @param - $action, the action that determines the processing
   */
   public function addFriend($otherUser, $action)
   {
@@ -355,7 +355,7 @@ class User
     $con = $this->con;
     $thisUserId = $this->id;
 
-    $stmt = $con->prepare("SELECT conexion_status, conexion_user_id1 FROM rconexions 
+    $stmt = $con->prepare("SELECT conexion_status, conexion_user_id1 FROM rconexions
       WHERE (conexion_user_id1 = $thisUserId AND conexion_user_id2 = $otherUserId)
       OR (conexion_user_id1 = $otherUserId AND conexion_user_id2 = $thisUserId)");
     $stmt->execute();
@@ -373,7 +373,7 @@ class User
     {
       return 1;
     }
-    
+
     // Check if this user already sent request
     if($id1 == $thisUserId)
     {
@@ -437,7 +437,7 @@ class User
     for($index=0; $index<count($messagePartners) && $index<10; $index++)
     {
       $id2 = $messagePartners[$index];
-      $stmt = $con->prepare("SELECT message_text, message_timestamp FROM rmessages 
+      $stmt = $con->prepare("SELECT message_text, message_timestamp FROM rmessages
                               WHERE (message_user_id1 = $id2 AND message_user_id2 = $userId)
                                 OR (message_user_id1 = $userId AND message_user_id2 = $id2)
                               ORDER BY message_timestamp DESC
@@ -454,14 +454,15 @@ class User
       // Get name
       $otherUser = new User($con, $id2);
       $otherUserName = $otherUser->getName();
+      $otherUserUsername = $otherUser->getIdentifier('username');
 
       $firstLine = explode("<br>", $text)[0];
 
-      $messages .= 
+      $messages .=
       "
       <li class='li drop-item drop-wide $addReadClass'>
         <p>
-          <a href='./messages/?conv=$id2'>$otherUserName $noNewMessages</a>
+          <a href='/messages/$otherUserUsername'>$otherUserName $noNewMessages</a>
         </p>
         <p>
           $firstLine
@@ -487,7 +488,7 @@ class User
   {
     // Localise con
     $con = $this->con;
-    
+
     $return = $this->getConv($offset);
     $apparitionArray = $return['apparitionArray'];
     $messagePartners = $return['messagePartners'];
@@ -506,11 +507,11 @@ class User
       $otherUser = new User($con, $otherUserId);
       $otherUserName = $otherUser->getName();
       $noNewMessages = (isset($unreadArray[$otherUserId]) && $unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
-      
+
       $conversations .=", \"$key\": [\"$otherUserId\", \"$otherUserName $noNewMessages\"]";
     }
     $conversations .= "}";
-    
+
     return $conversations;
   }
 
@@ -572,7 +573,7 @@ private function getConv($offset)
     $unreadArray = array();
 
 
-    $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read FROM rmessages 
+    $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read FROM rmessages
                             WHERE message_user_id2 = $userId
                               OR message_user_id1 = $userId
                             ORDER BY message_timestamp DESC");
