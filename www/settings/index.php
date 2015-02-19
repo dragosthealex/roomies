@@ -85,13 +85,13 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 	   $r3='/[!@#$%^&*()\-_=+{};:,<.>]/';  // whatever you mean by 'special char'
 	   $r4='/[0-9]/';  //numbers
 
-	   if(preg_match_all($r1,$password, $o)<2) return FALSE;
+	   if(!preg_match_all($r1,$password, $o)) return FALSE;
 
-	   if(preg_match_all($r2,$password, $o)<2) return FALSE;
+	   if(!preg_match_all($r2,$password, $o)) return FALSE;
 
-	   if(preg_match_all($r3,$password, $o)<2) return FALSE;
+	   if(!preg_match_all($r3,$password, $o)) return FALSE;
 
-	   if(preg_match_all($r4,$password, $o)<2) return FALSE;
+	   if(!preg_match_all($r4,$password, $o)) return FALSE;
 
 	   if(strlen($password)>25) return FALSE;
 
