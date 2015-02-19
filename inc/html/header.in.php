@@ -12,6 +12,7 @@
       <li class="header-item">
         <!-- message drop -->
         <div id="frequests-drop" class="drop hidden ">
+          <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
             <div class="drop-header">
               <p class="drop-header-text">Friend Requests</p>
@@ -32,6 +33,7 @@
       </li>
       <li class="header-item">
         <div id="message-drop" class="drop hidden ">
+          <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
             <div class="drop-header">
               <p class="drop-header-text">Messages</p>
@@ -85,6 +87,7 @@
       <!-- <li class="header-split"></li> -->
       <li class="header-item">
         <div id="extra-drop" class="drop hidden ">
+          <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
             <ul class="drop-list box-padding">
               <li class="drop-item">
