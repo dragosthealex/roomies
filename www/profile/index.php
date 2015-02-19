@@ -12,13 +12,17 @@ Please read the gantt chart note for this task (task 10)
 //define("REQUIRE_SESSION", true);
 include '../../inc/init.php';
 
-// The title of the page
+// If GET[u] is not set, it means that we're on our own profile.
+if (!isset($_GET['u']))
+{
+  header("Location: $webRoot/profile/".$_SESSION['user']['username']);
+  exit();
+}
 
-// If GET[u] is not set, it means that we're on our own profile. Else, we are on another user's profile
-if(!isset($_GET['u']) || (isset($_GET['u']) && $_GET['u'] == $_SESSION['user']['username']))
+if ($_GET['u'] == $_SESSION['user']['username'])
 {
   // I'm on my profile
-  $title = "My profile";
+  $title = $user->getName();
   // Include head and header
   require_once __ROOT__."/inc/html/head.php";
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
@@ -27,18 +31,16 @@ if(!isset($_GET['u']) || (isset($_GET['u']) && $_GET['u'] == $_SESSION['user']['
 ?>
 <!-- html for my profile -->
 	<!-- Profile Bar -->
-	<div class="box">
+  <div class="box">
 		<div class="box-padding">
 			<div class="profile-box">
-					<div class="main-pic">
+				<span class="profile-picture" style="background-image: url('<?=$userImagePath?>');"></span>
+				<div class="profile-box-inner">
+					<h2 class="h2 profile-name"><?=$user->getName()?></h2>
+					<div class="profile-links">
+						<a class='link-button'>Edit Profile</a>
 					</div>
-					<div class="details-box">
-						<div class="box-padding">
-							<h2 class="h2"><?=$user->getName();?></h2>
-							<!-- php to retrieve information from the database should replace this -->
-							<p class="text">Main details e.g Gender and Stuff</p>
-						</div>
-					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -121,7 +123,7 @@ $unblockButtonHide   = $status == 4 ? '' : 'style="display: none"';
 
 $nameOrUsername = ($status == 1)?$otherUser->getName():$otherUsername;
 
-$title = "$otherUsername's profile";
+$title = "$otherUsername";
 
 // Include head and header
 require_once __ROOT__."/inc/html/head.php";

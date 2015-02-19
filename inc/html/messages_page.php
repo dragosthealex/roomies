@@ -28,18 +28,28 @@ if(!isset($_GET['conv']))
     $stmt->bindColumn(2, $id2);
     $stmt->fetch();
 
-    $conversation = new Conversation ($con, $id1, $id2);
+    $otherUserId = $userId == $id1 ? $id2 : $id1;
+    $otherUser = new User($con, $otherUserId);
+    $otherName = $otherUser->getName();
+
+    // Redirect to the page with the latest messages
+    header("Location: $webRoot/messages/".$otherUser->getIdentifier('username'));
+    exit();
+
+    $conversation = new Conversation ($con, $userId, $otherUserId);
     $conv = $conversation->toString();
-    $otherUserId = $id2;
+    $title = "$otherName - Messages";
   }
 }
 else
 {
   $otherUserId = htmlentities($_GET['conv']);
   $otherUser = new User($con, $otherUserId);
+  $otherUserId = $otherUser->getIdentifier('id');
   $otherName = $otherUser->getName();
   $conversation = new Conversation ($con, $userId, $otherUserId);
   $conv = $conversation->toString();
+  $title = "$otherName - Messages";
 }
 
 // Get 10 conversations from the user, starting from offset, ordered desc by time

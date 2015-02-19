@@ -1,17 +1,14 @@
 <?php
 include '../../inc/init.php';
 
-// The title of the page
-$title = "Messages";
 if(!LOGGED_IN)
 {
   include __ROOT__."/inc/html/notfound.php";
   exit();
 }
 
-// Include head and header
-require_once __ROOT__."/inc/html/head.php";
-require_once __ROOT__."/inc/html/header.$ioStatus.php";
+// The default title of the page
+$title = "Messages";
 
 $err = "";
 // The current opened conversation
@@ -28,6 +25,9 @@ This script provides variables:
 */
 include __ROOT__."/inc/html/messages_page.php";
 
+// Include head and header
+require_once __ROOT__."/inc/html/head.php";
+require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
 // Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footers
 ?>
@@ -63,7 +63,7 @@ include __ROOT__."/inc/html/messages_page.php";
         </div>
         <div class="box-padding">
           <!--TODO: CHANGE METHOD TO POST-->
-          <div class="textarea-holder"><textarea class="textarea" id="message" placeholder="Write a message..."></textarea>
+          <div class="textarea-holder"><textarea class="textarea" id="message" placeholder="Write a message..." oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"></textarea>
           </div><input type="submit" class="input-button block" value="Send"
           data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
           data-ajax-post="message">

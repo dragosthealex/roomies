@@ -497,7 +497,7 @@ class User
 
     $noOfMessagePartners = count($messagePartners);
 
-    $conversations = "{\"template\": [\"<li class='li'><p><a href='?conv=\",
+    $conversations = "{\"template\": [\"<li class='li'><p><a href='/messages/\",
                                   \"'>\",
                                   \"</a></p></li>\"
                                  ],
@@ -539,13 +539,14 @@ class User
     {
       $otherUser = new User($con, $otherUserId);
       $otherUserName = $otherUser->getName();
+      $otherUserUsername = $otherUser->getIdentifier('username');
       $noNewMessages = (isset($unreadArray[$otherUserId]) && $unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
 
       $conversations .=
       "
       <li data-id='$otherUserId' class='li'>
         <p>
-          <a href='?conv=$otherUserId'>$otherUserName $noNewMessages</a>
+          <a href='/messages/$otherUserUsername'>$otherUserName $noNewMessages</a>
         </p>
       </li>
       ";

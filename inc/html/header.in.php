@@ -9,7 +9,7 @@
         </a>
       </li>
       <li class="header-item">
-        <a href="<?=$webRoot?>/profile" class="icon-holder" title="Profile">
+        <a href="<?=$webRoot?>/profile/<?=$user->getIdentifier('username')?>" class="icon-holder" title="Profile">
           <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')"></span>
         </a>
       </li>
@@ -25,38 +25,7 @@
             </div>
             <div class="drop-list-wrapper">
               <div class="drop-list">
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
+                <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
               </div>
             </div>
             <div class="drop-footer">
@@ -76,7 +45,8 @@
             </div>
             <div class="drop-list-wrapper">
               <div class="drop-list">
-                <div class="drop-item">
+                <?php include __ROOT__."/inc/html/new_messages.php"; ?>
+                <!-- <div class="drop-item">
                   <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
                   <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
                 </div>
@@ -107,11 +77,11 @@
                 <div class="drop-item">
                   <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
                   <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="drop-footer">
-              <p class="drop-header-text">View all</p>
+              <a href="<?=$webRoot?>/messages" class="link drop-header-text">View all</a>
             </div>
           </div>
         </div>

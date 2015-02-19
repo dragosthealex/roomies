@@ -10,7 +10,7 @@
   convParent.onscroll = function () {
     if (convParent.scrollTop < 100 && !gettingNextSet)  {
         gettingNextSet = true;
-        update('messageOld', '../php/update_message.process.php?type=old&otherId=' + window.location.href.split("=")[1], 'message', null, function () {
+        update('messageOld', '../php/update_message.process.php?type=old&otherId=' + /messages\/([^\?]+)/.exec(window.location.href)[1], 'message', null, function () {
             gettingNextSet = false;
         });
     }
@@ -30,7 +30,7 @@
   };
 
   var updateMessages = function () {
-    update('messageNew', '../php/update_message.process.php?type=new&lastId=' + conv.lastChild.getAttribute('data-message-id') + '&otherId=' + window.location.href.split("=")[1], null, null, updateMessages);
+    update('messageNew', '../php/update_message.process.php?type=new&lastId=' + conv.lastChild.getAttribute('data-message-id') + '&otherId=' + /messages\/([^\?]+)/.exec(window.location.href)[1], null, null, updateMessages);
   };
 
   var updateMessagesAgain = function () {

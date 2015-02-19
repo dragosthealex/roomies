@@ -365,7 +365,7 @@
 
     // If we are to also get the header, then do so
     if (modifyHeader) {
-      boxShadowElements.concat(aProto.slice.call(document.getElementsByClassName("header")));
+      boxShadowElements = boxShadowElements.concat(aProto.slice.call(document.getElementsByClassName("header")));
     }
 
     // For each element which needs a box-shadow, apply one

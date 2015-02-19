@@ -1,0 +1,5 @@
+# Send /messages/<username> to /messages/?conv=<username>
+RewriteEngine on
+RewriteCond  %{REQUEST_FILENAME} !-f
+RewriteCond  %{REQUEST_FILENAME} !-d
+RewriteRule  ^(.*)$ index.php?conv=$1 [QSA,L]

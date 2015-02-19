@@ -1,4 +1,4 @@
-<div class="column-wrapper" id="notifications">
+<?php /*<div class="column-wrapper" id="notifications">
   <!--About me-->
   <div class="column-2">
     <div class="column-box">
@@ -23,4 +23,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> */ ?>

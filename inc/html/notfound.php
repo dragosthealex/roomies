@@ -4,7 +4,7 @@ To do:
 1 Output 404 not found message
 */
 header("HTTP/1.0 404 Not Found");
-if ($_SERVER['HTTP_ROOMIES'] == 'cactus' || $_SERVER['HTTP_ROOMIES'] == 'kiwi')
+if (isset($_SERVER['HTTP_ROOMIES']) && ($_SERVER['HTTP_ROOMIES'] == 'cactus' || $_SERVER['HTTP_ROOMIES'] == 'kiwi'))
 {
     exit('not found!!1!');
 }

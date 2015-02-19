@@ -82,7 +82,7 @@ while($stmt->fetch())
   //   <li class='box'>
   //     <div class='box-padding'>
   //       <p class='text'>
-  //         <a href='profile?u=$otherUsername' class='link'>
+  //         <a href='profile/$otherUsername' class='link'>
   //           <img src='media/img/anonymous.jpg' class='profile-picture' alt=''>
   //           $otherUserName
   //         </a>
@@ -97,47 +97,47 @@ while($stmt->fetch())
   // ";
   echo "<li class='profile-box-item'>
       <div class='profile-box'>
-        <a href='profile?u=$otherUsername' class='profile-picture'></a><!--style='background-image: url(\"$userImagePath\");'-->
+        <a href='profile/$otherUsername' class='profile-picture'></a><!--style='background-image: url(\"$userImagePath\");'-->
         <div class='profile-box-inner'>
-          <a href='profile?u=$otherUsername' class='h2 profile-name'>$nameOrUsername</a>
+          <a href='profile/$otherUsername' class='h2 profile-name'>$nameOrUsername</a>
           <div class='profile-percent' style='color:rgba(0,160,0,1);'>$percentage%</div>
           <div class='profile-links'>
 
-            <a data-ajax-url='../php/friends.process.php?a=1&id=$otherUserId'
+            <a data-ajax-url='../php/friends.process.php?a=1&amp;id=$otherUserId'
                data-ajax-text='Sending...'
                data-ajax-hide='friend-button requestSent' $addFriendHide
                class='link-button friend-button' id='addFriend'>Add Friend</a>
 
             <span class='minidrop-container friend-button' id='alreadyFriends' $alreadyFriendsHide>
-            <a data-ajax-url='../php/friends.process.php?a=0&id=$otherUserId'
+            <a data-ajax-url='../php/friends.process.php?a=0&amp;=$otherUserId'
                data-ajax-text='Pending...'
                data-ajax-hide='friend-button addFriend'
                class='link-button'>Unfriend</a>
             </span>
 
             <span class='minidrop-container friend-button' id='requestSent' $requestSentHide>
-            <a data-ajax-url='../php/friends.process.php?a=0&id=$otherUserId'
+            <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Canceling...'
                data-ajax-hide='friend-button addFriend'
                class='link-button'>Cancel</a>
             </span>
 
             <span class='minidrop-container friend-button' id='requestReceived' $requestReceivedHide>
-            <a data-ajax-url='../php/friends.process.php?a=3&id=$otherUserId'
+            <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
                data-ajax-text='Accepting...'
                data-ajax-hide='friend-button alreadyFriends'
                class='link-button'>Accept</a>
-            <a data-ajax-url='../php/friends.process.php?a=0&id=$otherUserId'
+            <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Ignoring...'
                data-ajax-hide='friend-button addFriend'
                class='link-button'>Ignore</a>
             </span>
 
-            <a data-ajax-url='../php/friends.process.php?a=4&id=$otherUserId'
+            <a data-ajax-url='../php/friends.process.php?a=4&amp;id=$otherUserId'
                data-ajax-text='Blocking...'
                data-ajax-hide='blockUnblock unblockButton' $blockButtonHide
                class='link-button blockUnblock' id='blockButton'>Block</a>
-            <a data-ajax-url='../php/friends.process.php?a=5&id=$otherUserId'
+            <a data-ajax-url='../php/friends.process.php?a=5&amp;id=$otherUserId'
                data-ajax-text='Unblocking...'
                data-ajax-hide='blockUnblock blockButton' $unblockButtonHide
                class='link-button blockUnblock' id='unblockButton'>Unblock</a>

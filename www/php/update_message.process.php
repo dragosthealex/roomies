@@ -22,6 +22,7 @@ else
   // Get the other user from the id given
   $otherUserId = htmlentities($_GET['otherId']);
   $otherUser = new User($con, $otherUserId);
+  $otherUserId = $otherUser->getIdentifier('id');
   $otherUserName = $otherUser->getName();
 
   // Get the current user id and name

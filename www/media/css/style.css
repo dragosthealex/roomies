@@ -73,7 +73,6 @@
 
 .header-item {
 	float: left;
-	position: relative;
 }
 
 .header-split {
@@ -96,7 +95,9 @@
 
 .icon {
 	display: block;
-	background-size: 16px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
 	height: 16px;
 	width: 16px;
 	opacity: 0.55;
@@ -674,6 +675,8 @@
 	box-sizing: border-box;
 	border: 0;
 	padding: .5em;
+	min-height: 5.2em;
+	max-height: 13em;
 	height: 5.2em;
 	width: 100%;
 	resize: none;

@@ -46,5 +46,8 @@ while($stmt->fetch())
   </li>
   ";
 }
-echo "</ul>";
+if($stmt->rowCount())
+{
+  echo "</ul>";
+}
 ?>
