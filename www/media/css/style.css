@@ -122,20 +122,8 @@
 	background-image: url('../img/icon_messages.png');
 }
 
-.icon-roomies {
-	background-image: url('../img/icon_find_roomies.png');
-}
-
-.icon-accomm {
-	background-image: url('../img/icon_accommodation.png');
-}
-
-.icon-settings {
-	background-image: url('../img/icon_settings.png');
-}
-
-.icon-logout {
-	background-image: url('../img/icon_logout.png');
+.icon-down {
+	background-image: url('../img/icon_down.png');
 }
 
 .logo-link {
@@ -801,7 +789,7 @@
 	}
 
 	.header-item {
-		width: 16.666%;
+		width: 20%;
 		text-align: center;
 	}
 

@@ -14,8 +14,8 @@
         </a>
       </li>
       <li class="header-item">
-        <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop">
-          <span class="icon icon-frequests" data-toggle="frequests-drop"></span>
+        <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop">
+          <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
         </span>
         <!-- message drop -->
         <div id="frequests-drop" class="drop hidden ">
@@ -66,8 +66,8 @@
         </div>
       </li>
       <li class="header-item">
-        <span class="icon-holder" title="Messages" data-toggle="message-drop">
-          <span class="icon icon-messages" data-toggle="message-drop"></span>
+        <span class="icon-holder" title="Messages" data-toggle="message-drop" data-hide="drop">
+          <span class="icon icon-messages" data-toggle="message-drop" data-hide="drop"></span>
         </span>
         <div id="message-drop" class="drop hidden ">
           <div class="drop-box">
@@ -118,24 +118,27 @@
       </li>
       <!-- <li class="header-split"></li> -->
       <li class="header-item">
-        <a href="<?=$webRoot?>/search" class="icon-holder" title="Find Roomies">
-          <span class="icon icon-roomies"></span>
-        </a>
-      </li>
-      <li class="header-item">
-        <a href="<?=$webRoot?>/accommodation" class="icon-holder" title="Accommodation">
-          <span class="icon icon-accomm"></span>
-        </a>
-      </li>
-      <li class="header-item">
-        <a href="<?=$webRoot?>/settings" class="icon-holder" title="Settings">
-          <span class="icon icon-settings"></span>
-        </a>
-      </li>
-      <li class="header-item">
-        <a href="<?=$webRoot?>?logout" class="icon-holder" title="Sign out">
-          <span class="icon icon-logout"></span>
-        </a>
+        <span class="icon-holder" data-toggle="extra-drop" data-hide="drop">
+          <span class="icon icon-down" data-toggle="extra-drop" data-hide="drop"></span>
+        </span>
+        <div id="extra-drop" class="drop hidden ">
+          <div class="drop-box">
+            <div class="drop-list">
+              <div class="drop-item">
+                <a href="<?=$webRoot?>/search" class="link">Find Roomies</a>
+              </div>
+              <div class="drop-item">
+                <a href="<?=$webRoot?>/accommodation" class="link">Accommodation</a>
+              </div>
+              <div class="drop-item">
+                <a href="<?=$webRoot?>/settings" class="link">Settings</a>
+              </div>
+              <div class="drop-item">
+                <a href="<?=$webRoot?>/logout" class="link">Sign out</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </li>
     </ul>
   </div>

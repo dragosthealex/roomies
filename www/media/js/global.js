@@ -43,6 +43,15 @@
    * An object which holds javascript functions for interactivity
    */
   var roomies = {
+    // A function to hide a list of elements
+    'hide': function (elements) {
+      for (var i = 0; i < elements.length; i += 1) {
+        if (!/ hidden /.exec(elements[i].className)) {
+          elements[i].className += "hidden ";
+        }
+      }
+    },
+
     // A function to toggle the visibility of an element
     'toggle': function (element) {
       // If the element is hidden, show it, else hide it
@@ -216,10 +225,17 @@
     var className = element.className;
 
     // Localise a variable for later use
-    var target;
+    var target, targets, targetWasAlreadyHidden = false;
 
     // If a target needs toggling, do so.
     if (target = document.getElementById(element.getAttribute('data-toggle'))) {
+      targetWasAlreadyHidden = / hidden /.exec(target.className);
+    }
+
+    roomies['hide'](document.getElementsByClassName('drop'));
+    roomies['hide'](document.getElementsByClassName('minidrop'));
+
+    if (target && targetWasAlreadyHidden) {
       roomies['toggle'](target);
     } // if
 
