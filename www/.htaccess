@@ -3,7 +3,8 @@ RewriteEngine on
 RewriteRule .? - [E=HTTP_ROOMIES:%{HTTP:Roomies}]
 
 # Cache
-#ExpiresActive On
+#   AddType font/ttf .ttf
+#   ExpiresActive On
 #	ExpiresByType font/ttf						"access 1 year"
 #	ExpiresByType image/jpeg					"access 1 year"
 #	ExpiresByType image/jpeg					"access 1 year"
@@ -19,8 +20,7 @@ RewriteRule .? - [E=HTTP_ROOMIES:%{HTTP:Roomies}]
 
 # Deflate resources
 Options +Includes
-AddType font/ttf .ttf
-AddOutputFilter INCLUDES;DEFLATE php html css js ttf
+AddOutputFilter INCLUDES;DEFLATE php html css js ttf svg
 
 # 404
 ErrorDocument 404 /error/404.php
