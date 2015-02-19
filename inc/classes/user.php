@@ -432,7 +432,7 @@ class User
     $unreadArray = $return['unreadArray'];
 
 
-    $messages = "<div class='messages'><ul class='ul'>";
+    $messages = '';
 
     for($index=0; $index<count($messagePartners) && $index<10; $index++)
     {
@@ -459,7 +459,7 @@ class User
 
       $messages .= 
       "
-      <li class='li $addReadClass'>
+      <li class='li drop-item drop-wide $addReadClass'>
         <p>
           <a href='./messages/?conv=$id2'>$otherUserName $noNewMessages</a>
         </p>
@@ -472,8 +472,6 @@ class User
       </li>
       ";
     }
-
-    $messages .= "</ul></div>";
 
     return $messages;
   }

@@ -6,6 +6,4 @@ ordering them by timestamp (newest first)
 
 ?>
 
-<div class="new-messages">
-  <?=($user->getNotifMessages(0))?$user->getNotifMessages(0):"No messages. Nobody loves you.";?>
-</div>
+<?=($user->getNotifMessages(0))?$user->getNotifMessages(0):"No messages. Nobody loves you.";?>

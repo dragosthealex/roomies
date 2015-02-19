@@ -163,13 +163,14 @@
 .drop {
 	position: absolute;
 	right: 0;
-	box-shadow: 3px 3px 2px -1px rgba(0,0,0,0.8);
-	width: 350px;
-	height: 363px;
+	/*box-shadow: 3px 3px 2px -1px rgba(0,0,0,0.8);*/
+	max-width: 430px;
+	max-height: 363px;
 	line-height: 1;
 }
 
 .drop-box {
+	box-shadow: 0px 3px 8px rgba(0,0,0,0.24);
 	border-radius: 2px;
 	border-width: 1px;
 	border-style: solid;
@@ -192,9 +193,9 @@
 }
 
 .drop-list-wrapper {
-	height: 310px;
+	max-height: 310px;
 	float: top;
-	overflow-y: hidden;
+	overflow: hidden;
 
 }
 
@@ -203,11 +204,14 @@
 	padding: 0;
 	margin: 0;
 	height: 100%;
-	overflow-y: scroll;
 }
 
 .drop-item {
-	height: 64px;
+	/*height: 64px;*/
+}
+
+.drop-wide {
+	width: 430px;
 }
 
 .message-icon {
@@ -810,6 +814,14 @@
 
 	.header-fixed .logo-link {
 		display: none;
+	}
+
+	.drop {
+		max-width: 320px;
+	}
+
+	.drop-wide {
+		width: 320px;
 	}
 
 	.main {

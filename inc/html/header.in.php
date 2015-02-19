@@ -24,9 +24,9 @@
               <p class="drop-header-text">Friend Requests</p>
             </div>
             <div class="drop-list-wrapper">
-              <div class="drop-list">
+              <ul class="drop-list">
                 <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
-              </div>
+              </ul>
             </div>
             <div class="drop-footer">
               <p class="drop-header-text">View all</p>
@@ -44,7 +44,7 @@
               <p class="drop-header-text">Messages</p>
             </div>
             <div class="drop-list-wrapper">
-              <div class="drop-list">
+              <ul class="drop-list">
                 <?php include __ROOT__."/inc/html/new_messages.php"; ?>
                 <!-- <div class="drop-item">
                   <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
@@ -78,7 +78,7 @@
                   <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
                   <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
                 </div> -->
-              </div>
+              </ul>
             </div>
             <div class="drop-footer">
               <a href="<?=$webRoot?>/messages" class="link drop-header-text">View all</a>
@@ -93,7 +93,7 @@
         </span>
         <div id="extra-drop" class="drop hidden ">
           <div class="drop-box">
-            <div class="drop-list">
+            <ul class="drop-list">
               <div class="drop-item">
                 <a href="<?=$webRoot?>/search" class="link">Find Roomies</a>
               </div>
@@ -106,7 +106,7 @@
               <div class="drop-item">
                 <a href="<?=$webRoot?>/logout" class="link">Sign out</a>
               </div>
-            </div>
+            </ul>
           </div>
         </div>
       </li>
