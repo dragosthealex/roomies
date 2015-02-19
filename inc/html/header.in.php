@@ -4,6 +4,7 @@
     <?php require_once "header.php"; ?>
     <ul class="header-nav">
       <li class="header-item">
+        <span class=hidden></span>
         <a href="<?=$webRoot?>" class="icon-holder" title="Home">
           <span class="icon icon-home"></span>
         </a>

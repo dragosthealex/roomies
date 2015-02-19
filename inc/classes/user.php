@@ -461,7 +461,7 @@ class User
       $messages .=
       "
       <li class='li drop-item drop-wide $addReadClass' title='At $timestamp'>
-          <span class='message-icon' style='background-image: url('/media/img/anonymous.jpg')'></span>
+          <span class='message-icon' style='background-image: url(/media/img/anonymous.jpg)'></span>
           <p class='drop-text'><span class='drop-text-span'>$otherUserName $noNewMessages</span></p>
           <p class='drop-text'><span class='drop-text-span'>$firstLine</span></p>
       </li>
