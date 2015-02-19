@@ -460,16 +460,10 @@ class User
 
       $messages .=
       "
-      <li class='li drop-item drop-wide $addReadClass'>
-        <p>
-          <a href='/messages/$otherUserUsername'>$otherUserName $noNewMessages</a>
-        </p>
-        <p>
-          $firstLine
-        </p>
-        <p>
-          At $timestamp
-        </p>
+      <li class='li drop-item drop-wide $addReadClass' title='At $timestamp'>
+          <span class='message-icon' style='background-image: url('/media/img/anonymous.jpg')'></span>
+          <p class='drop-text'><span class='drop-text-span'>$otherUserName $noNewMessages</span></p>
+          <p class='drop-text'><span class='drop-text-span'>$firstLine</span></p>
       </li>
       ";
     }
