@@ -9,9 +9,6 @@
         </a>
       </li>
       <li class="header-item">
-        <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop">
-          <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
-        </span>
         <!-- message drop -->
         <div id="frequests-drop" class="drop hidden ">
           <div class="drop-box">
@@ -28,11 +25,11 @@
             </div>
           </div>
         </div>
+        <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop">
+          <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
+        </span>
       </li>
       <li class="header-item">
-        <span class="icon-holder" title="Messages" data-toggle="message-drop" data-hide="drop">
-          <span class="icon icon-messages" data-toggle="message-drop" data-hide="drop"></span>
-        </span>
         <div id="message-drop" class="drop hidden ">
           <div class="drop-box">
             <div class="drop-header">
@@ -80,12 +77,12 @@
             </div>
           </div>
         </div>
+        <span class="icon-holder" title="Messages" data-toggle="message-drop" data-hide="drop">
+          <span class="icon icon-messages" data-toggle="message-drop" data-hide="drop"></span>
+        </span>
       </li>
       <!-- <li class="header-split"></li> -->
       <li class="header-item">
-        <span class="icon-holder" data-toggle="extra-drop" data-hide="drop">
-          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')" data-toggle="extra-drop" data-hide="drop"></span>
-        </span>
         <div id="extra-drop" class="drop hidden ">
           <div class="drop-box">
             <ul class="drop-list box-padding">
@@ -107,6 +104,9 @@
             </ul>
           </div>
         </div>
+        <span class="icon-holder" data-toggle="extra-drop" data-hide="drop">
+          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')" data-toggle="extra-drop" data-hide="drop"></span>
+        </span>
       </li>
     </ul>
   </div>

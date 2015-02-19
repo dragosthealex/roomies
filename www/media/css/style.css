@@ -100,11 +100,15 @@
 	background-size: contain;
 	height: 26px;
 	width: 26px;
+	opacity: 0.85;
+}
+
+.hidden + .icon-holder .icon {
 	opacity: 0.55;
 }
 
 .icon-holder:hover .icon {
-	opacity: 0.85;
+	opacity: 0.85 !important;
 }
 
 .icon-home {
@@ -162,6 +166,7 @@
 
 .drop {
 	position: absolute;
+	top: 48px;
 	right: 0;
 	/*box-shadow: 3px 3px 2px -1px rgba(0,0,0,0.8);*/
 	max-width: 430px;

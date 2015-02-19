@@ -124,15 +124,41 @@ else
 		include __ROOT__."/inc/html/notifications.php";
 	}
 ?>
+		<div class="box">
+			<div class="box-padding">
+				<div class="profile-box">
+					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');"></div>
+						<div style="float:left;">
+							<h2 class="h2"><?=$user->getName()?></h2>
+							<div class="links-wrapper">
+							<ul class="ul">
+								<li class="float-left">
+									<a class="link-button toggle " data-target="notifications">Notifications</a>
+								</li>
+								<li class="float-left">
+									<a href="#reviews" class="link-button">Review</a>
+								</li>
+								<li class="float-left">
+									<a href="search/" class="link-button">Search</a>
+								</li>
+								<li class="float-left">
+									<a href="messages/" class="link-button">Messages</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="column-wrapper">
 			<div class="column-2">
 				<div class="column-box">
 					<div class="box-padding">
-			    	<p class="h2">
-			    		Recent Matches
-			    	</p>
-				    <ul class="ul">
-				    	<?php require_once __ROOT__.'/inc/html/recent_matches.php';?>
+						<p class="h2">
+							Recent Matches
+						</p>
+						<ul class="ul">
+							<?php require_once __ROOT__.'/inc/html/recent_matches.php';?>
 						</ul>
 					</div>
 				</div>
@@ -140,49 +166,49 @@ else
 			<div class="column-2">
 				<div class="column-box">
 					<div class="box-padding">
-			    	<p class="h2"> Popular Accommodation </p>
-			    	<ul class="ul">
-			    		<li class="box accommodation">
-			    			<div class="box-padding">
-				    			<p>
-				    				Whitworth Park
-				    			</p>
-				    			<img class="housepic" src="media/img/banana.jpeg">
-				    			<div class="house-description">
-				    				<p>
-				    					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec nibh lectus. Nam convallis a eros in finibus. Suspendisse varius, turpis eget mollis consectetur, neque erat tincidunt diam, sed porttitor lorem nunc sed eros.
-				    				</p>
-				    			</div>
-			    			</div>
-			    		</li>
-			    		<li class="box accommodation">
-			    			<div class="box-padding">
-				    			<p>
-				    				Dalton-Ellis
-				    			</p>
-				    			<img class="housepic" src="media/img/banana.jpeg">
-				    			<div class="house-description">
-				    				<p>
-				    					Nulla facilisi. Donec eu ante auctor ipsum tempus consequat ut ut ante. Integer a laoreet tortor, at volutpat nibh. Aliquam erat volutpat. Vestibulum eget commodo justo. Quisque ipsum ipsum, ph
-				    				</p>
-				    			</div>
-			    			</div>
-			    		</li>
-			    		<li class="box accommodation">
-			    			<div class="box-padding">
-				    			<p>
-				    				Rusholme
-				    			</p>
-				    			<img class="housepic" src="media/img/banana.jpeg">
-				    			<div class="house-description">
-				    				<p>
-				    					Nunc cursus enim a vulputate
-				    				</p>
-				    			</div>
-			    			</div>
-			    		</li>
-			    	</ul>
-			  </div>
+						<p class="h2"> Popular Accommodation </p>
+						<ul class="ul">
+							<li class="box accommodation">
+								<div class="box-padding">
+									<p>
+										Whitworth Park
+									</p>
+									<img class="housepic" src="media/img/banana.jpeg">
+									<div class="house-description">
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec nibh lectus. Nam convallis a eros in finibus. Suspendisse varius, turpis eget mollis consectetur, neque erat tincidunt diam, sed porttitor lorem nunc sed eros.
+										</p>
+									</div>
+								</div>
+							</li>
+							<li class="box accommodation">
+								<div class="box-padding">
+									<p>
+										Dalton-Ellis
+									</p>
+									<img class="housepic" src="media/img/banana.jpeg">
+									<div class="house-description">
+										<p>
+											Nulla facilisi. Donec eu ante auctor ipsum tempus consequat ut ut ante. Integer a laoreet tortor, at volutpat nibh. Aliquam erat volutpat. Vestibulum eget commodo justo. Quisque ipsum ipsum, ph
+										</p>
+									</div>
+								</div>
+							</li>
+							<li class="box accommodation">
+								<div class="box-padding">
+									<p>
+										Rusholme
+									</p>
+									<img class="housepic" src="media/img/banana.jpeg">
+									<div class="house-description">
+										<p>
+											Nunc cursus enim a vulputate
+										</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+				</div>
 			</div>
 		</div>
 	</div>
