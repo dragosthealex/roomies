@@ -60,8 +60,10 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 		{
 			// Create random salt, hash the pass
 			$salt = mt_rand();
+            echo "$password <br>";
 			$password = hash('sha256', $password.$salt);
 			$stmt = $con->prepare("UPDATE rusers SET user_salt = $salt, user_pass  = $password WHERE username = $username");
+            echo "UPDATE rusers SET user_salt = $salt, user_pass  = $password WHERE username = $username <br>";
 			$stmt->execute();
 			$stmt->bindColumn(1, $dbId);
 	    	$stmt->fetch();
