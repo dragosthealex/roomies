@@ -6,8 +6,7 @@ require_once '../../inc/init.php';
 require_once __ROOT__.'/inc/classes/message.php';
 require_once __ROOT__.'/inc/classes/conversation.php';
 
-$headers = getallheaders();
-if(!isset($_POST['message']) || !isset($_GET['receiver']) || !isset($headers['Roomies']) || $headers['Roomies'] != 'cactus')
+if(!isset($_POST['message']) || !isset($_GET['receiver']) || !isset($_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__."/inc/html/notfound.php";
   exit();

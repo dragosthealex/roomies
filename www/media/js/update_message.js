@@ -2,14 +2,15 @@
   // Localise the document, html and body
   var document = window.document;
   var update = window.roomies.update;
-  var convParent = document.getElementById('conv').parentNode;
+  var conv = document.getElementById('conv');
+  var convParent = conv.parentNode;
   var convTracker = convParent.getElementsByClassName('scroll-tracker')[0];
   var gettingNextSet = false;
 
   convParent.onscroll = function () {
     if (convParent.scrollTop < 100 && !gettingNextSet)  {
         gettingNextSet = true;
-        update('messages', '../php/update_message.process.php?otherId=' + window.location.href.split("=")[1], 'message', null, function () {
+        update('messageOld', '../php/update_message.process.php?type=old&otherId=' + window.location.href.split("=")[1], 'message', null, function () {
             gettingNextSet = false;
         });
     }
@@ -29,15 +30,15 @@
   };
 
   var updateMessages = function () {
-    update('messages', '../php/update_message.process.php?timestamp=' + encodeURIComponent(new Date()) + '&otherId=' + window.location.href.split("=")[1], 'header', null, updateMessagesAgain);
+    update('messageNew', '../php/update_message.process.php?type=new&lastId=' + conv.lastChild.getAttribute('data-message-id') + '&otherId=' + window.location.href.split("=")[1], null, null, updateMessages);
   };
 
   var updateMessagesAgain = function () {
-    // Give 4 seconds before updating again
-    setTimeout(updateMessages, 4000);
+    // Give 1 second before updating again
+    setTimeout(updateMessages, 1000);
   };
 
-  updateMessagesAgain();
+  updateMessages();
 
   setTimeout(function () {
     convParent.scrollTop = convParent.scrollHeight;

@@ -71,12 +71,25 @@ require_once __ROOT__.'/config.inc.php';
 // $con is the connection handler, PDO object.
 try
 {
-  $con = new PDO("mysql:host=$database_host;dbname=$group_dbnames[0]", $database_user, $database_pass);
+  $con = new PDO("mysql:host=$database_host;dbname=$database_name", $database_user, $database_pass);
 } catch (PDOException $e)
 {
   // Exit the script if the database conneciton fails.
   exit('Connection failed: ' . $e->getMessage());
 }
+
+// Fix timezones
+date_default_timezone_set('Europe/London');
+$now = new DateTime();
+$mins = $now->getOffset() / 60;
+$sgn = ($mins < 0 ? -1 : 1);
+$mins = abs($mins);
+$hrs = floor($mins / 60);
+$mins -= $hrs * 60;
+$offset = sprintf('%+d:%02d', $hrs*$sgn, $mins);
+$stmt = $con->prepare("SET time_zone = '$offset'");
+$stmt->execute();
+
 if(LOGGED_IN)
 {
   $user = new User($con, $_SESSION['user']['id']);

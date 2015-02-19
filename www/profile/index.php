@@ -101,35 +101,6 @@ if(!isset($otherUserId) || !$otherUserId)
 }
 $stmt = null;
 
-// Echo the appropiate possible buttons for friends
-$addFriend = "<li class='float-left'>
-	<a data-ajax-url='../php/friends.process.php?a=1&id=$otherUserId'
-	   data-ajax-text='Sending...'
-	   data-ajax-hide='friend-button requestSent'
-	   class='link-button friend-button' id='addFriend'>Add friend</a></li>";
-$alreadyFriends = "<li class='float-left'>
-	<span class='minidrop-container friend-button' id='alreadyFriends'>
-	<a data-ajax-url='../php/friends.process.php?a=0&id=$otherUserId'
-	   data-ajax-text='Pending...'
-	   data-ajax-hide='friend-button addFriend'
-	   class='link-button'>Unfriend</a></span></li>";
-$requestSent = "<li class='float-left'>
-	<span class='minidrop-container friend-button' id='requestSent'>
-	<a data-ajax-url='../php/friends.process.php?a=0&id=$otherUserId'
-	   class='link-button'>Cancel request</a></span></li>";
-$requestReceived = "<li class='float-left'>
-	<a data-action='../php/friends.process.php?a=3&id=$otherUserId'
-	   data-action-toggle='../php/friends.process.php?a=0&id=$otherUserId'
-	   data-text-toggle='Friends!'
-	   class='link-button friend-button'>Accept</a></li>";
-$blockButton = "<li class='float-left'>
-	<a data-action='../php/friends.process.php?a=4&id=$otherUserId'
-	   data-action-toggle='../php/friends.process.php?a=5&id=&otherUserId'
-	   data-text-toggle='Unblock' class='link-button ajax '>Block user</a></li>";
-$unblockButton = "<li class='float-left'>
-	<a data-action='../php/friends.process.php?a=5&id=$otherUserId'
-	   data-action-toggle='../php/friends.process.php?a=1&id=&otherUserId'
-	   data-text-toggle='Add Friend' class='link-button ajax '>Unblock user</a></li>";
 /* Check friendship and set the button accordingly
 0 -> not friends
 1 -> friends
@@ -141,24 +112,13 @@ $unblockButton = "<li class='float-left'>
 $blocked = 0;
 
 $status = $user->friendshipStatus($otherUser);
-switch ($status)
-{
-	case 0:
-		$friendsButton = $addFriend;
-		break;
-	case 1:
-		$friendsButton = $alreadyFriends;
-		break;
-	case 2:
-		$friendsButton = $requestSent;
-		break;
-	case 3:
-		$friendsButton = $requestReceived;
-		break;
-	default:
-		$friendsButton = $addFriend;
-		break;
-}
+$addFriendHide       = $status == 0 ? '' : 'style="display: none"';
+$alreadyFriendsHide  = $status == 1 ? '' : 'style="display: none"';
+$requestSentHide     = $status == 2 ? '' : 'style="display: none"';
+$requestReceivedHide = $status == 3 ? '' : 'style="display: none"';
+$blockButtonHide     = $status != 4 ? '' : 'style="display: none"';
+$unblockButtonHide   = $status == 4 ? '' : 'style="display: none"';
+
 $nameOrUsername = ($status == 1)?$otherUser->getName():$otherUsername;
 
 $title = "$otherUsername's profile";
@@ -171,20 +131,51 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
   <div class="box">
 		<div class="box-padding">
 			<div class="profile-box">
-					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');">
+				<span class="profile-picture" style="background-image: url('<?=$userImagePath?>');"></span>
+				<div class="profile-box-inner">
+					<h2 class="h2 profile-name"><?=$nameOrUsername?></h2>
+					<div class="profile-links">
+						<a data-ajax-url='../php/friends.process.php?a=1&id=<?=$otherUserId?>'
+						   data-ajax-text='Sending...'
+						   data-ajax-hide='friend-button requestSent' <?=$addFriendHide?>
+						   class='link-button friend-button' id='addFriend'>Add Friend</a>
+
+						<span class='minidrop-container friend-button' id='alreadyFriends' <?=$alreadyFriendsHide?>>
+						<a data-ajax-url='../php/friends.process.php?a=0&id=<?=$otherUserId?>'
+						   data-ajax-text='Pending...'
+						   data-ajax-hide='friend-button addFriend'
+						   class='link-button'>Unfriend</a>
+						</span>
+
+						<span class='minidrop-container friend-button' id='requestSent' <?=$requestSentHide?>>
+						<a data-ajax-url='../php/friends.process.php?a=0&id=<?=$otherUserId?>'
+						   data-ajax-text='Canceling...'
+						   data-ajax-hide='friend-button addFriend'
+						   class='link-button'>Cancel</a>
+						</span>
+
+						<span class='minidrop-container friend-button' id='requestReceived' <?=$requestReceivedHide?>>
+						<a data-ajax-url='../php/friends.process.php?a=3&id=<?=$otherUserId?>'
+						   data-ajax-text='Accepting...'
+						   data-ajax-hide='friend-button alreadyFriends'
+						   class='link-button'>Accept</a>
+						<a data-ajax-url='../php/friends.process.php?a=0&id=<?=$otherUserId?>'
+						   data-ajax-text='Ignoring...'
+						   data-ajax-hide='friend-button addFriend'
+						   class='link-button'>Ignore</a>
+						</span>
+
+						<a data-ajax-url='../php/friends.process.php?a=4&id=<?=$otherUserId?>'
+						   data-ajax-text='Blocking...'
+						   data-ajax-hide='blockUnblock unblockButton' <?=$blockButtonHide?>
+						   class='link-button blockUnblock' id='blockButton'>Block</a>
+						<a data-ajax-url='../php/friends.process.php?a=5&id=<?=$otherUserId?>'
+						   data-ajax-text='Unblocking...'
+						   data-ajax-hide='blockUnblock blockButton' <?=$unblockButtonHide?>
+						   class='link-button blockUnblock' id='unblockButton'>Unblock</a>
 					</div>
-					<div style="float:left;">
-						<h2 class="h2">
-							<?=$nameOrUsername;?>
-						</h2>
-						<div class="links-wrapper">
-				    	<ul class="ul">
-				    		<?=$friendsButton?>
-				    		<?=$blocked?$unblockButton:$blockButton?>
-				    	</ul>
-			    	</div>
-		    	</div>
-		    </div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div id="error">

@@ -292,18 +292,6 @@
 .details-box {
 	float : left;
 }
-.profile-box {
-	overflow: hidden;
-	display: table;
-}
-
-.profile-picture {
-	float: left;
-	/*height: 180px;
-	width:180px;*/
-	margin: 0 .8em 1em 0;
-	height: 3.6em;
-}
 
 .housepic {
 	width: 4em;
@@ -314,11 +302,6 @@
 
 .accommodation {
 	overflow: hidden;
-}
-
-.links-wrapper {
-	display: table-cell;
-	vertical-align: middle;
 }
 
 .table, .td, .th {
@@ -336,16 +319,6 @@
 
 .box-content {
 	display: none;
-}
-
-.main-pic {
-	display: block;
-	height: 6em;
-	width: 6em;
-	margin: 0 .8em 0 0;
-	background-image: url('../img/profile-picture-placeholder.gif');
-	background-size: auto 6em;
-	float: left;
 }
 
 .details {
@@ -369,10 +342,6 @@
 
 .details-up:after {
 	border-width: 0 3px 3px;
-}
-
-.unread {
-	color: red;
 }
 
 .h1, .h2 {
@@ -524,6 +493,54 @@
 	color: #00adaa;
 }
 
+.profile-box-item {
+	margin: 16px 0 0;
+	border-top: 1px solid #d9d6d5;
+	padding: 16px 0 0;
+}
+
+.profile-box-item:first-child {
+	margin: 0 !important;
+	border: 0;
+	padding: 0 !important;
+}
+
+.profile-box {
+	overflow: hidden;
+}
+
+.profile-picture {
+	display: block;
+	margin: 0 1em 0 0;
+	float: left;
+	background-position: center center;
+	background-image: url('../img/profile-picture-placeholder.gif');
+	background-size: cover;
+	height: 6.8em;
+	width: 6.8em;
+}
+
+.profile-box-inner {
+	float: left;
+}
+
+.profile-name {
+	display: block;
+	margin: 0 0 2em !important;
+	text-decoration: none;
+	color: #000;
+}
+
+.profile-percent {
+	margin-top: -2em;
+	font-size: 1.5em;
+	line-height: 2em;
+}
+
+.profile-links .link-button {
+	margin: 0;
+}
+
 .scroll-wrapper {
 	position: relative;
 	border-top: 1px solid #e4e0df;
@@ -580,11 +597,36 @@
 }
 
 .conversation {
-	padding: 8px 8px 8px 0;
+	padding: 0 8px 16px 0;
 }
 
 .message {
-	padding: 8px 16px;
+	position: relative;
+	padding: 16px 16px 0 60px;
+}
+
+.sent + .sent, .received + .received {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.sent + .sent:before, .received + .received:before {
+	display: none;
+}
+
+.message-pic {
+	display: block;
+	position: absolute;
+	top: 18px;
+	left: 16px;
+	background-color: #EFEFEF;
+	background-size: 33px 33px;
+	width: 33px;
+	height: 33px;
+}
+
+.sent + .sent .message-pic, .received + .received .message-pic {
+	display: none;
 }
 
 .message-name {
@@ -594,13 +636,30 @@
 	font-size: .9em;
 }
 
+.sent + .sent .message-name, .received + .received .message-name {
+	display: none;
+}
+
 .message .text {
 	margin: 0;
 	font-size: .9em;
 }
 
-.message .text + .text {
+.sent + .sent .text, .received + .received .text {
 	margin: 8px 0 0;
+}
+
+./*sent {
+}
+
+.received {
+}
+
+.read {
+}*/
+
+.received.unread {
+	color: red;
 }
 
 .textarea-holder {
@@ -664,7 +723,7 @@
 
 .errorBox {
 	margin: 16px auto;
-	box-shadow: 0px 2px 4px rgba(0,0,0,0.16);
+	box-shadow: 0px 2px 4px rgba(0,0,0,0.16) !important;
 	padding: 16px;
 	max-width: 600px;
 }
@@ -696,6 +755,27 @@
 @media (max-width: 976px) {
 	.header {
 		position: absolute;
+	}
+
+	.profile-picture {
+		margin-right: 8px;
+		height: 4.24em;
+		width: 4.24em;
+	}
+
+	.profile-name {
+		margin: 0 0 1.4em !important;
+		font-size: 1em;
+	}
+
+	.profile-percent {
+		margin-top: -1.4em;
+		font-size: 1em;
+		line-height: 1.4em;
+	}
+
+	.profile-links {
+		font-size: 0.8em;
 	}
 }
 
@@ -762,6 +842,32 @@
 		color: #a39791;
 		font-weight: bold;
 		font-size: .92em;
+	}
+
+	.profile-box-item {
+		margin: 10px 0 0;
+		padding: 10px 0 0;
+	}
+
+	.profile-picture {
+		margin-right: 8px;
+		height: 4.84em;
+		width: 4.84em;
+	}
+
+	.profile-name {
+		margin: 0 0 1.5em !important;
+		border: 0;
+		padding: 0;
+		color: inherit;
+		font-weight: normal;
+		font-size: 1.2em;
+	}
+
+	.profile-percent {
+		margin-top: -1.8em;
+		font-size: 1em;
+		line-height: 1.8em;
 	}
 
 	.float-right {

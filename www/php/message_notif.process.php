@@ -3,8 +3,7 @@
 
 require_once '../../init.php';
 
-$headers = getallheaders();
-if(!isset($headers['Roomies']) || $headers['Roomies'] != 'cactus')
+if(!isset($_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__."/inc/html/notfound.php";
   exit();

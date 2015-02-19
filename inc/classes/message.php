@@ -63,7 +63,7 @@ class Message
       $this->text = $message_text;
       $this->author = $message_user_id1;
       $this->con = $con;
-      $this->timeStamp = date('d-m-Y-H-i-s');
+      $this->timeStamp = date('Y-m-d H:i:s');
     }
   }
 

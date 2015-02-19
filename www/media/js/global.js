@@ -12,6 +12,8 @@
   // Set a variable for whether the mouse is down
   var mouseIsDown = false;
   var target;
+  var newMessageCount = 0;
+  var originalTitle = document.title;
 
   /**
    * A function to get the current size of the page
@@ -90,18 +92,33 @@
                 newHTML[i] += obj.template[obj.template.length - 1];
               }
             }
+            
+            var conv = document.getElementById('conv');
+            var convParent = conv.parentNode;
 
             switch (part) {
-              case 'messages':
-                var conv = document.getElementById('conv');
-                var convParent = conv.parentNode;
-                conv.innerHTML = newHTML[0];
-                setTimeout(function () {
-                  if (convParent.scrollHeight - convParent.scrollTop - convParent.offsetHeight === 0) {
+              case 'messageNew':
+                if (objs[0].length) {
+                  var scrolledAtBottom = convParent.scrollHeight - convParent.scrollTop - convParent.offsetHeight === 0;
+                  conv.innerHTML += newHTML[0];
+                  if (scrolledAtBottom) {
                     convParent.scrollTop = convParent.scrollHeight;
                   }
-                }, 100);
-                document.getElementById('allConversations').innerHTML = newHTML[1];
+                  newMessageCount = document.getElementsByClassName('unread received').length;
+                  var newTitle = newMessageCount ? "(" + newMessageCount + ") " : "";
+                  newTitle += originalTitle;
+                  document.title = newTitle;
+                }
+                if (objs[1].length) {
+                  document.getElementById('allConversations').innerHTML = newHTML[1];
+                }
+                break;
+              case 'messageOld':
+                if (objs[0].length) {
+                  var previousScrollHeight = convParent.scrollHeight - convParent.scrollTop;
+                  conv.innerHTML = newHTML[0] + conv.innerHTML;
+                  convParent.scrollTop = convParent.scrollHeight - previousScrollHeight;
+                }
                 break;
             }
           }
@@ -127,18 +144,21 @@
 
       xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4) {
+          // Return the text to its original state
+          element.innerHTML = originalText;
+
           // If there was anything output, new error
           if (xmlhttp.status === 404) {
             newError("Not found suck balls");
           } else if (xmlhttp.responseText) {
             newError(xmlhttp.responseText);
-          } else if (hideText = element.getAttribute('data-ajax-hide') && xmlhttp.status === 200) {
+          } else if ((hideText = element.getAttribute('data-ajax-hide')) && xmlhttp.status === 200) {
             hideText = hideText.split(" ");
 
-            var elementsToHide = aProto.splice.call(document.getElementsByClassName(hideText[0]));
+            var elementsToHide = aProto.slice.call(document.getElementsByClassName(hideText[0]));
 
             elementsToHide.forEach(function (element) {
-              element.style.visibility = "none";
+              element.style.display = "none";
             });
 
             document.getElementById(hideText[1]).removeAttribute('style');
