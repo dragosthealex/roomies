@@ -35,6 +35,7 @@ if (!LOGGED_IN)
 if(!LOGGED_IN)
 {
 	require_once __ROOT__."/inc/html/head.php";
+	echo "<script src='$webRoot/media/js/facebook_login.js'></script>";
 	require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 		<!-- Hidden title -->
@@ -54,8 +55,14 @@ if(!LOGGED_IN)
 						<form method="POST" name="signin" action="./login/index.php" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
 							<input type="text" name="login" placeholder="Email/Username" class="input block" required>
 							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
+
 							<!--Facebook Login-->
-							<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="true" data-auto-logout-link="false"></div>
+							<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+							</fb:login-button>
+							<div id="status">
+							</div>
+
+
 							<label for="remember_me">
 								<input type="checkbox" id="remember_me" name="rememberMe">
 								<span>Remember me</span>
