@@ -97,6 +97,27 @@ if(LOGGED_IN)
 {
   if(isset($_GET['logout']))
   {
+    if(isset($_COOKIE['login']))
+    {
+      $userId = $_SESSION['user']['id'];
+      $currentCookie = $_COOKIE['login'];
+      $stmt = $con->prepare("SELECT user_cookie FROM rusers WHERE user_id = $userId");
+      $stmt->execute();
+      $stmt->bindColumn(1, $dbCookies);
+      $stmt->fetch();
+
+      // Remove cookie from array
+      $dbCookies = explode(':', $dbCookies);
+      $dbCookies = array_diff($dbCookies, array("$currentCookie"));
+      $dbCookies = implode(':', $dbCookies);
+      // Put the new array back
+      $stmt = $con->prepare("UPDATE rusers SET user_cookie = '$dbCookies' WHERE user_id = '$userId'");
+      $stmt->execute();
+
+      // Delete cookie from user
+      setcookie('login', '', time()-3600);
+    }
+
     session_destroy();
     header("Location: $webRoot");
     exit();
