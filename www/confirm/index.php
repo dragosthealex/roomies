@@ -114,7 +114,7 @@ If temp user not in session, a "user" get variable is needed for checking in db
 function completeReg($con, $username)
 {
   $stmt = $con->prepare("SELECT temp_email, temp_pass, temp_salt FROM rtempusers
-                          Where temp_username = '$username'");
+                          WHERE temp_username = '$username'");
   $stmt->execute();
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -168,7 +168,7 @@ $stmt->fetch();
 if($stmt->rowCount() != 1)
 {
   $stmt = null;
-  require_once '../../init/html/notfound.php';
+  require_once __ROOT__.'/inc/html/notfound.php';
   exit();
 }
 

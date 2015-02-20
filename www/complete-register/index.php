@@ -32,77 +32,96 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
     && $_POST['city'])
   {
     // Get the values from POST
-    $firstName = htmlentities($_POST['first_name']);
-    $lastName = htmlentities($_POST['last_name']);
-    $bYear = htmlentities($_POST['b_year']);
-    $bMonth = htmlentities($_POST['b_month']);
-    $bDay = htmlentities($_POST['b_day']);
-    $country = htmlentities($_POST['country']);
-    $language = htmlentities($_POST['language']);
-    $gender = htmlentities($_POST['gender']);
-    $city = htmlentities($_POST['city']);
-
-
-    // Check if the ID exists. If not, it must be a problem
-    $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
-    $stmt->execute();
-    $stmt->bindColumn(1, $dbId);
-    $stmt->fetch();
-    if(!$stmt->rowCount())
+    try
     {
-      // There was a problem
-      require_once __ROOT__."/inc/html/problem.php";
+      $firstName = htmlentities($_POST['first_name']);
+      $lastName = htmlentities($_POST['last_name']);
+      if(!validate('alphanumeric', $firstName, 2, 35) || !validate('alphanumeric', $lastName, 2, 35))
+      {
+        throw new Exception("Names are invalid.", 1);
+      }
+
+      $bYear = htmlentities($_POST['b_year']);
+      $bMonth = htmlentities($_POST['b_month']);
+      $bDay = htmlentities($_POST['b_day']);
+      $country = htmlentities($_POST['country']);
+      $language = htmlentities($_POST['language']);
+      $gender = htmlentities($_POST['gender']);
+      $city = htmlentities($_POST['city']);
+
+      if(!validate($bYear) || !validate($bMonth) || !validate($bDay) || !validate($country)
+        || !validate($language) || !validate($gender) || !$validate($city))
+      {
+        throw new Exception("Invalid values for year, month, day, country, language, gender or city.", 1);      
+      }
+      // Check if the ID exists. If not, it must be a problem
+      $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
+      $stmt->execute();
+      $stmt->bindColumn(1, $dbId);
+      $stmt->fetch();
+      if(!$stmt->rowCount())
+      {
+        // There was a problem
+        require_once __ROOT__."/inc/html/problem.php";
+        exit();
+      }
+
+      // Format the birthday
+      if($bDay < 10)
+      {
+        $bDay = "0".$bDay;
+      }
+      if($bMonth < 10)
+      {
+        $bMonth = "0".$bMonth;
+      }
+      $birthday = $bYear."-".$bMonth."-".$bDay;
+
+      // Get the values in ints from mapping
+      $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_country = '$country'");
+      $stmt->execute();
+      $stmt->bindColumn(1, $mapCountry);
+      $stmt->fetch();
+      $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_language = '$language'");
+      $stmt->execute();
+      $stmt->bindColumn(1, $mapLanguage);
+      $stmt->fetch();
+      $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_gender = '$gender'");
+      $stmt->execute();
+      $stmt->bindColumn(1, $mapGender);
+      $stmt->fetch();
+      $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_uni_city = '$city'");
+      $stmt->execute();
+      $stmt->bindColumn(1, $mapCity);
+      $stmt->fetch();
+
+      // Get all the users in the same city
+      $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE uni_city=$mapCity");
+      $stmt->execute();
+      $usersInCity = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+      foreach ($usersInCity as $otherUserId)
+      {
+        // Insert new rows in db, initialising the percentages for this user and others in their city with 0
+        $stmt = $con->prepare("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
+                                VALUES ($otherUserId, $id, $mapCity)");
+        $stmt->execute();
+      }
+
+      // Insert those values in rdetails
+      $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender, uni_city )
+                              VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender', '$mapCity')");
+      $stmt->execute();
+
+      $stmt = null;
+    }
+    catch(Exception $exception)
+    {
+      $_SESSION['err'] = $exception;
+      header("Location: ./");
       exit();
     }
 
-    // Format the birthday
-    if($bDay < 10)
-    {
-      $bDay = "0".$bDay;
-    }
-    if($bMonth < 10)
-    {
-      $bMonth = "0".$bMonth;
-    }
-    $birthday = $bYear."-".$bMonth."-".$bDay;
-
-    // Get the values in ints from mapping
-    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_country = '$country'");
-    $stmt->execute();
-    $stmt->bindColumn(1, $mapCountry);
-    $stmt->fetch();
-    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_language = '$language'");
-    $stmt->execute();
-    $stmt->bindColumn(1, $mapLanguage);
-    $stmt->fetch();
-    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_gender = '$gender'");
-    $stmt->execute();
-    $stmt->bindColumn(1, $mapGender);
-    $stmt->fetch();
-    $stmt = $con->prepare("SELECT filter_value FROM rfiltersmap WHERE map_uni_city = '$city'");
-    $stmt->execute();
-    $stmt->bindColumn(1, $mapCity);
-    $stmt->fetch();
-
-    // Get all the users in the same city
-    $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE uni_city=$mapCity");
-    $stmt->execute();
-    $usersInCity = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-
-    foreach ($usersInCity as $otherUserId)
-    {
-      // Insert new rows in db, initialising the percentages for this user and others in their city with 0
-      $stmt = $con->prepare("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
-                              VALUES ($otherUserId, $id, $mapCity)");
-      $stmt->execute();
-    }
-
-    // Insert those values in rdetails
-    $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender, uni_city )
-                            VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender', '$mapCity')");
-    $stmt->execute();
-
-    $stmt = null;
     unset($_SESSION['notComplete']);
     header("Location: ../");
     exit();
@@ -136,7 +155,6 @@ if(isset($_GET['logout']))
   header("Location: ../");
   exit();
 }
-echo $_SESSION['randomKey'] == $_POST['randomKey'];
 // Generate random key, needed for accessing the process script
 $randKey = mt_rand();
 if(!isset($_SESSION['randomKey']))
@@ -145,11 +163,20 @@ if(!isset($_SESSION['randomKey']))
 }
 
 $title = "Complete Registration";
+
+$errMsg = '';
+if(isset($_SESSION['err']))
+{
+  $errMsg = $_SESSION['err'];
+}
 ?>
 <?php require_once __ROOT__."/inc/html/head.php";?>
     <!--header-->
     <?php require_once __ROOT__."/inc/html/header.$ioStatus.php";?>
       <div id="mandatory_details" class="box">
+        <div class="error">
+          <?=$errMsg;?>
+        </div>
         <div class="box-padding">
           <h2 id="Complete_registration" class="h2">
             Complete registration
@@ -227,9 +254,6 @@ $title = "Complete Registration";
           </form>
         </div>
       </div>
-      <div id="optional_details" class="box" style="display: none;">
-        <?php require_once "optionalDetails.php";?>
-      </div>
       <!--Scripts-->
       <script type="text/javascript" src="../media/js/jquery.min.js"></script>
       <script type="text/javascript" src="../media/js/birthday.js"></script>
@@ -253,4 +277,27 @@ function listLanguageOptions()
     echo "<option class='option' value='$language'>$language</option>";
   }
 }
+
+// Validates the $value
+function validate($key='int', $value, $minLength=0, $maxLength=100)
+{
+  switch ($key) {
+    case 'int':
+      return is_int($value);
+      break;
+    case 'alphanumeric':
+      $range = $minLength . ", " . $maxLength;
+      return preg_match("/^\[a-zA-Z0-9 '-\]\{$range\}\$/", subject);
+      break;
+    default:
+      # code...
+      break;
+  }
+}
+
+
+
+
+
+
 ?>

@@ -32,11 +32,11 @@ if (!LOGGED_IN)
 	$title = "Welcome to " . $title;
 }
 
-require_once __ROOT__."/inc/html/head.php";
-require_once __ROOT__."/inc/html/header.$ioStatus.php";
-
 if(!LOGGED_IN)
 {
+	require_once __ROOT__."/inc/html/head.php";
+	require_once __ROOT__."/inc/html/header.$ioStatus.php";
+
 ?>
 		<!-- Hidden title -->
 		<div class="not-mobile banner">
