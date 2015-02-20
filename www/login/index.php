@@ -48,7 +48,11 @@ if(isset($_POST['login'], $_POST['password']))
   }
 
   $user = new User($con, $login);
-  include_once __ROOT__."/inc/html/cookie_set.php";
+
+  if ($_POST['rememberMe'])
+  {
+    include_once __ROOT__."/inc/html/cookie_set.php";
+  }
   
   loginUser($con, $login, $password);
 }
