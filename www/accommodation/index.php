@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This is the accommodation index page
 */

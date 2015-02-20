@@ -4,9 +4,14 @@
     <?php require_once "header.php"; ?>
     <ul class="header-nav">
       <li class="header-item">
+        <a href="<?=$webRoot?>/profile/<?=$user->getIdentifier('username')?>" class="icon-holder user-icon-holder">
+          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')"></span>
+        </a>
+      </li>
+      <li class="header-item">
         <span class=hidden></span>
         <a href="<?=$webRoot?>" class="icon-holder" title="Home">
-          <span class="icon icon-home"></span>
+          <span class="icon icon-home">Home</span>
         </a>
       </li>
       <li class="header-item">
@@ -84,21 +89,23 @@
           <span class="icon icon-messages" data-toggle="message-drop" data-hide="drop"></span>
         </span>
       </li>
-      <!-- <li class="header-split"></li> -->
+      <li class="header-item">
+        <span class="hidden"></span>
+        <a href="<?=$webRoot?>/search" class="icon-holder" title="Find Roomies">
+          <span class="icon icon-search">Find Roomies</span>
+        </a>
+      </li>
+      <li class="header-item">
+        <span class="hidden"></span>
+        <a href="<?=$webRoot?>/accommodation" class="icon-holder" title="Accommodation">
+          <span class="icon icon-accommodation">Accommodation</span>
+        </a>
+      </li>
       <li class="header-item">
         <div id="extra-drop" class="drop hidden ">
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
             <ul class="drop-list box-padding">
-              <li class="drop-item">
-                <a href="<?=$webRoot?>/profile/<?=$user->getIdentifier('username')?>" class="link-button block"><?=$user->getName()?></a>
-              </li>
-              <li class="drop-item">
-                <a href="<?=$webRoot?>/search" class="link-button block">Find Roomies</a>
-              </li>
-              <li class="drop-item split-after">
-                <a href="<?=$webRoot?>/accommodation" class="link-button block">Accommodation</a>
-              </li>
               <li class="drop-item">
                 <a href="<?=$webRoot?>/settings" class="link-button block">Settings</a>
               </li>
@@ -109,7 +116,7 @@
           </div>
         </div>
         <span class="icon-holder" data-toggle="extra-drop" data-hide="drop">
-          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')" data-toggle="extra-drop" data-hide="drop"></span>
+          <span class="icon icon-down" data-toggle="extra-drop" data-hide="drop"></span>
         </span>
       </li>
     </ul>
