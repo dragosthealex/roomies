@@ -15,3 +15,4 @@ To do:
   <link rel="stylesheet" type="text/css" href="<?=$webRoot?>/media/css/style.css">
 </head>
 <body class="body">
+<script src="<?=$webRoot?>/media/js/facebook_api.js"></script>
