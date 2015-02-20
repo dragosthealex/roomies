@@ -65,7 +65,8 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
           <div class="textarea-holder"><textarea class="textarea" id="message" placeholder="Write a message..." oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"></textarea>
           </div><input type="submit" class="input-button block" value="Send"
           data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
-          data-ajax-post="message">
+          data-ajax-post="message"
+          data-ajax-callback="scrollToBottom conv 1">
         </div>
       </div>
     </div>

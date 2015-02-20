@@ -82,6 +82,16 @@
       element.parentNode.removeChild(element);
     },
 
+    'scrollToBottom': function (id, parent) {
+      var element = document.getElementById(id), i;
+      if (element) {
+        for (i = 0; i < parent; i += 1) {
+          element = element.parentNode;
+        }
+        element.scrollTop = element.scrollHeight;
+      }
+    },
+
     // A function to return an array of all parent drops and minidrops
     'getDrops': function getDrops(element) {
       return element === body ? [] : (/ drop /.exec(element.className) || / minidrop /.exec(element.className)) ? [element].concat(getDrops(element.parentNode)) : getDrops(element.parentNode);
