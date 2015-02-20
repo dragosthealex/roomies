@@ -123,6 +123,8 @@ else
 		}
 		include __ROOT__."/inc/html/notifications.php";
 	}
+	require_once __ROOT__."/inc/html/head.php";
+	require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 		<div class="box">
 			<div class="box-padding">
