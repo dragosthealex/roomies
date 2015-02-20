@@ -4,9 +4,15 @@
   var update = window.roomies.update;
   var conv = document.getElementById('conv');
   var convParent = conv.parentNode;
+  var currentUrl = window.location.href;
+  var otherId = (currentUrl.indexOf('conv=')===-1)
+                ? /messages\/([^\?]+)/.exec(currentUrl)[1]
+                : currentUrl.split("=")[1];
 
   var updateMessages = function () {
-    update('messageNew', '../php/update_message.process.php?type=new&lastId=' + conv.lastChild.getAttribute('data-message-id') + '&otherId=' + /messages\/([^\?]+)/.exec(window.location.href)[1], null, null, updateMessages);
+    update('messageNew', '../php/update_message.process.php?type=new&lastId='
+      + conv.lastChild.getAttribute('data-message-id') + '&otherId=' + otherId,
+      null, null, updateMessages);
   };
 
   var updateMessagesAgain = function () {
