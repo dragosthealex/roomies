@@ -124,4 +124,8 @@ if(LOGGED_IN)
   }
   $user = new User($con, $_SESSION['user']['id']);
 }
+else
+{
+  include_once __ROOT__."/inc/html/cookie_login.php";
+}
 ?>

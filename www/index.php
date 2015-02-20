@@ -36,7 +36,6 @@ if(!LOGGED_IN)
 {
 	require_once __ROOT__."/inc/html/head.php";
 	require_once __ROOT__."/inc/html/header.$ioStatus.php";
-	include_once __ROOT__."/inc/html/cookie_login.php";
 ?>
 		<!-- Hidden title -->
 		<div class="not-mobile banner">
