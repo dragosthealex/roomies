@@ -211,6 +211,7 @@
 
           letter += "&" + id + "=" + encodeURIComponent(element.value);
           element.value = '';
+          element.focus();
         });
 
         xmlhttp.send(letter);
