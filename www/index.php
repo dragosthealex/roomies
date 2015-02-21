@@ -57,7 +57,7 @@ if(!LOGGED_IN)
 							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
 
 							<!--Facebook Login-->
-							<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+							<fb:login-button scope="public_profile,email,user_birthday" onlogin="checkLoginState();">
 							</fb:login-button>
 							<div id="status">
 							</div>

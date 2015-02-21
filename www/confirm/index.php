@@ -212,4 +212,4 @@ $title = "Confirm";
       <button type="submit">Submit</button>
       <a href="./?logout=yes">logout</a>
     </form>
-    <?php require_once __ROOT__."/inc/html/footer.php";?>
+<?php require_once __ROOT__."/inc/html/footer.php";?>

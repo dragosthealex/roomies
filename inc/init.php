@@ -18,6 +18,11 @@ include __ROOT__.'/inc/classes/user.php';
 // Setting session name
 $session_name = 'some_name';
 
+// Set Facebook session
+require_once __ROOT__."/inc/lib/fb-php-sdk/autoload.php";
+use Facebook\FacebookSession;
+FacebookSession::setDefaultApplication('327250234130442', 'ef83e698805b61b311f44d0735728781');
+
 // Setting runtime ini cookie params (lifetime, path, domain, ssl or not, httponly or not)
 $cookieParams = session_get_cookie_params();
 session_set_cookie_params($cookieParams['lifetime'], $cookieParams['path'],
@@ -62,7 +67,6 @@ if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 // header.in.php vs header.out.php. Only used when the user is not required
 // to be specifically logged in or out.
 $ioStatus = (LOGGED_IN ? "in" : "out");
-
 
 // Inclusion of the db config file
 require_once __ROOT__.'/config.inc.php';

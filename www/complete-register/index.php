@@ -1,19 +1,19 @@
 <?php
 require_once "../../inc/init.php";
-
+require_once __ROOT__.'/inc/html/check_fb_login.php';
 /*
 This script processes the data sent from the complete register page.
 It updates creates a profile for the current user and inserts the values.
 */
 
-if(!LOGGED_IN)
+if(!LOGGED_IN && !FB_LOGGED_IN)
 {
   require_once '../../inc/html/notfound.php';
   exit();
 }
 
 //THE PROCESS STUFF
-$id = $_SESSION['user']['id'];
+$id = (isset($_SESSION['user']['id']))?$_SESSION['user']['id']:'';
 $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE profile_filter_id = $id");
 $stmt->execute();
 $stmt->bindColumn(1, $dbId);
@@ -190,9 +190,10 @@ if(isset($_SESSION['err']))
             </p>
           </div>
           <form action="" name="details" method="POST">
+            <?php (FB_LOGGED_IN)?include_once __ROOT__.'/inc/html/fb_complete_reg.php':'';?>
             <div>
-              <input class="input" type="text" required="" title="2 to 20 characters" placeholder="First/Given Name" name="first_name"></input>
-              <input class="input input" type="text" required="" title="2 to 20 characters" placeholder="Last/Family Name" name="last_name"></input>
+              <input class="input" type="text" required="" title="2 to 20 characters" placeholder="First/Given Name" name="first_name" value="<?=$fbFirstName?>"></input>
+              <input class="input input" type="text" required="" title="2 to 20 characters" placeholder="Last/Family Name" name="last_name" value="<?=$fbLastName?>"></input>
             </div>
             <div>
                 <span>
@@ -201,13 +202,13 @@ if(isset($_SESSION['err']))
                   </p>
                 </span>
               <select class="select has-submit" id="byear" name="b_year">
-                <option class="option" value="" selected="">Select year</option>
+                <option class="option" value="<?=$fbBirthDay[2]?>" selected=""><?=($fbBirthDay[2])?$fbBirthDay[2]:'Select year'?></option>
               </select>
               <select class="select has-submit" id="bmonth" name="b_month">
-                <option class="option" value="" selected="">Select month</option>
+                <option class="option" value="<?=$fbBirthDay[0]?>" selected=""><?=($fbBirthDay[0])?$fbBirthDay[0]:'Select month'?></option>
               </select>
               <select class="select has-submit" id="bday" name="b_day">
-                <option class="option" value="" selected="">Select day</option>
+                <option class="option" value="<?=$fbBirthDay[1]?>" selected=""><?=($fbBirthDay[1])?$fbBirthDay[1]:'Select day'?></option>
               </select>
             </div>
             <div>
@@ -232,7 +233,7 @@ if(isset($_SESSION['err']))
                 <p>
               </span>
               <select class="select has-submit" name="gender">
-                <option class="option" value="">Select gender</option>
+                <option class="option" value="<?=$fbGender?>"><?=($fbGender)?ucfirst($fbGender):'Select gender'?></option>
                 <option class="option" value="man">Man</option>
                 <option class="option" value="woman">Woman</option>
                 <option class="option" value="trans">Trans*</option>
@@ -250,7 +251,14 @@ if(isset($_SESSION['err']))
               </select>
             </div>
             <input type="hidden" name="randomKey" value="<?php echo $_SESSION['randomKey'];?>"></input>
-            <input class="input-button block" type="submit" value="Submit"></input>
+            <?php if(FB_LOGGED_IN) {?>
+              <p class="small-text">By registering, you agree to our
+                <a href="#terms" class="link">Terms</a> and
+                <a href="#privacy" class="link">Privacy Policy</a>, including our
+                <a href="#cookies" class="link">Cookie Use</a>.
+              </p>
+            <?php }?>
+            <input class="input-button block" type="submit" value="<?=(FB_LOGGED_IN)?'Register':'Submit'?>"></input>
           </form>
         </div>
       </div>
