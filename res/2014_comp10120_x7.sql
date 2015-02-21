@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 20, 2015 at 04:14 PM
+-- Generation Time: Feb 21, 2015 at 05:26 AM
 -- Server version: 5.6.23-log
 -- PHP Version: 5.5.21-pl0-gentoo
 
@@ -447,7 +447,7 @@ CREATE TABLE IF NOT EXISTS `rmessages` (
   `message_text` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
   `message_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `messages_read` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `rmessages`
@@ -587,9 +587,14 @@ INSERT INTO `rmessages` (`message_id`, `message_user_id1`, `message_user_id2`, `
 (165, 12, 12, 'newtest4', '2015-02-15 03:37:55', 1),
 (166, 12, 12, 'newtest5', '2015-02-15 03:40:47', 1),
 (167, 12, 12, 'newtest6', '2015-02-15 03:50:56', 1),
-(168, 21, 12, 'biatch', '2015-02-19 15:35:42', 0),
-(169, 21, 12, 'see dis', '2015-02-19 15:35:47', 0),
-(170, 21, 12, 'muthafucka', '2015-02-19 15:35:55', 0);
+(168, 21, 12, 'biatch', '2015-02-19 15:35:42', 1),
+(169, 21, 12, 'see dis', '2015-02-19 15:35:47', 1),
+(170, 21, 12, 'muthafucka', '2015-02-19 15:35:55', 1),
+(171, 21, 12, 'hey, see this?', '2015-02-20 18:58:25', 1),
+(172, 21, 12, 'see?', '2015-02-20 19:07:25', 1),
+(173, 21, 12, 'asdasd', '2015-02-20 19:07:34', 1),
+(174, 21, 12, 'asdasd', '2015-02-20 19:07:36', 1),
+(175, 21, 27, 'asdasd', '2015-02-20 19:14:08', 1);
 
 -- --------------------------------------------------------
 
@@ -712,7 +717,7 @@ CREATE TABLE IF NOT EXISTS `rtempusers` (
   `temp_salt` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `temp_pass` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `conf` varchar(10) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -730,24 +735,25 @@ CREATE TABLE IF NOT EXISTS `rusers` (
   `user_rank` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user' COMMENT 'Can be user/mod/admin/?',
   `matches` longtext COLLATE utf8_unicode_ci NOT NULL,
   `has_updated` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `user_cookie` mediumtext COLLATE utf8_unicode_ci NOT NULL
+  `user_cookie` mediumtext COLLATE utf8_unicode_ci NOT NULL,
+  `facebook_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `rusers`
 --
 
-INSERT INTO `rusers` (`user_id`, `username`, `user_email`, `user_salt`, `user_pass`, `user_rank`, `matches`, `has_updated`, `user_cookie`) VALUES
-(11, 'guest', 'guest@cs.man.ac.uk', '1012506342', 'bbbfb2a1528fb0fad3f7309b5c3b1df750ff5bc3e9c89d0c66d36a48715a902c', 'user', '', '', ''),
-(12, 'Kanoshi', 'd_hod@hotmail.com', '1495115196', 'b560713298b7bd5df68e6532448f65395c8363ee4f880b319d8560ea355957c1', 'user', '', '', ''),
-(21, 'dragosthealx', 'dragosthealex@gmail.com', '2021878810', '5b752fbbf990bba6dd819b2cfdad4d4717e74a1fa0f07e70564e7ea9d8e5fccf', 'user', '', '', ''),
-(22, 'mitalip', 'mitalipalsikar@gmail.com', '1960714236', '9aa6cf1b193d65a96e3d4685ac4c98f8a61fc25b73cf3a65f9b67a30382a3c8c', 'user', '', '', ''),
-(23, 'PakChoi', 'liam.higgins3@googlemail.com', '217625186', 'b65cfaac7014fc5b83d53e5e965a5b88316e623feb26e3c9c336e937a7e2cd3b', 'user', '', '', ''),
-(24, 'Elnur', 'ebaku2015@gmail.com', '1791532909', 'b9c5389873c5389c47ec68e88777309aea840a4c1bcf41e06b016c9c4c1ec1da', 'user', '', '', ''),
-(26, 'dragosthealex2', 'dragosthealex2@gmail.com', '296003121', 'f7963866ff4ca304ce8f96f8882ab3b40a3cbb14994690e73891409651a76cd7', 'user', '', '', ''),
-(27, 'SirKiwiTheGreat', 'kiwis@gmail.com', '835198187', '09cfc5f0c89cc125c2508e7095bd4add6ec1c39e8cd6f51780227906e2209ac8', 'user', '', '', ''),
-(28, 'test_init_perc', 'test_init_perc@yahoo.com', '1841271249', '0a6079d6de193e2db8be8ab090e7ed6c81b96ff719a9bb0c7a393fd1f2a87b63', 'user', '', '', ''),
-(29, 'johnTheRapist', 'john@gmail.com', '260991738', '2a213ad966944aa148f0a5871aa765f15155b87adb8f2e1b3ec61f3cfc31338e', 'user', '', '', '');
+INSERT INTO `rusers` (`user_id`, `username`, `user_email`, `user_salt`, `user_pass`, `user_rank`, `matches`, `has_updated`, `user_cookie`, `facebook_id`) VALUES
+(11, 'guest', 'guest@cs.man.ac.uk', '1012506342', 'bbbfb2a1528fb0fad3f7309b5c3b1df750ff5bc3e9c89d0c66d36a48715a902c', 'user', '', '', '', ''),
+(12, 'Kanoshi', 'd_hod@hotmail.com', '1495115196', 'b560713298b7bd5df68e6532448f65395c8363ee4f880b319d8560ea355957c1', 'user', '', '', '', ''),
+(21, 'dragosthealx', 'dragosthealex@gmail.com', '2021878810', '5b752fbbf990bba6dd819b2cfdad4d4717e74a1fa0f07e70564e7ea9d8e5fccf', 'user', '', '', '', ''),
+(22, 'mitalip', 'mitalipalsikar@gmail.com', '1960714236', '9aa6cf1b193d65a96e3d4685ac4c98f8a61fc25b73cf3a65f9b67a30382a3c8c', 'user', '', '', '', ''),
+(23, 'PakChoi', 'liam.higgins3@googlemail.com', '217625186', 'b65cfaac7014fc5b83d53e5e965a5b88316e623feb26e3c9c336e937a7e2cd3b', 'user', '', '', '', ''),
+(24, 'Elnur', 'ebaku2015@gmail.com', '1791532909', 'b9c5389873c5389c47ec68e88777309aea840a4c1bcf41e06b016c9c4c1ec1da', 'user', '', '', '', ''),
+(26, 'dragosthealex2', 'dragosthealex2@gmail.com', '296003121', 'f7963866ff4ca304ce8f96f8882ab3b40a3cbb14994690e73891409651a76cd7', 'user', '', '', '', ''),
+(27, 'SirKiwiTheGreat', 'kiwis@gmail.com', '835198187', '09cfc5f0c89cc125c2508e7095bd4add6ec1c39e8cd6f51780227906e2209ac8', 'user', '', '', '', ''),
+(28, 'test_init_perc', 'test_init_perc@yahoo.com', '1841271249', '0a6079d6de193e2db8be8ab090e7ed6c81b96ff719a9bb0c7a393fd1f2a87b63', 'user', '', '', '', ''),
+(29, 'johnTheRapist', 'john@gmail.com', '260991738', '2a213ad966944aa148f0a5871aa765f15155b87adb8f2e1b3ec61f3cfc31338e', 'user', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -904,7 +910,7 @@ ALTER TABLE `rlog`
 -- AUTO_INCREMENT for table `rmessages`
 --
 ALTER TABLE `rmessages`
-  MODIFY `message_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=171;
+  MODIFY `message_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=176;
 --
 -- AUTO_INCREMENT for table `rquestionsmap`
 --
@@ -924,7 +930,7 @@ ALTER TABLE `rsiteinfo`
 -- AUTO_INCREMENT for table `rtempusers`
 --
 ALTER TABLE `rtempusers`
-  MODIFY `temp_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `temp_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `rusers`
 --
