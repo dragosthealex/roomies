@@ -309,10 +309,10 @@
     target = e.target;
     var element = target;
     mouseIsDown = true;
-    if (element.className === 'scroll-tracker') {
+    if (element.className === ' scroll-tracker ') {
       roomies['scroll'](element.parentNode, e.clientY);
       return false;
-    } else if (element.className === 'scroll-bar') {
+    } else if (element.className === ' scroll-bar ') {
       roomies['scroll'](element, e.clientY);
       return false;
     }
@@ -348,11 +348,11 @@
     // If the mouse is down and the target is a scrollbar or the like, then scroll
     if (mouseIsDown) {
       // If the element is a scroll bar, scroll something.
-      if (element.className === 'scroll-tracker') {
+      if (element.className === ' scroll-tracker ') {
         element = element.parentNode;
       }
 
-      if (element.className === 'scroll-bar') {
+      if (element.className === ' scroll-bar ') {
         roomies['scroll'](element, e.clientY);
         clearSelection();
         e.preventDefault();
