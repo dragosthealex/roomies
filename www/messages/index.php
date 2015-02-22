@@ -65,9 +65,10 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
           <div class="textarea-holder"
             ><textarea class="textarea" id="message" placeholder="Write a message..." oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false" onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"></textarea>
           </div
-          ><label for="pressEnterToSend"
-            ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')">
-            Press Enter to send
+          ><label for="pressEnterToSend" class="cr-label"
+            ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')" class="cr">
+            <span class="cr-button"></span>
+            <span class="cr-text">Press Enter to send</span>
           </label
           ><input type="submit" class="input-button block " value="Send"
                   data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
