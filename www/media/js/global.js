@@ -236,8 +236,9 @@
         post.forEach(function (id) {
           var element = document.getElementById(id);
 
-          letter += "&" + id + "=" + encodeURIComponent(element.value);
+          letter += "&" + id + "=" + encodeURIComponent(element.value.trim());
           element.value = '';
+          element.oninput && element.oninput();
           element.focus();
         });
 
