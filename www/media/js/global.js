@@ -94,7 +94,7 @@
 
     // A function to return an array of all parent drops
     'getParentsByClassName': function getParentsByClassName(element, className) {
-      return element === body
+      return (!element || element === body)
               ? []
               : new RegExp(' '+className+' ').exec(element.className)
                 ? [element].concat(getParentsByClassName(element.parentNode, className))
