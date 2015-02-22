@@ -43,7 +43,7 @@ if($_SESSION['fbToken'])
 
         // Check if invalid characters
       if($password1 != $_POST['registerPassword'] || $password2 != $_POST['registerConfirmPassword']
-        || $email != $_POST['registerEmail'] || $username != $_POST['registerUsername'])
+       || $username != $_POST['registerUsername'])
       {
         throw new Exception("You inserted invalid characters", 1);
       }
