@@ -34,7 +34,6 @@ if(isset($_SESSION['fbToken'], $_POST['registerPassword'], $_POST['registerConfi
     $fbId = $object->getProperty('id');
 
     $username = htmlentities(filter_input(INPUT_POST, 'registerUsername', FILTER_SANITIZE_STRING));
-    $email = htmlentities(filter_input(INPUT_POST, 'registerEmail', FILTER_VALIDATE_EMAIL));
     $password1 = htmlentities(filter_input(INPUT_POST, 'registerPassword', FILTER_SANITIZE_STRING));
     $password2 = htmlentities(filter_input(INPUT_POST, 'registerConfirmPassword', FILTER_SANITIZE_STRING));
 

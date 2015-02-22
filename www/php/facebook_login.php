@@ -41,7 +41,7 @@ if(isset($_POST['id'], $_POST['acc']))
     catch (\Exception $ex) 
     {}
     // See if user exists
-    $stmt = $con->prepare("SELECT user_id FROM rusers WHERE facebook_id = $fbId OR user_email = '$fbEmail'");
+    $stmt = $con->prepare("SELECT user_id, facebook_id FROM rusers WHERE facebook_id = $fbId OR user_email = '$fbEmail'");
     $stmt->execute();
     if(!$stmt->rowCount())
     {
@@ -52,9 +52,16 @@ if(isset($_POST['id'], $_POST['acc']))
     {
       // We have found the user, log them in
       $stmt->bindColumn(1, $dbUserId);
+      $stmt->bindColumn(2, $dbFbId);
       $stmt->fetch();
       loginUser($con, $dbUserId);
 
+      // If we don't have the fb id, insert it
+      if(!$dbFbId)
+      {
+        $stmt = $con->prepare("UPDATE rusers SET facebook_id = $fbId WHERE user_email = '$fbEmail'");
+        $stmt->execute();
+      }
       $response = $dbUserId;
     }
   }
