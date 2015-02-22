@@ -39,13 +39,13 @@
           <span class="icon icon-messages" data-toggle="message-drop" data-hide="drop"></span>
         </span>
       </li>
-      <li class="header-item">
+      <li class="header-item not-mobile">
         <span class="hidden"></span>
         <a href="<?=$webRoot?>/search" class="icon-holder" title="Find Roomies">
           <span class="icon icon-search">Find Roomies</span>
         </a>
       </li>
-      <li class="header-item">
+      <li class="header-item not-mobile">
         <span class="hidden"></span>
         <a href="<?=$webRoot?>/accommodation" class="icon-holder" title="Accommodation">
           <span class="icon icon-accommodation">Accommodation</span>
@@ -56,6 +56,13 @@
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
             <ul class="ul">
+              <li class="mobile-only">
+                <a href="<?=$webRoot?>/search" class="link">Find Roomies</a>
+              </li>
+              <li class="mobile-only">
+                <a href="<?=$webRoot?>/accommodation" class="link">Accommodation</a>
+              </li>
+              <li class="mobile-only drop-mini-split"></li>
               <li>
                 <a href="<?=$webRoot?>/settings" class="link">Settings</a>
               </li>
