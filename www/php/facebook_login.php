@@ -57,9 +57,9 @@ if(isset($_POST['id'], $_POST['acc']))
 
       $response = $dbUserId;
     }
-    echo "{\"error\" : \"$msgErr\",
-       \"response\" : \"$response\"}";
   }
 }
+echo "{\"error\" : \"$msgErr\",
+       \"response\" : \"$response\"}";
 
 ?>

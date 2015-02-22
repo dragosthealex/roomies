@@ -35,17 +35,21 @@ function statusChangeCallback(response) {
       
       if (xmlhttp.readyState==4 && xmlhttp.status==200) {
         if(xmlhttp.responseText) {
-          resp = JSON.parse(xmlhttp.responseText);
-          if(resp.error) {
-            alert (resp.error);
-          }
-          else {
-            if(resp.response == 'notInDb') {
-              window.location.replace("./complete-register/?ref=fb&tok="+fbAccessToken);
+          if(IsJsonString(xmlhttp.responseText))
+          {
+            resp = JSON.parse(xmlhttp.responseText);
+            if(resp.error) {
+              alert (resp.error);
             }
             else {
-              window.location.href = "./";
+              if(resp.response == 'notInDb') {
+                window.location.replace("./complete-register/?ref=fb&tok="+fbAccessToken);
+              }
             }
+          }
+          else
+          {
+            window.location.reload();
           }
         }
       }
@@ -64,6 +68,16 @@ function statusChangeCallback(response) {
     document.getElementById('status').innerHTML = 'Please log ' +
       'into Facebook.';
   }
+}
+
+// Test if json
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }
 
 // This function is called when someone finishes with the Login

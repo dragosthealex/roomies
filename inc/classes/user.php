@@ -454,6 +454,11 @@ class User
       $stmt->bindColumn(3, $timestamp);
       $stmt->fetch();
 
+      if(!$stmt->rowCount())
+      {
+        $messages .= "";
+        continue;
+      }
       // Get the number of unread messages from this user
       $noNewMessages = (isset($unreadArray[$id2]) && $unreadArray[$id2])?"({$unreadArray[$id2]})":"";
       $addReadClass = ($noNewMessages)?"read":"";
