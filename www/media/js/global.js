@@ -414,6 +414,24 @@
     boxShadowElements.forEach(function (element) {
       element.style.boxShadow = boxShadow;
     });
+
+    aProto.slice.call(document.getElementsByClassName('drop')).forEach(function (drop) {
+      roomies['toggle'](drop);
+      var dropParent = roomies['getParentsByClassName'](drop, 'drop-parent')[0];
+      var right = (dropParent.parentNode.offsetWidth - (dropParent.offsetLeft + dropParent.offsetWidth) + (dropParent.offsetWidth / 2) - 8);
+      var dropIcon = drop.getElementsByClassName('drop-icon')[0];
+      var dropIconBorder = drop.getElementsByClassName('drop-icon-border')[0];
+      if (right <= 304) {
+        dropIcon.className = dropIcon.className.replace(' hidden ', ' ');
+        dropIconBorder.className = dropIconBorder.className.replace(' hidden ', ' ');
+        drop.getElementsByClassName('drop-icon')[0].style.right = right + "px";
+        drop.getElementsByClassName('drop-icon-border')[0].style.right = right + "px";
+      } else if (!/ hidden /.exec(dropIcon.className)) {
+        dropIcon.className += 'hidden ';
+        dropIconBorder.className += 'hidden ';
+      }
+      roomies['toggle'](drop);
+    });
   };
 
   // When the user scrolls, set the box shadows
@@ -476,15 +494,6 @@
     scrollArea.onscroll = function () {
       scrollAreaFunc(this);
     };
-  });
-
-  aProto.slice.call(document.getElementsByClassName('drop')).forEach(function (drop) {
-    roomies['toggle'](drop);
-    var dropParent = roomies['getParentsByClassName'](drop, 'drop-parent')[0];
-    var right = (dropParent.parentNode.offsetWidth - (dropParent.offsetLeft + dropParent.offsetWidth) + (dropParent.offsetWidth / 2) - 8) + "px";
-    drop.getElementsByClassName('drop-icon')[0].style.right = right;
-    drop.getElementsByClassName('drop-icon-border')[0].style.right = right;
-    roomies['toggle'](drop);
   });
 
   window.roomies = roomies;

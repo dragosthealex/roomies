@@ -887,11 +887,12 @@
 	}
 
 	.header-padding {
-		margin: 0 9px;
+		margin: 0;
 	}
 
 	.header-nav {
 		position: relative;
+		padding: 0 9px;
 	}
 
 	.header-item {
@@ -915,16 +916,8 @@
 		display: none;
 	}
 
-	.header-item > .drop {
-		right: -9px;
-	}
-
 	.drop {
 		width: 320px;
-	}
-
-	.drop-wide {
-		width: 100%;
 	}
 
 	.main {
