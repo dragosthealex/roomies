@@ -43,6 +43,9 @@ function statusChangeCallback(response) {
             if(resp.response == 'notInDb') {
               window.location.replace("./complete-register/?ref=fb&tok="+fbAccessToken);
             }
+            else {
+              window.location.href = "./";
+            }
           }
         }
       }
