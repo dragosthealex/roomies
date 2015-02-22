@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 21, 2015 at 05:26 AM
+-- Generation Time: Feb 22, 2015 at 03:02 PM
 -- Server version: 5.6.23-log
 -- PHP Version: 5.5.21-pl0-gentoo
 
@@ -19,9 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `2014_comp10120_x7`
 --
-/*Cannot create database!*/
-/*CREATE DATABASE IF NOT EXISTS `2014_comp10120_x7` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `2014_comp10120_x7`;*/
+CREATE DATABASE IF NOT EXISTS `2014_comp10120_x7` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `2014_comp10120_x7`;
 
 -- --------------------------------------------------------
 
@@ -146,7 +145,9 @@ INSERT INTO `rdetails` (`profile_filter_id`, `first_name`, `last_name`, `complet
 (23, 'Liam', 'Higgins', 0, '1996-06-28', 221, 1, 1, 1),
 (26, 'Alex2', 'Radu2', 0, '1995-04-02', 174, 1, 1, 1),
 (27, 'His Kiwiness', 'Mr. Kiwi', 0, '0000-00-00', 12, 14, 3, 1),
-(28, 'test', 'init perc', 0, '0000-00-00', 5, 4, 3, 1);
+(28, 'test', 'init perc', 0, '0000-00-00', 5, 4, 3, 1),
+(49, 'Dragos', 'Radu', 0, '1995-04-01', 174, 1, 1, 1),
+(50, 'adsds', 'dasdassad', 0, '2006-03-03', 3, 3, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -630,21 +631,36 @@ INSERT INTO `rpercentages` (`percentage_user_id1`, `percentage_user_id2`, `perce
 (12, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(12, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(12, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (21, 22, 10, 0, 0, 1, 0, 0, 0, 50, 50, 1),
 (21, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (21, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (21, 27, 10, 0, 0, 0, 0, 0, 1, 50, 50, 1),
 (21, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(21, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(21, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(22, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(22, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (23, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (23, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (23, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(23, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(23, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (26, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (26, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+(26, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(26, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(27, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(27, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(27, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(28, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(28, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(49, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -737,24 +753,27 @@ CREATE TABLE IF NOT EXISTS `rusers` (
   `matches` longtext COLLATE utf8_unicode_ci NOT NULL,
   `has_updated` longtext COLLATE utf8_unicode_ci NOT NULL,
   `user_cookie` mediumtext COLLATE utf8_unicode_ci NOT NULL,
-  `facebook_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `facebook_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `image_url` varchar(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT '/media/img/default.gif'
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `rusers`
 --
 
-INSERT INTO `rusers` (`user_id`, `username`, `user_email`, `user_salt`, `user_pass`, `user_rank`, `matches`, `has_updated`, `user_cookie`, `facebook_id`) VALUES
-(11, 'guest', 'guest@cs.man.ac.uk', '1012506342', 'bbbfb2a1528fb0fad3f7309b5c3b1df750ff5bc3e9c89d0c66d36a48715a902c', 'user', '', '', '', ''),
-(12, 'Kanoshi', 'd_hod@hotmail.com', '1495115196', 'b560713298b7bd5df68e6532448f65395c8363ee4f880b319d8560ea355957c1', 'user', '', '', '', ''),
-(21, 'dragosthealx', 'dragosthealex@gmail.com', '2021878810', '5b752fbbf990bba6dd819b2cfdad4d4717e74a1fa0f07e70564e7ea9d8e5fccf', 'user', '', '', '', ''),
-(22, 'mitalip', 'mitalipalsikar@gmail.com', '1960714236', '9aa6cf1b193d65a96e3d4685ac4c98f8a61fc25b73cf3a65f9b67a30382a3c8c', 'user', '', '', '', ''),
-(23, 'PakChoi', 'liam.higgins3@googlemail.com', '217625186', 'b65cfaac7014fc5b83d53e5e965a5b88316e623feb26e3c9c336e937a7e2cd3b', 'user', '', '', '', ''),
-(24, 'Elnur', 'ebaku2015@gmail.com', '1791532909', 'b9c5389873c5389c47ec68e88777309aea840a4c1bcf41e06b016c9c4c1ec1da', 'user', '', '', '', ''),
-(26, 'dragosthealex2', 'dragosthealex2@gmail.com', '296003121', 'f7963866ff4ca304ce8f96f8882ab3b40a3cbb14994690e73891409651a76cd7', 'user', '', '', '', ''),
-(27, 'SirKiwiTheGreat', 'kiwis@gmail.com', '835198187', '09cfc5f0c89cc125c2508e7095bd4add6ec1c39e8cd6f51780227906e2209ac8', 'user', '', '', '', ''),
-(28, 'test_init_perc', 'test_init_perc@yahoo.com', '1841271249', '0a6079d6de193e2db8be8ab090e7ed6c81b96ff719a9bb0c7a393fd1f2a87b63', 'user', '', '', '', ''),
-(29, 'johnTheRapist', 'john@gmail.com', '260991738', '2a213ad966944aa148f0a5871aa765f15155b87adb8f2e1b3ec61f3cfc31338e', 'user', '', '', '', '');
+INSERT INTO `rusers` (`user_id`, `username`, `user_email`, `user_salt`, `user_pass`, `user_rank`, `matches`, `has_updated`, `user_cookie`, `facebook_id`, `image_url`) VALUES
+(11, 'guest', 'guest@cs.man.ac.uk', '1012506342', 'bbbfb2a1528fb0fad3f7309b5c3b1df750ff5bc3e9c89d0c66d36a48715a902c', 'user', '', '', '', '', '/media/img/default.gif'),
+(12, 'Kanoshi', 'd_hod@hotmail.com', '1495115196', 'b560713298b7bd5df68e6532448f65395c8363ee4f880b319d8560ea355957c1', 'user', '', '', '', '', '/media/img/default.gif'),
+(21, 'dragosthealx', 'dragosthealex@gmail.com', '2021878810', '5b752fbbf990bba6dd819b2cfdad4d4717e74a1fa0f07e70564e7ea9d8e5fccf', 'user', '', '', '', '', '/media/img/default.gif'),
+(22, 'mitalip', 'mitalipalsikar@gmail.com', '1960714236', '9aa6cf1b193d65a96e3d4685ac4c98f8a61fc25b73cf3a65f9b67a30382a3c8c', 'user', '', '', '', '', '/media/img/default.gif'),
+(23, 'PakChoi', 'liam.higgins3@googlemail.com', '217625186', 'b65cfaac7014fc5b83d53e5e965a5b88316e623feb26e3c9c336e937a7e2cd3b', 'user', '', '', '', '', '/media/img/default.gif'),
+(24, 'Elnur', 'ebaku2015@gmail.com', '1791532909', 'b9c5389873c5389c47ec68e88777309aea840a4c1bcf41e06b016c9c4c1ec1da', 'user', '', '', '', '', '/media/img/default.gif'),
+(26, 'dragosthealex2', 'dragosthealex2@gmail.com', '296003121', 'f7963866ff4ca304ce8f96f8882ab3b40a3cbb14994690e73891409651a76cd7', 'user', '', '', '', '', '/media/img/default.gif'),
+(27, 'SirKiwiTheGreat', 'kiwis@gmail.com', '835198187', '09cfc5f0c89cc125c2508e7095bd4add6ec1c39e8cd6f51780227906e2209ac8', 'user', '', '', '', '', '/media/img/default.gif'),
+(28, 'test_init_perc', 'test_init_perc@yahoo.com', '1841271249', '0a6079d6de193e2db8be8ab090e7ed6c81b96ff719a9bb0c7a393fd1f2a87b63', 'user', '', '', '', '', '/media/img/default.gif'),
+(29, 'johnTheRapist', 'john@gmail.com', '260991738', '2a213ad966944aa148f0a5871aa765f15155b87adb8f2e1b3ec61f3cfc31338e', 'user', '', '', '', '', '/media/img/default.gif'),
+(49, 'alexFacebook', 'dragosthealx@gmail.com', '1922294828', 'e456b4f45a512087dc7d99254244bcaf333422db11f56e301e9f88a20e20eee8', 'user', '', '', ':6a8ec544305557555c5ab365faa91dfb77cf4358505808d5292817172457158d', '797073513702931', 'https://graph.facebook.com/797073513702931/picture?type=large'),
+(50, 'asdasd', 'asdsd@asasd.cim', '1852453316', 'a9619e99a93fe4c05aaeb01fc2ad88b1bdfd4aea6508edca4a6044f185df2591', 'user', '', '', '', '', '/media/img/default.gif');
 
 -- --------------------------------------------------------
 
@@ -936,7 +955,7 @@ ALTER TABLE `rtempusers`
 -- AUTO_INCREMENT for table `rusers`
 --
 ALTER TABLE `rusers`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The user id',AUTO_INCREMENT=30;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The user id',AUTO_INCREMENT=51;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

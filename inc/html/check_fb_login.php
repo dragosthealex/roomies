@@ -34,6 +34,8 @@ if($_SESSION['fbToken'])
       $object = $response->getGraphObject();
       $email = $object->getProperty('email');
       $fbId = $object->getProperty('id');
+      // Construct profile picture
+      $imageUrl = "https://graph.facebook.com/$fbId/picture?type=large";
 
       $username = htmlentities(filter_input(INPUT_POST, 'registerUsername', FILTER_SANITIZE_STRING));
       $password1 = htmlentities(filter_input(INPUT_POST, 'registerPassword', FILTER_SANITIZE_STRING));
@@ -67,8 +69,8 @@ if($_SESSION['fbToken'])
       $password = hash('sha256', $password1.$salt);
 
       // Insert new user in db
-      $stmt = $con->prepare("INSERT INTO rusers (username, user_email, user_salt, user_pass, facebook_id)
-                              VALUES ('$username', '$email', '$salt', '$password', '$fbId')");
+      $stmt = $con->prepare("INSERT INTO rusers (username, user_email, user_salt, user_pass, facebook_id, image_url)
+                              VALUES ('$username', '$email', '$salt', '$password', '$fbId', '$imageUrl')");
       $stmt->execute();
       // Get the id
       $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_email = '$email'");

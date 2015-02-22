@@ -41,18 +41,20 @@ class User
     // Filter the key
     $key = htmlentities($key);
     // Get the basic info for the user from the db
-    $stmt = $con->prepare("SELECT user_id, username, user_email FROM rusers
+    $stmt = $con->prepare("SELECT user_id, username, user_email, image_url FROM rusers
                             WHERE user_id = '$key' OR username = '$key' OR user_email = '$key'");
     $stmt->execute();
     $stmt->bindColumn(1,$id);
     $stmt->bindColumn(2,$username);
     $stmt->bindColumn(3,$email);
+    $stmt->bindColumn(4, $imageUrl);
     $stmt->fetch();
 
     $this->id = $id;
     $this->username = $username;
     $this->email = $email;
     $this->con = $con;
+    $this->image = $imageUrl;
 
     // Get the rest of the details as mapped ints from the db
     $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =".$this->id);
@@ -182,6 +184,9 @@ class User
         break;
       case 'city':
         return $this->details['uni_city'];
+        break;
+      case 'image':
+        return $this->image;
         break;
       default:
         return "Wrong key";

@@ -19,6 +19,8 @@ if (!isset($_GET['u']))
   exit();
 }
 
+$userImagePath = $user->getIdentifier('image');
+
 if ($_GET['u'] == $_SESSION['user']['username'])
 {
   // I'm on my profile

@@ -122,6 +122,8 @@ else
 
 	// Check if user has completed their details in $comp boolean
 	$id = $_SESSION['user']['id'];
+	$userImagePath = $user->getIdentifier('image');
+	$userImagePath = ($userImagePath == '/media/img/default.gif')?$webRoot.$userImagePath:$userImagePath;
 	//$user = new User($con, $id);
 	$stmt = $con->prepare("SELECT completed FROM rdetails WHERE profile_filter_id = $id");
 	$stmt->execute();
@@ -143,8 +145,8 @@ else
 		<div class="box">
 			<div class="box-padding">
 				<div class="profile-box">
-					<div class="main-pic" style="background-image: url('<?=$userImagePath?>');"></div>
-						<div style="float:left;">
+					<span class="profile-picture" style="background-image: url('<?=$userImagePath?>');"></span>
+						<div class="profile-box-inner" style="float:left;">
 							<h2 class="h2"><?=$user->getName()?></h2>
 							<div class="links-wrapper">
 							<ul class="ul">

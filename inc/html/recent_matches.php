@@ -44,7 +44,8 @@ while($stmt->fetch())
   $otherUsername = $otherUser->getIdentifier('username');
   $nameOrUsername = ($status == 1)?$otherUser->getName():$otherUsername;
 
-  $userImagePath = '';
+  $userImagePath = $otherUser->getIdentifier('image');
+  $userImagePath = ($userImagePath == '/media/img/default.gif')?$webRoot.$userImagePath:$userImagePath;
 
   // $friendsButtons = "<button class='input-button button2'>
   //                       Add
@@ -98,7 +99,7 @@ while($stmt->fetch())
   // ";
   echo "<li class='profile-box-item'>
       <div class='profile-box'>
-        <a href='profile/$otherUsername' class='profile-picture'></a><!--style='background-image: url(\"$userImagePath\");'-->
+        <a href='profile/$otherUsername' style='background-image: url(\"$userImagePath\")' class='profile-picture'></a><!--style='background-image: url(\"$userImagePath\");'-->
         <div class='profile-box-inner'>
           <a href='profile/$otherUsername' class='h2 profile-name'>$nameOrUsername</a>
           <div class='profile-percent' style='color:rgba(".(255-255*$percentage/100).",".(255*$percentage/100).",0,1);'>$percentage%</div>
