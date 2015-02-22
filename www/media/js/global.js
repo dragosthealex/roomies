@@ -420,8 +420,24 @@
 
   var gettingNextSet = false; // for message box
   var scrollAreaFunc = function (element) {
-    if (!element.getElementsByClassName('scroll-bar').length && element.scrollHeight > element.offsetHeight) {
-      element.innerHTML += "<div class='scroll-bar'><div class='scroll-tracker'></div></div>";
+    var scrollBars = aProto.slice.call(element.getElementsByClassName('scroll-bar'));
+    var minusScrollBarWidth = element.clientWidth - element.offsetWidth;
+    if (minusScrollBarWidth) {
+      aProto.slice.call(element.childNodes).forEach(function (child) {
+        if (child.style && !/ scroll-bar /.exec(child.className)) {
+          child.style.marginRight = minusScrollBarWidth + "px";
+        }
+      });
+    }
+
+    if (!scrollBars.length && element.scrollHeight > element.offsetHeight) {
+      element.innerHTML += "<div class=' scroll-bar '><div class=' scroll-tracker '></div></div>";
+    }
+
+    if (element.scrollHeight <= element.offsetHeight && scrollBars.length) {
+      scrollBars.forEach(function (scrollBar) {
+        scrollBar.parentNode.removeChild(scrollBar);
+      });
     }
 
     if (element.hasAttribute('data-message-id') && element.scrollTop < 100 && !gettingNextSet) {
@@ -452,7 +468,7 @@
 
   aProto.slice.call(document.getElementsByClassName('scroll-area')).forEach(function (scrollArea) {
     if (scrollArea.scrollHeight > scrollArea.offsetHeight) {
-      scrollArea.innerHTML += "<div class='scroll-bar'><div class='scroll-tracker'></div></div>";
+      scrollArea.innerHTML += "<div class=' scroll-bar '><div class=' scroll-tracker '></div></div>";
     }
     scrollArea.onscroll = function () {
       scrollAreaFunc(this);
