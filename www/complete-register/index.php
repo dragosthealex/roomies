@@ -19,7 +19,7 @@ if(!LOGGED_IN && !FB_LOGGED_IN)
 }
 
 //THE PROCESS STUFF
-$id = (isset($_SESSION['user']['id']))?$_SESSION['user']['id']:"";
+$id = (isset($_SESSION['user']['id']) && $_SESSION['user']['id'])?$_SESSION['user']['id']:$userId;
 $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE profile_filter_id = $id");
 $stmt->execute();
 $stmt->bindColumn(1, $dbId);
@@ -68,7 +68,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
       if(!$stmt->rowCount())
       {
         //There was a problem
-        require_once __ROOT__."/inc/html/problem.php";
+        //require_once __ROOT__."/inc/html/problem.php";
         exit();
       }
 

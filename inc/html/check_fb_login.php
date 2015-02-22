@@ -79,6 +79,7 @@ if($_SESSION['fbToken'])
       $stmt->fetch();
       // Set the user in session
       $_SESSION['user']['id'] = $userId;
+      echo $_SESSION['user']['id'];
       $_SESSION['user']['email'] = $email;
       $_SESSION['user']['username'] = $username;
 
