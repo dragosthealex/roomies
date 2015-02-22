@@ -9,7 +9,7 @@ $fbAccessToken
 require_once '../../inc/init.php';
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
-
+$fbSessionValid = false;
 if($_SESSION['fbToken'])
   {
   // Process the request, if values were sent through post
@@ -106,7 +106,6 @@ if($_SESSION['fbToken'])
 }
 
 // Initialise with false
-$fbSessionValid = false;
 $fbEmail = "";
 $fbBirthDay = array('', '', '');
 $fbFirstName = '';
