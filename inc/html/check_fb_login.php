@@ -10,7 +10,7 @@ require_once '../../inc/init.php';
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
 
-if(FB_LOGGED_IN)
+if($_SESSION['fbToken'])
   {
   // Process the request, if values were sent through post
   // Process just username, email, password. The others are processed by the normal script
@@ -96,7 +96,8 @@ if(FB_LOGGED_IN)
       array_push($errors, $ex->getMessage());
     }
   }
-  else if(isset($_POST['randomKey']))
+  else if(isset($_POST['randomKey']) && isset($_SESSION['fbToken'], $_POST['registerPassword'], $_POST['registerConfirmPassword'], $_POST['registerUsername'])
+    && $_POST['registerPassword'] && $_POST['registerConfirmPassword'] && $_POST['registerUsername'])
   {
     array_push($errors, "All values must be filled");
   }
