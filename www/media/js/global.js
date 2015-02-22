@@ -82,6 +82,19 @@
       element.parentNode.removeChild(element);
     },
 
+    // A function to delete an element, given an id
+    'deleteById': function (id) {
+      var element = document.getElementById(id);
+      element && roomies['delete'](element);
+    },
+
+    // A function to delete a list of elements, given a className
+    'deleteByClassName': function (className) {
+      aProto.slice.call(document.getElementsByClassName(className)).forEach(function (element) {
+        roomies['delete'](element);
+      });
+    },
+
     'scrollToBottom': function (id, parent) {
       var element = document.getElementById(id), i;
       if (element) {

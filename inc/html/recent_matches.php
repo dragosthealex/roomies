@@ -40,6 +40,7 @@ while($stmt->fetch())
   $blockButtonHide     = $status != 4 ? '' : 'style="display: none"';
   $unblockButtonHide   = $status == 4 ? '' : 'style="display: none"';
 
+  $otherUserId = $otherUser->getIdentifier('id');
   $otherUsername = $otherUser->getIdentifier('username');
   $nameOrUsername = ($status == 1)?$otherUser->getName():$otherUsername;
 
@@ -100,47 +101,47 @@ while($stmt->fetch())
         <a href='profile/$otherUsername' class='profile-picture'></a><!--style='background-image: url(\"$userImagePath\");'-->
         <div class='profile-box-inner'>
           <a href='profile/$otherUsername' class='h2 profile-name'>$nameOrUsername</a>
-          <div class='profile-percent' style='color:rgba(0,160,0,1);'>$percentage%</div>
+          <div class='profile-percent' style='color:rgba(".(255-255*$percentage/100).",".(255*$percentage/100).",0,1);'>$percentage%</div>
           <div class='profile-links'>
 
             <a data-ajax-url='../php/friends.process.php?a=1&amp;id=$otherUserId'
                data-ajax-text='Sending...'
-               data-ajax-hide='friend-button requestSent' $addFriendHide
-               class='link-button friend-button' id='addFriend'>Add Friend</a>
+               data-ajax-hide='frequest-rm-$otherUserId requestSent-rm-$otherUserId' $addFriendHide
+               class='link-button frequest-rm-$otherUserId' id='addFriend-rm-$otherUserId'>Add Friend</a>
 
-            <span class='minidrop-container friend-button' id='alreadyFriends' $alreadyFriendsHide>
-            <a data-ajax-url='../php/friends.process.php?a=0&amp;=$otherUserId'
+            <span class='minidrop-container frequest-rm-$otherUserId' id='alreadyFriends-rm-$otherUserId' $alreadyFriendsHide>
+            <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Pending...'
-               data-ajax-hide='friend-button addFriend'
+               data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Unfriend</a>
             </span>
 
-            <span class='minidrop-container friend-button' id='requestSent' $requestSentHide>
+            <span class='minidrop-container frequest-rm-$otherUserId' id='requestSent-rm-$otherUserId' $requestSentHide>
             <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Canceling...'
-               data-ajax-hide='friend-button addFriend'
+               data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Cancel</a>
             </span>
 
-            <span class='minidrop-container friend-button' id='requestReceived' $requestReceivedHide>
+            <span class='minidrop-container frequest-rm-$otherUserId' id='requestReceived-rm-$otherUserId' $requestReceivedHide>
             <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
                data-ajax-text='Accepting...'
-               data-ajax-hide='friend-button alreadyFriends'
+               data-ajax-hide='frequest-rm-$otherUserId alreadyFriends-rm-$otherUserId'
                class='link-button'>Accept</a>
             <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Ignoring...'
-               data-ajax-hide='friend-button addFriend'
+               data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Ignore</a>
             </span>
 
             <a data-ajax-url='../php/friends.process.php?a=4&amp;id=$otherUserId'
                data-ajax-text='Blocking...'
-               data-ajax-hide='blockUnblock unblockButton' $blockButtonHide
-               class='link-button blockUnblock' id='blockButton'>Block</a>
+               data-ajax-hide='blockUnblock-rm-$otherUserId unblockButton-rm-$otherUserId' $blockButtonHide
+               class='link-button blockUnblock-rm-$otherUserId' id='blockButton-rm-$otherUserId'>Block</a>
             <a data-ajax-url='../php/friends.process.php?a=5&amp;id=$otherUserId'
                data-ajax-text='Unblocking...'
-               data-ajax-hide='blockUnblock blockButton' $unblockButtonHide
-               class='link-button blockUnblock' id='unblockButton'>Unblock</a>
+               data-ajax-hide='blockUnblock-rm-$otherUserId blockButton-rm-$otherUserId' $unblockButtonHide
+               class='link-button blockUnblock-rm-$otherUserId' id='unblockButton-rm-$otherUserId'>Unblock</a>
           </div>
         </div>
       </div>
