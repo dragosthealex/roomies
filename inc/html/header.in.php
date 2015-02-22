@@ -14,7 +14,7 @@
           <span class="icon icon-home">Home</span>
         </a>
       </li>
-      <li class="header-item">
+      <li class="header-item drop-parent">
         <!-- message drop -->
         <div id="frequests-drop" class="drop drop-wide hidden ">
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
@@ -32,7 +32,7 @@
           <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
         </span>
       </li>
-      <li class="header-item">
+      <li class="header-item drop-parent">
         <div id="message-drop" class="drop drop-wide hidden ">
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
@@ -63,7 +63,7 @@
           <span class="icon icon-accommodation">Accommodation</span>
         </a>
       </li>
-      <li class="header-item">
+      <li class="header-item drop-parent">
         <div id="extra-drop" class="drop drop-mini hidden ">
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">

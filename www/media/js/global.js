@@ -92,9 +92,13 @@
       }
     },
 
-    // A function to return an array of all parent drops and minidrops
-    'getDrops': function getDrops(element) {
-      return element === body ? [] : (/ drop /.exec(element.className) || / minidrop /.exec(element.className)) ? [element].concat(getDrops(element.parentNode)) : getDrops(element.parentNode);
+    // A function to return an array of all parent drops
+    'getParentsByClassName': function getParentsByClassName(element, className) {
+      return element === body
+              ? []
+              : new RegExp(' '+className+' ').exec(element.className)
+                ? [element].concat(getParentsByClassName(element.parentNode, className))
+                : getParentsByClassName(element.parentNode, className);
     },
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
@@ -263,11 +267,10 @@
       targetWasAlreadyHidden = / hidden /.exec(target.className);
     }
 
-    // Get an array of all the minidrops and drops that the current element is in
-    var elementsToShowAgain = roomies['getDrops'](element);
-    // Hide all drops and minidrops
+    // Get an array of all the drops that the current element is in
+    var elementsToShowAgain = roomies['getParentsByClassName'](element, 'drop');
+    // Hide all drops
     roomies['hide'](document.getElementsByClassName('drop'));
-    roomies['hide'](document.getElementsByClassName('minidrop'));
     // Show the previous elements again
     elementsToShowAgain.forEach(function (elementToShow) {
       roomies['toggle'](elementToShow);
@@ -473,6 +476,15 @@
     scrollArea.onscroll = function () {
       scrollAreaFunc(this);
     };
+  });
+
+  aProto.slice.call(document.getElementsByClassName('drop')).forEach(function (drop) {
+    roomies['toggle'](drop);
+    var dropParent = roomies['getParentsByClassName'](drop, 'drop-parent')[0];
+    var right = (dropParent.parentNode.offsetWidth - (dropParent.offsetLeft + dropParent.offsetWidth) + (dropParent.offsetWidth / 2) - 8) + "px";
+    drop.getElementsByClassName('drop-icon')[0].style.right = right;
+    drop.getElementsByClassName('drop-icon-border')[0].style.right = right;
+    roomies['toggle'](drop);
   });
 
   window.roomies = roomies;
