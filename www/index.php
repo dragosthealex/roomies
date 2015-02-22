@@ -122,6 +122,7 @@ else
 
 	// Check if user has completed their details in $comp boolean
 	$id = $_SESSION['user']['id'];
+	//$user = new User($con, $id);
 	$stmt = $con->prepare("SELECT completed FROM rdetails WHERE profile_filter_id = $id");
 	$stmt->execute();
 	$stmt->bindColumn(1, $comp);

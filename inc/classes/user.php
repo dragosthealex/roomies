@@ -523,9 +523,9 @@ class User
     $con = $this->con;
 
     $return = $this->getConv($offset);
-    $apparitionArray = $return['apparitionArray'];
-    $messagePartners = $return['messagePartners'];
-    $unreadArray = $return['unreadArray'];
+    $apparitionArray = isset($return['apparitionArray'])?$return['apparitionArray']:array();
+    $messagePartners = (isset($return['messagePartners']))?$return['messagePartners']:array();
+    $unreadArray = isset($return['unreadArray'])?$return['unreadArray']:array();
 
     $conversations = "";
     foreach ($messagePartners as $otherUserId)

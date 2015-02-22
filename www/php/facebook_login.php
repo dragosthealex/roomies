@@ -53,7 +53,7 @@ if(isset($_POST['id'], $_POST['acc']))
       // We have found the user, log them in
       $stmt->bindColumn(1, $dbUserId);
       $stmt->fetch();
-      login_func($con, $dbUserId);
+      loginUser($con, $dbUserId);
 
       $response = $dbUserId;
     }

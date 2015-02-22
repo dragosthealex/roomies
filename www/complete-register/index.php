@@ -1,9 +1,15 @@
 <?php
 require_once "../../inc/init.php";
+$errors = array();
 require_once __ROOT__.'/inc/html/check_fb_login.php';
+
 /*
 This script processes the data sent from the complete register page.
 It updates creates a profile for the current user and inserts the values.
+
+can have 2 types of errors:
+->Explicit ones are stored in Exception in the $_SESSION['err'] variable
+->Weird ones are $_GET['err']
 */
 
 if(!LOGGED_IN && !FB_LOGGED_IN)
@@ -13,7 +19,7 @@ if(!LOGGED_IN && !FB_LOGGED_IN)
 }
 
 //THE PROCESS STUFF
-$id = (isset($_SESSION['user']['id']))?$_SESSION['user']['id']:'';
+$id = (isset($_SESSION['user']['id']))?$_SESSION['user']['id']:"";
 $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE profile_filter_id = $id");
 $stmt->execute();
 $stmt->bindColumn(1, $dbId);
@@ -29,7 +35,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
   // Check if values are not null
   if($_POST['first_name'] && $_POST['last_name'] && $_POST['b_year'] && ['b_month']
     && $_POST['b_day'] && $_POST['country'] && $_POST['language'] && $_POST['gender']
-    && $_POST['city'])
+    && $_POST['city'] && !isset($errors[0]))
   {
     // Get the values from POST
     try
@@ -49,8 +55,8 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
       $gender = htmlentities($_POST['gender']);
       $city = htmlentities($_POST['city']);
 
-      if(!validate($bYear) || !validate($bMonth) || !validate($bDay) || !validate($country)
-        || !validate($language) || !validate($gender) || !$validate($city))
+      if(!validate('int', $bYear) || !validate('int', $bMonth) || !validate('int', $bDay) || !validate('alphanumeric', $country)
+        || !validate('alphanumeric', $language) || !validate('alphanumeric', $gender) || !validate('alphanumeric', $city))
       {
         throw new Exception("Invalid values for year, month, day, country, language, gender or city.", 1);      
       }
@@ -61,7 +67,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
       $stmt->fetch();
       if(!$stmt->rowCount())
       {
-        // There was a problem
+        //There was a problem
         require_once __ROOT__."/inc/html/problem.php";
         exit();
       }
@@ -117,9 +123,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
     }
     catch(Exception $exception)
     {
-      $_SESSION['err'] = $exception;
-      header("Location: ./");
-      exit();
+      array_push($errors, $exception->getMessage());
     }
 
     unset($_SESSION['notComplete']);
@@ -128,8 +132,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
   }
   else
   {
-    header("Location: ./?error");
-    exit();
+    array_push($errors, "All values must be filled");
   }
 }
 else if($stmt->rowCount())
@@ -139,8 +142,7 @@ else if($stmt->rowCount())
 }
 else if(isset($_POST['randomKey']))
 {
-  header("Location: ./?error");
-  exit();
+  array_push($errors, "All values must be filled");
 }
 
 
@@ -164,11 +166,7 @@ if(!isset($_SESSION['randomKey']))
 
 $title = "Complete Registration";
 
-$errMsg = '';
-if(isset($_SESSION['err']))
-{
-  $errMsg = $_SESSION['err'];
-}
+$errMsg = (isset($errors))?implode(", ", $errors):"";
 ?>
 <?php require_once __ROOT__."/inc/html/head.php";?>
     <!--header-->
@@ -291,11 +289,11 @@ function validate($key='int', $value, $minLength=0, $maxLength=100)
 {
   switch ($key) {
     case 'int':
-      return is_int($value);
+      return is_numeric($value);
       break;
     case 'alphanumeric':
       $range = $minLength . ", " . $maxLength;
-      return preg_match("/^\[a-zA-Z0-9 '-\]\{$range\}\$/", subject);
+      return preg_match("/^[a-zA-Z0-9 '-]{2,35}$/", $value);
       break;
     default:
       # code...
