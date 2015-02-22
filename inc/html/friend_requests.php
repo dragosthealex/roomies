@@ -7,13 +7,14 @@ $id = $user->getIdentifier('id');
 $stmt = $con->prepare("SELECT conexion_user_id1 FROM rconexions WHERE conexion_user_id2 = '$id' AND conexion_status = '2'");
 $stmt->execute();
 $stmt->bindColumn(1, $otherUserId);
+echo '<div class="drop-list-wrapper scroll-wrapper"><div class="drop-list-area scroll-area">';
 if($stmt->rowCount())
 {
   echo "<ul class='ul'>";
 }
 else
 {
-  echo "No friend requests yet. Loner.";
+  echo "<p class='drop-placeholder'>No friend requests.</p>";
 }
 
 while($stmt->fetch())
@@ -31,7 +32,7 @@ while($stmt->fetch())
         <button class='input-button button2' style='margin:0'>Accept</button>
         <button class='input-button button2' style='margin:0'>Ignore</button>
       </p>
-      <p class='drop-item-time' style='color:rgba(0,160,0,1)'>$percentage%</p>
+      <p class='drop-item-footer' style='color:rgba(0,160,0,1)'>$percentage%</p>
     </div>
   </li>
   ";
@@ -39,5 +40,10 @@ while($stmt->fetch())
 if($stmt->rowCount())
 {
   echo "</ul>";
+}
+echo '</div></div>';
+if($stmt->rowCount())
+{
+  echo "<a href='$webRoot/friends/requests' class='drop-footer link'>View all</a>";
 }
 ?>

@@ -514,7 +514,7 @@ class User
           <span class='drop-item-pic' style='background-image: url(/media/img/anonymous.jpg)'></span>
           <h3 class='drop-item-header'>$otherUserName $noNewMessages</h3>
           <p class='drop-item-text $sentClass'>$firstLine</p>
-          <p class='drop-item-time' title='$msgDateTimeTitle'>$msgDateTimeText</p>
+          <p class='drop-item-footer' title='$msgDateTimeTitle'>$msgDateTimeText</p>
         </a>
       </li>
       ";

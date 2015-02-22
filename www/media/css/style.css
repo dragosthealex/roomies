@@ -297,7 +297,7 @@
 	height: 3.90625em;
 }
 
-.drop-item-header, .drop-item-text, .drop-item-time {
+.drop-item-header, .drop-item-text, .drop-item-footer, .drop-placeholder {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
@@ -319,9 +319,16 @@
 	content: "Sent: ";
 }
 
-.drop-item-time {
+.drop-item-footer {
 	padding-top: .26em;
 	font-size: .8em;
+	color: #888;
+}
+
+.drop-placeholder {
+	margin: 1em 0;
+	cursor: default;
+	text-align: center;
 	color: #888;
 }
 

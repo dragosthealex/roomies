@@ -20,12 +20,7 @@
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
             <h2 class="drop-header">Friend Requests</h2>
-            <div class="drop-list-wrapper scroll-wrapper">
-              <div class="drop-list-area scroll-area">
-                <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
-              </div>
-            </div>
-            <a href="<?=$webRoot?>/friends/requests" class="drop-footer link">View all</a>
+            <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
           </div>
         </div>
         <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop">
@@ -37,14 +32,7 @@
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
             <h2 class="drop-header">Messages</h2>
-            <div class="drop-list-wrapper scroll-wrapper">
-              <div class="scroll-area drop-list-area">
-                <ul class="ul">
-                  <?php include __ROOT__."/inc/html/new_messages.php"; ?>
-                </ul>
-              </div>
-            </div>
-            <a href="<?=$webRoot?>/messages" class="drop-footer link">View all</a>
+            <?php include __ROOT__."/inc/html/new_messages.php"; ?>
           </div>
         </div>
         <span class="icon-holder" title="Messages" data-toggle="message-drop" data-hide="drop">
