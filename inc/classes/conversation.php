@@ -68,7 +68,7 @@ class Conversation
                                         OR  (message_user_id1 = $id1
                                        AND   message_user_id2 = $id2))
                                        AND message_id > '$lastMessageId'
-                                  ORDER BY message_timestamp ASC");
+                                  ORDER BY message_id ASC");
       $stmt->execute();
 
       // Begin recording the time spent in polling
@@ -101,7 +101,7 @@ class Conversation
                                        AND  message_user_id2 = $id2)
                                         OR (message_user_id1 = $id2
                                        AND  message_user_id2 = $id1)
-                                  ORDER BY message_timestamp DESC
+                                  ORDER BY message_id DESC
                                      LIMIT 50 OFFSET $offset");
 
       $stmt->execute();

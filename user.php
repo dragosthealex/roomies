@@ -446,7 +446,7 @@ class User
       $stmt = $con->prepare("SELECT message_user_id1, message_text, message_timestamp FROM rmessages
                               WHERE (message_user_id1 = $id2 AND message_user_id2 = $userId)
                                 OR (message_user_id1 = $userId AND message_user_id2 = $id2)
-                              ORDER BY message_timestamp DESC
+                              ORDER BY message_id DESC
                               LIMIT 1");
       $stmt->execute();
       $stmt->bindColumn(1, $senderId);
@@ -622,7 +622,7 @@ private function getConv($offset)
     $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read FROM rmessages
                             WHERE message_user_id2 = $userId
                               OR message_user_id1 = $userId
-                            ORDER BY message_timestamp DESC");
+                            ORDER BY message_id DESC");
     $stmt->execute();
     $stmt->bindColumn(1, $id1);
     $stmt->bindColumn(2, $id2);

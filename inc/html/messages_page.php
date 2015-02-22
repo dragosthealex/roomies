@@ -15,7 +15,7 @@ if(!isset($_GET['conv']))
   // Get the latest conversation
   $stmt = $con->prepare("SELECT message_user_id1, message_user_id2 FROM rmessages
                           WHERE message_user_id1 = $userId OR message_user_id2 = $userId
-                          ORDER BY message_timestamp DESC
+                          ORDER BY message_id DESC
                           LIMIT 1");
   $stmt->execute();
   if(!$stmt->rowCount())

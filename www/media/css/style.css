@@ -561,6 +561,68 @@
 	color: #888;
 }
 
+/* Temporary checkbox/radio styles. */
+
+.cr-label {
+	position: relative;
+	display: block;
+	line-height: 18px;
+	height: 18px;
+	cursor: pointer;
+	color: #888;
+	font-size: .9em;
+	overflow: hidden;
+}
+
+.cr-label:hover {
+	color: #555;
+}
+
+.cr {
+	position: absolute;
+	top: -10em;
+	left: 0;
+}
+
+.cr-button {
+	position: relative;
+	display: block;
+	float: left;
+	margin: 0 .6em 0 0;
+	border: 1px solid #d9d6d5;
+	background: #fff;
+	width: 16px;
+	height: 16px;
+}
+
+.cr:focus + .cr-button {
+	border-color: #e37314;
+}
+
+.cr-button:after {
+	position: absolute;
+	top: 20%;
+	left: 20%;
+	width: 60%;
+	height: 60%;
+	content: "";
+}
+
+.r-button, .r-button:after {
+	border-radius: 100%;
+}
+
+.cr:checked + .cr-button:after {
+	background: #e37314;
+}
+
+.cr-text {
+	display: block;
+	float: left;
+}
+
+/* End temporary checkbox/radio styles */
+
 .block {
 	display: block;
 	box-sizing: border-box;

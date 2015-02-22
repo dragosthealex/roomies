@@ -17,7 +17,14 @@ else
   $id2 = htmlentities($_GET['receiver']);
 
   // Escape stuff
-  $messageText = htmlentities($_POST['message']);
+  $messageText = htmlentities(trim($_POST['message']));
+
+  // If empty message, don't do anything
+  if ($messageText == '')
+  {
+    exit();
+  }
+
   // Values for setting the message
   $values[0] = $id1;
   $values[1] = $id2;
