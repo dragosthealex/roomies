@@ -19,8 +19,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `2014_comp10120_x7`
 --
-CREATE DATABASE IF NOT EXISTS `2014_comp10120_x7` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `2014_comp10120_x7`;
+/*Cannot create database!*/
+/*CREATE DATABASE IF NOT EXISTS `2014_comp10120_x7` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `2014_comp10120_x7`;*/
 
 -- --------------------------------------------------------
 

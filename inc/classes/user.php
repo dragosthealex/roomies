@@ -434,22 +434,32 @@ class User
 
     $messages = '';
 
+    $todayDateTime = new DateTime();
+
+    $regexTime = '/^(([0-9]{4})\-([0-9]{2})\-([0-9]{2})) ([0-9]{2}:[0-9]{2}):[0-9]{2}$/';
+    preg_match($regexTime, date('Y-m-d H:i:s'), $todaysDateMatches);
+    preg_match($regexTime, date('Y-m-d H:i:s', time() - 3600*24), $yesterdaysDateMatches);
+
     for($index=0; $index<count($messagePartners) && $index<10; $index++)
     {
       $id2 = $messagePartners[$index];
-      $stmt = $con->prepare("SELECT message_text, message_timestamp FROM rmessages
+      $stmt = $con->prepare("SELECT message_user_id1, message_text, message_timestamp FROM rmessages
                               WHERE (message_user_id1 = $id2 AND message_user_id2 = $userId)
                                 OR (message_user_id1 = $userId AND message_user_id2 = $id2)
                               ORDER BY message_timestamp DESC
                               LIMIT 1");
       $stmt->execute();
-      $stmt->bindColumn(1, $text);
-      $stmt->bindColumn(2, $timestamp);
+      $stmt->bindColumn(1, $senderId);
+      $stmt->bindColumn(2, $text);
+      $stmt->bindColumn(3, $timestamp);
       $stmt->fetch();
 
       // Get the number of unread messages from this user
       $noNewMessages = (isset($unreadArray[$id2]) && $unreadArray[$id2])?"({$unreadArray[$id2]})":"";
       $addReadClass = ($noNewMessages)?"read":"";
+
+      // If the message was sent, add "sent" to the message class
+      $sentClass = $userId == $senderId ? ' drop-item-text-sent ' : '';
 
       // Get name
       $otherUser = new User($con, $id2);
@@ -458,12 +468,49 @@ class User
 
       $firstLine = explode("<br>", $text)[0];
 
+      $msgDateTime = date_create_from_format('Y-m-d H:i:s', $timestamp);
+      $diff = $todayDateTime->diff($msgDateTime);
+      $diff = (int) $diff->format('%a');
+      // If today, output the time and "Today"
+      if ($diff == 0)
+      {
+        $msgDateTimeTitle = 'Today';
+        $msgDateTimeText = $msgDateTime->format('H:i');
+      }
+      // Else, if yesterday, output "yesterday"
+      else if ($diff == 1)
+      {
+        $msgDateTimeTitle = 'Yesterday';
+        $msgDateTimeText = 'Yesterday';
+      }
+      // Else, if within the last 6 days, output the day name
+      else if ($diff < 6)
+      {
+        $msgDateTimeTitle = $msgDateTime->format('l');
+        $msgDateTimeText = $msgDateTime->format('D');
+      }
+      // Else, if the year is still the same, output the date (e.g. 12 February)
+      else if ($msgDateTime->format('Y') == $todayDateTime->format('Y'))
+      {
+        $msgDateTimeTitle = $msgDateTime->format('j F');
+        $msgDateTimeText = $msgDateTimeTitle;
+      }
+      // Else output the date as DD/MM/YYYY
+      else
+      {
+        $msgDateTimeTitle = $msgDateTime->format('d/m/Y');
+        $msgDateTimeText = $msgDateTimeTitle;
+      }
+
       $messages .=
       "
-      <li class='li drop-item drop-wide $addReadClass' title='At $timestamp'>
-          <span class='message-icon' style='background-image: url(/media/img/anonymous.jpg)'></span>
-          <p class='drop-text'><span class='drop-text-span'>$otherUserName $noNewMessages</span></p>
-          <p class='drop-text'><span class='drop-text-span'>$firstLine</span></p>
+      <li class='drop-item'>
+        <a href='/messages/$otherUserUsername' class='drop-item-link $addReadClass'>
+          <span class='drop-item-pic' style='background-image: url(/media/img/anonymous.jpg)'></span>
+          <h3 class='drop-item-header'>$otherUserName $noNewMessages</h3>
+          <p class='drop-item-text $sentClass'>$firstLine</p>
+          <p class='drop-item-time' title='$msgDateTimeTitle'>$msgDateTimeText</p>
+        </a>
       </li>
       ";
     }

@@ -16,20 +16,16 @@
       </li>
       <li class="header-item">
         <!-- message drop -->
-        <div id="frequests-drop" class="drop hidden ">
+        <div id="frequests-drop" class="drop drop-wide hidden ">
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
-            <div class="drop-header">
-              <p class="drop-header-text">Friend Requests</p>
-            </div>
+            <h2 class="drop-header">Friend Requests</h2>
             <div class="drop-list-wrapper scroll-wrapper">
-              <ul class="drop-list scroll-area">
+              <div class="drop-list-area scroll-area">
                 <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
-              </ul>
+              </div>
             </div>
-            <div class="drop-footer">
-              <p class="drop-header-text">View all</p>
-            </div>
+            <a href="<?=$webRoot?>/friends/requests" class="drop-footer link">View all</a>
           </div>
         </div>
         <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop">
@@ -37,52 +33,18 @@
         </span>
       </li>
       <li class="header-item">
-        <div id="message-drop" class="drop hidden ">
+        <div id="message-drop" class="drop drop-wide hidden ">
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
-            <div class="drop-header">
-              <p class="drop-header-text">Messages</p>
-            </div>
+            <h2 class="drop-header">Messages</h2>
             <div class="drop-list-wrapper scroll-wrapper">
-              <ul class="drop-list scroll-area">
-                <?php include __ROOT__."/inc/html/new_messages.php"; ?>
-                <!-- <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div>
-                <div class="drop-item">
-                  <span class="message-icon" style="background-image: url('/media/img/anonymous.jpg')"></span>
-                  <p class="drop-text"><span class="drop-text-span">Hello my name is profile pic and bal bal ala SF ASDF ASdasf asdf asdgasdf</span></p>
-                </div> -->
-              </ul>
+              <div class="scroll-area drop-list-area">
+                <ul class="ul">
+                  <?php include __ROOT__."/inc/html/new_messages.php"; ?>
+                </ul>
+              </div>
             </div>
-            <div class="drop-footer">
-              <a href="<?=$webRoot?>/messages" class="link drop-header-text">View all</a>
-            </div>
+            <a href="<?=$webRoot?>/messages" class="drop-footer link">View all</a>
           </div>
         </div>
         <span class="icon-holder" title="Messages" data-toggle="message-drop" data-hide="drop">
@@ -102,15 +64,15 @@
         </a>
       </li>
       <li class="header-item">
-        <div id="extra-drop" class="drop hidden ">
+        <div id="extra-drop" class="drop drop-mini hidden ">
           <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
           <div class="drop-box">
-            <ul class="drop-list box-padding">
-              <li class="drop-item">
-                <a href="<?=$webRoot?>/settings" class="link-button block">Settings</a>
+            <ul class="ul">
+              <li>
+                <a href="<?=$webRoot?>/settings" class="link">Settings</a>
               </li>
-              <li class="drop-item">
-                <a href="?logout" class="link-button block">Sign out</a>
+              <li>
+                <a href="?logout" class="link">Sign out</a>
               </li>
             </ul>
           </div>

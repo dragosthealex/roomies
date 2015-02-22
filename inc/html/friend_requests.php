@@ -23,25 +23,15 @@ while($stmt->fetch())
   $percentage = $user->getPercentageWith($otherUser);
   echo 
   "
-  <li class='box'>
-    <div class='box-padding'>
-      <p class='text'>
-        <a class='link' href='profile/?u=$otherUsername'>
-          <img alt='' class='profile-picture' src='media/img/anonymous.jpg'>
-          $otherUsername
-        </a>
-        <button class='input-button button2'>
-          Accept
-        </button>
-        <button class='input-button button2'>
-          Reject
-        </button>
+  <li class='drop-item'>
+    <div class='drop-item-box'>
+      <a class='drop-item-pic' href='/profile/?u=$otherUsername' style='background-image: url(/media/img/anonymous.jpg)'></a>
+      <a class='drop-item-header link' href='/profile/$otherUsername'>$otherUsername</a>
+      <p class='drop-item-text'>
+        <button class='input-button button2' style='margin:0'>Accept</button>
+        <button class='input-button button2' style='margin:0'>Ignore</button>
       </p>
-      <p class='text'>
-        <span style='font-size:1.5em;line-height:0;color:rgba(0,160,0,1)'>
-          $percentage%
-        </span>
-      </p>
+      <p class='drop-item-time' style='color:rgba(0,160,0,1)'>$percentage%</p>
     </div>
   </li>
   ";

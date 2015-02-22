@@ -58,7 +58,7 @@
 .header-padding {
 	position: relative;
 	margin: 0 auto;
-	max-width: 944px;
+	max-width: 942px;
 }
 
 .header-nav {
@@ -86,10 +86,11 @@
 .icon-holder {
 	position: relative;
 	display: block;
-	margin: 7px auto;
+	margin: 10px auto;
+	outline: 0;
 	padding: 10px;
-	height: 26px;
-	width: 26px;
+	height: 20px;
+	width: 20px;
 	cursor: pointer;
 	text-indent: -9999em;
 }
@@ -99,8 +100,8 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
-	height: 26px;
-	width: 26px;
+	height: 100%;
+	width: 100%;
 	opacity: 0.85;
 }
 
@@ -177,21 +178,31 @@
 	position: absolute;
 	top: 48px;
 	right: 0;
-	/*box-shadow: 3px 3px 2px -1px rgba(0,0,0,0.8);*/
 	max-width: 430px;
 	max-height: 363px;
+	text-align: left;
 	line-height: 1;
+	font-size: .8em;
+}
+
+.drop-wide {
+	width: 430px;
+}
+
+.drop-mini {
+	font-size: .9em;
 }
 
 .drop-icon-holder {
 	position: relative;
+	z-index: 2;
 	height: 12px;
 }
 
 .drop-icon, .drop-icon-border {
 	position: absolute;
 	top: 5px;
-	right: 0;
+	right: 10%;
 	border-width: 0 8px 8px;
 	border-style: solid;
 	border-color: transparent transparent #fff;
@@ -203,6 +214,8 @@
 }
 
 .drop-box {
+	position: relative;
+	z-index: 1;
 	box-shadow: 0px 3px 8px rgba(0,0,0,0.24);
 	border-radius: 2px;
 	border-width: 1px;
@@ -212,69 +225,111 @@
 	height: 100%;
 }
 
-.drop-header, .drop-footer {
-	padding: 3px;
-	height: 20px;
+.drop-mini .drop-box {
+	border-color: rgba(0,0,0,0.2);
+	padding: .5em 0;
 }
 
-.drop-header-text {
-	font-size: 12px;
-	padding: 0;
+.drop-header, .drop-footer {
+	display: block;
+}
+
+.drop-header {
 	margin: 0;
-	font-family: inherit;
-	text-align: center;
+	border-bottom: 1px solid #e4e0df;
+	padding: 0 8px;
+	line-height: 2em;
+	font-weight: bold;
+	font-size: 1em;
 }
 
 .drop-list-wrapper {
-	height: 310px;
+	border: 0 !important;
+	max-height: 310px;
 	overflow: hidden;
 }
 
-.drop-list {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-	height: 100% !important;
+.drop-list-area {
+	max-height: 310px !important;
 }
 
 .drop-item {
-	/*height: 64px;*/
+	border-top: 1px solid #e4e0df;
 }
 
-.drop-wide {
-	width: 430px;
+.drop-item:first-child {
+	border-top: 0;
 }
 
-.message-icon {
-	float:top;
-	float: left;
-	display: inline-block;
-	background-size: 30px;
-	height: 30px;
-	width: 30px;
-	opacity: 0.55;
-	margin-left: 15px;
-	margin-top: 17px;
-	margin-bottom: 17px;
-	margin-right: 15px;
-}
-
-.drop-text {
-	/*overflow: hidden;*/
-	font-size: 12px;
-	padding: 0;
-	margin: 0;
-	font-family: inherit;
-}
-
-.drop-text-span {
-	height: 14px;
-	width: 250px;
+.drop-item-link, .drop-item-box {
+	position: relative;
+	display: block;
+	outline: 0;
+	padding: .5em .5em .5em 5.40625em;
 	overflow: hidden;
-	margin-top: 25px;
-	margin-bottom: 25px;
-	float:left;
-	display: inline-block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.drop-item-link:hover {
+	background-color: #f2f0ef;
+}
+
+.drop-mini .link {
+	display: block;
+	text-decoration: none !important;
+	outline: 0;
+	padding: .5em 1.5em;
+}
+
+.drop-mini .link:hover {
+	background: #e37314;
+	color: #fff;
+}
+
+.drop-item-pic {
+	position: absolute;
+	top: .5em;
+	left: .8em;
+	background-color: #efefef;
+	background-size: 100% 100%;
+	width: 3.90625em;
+	height: 3.90625em;
+}
+
+.drop-item-header, .drop-item-text, .drop-item-time {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height: 1.3em;
+	font-size: 1em;
+}
+
+.drop-item-header {
+	font-weight: bold;
+}
+
+.drop-item-text {
+	color: #666;
+}
+
+.drop-item-text-sent:before {
+	content: "Sent: ";
+}
+
+.drop-item-time {
+	padding-top: .26em;
+	font-size: .8em;
+	color: #888;
+}
+
+.drop-footer {
+	outline: 0;
+	border-top: 1px solid #e4e0df;
+	line-height: 2.5em;
+	text-align: center;
 }
 
 /*End CSS for drop menu*/
@@ -591,7 +646,7 @@
 	margin-right: -30px;
 	padding-right: 30px;
 	/* Will adjust this with JS */
-	height: 400px;
+	max-height: 400px;
 	overflow-x: hidden;
 	overflow-y: scroll;
 }
@@ -776,7 +831,7 @@
 	}
 
 	.header-padding {
-		max-width: 1148px;
+		max-width: 1146px;
 	}
 
 	.box-padding {
@@ -796,6 +851,11 @@
 @media (max-width: 976px) {
 	.header {
 		position: absolute;
+		text-align: left;
+	}
+
+	.header-padding {
+		margin: 0 17px;
 	}
 
 	.profile-picture {
@@ -822,12 +882,20 @@
 
 /* Mobile version - inherits from small version*/
 @media (max-width: 623px) {
+	.header {
+		text-align: center;
+	}
+
+	.header-padding {
+		margin: 0 9px;
+	}
+
 	.header-nav {
 		position: relative;
 	}
 
 	.header-item {
-		width: 25%;
+		width: 14.2857%;
 		text-align: center;
 	}
 
@@ -847,12 +915,16 @@
 		display: none;
 	}
 
+	.header-item > .drop {
+		right: -9px;
+	}
+
 	.drop {
-		max-width: 320px;
+		width: 320px;
 	}
 
 	.drop-wide {
-		width: 320px;
+		width: 100%;
 	}
 
 	.main {

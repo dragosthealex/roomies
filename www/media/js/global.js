@@ -450,8 +450,7 @@
     }
   };
 
-  var scrollAreas = aProto.slice.call(document.getElementsByClassName('scroll-area'));
-  scrollAreas.forEach(function (scrollArea) {
+  aProto.slice.call(document.getElementsByClassName('scroll-area')).forEach(function (scrollArea) {
     if (scrollArea.scrollHeight > scrollArea.offsetHeight) {
       scrollArea.innerHTML += "<div class='scroll-bar'><div class='scroll-tracker'></div></div>";
     }
