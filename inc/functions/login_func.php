@@ -2,7 +2,7 @@
 
 
 // Takes $login which can be id, username, 
-function loginUser($con, $login, $password='')
+function loginUser($con, $login, $password='', $remember=false)
 {
 
   // Check the pass against the one in db. If incorrect, will be logged
@@ -23,6 +23,12 @@ function loginUser($con, $login, $password='')
     $_SESSION['user']['email'] = $email;
     $_SESSION['user']['username'] = $username;
     $_SESSION['justLoggedIn'] = true; // For header.in.php
+
+    // Set cookie, if remember me
+    if ($remember)
+    {
+      include_once __ROOT__."/inc/html/cookie_set.php";
+    }
 
     // Check whether the user has completed his profile
     $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE profile_filter_id = $id");

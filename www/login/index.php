@@ -21,7 +21,7 @@ if(isset($_POST['login'], $_POST['password']))
   $password = htmlentities(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING));
 
   // Check if valid chars
-  if($login != $_POST['login'] || $password != $_POST['password'])
+  if($login != $_POST['login'] || $password != $_POST['password'] || !$_POST['password'])
   {
     header("Location: ../?err=invalid");
     exit();
@@ -49,10 +49,7 @@ if(isset($_POST['login'], $_POST['password']))
 
   $user = new User($con, $login);
 
-  if ($_POST['rememberMe'])
-  {
-    include_once __ROOT__."/inc/html/cookie_set.php";
-  }
+  $remember = $_POST['remember_me'];
   
   loginUser($con, $login, $password);
 }
