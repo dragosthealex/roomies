@@ -30,6 +30,12 @@ require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
 // Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footers
+if(isset($_GET['conv']))
+{
+  $otherUserId = htmlentities($_GET['conv']);
+  $otherUser = new User($con, $otherUserId);
+  $otherUserId = $otherUser->getIdentifier('id');
+}
 ?>
 
 <div class="column-wrapper">

@@ -19,12 +19,13 @@ if (!isset($_GET['u']))
   exit();
 }
 
-$userImagePath = $user->getIdentifier('image');
 
 if ($_GET['u'] == $_SESSION['user']['username'])
 {
   // I'm on my profile
   $title = $user->getName();
+  $userImagePath = $user->getIdentifier('image');
+
   // Include head and header
   require_once __ROOT__."/inc/html/head.php";
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
@@ -126,6 +127,7 @@ $unblockButtonHide   = $status == 4 ? '' : 'style="display: none"';
 $nameOrUsername = ($status == 1)?$otherUser->getName():$otherUsername;
 
 $title = "$otherUsername";
+$userImagePath = $otherUser->getIdentifier('image');
 
 // Include head and header
 require_once __ROOT__."/inc/html/head.php";
