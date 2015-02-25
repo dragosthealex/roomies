@@ -32,7 +32,7 @@ while($stmt->fetch())
         <a href='/profile/$otherUsername' class='link'>$otherUsername</a>
       </h3>
       <p class='drop-item-footer'></p>
-      <p class='drop-item-text' style='color:rgba(".(255-255*$percentage/100).",".(255*$percentage/100).",0,1)'>$percentage%</p>
+      <p class='drop-item-text' style='color:rgba(".(160-160*$percentage/100).",".(160*$percentage/100).",0,1)'>$percentage%</p>
     </div>
   </li>
   ";

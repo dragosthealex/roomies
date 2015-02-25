@@ -102,7 +102,7 @@ while($stmt->fetch())
         <a href='profile/$otherUsername' style='background-image: url(\"$userImagePath\")' class='profile-picture'></a><!--style='background-image: url(\"$userImagePath\");'-->
         <div class='profile-box-inner'>
           <a href='profile/$otherUsername' class='h2 profile-name'>$nameOrUsername</a>
-          <div class='profile-percent' style='color:rgba(".(255-255*$percentage/100).",".(255*$percentage/100).",0,1);'>$percentage%</div>
+          <div class='profile-percent' style='color:rgba(".(160-160*$percentage/100).",".(160*$percentage/100).",0,1);'>$percentage%</div>
           <div class='profile-links'>
 
             <a data-ajax-url='../php/friends.process.php?a=1&amp;id=$otherUserId'
