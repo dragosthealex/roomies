@@ -92,7 +92,50 @@ class Review extends Comment
         $this->errorMsg = "Weird input";
         break;
     }
-  }// method __construct 
+  }// function __construct 
+
+  protected function getReplies()
+  {
+    // Localise stuff
+    $con = $this->con;
+    $reviewId = $this->id;
+    $accId = $this->parent;
+
+    // Get the replies
+    $stmt = $con->prepare("SELECT reply_id FROM rreplies WHERE parent_id = '$reviewId'");
+    try
+    {
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting replies from database", 1);
+      }
+      if(!$stmt->rowCount())
+      {
+        $replies = "[\"\"]";
+      }
+
+      // Go through every reply
+      $stmt->bindColumn(1 $replyId);
+      while($reply = $stmt->fetch())
+      {
+        // Prepare the params
+        $params['id'] = $replyId;
+        // Make new replies having the ids
+        $reply = new Reply($con, 'get', $params);
+        // Skip if we have any error with a reply
+        if($reply->getError())
+        {
+          continue;
+        }
+      }
+      // Return the replies
+      return $replies;
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg .= $e->getMessage();
+    }
+  }// function getReplies()
 }// class Review
 
 ?>

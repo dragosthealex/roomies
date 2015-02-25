@@ -55,6 +55,9 @@ abstract class Comment
     $author = new User($con, $authorId);
     $authorName = $author->getName();
 
+    // Get the replies
+    $replies = $this->getReplies();
+
     // Construct the json
     $json = "{\"id\"          : \"$id\",
               \"authorName\"  : \"$authorName\",
@@ -63,9 +66,14 @@ abstract class Comment
               \"likes\"       : \"$likes\",
               \"date\"        : \"$date\",
               \"parentId\"    : \"$parentId\",
+              \"replies\"     : \"$replies\"
              }";
     // Return it;
     return $json;
   }
+
+  // Gets the replies of this comment as an array string 
+  abstract protected function getReplies();
+
 }// class Comment
 ?>
