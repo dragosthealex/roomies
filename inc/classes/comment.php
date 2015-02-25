@@ -5,7 +5,8 @@
 * Represents any type of comment. has an author, a parent (where it is posted), a date, a text, and a number of "likes"
 *
 */
-abstract class Comment
+require_once __ROOT__.'/inc/classes/base.php';
+abstract class Comment extends Base
 {
   // The id of the comment
   protected $id;
@@ -19,20 +20,6 @@ abstract class Comment
   protected $text;
   // The number of likes
   protected $likes;
-  // The error msg
-  protected $errorMsg = false;
-
-  /**
-  * Function getError()
-  *
-  * Returns the error msg
-  *
-  * @return - $errorMsg(String), error message
-  */
-  public function getError()
-  {
-    return $this->errorMsg;
-  }
 
   /**
   * Function toJson()

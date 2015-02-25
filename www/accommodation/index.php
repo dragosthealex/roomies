@@ -19,6 +19,21 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
 ?>
 
-
+<div class="column-wrapper">
+  <div class="column-2">
+    <div class="column-box">
+      <div class="box-padding">
+        <?php require_once __ROOT__.'/inc/html/all_accommodations.php';?>
+      </div>
+    </div>
+  </div>
+  <div class="column-2">
+    <div class="column-box">
+      <div class="box-padding">
+        <?php require_once __ROOT__.'/inc/html/specific_accommodation.php';?>
+      </div>
+    </div>
+  </div>
+</div>
 
 <?php require_once __ROOT__."/inc/html/footer.php";?>

@@ -53,7 +53,7 @@ class Review extends Comment
         }
         catch (Exception $e)
         {
-          $this->errorMsg = $e->getMessage();
+          $this->setError($e->getMessage());
         }
         break;
       case 'get':
@@ -85,11 +85,11 @@ class Review extends Comment
         }
         catch (Exception $e)
         {
-          $this->errorMsg = $e->getMessage();
+          $this->setError($e->getMessage());
         }
         break;
       default:
-        $this->errorMsg = "Weird input";
+        $this->setError("Weird input");
         break;
     }
   }// function __construct
@@ -133,7 +133,7 @@ class Review extends Comment
     }
     catch (Exception $e)
     {
-      $this->errorMsg = $e->getMessage();
+      $this->setError($e->getMessage());
     }
   }// function getReplies()
 }// class Review
