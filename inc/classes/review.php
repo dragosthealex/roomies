@@ -53,7 +53,7 @@ class Review extends Comment
         }
         catch (Exception $e)
         {
-          $this->errorMsg .= $e->getMessage();
+          $this->errorMsg = $e->getMessage();
         }
         break;
       case 'get':
@@ -92,7 +92,7 @@ class Review extends Comment
         $this->errorMsg = "Weird input";
         break;
     }
-  }// function __construct 
+  }// function __construct
 
   protected function getReplies()
   {
@@ -133,7 +133,7 @@ class Review extends Comment
     }
     catch (Exception $e)
     {
-      $this->errorMsg .= $e->getMessage();
+      $this->errorMsg = $e->getMessage();
     }
   }// function getReplies()
 }// class Review

@@ -20,7 +20,7 @@ abstract class Comment
   // The number of likes
   protected $likes;
   // The error msg
-  protected $errorMsg = '';
+  protected $errorMsg = false;
 
   /**
   * Function getError()
@@ -72,7 +72,7 @@ abstract class Comment
     return $json;
   }
 
-  // Gets the replies of this comment as an array string 
+  // Gets the replies of this comment as an array string
   abstract protected function getReplies();
 
 }// class Comment

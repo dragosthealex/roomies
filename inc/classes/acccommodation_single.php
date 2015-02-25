@@ -64,7 +64,7 @@ class Accommodation
                                  VALUES ('$name', '$author', '$date', '$noPhotos', '$description')");
           if(!$stmt->execute())
           {
-            throw new Exception("Error Inserting into database", 1);            
+            throw new Exception("Error Inserting into database", 1);
           }
 
           // Get the id
@@ -163,29 +163,27 @@ class Accommodation
               \"rating\"      : \"$rating\",
               \"noOfPhotos\"  : \"$noOfPhotos\",
               \"name\"        : \"$name\",
-              \"reviews\"     : [
+              \"reviews\"     : [\"\"
             ";
     foreach ($reviews as $key => $review)
     {
       $review = $review->toJson();
-      $json .= "\"$review,\"";
+      $json .= ",\"$review\"";
     }
 
-    // Include an empty review and close the array, because we have the comma afther the last included review
-    $json .= "\"\"]";
     // Close json
-    $json .= "}";
+    $json .= "]}";
 
     return $json;
   }
 
   /**
-  * Function getReviews
+  * Function setReviews
   *
   * Sets reviews for this accommodation, and sets them from the database
   *
   */
-  public function setReviwes()
+  public function setReviews()
   {
     // Localise stuff
     $con = $this->con;
@@ -197,7 +195,7 @@ class Accommodation
     {
       if(!$stmt->execute())
       {
-        throw new Exception("Database execution failed", 1); 
+        throw new Exception("Database execution failed", 1);
       }
 
       // Initialise as empty array
