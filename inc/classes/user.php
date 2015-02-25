@@ -478,7 +478,7 @@ class User
       $otherUserName = $otherUser->getName();
       $otherUserUsername = $otherUser->getIdentifier('username');
 
-      $firstLine = explode("<br>", $text)[0];
+      $firstLine = substr(explode("<br>", $text)[0], 0, 200);
 
       $msgDateTime = date_create_from_format('Y-m-d H:i:s', $timestamp);
       $diff = $todayDateTime->diff($msgDateTime);
