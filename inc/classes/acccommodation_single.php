@@ -88,6 +88,7 @@ class Accommodation
           $this->date = $date;
           $this->con = $con;
           $this->description = $description;
+          $this->id = $accId;
         }
         catch (Exception $e)
         {
@@ -125,7 +126,7 @@ class Accommodation
         {
           $this->errorMsg = $e->getMessage();
         }
-
+        break;
       default:
         $this->errorMsg = "Weird input";
         break;
@@ -156,7 +157,8 @@ class Accommodation
 
     // Create the JSON
     $json = "{\"id\"          : \"$id\",
-              \"author\"      : \"$authorName\",
+              \"authorName\"  : \"$authorName\",
+              \"authorId\"    : \"$authorId\",
               \"description\" : \"$description\",
               \"rating\"      : \"$rating\",
               \"noOfPhotos\"  : \"$noOfPhotos\",
