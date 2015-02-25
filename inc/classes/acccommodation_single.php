@@ -23,8 +23,12 @@ class Accommodation
   private $rating;
   // The reviews, as an array of Review objects
   private $reviews;
+  // The description, text
+  private $description;
   // The db connection handler
   private $con;
+  // Errors
+  private $errorMsg = '';
 
   /**
   * Constructor
@@ -83,6 +87,7 @@ class Accommodation
           $this->noOfPhotos = $noPhotos;
           $this->date = $date;
           $this->con = $con;
+          $this->description = $description;
         }
         catch (Exception $e)
         {
@@ -113,6 +118,8 @@ class Accommodation
           $this->author = $result['accommodation_author'];
           $this->name = $result['accommodation_name'];
           $this->con = $con;
+          $this->description = $result['accommodation_description'];
+          $this->rating = $result['accommodation_rating'];
         }
         catch (Exception $e)
         {
@@ -131,9 +138,103 @@ class Accommodation
   * @return - $json, a JSON object containing the details of this accommodation
   *
   */
+  public function toJson()
+  {
+    // Localise stuff
+    $id = $this->id;
+    $description = $this->description;
+    $date = $this->date;
+    $reviews = $this->reviews;
+    $rating = $this->rating;
+    $name = $this->name;
+    $authorId = $this->author;
+    $noOfPhotos = $this->noOfPhotos;
 
+    // Get the name of the author
+    $author = new User($authorId);
+    $authorName = $author->getName();
 
+    // Create the JSON
+    $json = "{\"id\"          : \"$id\",
+              \"author\"      : \"$authorName\",
+              \"description\" : \"$description\",
+              \"rating\"      : \"$rating\",
+              \"noOfPhotos\"  : \"$noOfPhotos\",
+              \"name\"        : \"$name\",
+              \"reviews\"     : [
+            ";
+    foreach ($reviews as $key => $review)
+    {
+      $review = $review->toJson();
+      $json .= "\"$review,\"";
+    }
 
+    // Include an empty review and close the array, because we have the comma afther the last included review
+    $json .= "\"\"]";
+    // Close json
+    $json .= "}";
+
+    return $json;
+  }
+
+  /**
+  * Function getReviews
+  *
+  * Sets reviews for this accommodation, and sets them from the database
+  *
+  */
+  public function setReviwes()
+  {
+    // Localise stuff
+    $con = $this->con;
+    $accId = $this->id;
+
+    // Get the review
+    $stmt = $con->prepare("SELECT review_id FROM rreviews WHERE review_acc_id = '$accId'");
+    try
+    {
+      if(!$stmt->execute())
+      {
+        throw new Exception("Database execution failed", 1); 
+      }
+
+      // Initialise as empty array
+      $reviews = array();
+
+      // Loop through review ids, creating a new review object
+      $stmt->bindColumn(1, $reviewId);
+      while($stmt->fetch())
+      {
+        $params['id'] = $reviewId;
+        $review = new Review($con, 'get', $params);
+        // Skip if we have errors
+        if($review->getError())
+        {
+          continue;
+        }
+        array_push($reviews, $review);
+      }
+
+      // Set the instance var
+      $this->reviews = $reviews;
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg .= $e->getMessage();
+    }
+  }
+
+  /**
+  * Function getError()
+  *
+  * Returns $errorMsg, containing any errors
+  *
+  * @return - $errorMsg(String), the message of error
+  */
+  public function getError()
+  {
+    return $this->errorMsg();
+  }
 }
 
 

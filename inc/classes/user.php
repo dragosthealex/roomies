@@ -27,6 +27,8 @@ class User
   // Array containing all the question objects. Each question has the answers.
   // Also, has the answers answered by user
   private $questions;
+  // Variable containing any errors
+  private $errorMsg = '';
 
   /**
   * Constructor
@@ -605,7 +607,7 @@ class User
   }
 
 
-// Gets the conversations
+// Helper function to get the conversations
 private function getConv($offset)
 {
       // Localise stuff
@@ -684,7 +686,42 @@ private function getConv($offset)
     $return['apparitionArray'] = $apparitionArray;
 
     return $return;
+  } // getConv method
+
+  /**
+  * Function sendReview($accId, $reviewText)
+  *
+  * Sends a review to the accommodation with given id
+  *
+  * @param - $accId(int), the Id of the accommodation
+  *
+  */
+  public function sendReview($accId, $reviewText)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // Prepare for the review;
+    $params['author'] = $userId;
+    $params['text'] = $reviewText;
+    $params['accId'] = $accId;
+
+    try 
+    {
+      $review = new Review($con, 'insert', $params);
+      if($review->getError())
+      {
+        throw new Exception("Error in submitting the review: " . $review->getError(), 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg .= $e->getMessage();
+    }
+
   }
+
 }// class
 
 ?>
