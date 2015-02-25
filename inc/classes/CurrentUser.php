@@ -32,7 +32,7 @@ class CurrentUser extends GeneralUser
       $stmt = $con->prepare("SELECT * FROM details WHERE profile_filter_id =".$this->id);
       if(!$stmt->execute())
       {
-        throw new Exception("Error getting details", 1);
+        throw new Exception("Error getting details from database", 1);
       }
       $details = $stmt->fetch(PDO::FETCH_ASSOC);
       if(!isset($details['first_name'], $details['last_name'], $details['birthday']))
@@ -58,6 +58,20 @@ class CurrentUser extends GeneralUser
       $this->setError($e->getMessage());
     }
   }// construct
+
+  /**
+  * Function getName()
+  *
+  * Overrides the function in parent. Gets this current user's name
+  *
+  * @return - $name(String), the first+last name
+  */
+  public function getName()
+  {
+    return $this->name;
+  }
+
+
 
   /**
   * Function addFriend($otherUser)
@@ -562,7 +576,7 @@ private function getConv($offset)
     
     return json_encode($notifications);
   }
-//a
+
   /**
   * Function getAllConversationsJSON()
   *

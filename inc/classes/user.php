@@ -60,9 +60,16 @@ class User
 
     // Get the rest of the details as mapped ints from the db
     $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =".$this->id);
-    $stmt->execute();
+    if(!$stmt->execute())
+    {
+      throw new Exception("Error getting details from database", 1);
+    }
     $details = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    // If we don't have details, something is wrong
+    if(!isset($details['first_name'], $details['last_name'], $details['birthday']))
+      {
+        throw new Exception("Error with details in database", 1);
+      }
     // Assign the unmapped details
     $this->firstName = $details['first_name'];
     $this->lastName = $details['last_name'];
