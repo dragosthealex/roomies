@@ -729,6 +729,27 @@ private function getConv($offset)
 
   }
 
+  /**
+  * Function getUnreadCount()
+  *
+  * Gets the number of unread conversations
+  *
+  * @return - $count(int), the number of unread conversations
+  */
+  public function getUnreadCount()
+  {
+    $count = 0;
+    $unreadArray = $this->getConv(0)['unreadArray'];
+    foreach ($unreadArray as $unread)
+    {
+      if ($unread > 0)
+      {
+        $count++;
+      }
+    }
+    return $count;
+  }
+
 }// class
 
 ?>

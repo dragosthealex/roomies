@@ -29,8 +29,14 @@ if (isset($_SERVER['HTTP_ROOMIES']) && $_SERVER['HTTP_ROOMIES'] == 'kiwi')
 } // if
 else
 {
+    $timestamp = date('Y-m-d H:i:s');
+    $userId = $user->getIdentifier('id');
+    $stmt = $con->prepare("SELECT message_id FROM rmessages ORDER BY message_id DESC LIMIT 1");
+    $stmt->bindColumn(1, $lastMessageId);
+    $stmt->execute();
+    $stmt->fetch();
     // Output the global scripts
-    echo "<script src='$webRoot/media/js/global.js'></script>";
+    echo "<script>longpollInfo={lastMessageId:$lastMessageId};</script><script src='$webRoot/media/js/global.js'></script>";
     // If there are other scripts to output, output those too
     if (isset($scripts))
     {

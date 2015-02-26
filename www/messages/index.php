@@ -62,7 +62,7 @@ if(isset($_GET['conv']))
           <h2 class="h2"><?=$otherName?></h2>
         </div>
         <div class="scroll-wrapper">
-          <div class="scroll-area" data-message-id="<?=$otherUserId?>">
+          <div class="scroll-area" data-conv-id="<?=$otherUserId?>">
             <?=($err)?$err:$conv?>
           </div>
         </div>
@@ -88,8 +88,4 @@ if(isset($_GET['conv']))
 <?php
 $scripts = array('update_message');
 include __ROOT__."/inc/html/footer.php";
-
-// Read all messages in this conv
-$conversation = new Conversation($con, $user->getIdentifier('id'), $otherUserId);
-$conversation->readMessages();
 ?>

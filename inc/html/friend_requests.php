@@ -7,7 +7,16 @@ $id = $user->getIdentifier('id');
 $stmt = $con->prepare("SELECT conexion_user_id1 FROM rconexions WHERE conexion_user_id2 = '$id' AND conexion_status = '2'");
 $stmt->execute();
 $stmt->bindColumn(1, $otherUserId);
-echo '<div class="drop-list-wrapper scroll-wrapper"><div class="drop-list-area scroll-area"><ul class="ul"><li class="drop-placeholder" data-placeholder="No friend requests."></li>';
+?>
+<div id="frequests-drop" class="drop drop-wide hidden ">
+  <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
+  <div class="drop-box">
+    <h2 class="drop-header">Friend Requests</h2>
+    <div class="drop-list-wrapper scroll-wrapper">
+      <div class="drop-list-area scroll-area">
+        <ul class="ul">
+          <li class="drop-placeholder" data-placeholder="No friend requests."></li>
+<?php
 while($stmt->fetch())
 {
   $otherUser = new User($con, $otherUserId);
@@ -15,7 +24,7 @@ while($stmt->fetch())
   $percentage = $user->getPercentageWith($otherUser);
   echo 
   "
-  <li class='drop-item' id='drop-item-fr-$otherUserId'>
+  <li class='drop-item friend-request' id='drop-item-fr-$otherUserId' data-fr-id='$otherUserId'>
     <div class='drop-item-box'>
       <a class='drop-item-pic' href='/profile/?u=$otherUsername' style='background-image: url(/media/img/anonymous.jpg)'></a>
       <h3 class='drop-item-header'>
@@ -37,5 +46,20 @@ while($stmt->fetch())
   </li>
   ";
 }
-echo "</ul></div></div><a href='$webRoot/friends/requests' class='drop-footer link'>View all</a>";
+$requestCount = $stmt->rowCount();
+if ($requestCount > 99) {
+  $requestCount = "99+";
+}
+?>
+        </ul>
+      </div>
+    </div>
+    <a href='<?=$webRoot?>/friends/requests' class='drop-footer link'>View all</a>
+  </div>
+</div>
+<span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop" data-icon-number="<?=$requestCount?>">
+  <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
+</span>
+<?php
+$stmt = null;
 ?>

@@ -2,7 +2,7 @@
   // Localise the document, html and body
   var document = window.document;
   var update = window.roomies.update;
-  var conv = document.getElementById('conv');
+  var conv = document.getElementById('main_conversation');
   var convParent = conv.parentNode;
   var currentUrl = window.location.href;
   var otherId = (currentUrl.indexOf('conv=')===-1)

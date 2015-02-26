@@ -15,29 +15,10 @@
         </a>
       </li>
       <li class="header-item drop-parent">
-        <!-- message drop -->
-        <div id="frequests-drop" class="drop drop-wide hidden ">
-          <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
-          <div class="drop-box">
-            <h2 class="drop-header">Friend Requests</h2>
-            <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
-          </div>
-        </div>
-        <span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop">
-          <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
-        </span>
+        <?php include __ROOT__."/inc/html/friend_requests.php"; ?>
       </li>
       <li class="header-item drop-parent">
-        <div id="message-drop" class="drop drop-wide hidden ">
-          <div class="drop-icon-holder"><div class="drop-icon-border"></div><div class="drop-icon"></div></div>
-          <div class="drop-box">
-            <h2 class="drop-header">Messages</h2>
-            <?php include __ROOT__."/inc/html/new_messages.php"; ?>
-          </div>
-        </div>
-        <span class="icon-holder" title="Messages" data-toggle="message-drop" data-hide="drop">
-          <span class="icon icon-messages" data-toggle="message-drop" data-hide="drop"></span>
-        </span>
+        <?php include __ROOT__."/inc/html/new_messages.php"; ?>
       </li>
       <li class="header-item not-mobile">
         <span class="hidden"></span>

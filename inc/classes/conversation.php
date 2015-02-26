@@ -19,7 +19,7 @@ class Conversation
   // Loaded messages
   private $numberOfLoadedMessages = 50;
   // The HTML template to use when outputting messages as a string
-  private $template = array(
+  public static $template = array(
     "<li class='li message ",
     // Read/unread and sent/received
     "' data-message-id='",
@@ -140,7 +140,7 @@ class Conversation
     $id1 = $this->id1;
     $id2 = $this->id2;
     $con = $this->con;
-    $template = $this->template;
+    $template = Conversation::$template;
 
     // The array of messages
     $messages = $this->messages;
@@ -217,12 +217,12 @@ class Conversation
     $id1 = $this->id1;
     $id2 = $this->id2;
     $con = $this->con;
-    $template = $this->template;
+    $template = Conversation::$template;
     // The array of messages
     $messages = $this->messages;
 
     // The conversation as text
-    $conv = "<ul class='ul conversation' id='conv'>";
+    $conv = "<ul class='ul conversation' id='main_conversation'>";
 
     // Make the users and localise stuff
     $user1 = new User($con, $id1);
@@ -281,7 +281,7 @@ class Conversation
 
     // Update db
     $stmt = $con->prepare("UPDATE rmessages SET messages_read = 1
-                            WHERE (message_user_id1 = $id2 AND message_user_id1 = $id2)
+                            WHERE (message_user_id1 = $id2 AND message_user_id2 = $id1)
                               AND messages_read = 0");
     $stmt->execute();
     $stmt = null;

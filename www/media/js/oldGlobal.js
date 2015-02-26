@@ -1,156 +1,101 @@
-(function (window, document, html, body, title, header, newError, undefined) {
-  // Localise some array methods
-  var slice = Array.prototype.slice,
-  forEach = Array.prototype.forEach,
-  some = Array.prototype.some,
+(function(window, undefined){
+  // Localise the document, html and body
+  var document = window.document;
+  var html = document.documentElement;
+  var body = document.body;
+  // Localise the newError function
+  var newError = window.newError;
+  // Localise Array.prototype
+  var aProto = Array.prototype;
+  // Get the header element
+  var header = document.getElementsByClassName("header")[0];
+  // Set a variable for whether the mouse is down
+  var mouseIsDown = false;
+  var target;
+  var newMessageCount = 0;
+  var originalTitle = document.title;
 
-  // Objects for testing types of variables
-  type = {
-    'stringable': {
-      'string': true,
-      'number': true
-    },
-    'string': {
-      'string': true
-    },
-    'number': {
-      'number': true
-    },
-    'function': {
-      'function': true
-    },
-    'object': {
-      'object': true
+  var everyElement = aProto.slice.call(body.getElementsByTagName('*'));
+  everyElement.forEach(function (element) {
+    if (!/^ /.exec(element.className)) {
+      element.className = ' ' + element.className;
     }
-  },
+    if (!/ $/.exec(element.className)) {
+      element.className += ' ';
+    }
+  });
 
-  // Function for validating types of variables
-  validate = function (variables) {
-    slice.call(arguments, 1).forEach(function (typeExpected, i) {
-      if (!type[typeExpected]) {
-        throw new Error('Invalid type: ' + typeExpected);
-      }
-      var typeFound = typeof variables[i];
-      if (!(typeFound in type[typeExpected])) {
-        throw new Error('Expected ' + typeExpected + ', found ' + typeFound);
-      }
-    });
-  },
-
-  // Function for getting message elements by their message id
-  getElementsByMessageId = function (messageId) {
-    validate(arguments, 'stringable');
-
-    // Preset the array of elements
-    var elements = [];
-    // Cast messageId to a string
-    messageId += '';
-    // Loop through all the messages, and find the ones with the message id
-    forEach.call(document.getElementsByClassName('message'), function (element) {
-      element.getAttribute('data-message-id') === messageId && elements.push(element);
-    });
-    // Return the list of elements
-    return elements;
-  },
-
-  // A function to get the current size of the page
-  size = function () {
+  /**
+   * A function to get the current size of the page
+   */
+  var size = function () {
     return {
       width:  window.innerWidth  || html.clientWidth  || body.clientWidth,
       height: window.innerHeight || html.clientHeight || body.clientHeight
     };
-  },
+  }; // size
 
-  // A function to return the offset of an element from the document
-  offset = function (element) {
-    validate(arguments, 'object');
-    var x = 0, y = 0;
+  /**
+   * A function to return the offset of an element from the document
+   */
+  var offset = function (element) {
+    var x = 0;
+    var y = 0;
     while (element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
         x += element.offsetLeft - element.scrollLeft;
         y += element.offsetTop - element.scrollTop;
         element = element.offsetParent;
     }
     return {top: y, left: x};
-  },
+  };
 
-  // Variable to hold the message ids which were sent and unread
-  unreadMessageIds = [],
-
-  // Variable to hold whether the mouse is down
-  mouseIsDown = false,
-  // Variable to refer to the target element on mouse down
-  target,
-
-  // Variable to hold the number of notifications
-  numberOfNotifications = 0,
-
-  // Variable to hold the regex for hidden
-  hiddenRegex = / hidden /,
-
-  // An object which holds javascript functions for interactivity
-  roomies = {
+  /**
+   * An object which holds javascript functions for interactivity
+   */
+  var roomies = {
     // A function to hide a list of elements
     'hide': function (elements) {
-      validate(arguments, 'object');
-
-      forEach.call(elements, function (element) {
-        !hiddenRegex.test(element) && (element.className += "hidden ");
-      });
-    },
-
-    'show': function (elements) {
-      validate(arguments, 'object');
-
-      forEach.call(elements, function (element) {
-        while (hiddenRegex.test(element.className)) {
-          element.className = element.className.replace(hiddenRegex, ' ');
+      for (var i = 0; i < elements.length; i += 1) {
+        if (!/ hidden /.exec(elements[i].className)) {
+          elements[i].className += "hidden ";
         }
-      });
+      }
     },
 
     // A function to toggle the visibility of an element
     'toggle': function (element) {
-      validate(arguments, 'object');
-
       // If the element is hidden, show it, else hide it
-      if (hiddenRegex.test(element.className)) {
-        roomies['show']([element]);
+      if (/ hidden /.exec(element.className)) {
+        element.className = element.className.replace(/ hidden /, ' ');
         // Get any scroll areas and ensure they have a scrollbar
-        forEach.call(element.getElementsByClassName('scroll-area'), function (scrollArea) {
+        var scrollAreas = aProto.slice.call(element.getElementsByClassName('scroll-area'));
+        scrollAreas.forEach(function (scrollArea) {
           scrollAreaFunc(scrollArea);
         });
       } else {
-        roomies['hide']([element]);
+        element.className += 'hidden ';
       } // else
     },
 
     // A function to delete an element
     'delete': function (element) {
-      validate(arguments, 'object');
-
       element.parentNode.removeChild(element);
     },
 
     // A function to delete an element, given an id
     'deleteById': function (id) {
-      validate(arguments, 'string');
-
       var element = document.getElementById(id);
       element && roomies['delete'](element);
     },
 
     // A function to delete a list of elements, given a className
     'deleteByClassName': function (className) {
-      validate(arguments, 'string');
-
-      forEach.call(document.getElementsByClassName(className), function (element) {
+      aProto.slice.call(document.getElementsByClassName(className)).forEach(function (element) {
         roomies['delete'](element);
       });
     },
 
     'scrollToBottom': function (id, parent) {
-      validate(arguments, 'string', 'number');
-
       var element = document.getElementById(id), i;
       if (element) {
         for (i = 0; i < parent; i += 1) {
@@ -162,8 +107,6 @@
 
     // A function to return an array of all parent drops
     'getParentsByClassName': function getParentsByClassName(element, className) {
-      validate(arguments, 'object', 'string');
-
       return (!element || element === body)
               ? []
               : new RegExp(' '+className+' ').exec(element.className)
@@ -173,18 +116,15 @@
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
     'scroll': function (element, mouseY) {
-      validate(arguments, 'object', 'number');
-
-      mouseY += (window.pageYOffset || html.scrollTop || body.scrollTop || 0);
+      mouseY += (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollType || 0);
       mouseY -= offset(element).top;
       var boxHeight = element.offsetHeight;
-      element.parentNode.scrollTop = (element.parentNode.scrollHeight - boxHeight) * ((mouseY - 0.1 * boxHeight) / 0.8) / boxHeight;
+      var scrollHeight = element.parentNode.scrollHeight;
+      element.parentNode.scrollTop = (scrollHeight - boxHeight) * ((mouseY - 0.1 * boxHeight) / 0.8) / boxHeight;
     },
 
     // A function to update something in the page
     'update': function (part, url, className1, className2, callBack) {
-      validate(arguments, 'string', 'string');
-
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
       xmlhttp.onreadystatechange = function () {
@@ -221,7 +161,9 @@
                     convParent.scrollTop = convParent.scrollHeight;
                   }
                   newMessageCount = document.getElementsByClassName('unread received').length;
-                  document.title = (newMessageCount ? "(" + newMessageCount + ") " : "") + title;
+                  var newTitle = newMessageCount ? "(" + newMessageCount + ") " : "";
+                  newTitle += originalTitle;
+                  document.title = newTitle;
                 }
                 if (objs[1].length) {
                   document.getElementById('allConversations').innerHTML = newHTML[1];
@@ -251,8 +193,6 @@
 
     // A function to use ajax on an element
     'ajax': function (element) {
-      validate(arguments, 'object');
-
       var url = element.getAttribute('data-ajax-url'),
           originalText = element.innerHTML,
           hideText,
@@ -375,24 +315,6 @@
     //   return false;
     // }
   }; // onclick
-
-  // Loop through all unread sent messages and add their id (uniquely) to the unread message ids
-  forEach.call(document.getElementsByClassName('unread sent'), function (message) {
-    var messageId = message.getAttribute('data-message-id');
-    unreadMessageIds.indexOf(messageId) === -1 && unreadMessageIds.push(messageId);
-  });
-
-  // Loop through all elements in the body and ensure that
-  // the className contains a space at the start and end,
-  // for manipulating classNames later.
-  forEach.call(body.getElementsByTagName('*'), function (element) {
-    if (!/^ /.exec(element.className)) {
-      element.className = ' ' + element.className;
-    }
-    if (!/ $/.exec(element.className)) {
-      element.className += ' ';
-    }
-  });
 
   /**
    * A function to detect if the mouse has been pressed
@@ -589,11 +511,4 @@
   });
 
   window.roomies = roomies;
-}(/* window   = */ window,
-  /* document = */ document,
-  /* html     = */ document.documentElement,
-  /* body     = */ document.body,
-  /* title    = */ document.title,
-  /* header   = */ document.getElementsByClassName('header')[0],
-  /* newError = */ newError,
-)); // Localise variables
+}(window)); // Localise the window
