@@ -37,7 +37,7 @@ else
         $stmt->bindColumn(1, $lastMessageId);
         $stmt->execute();
         $stmt->fetch();
-        echo "<script>longpollInfo={lastMessageId:$lastMessageId};</script>";
+        echo "<script>roomiesInfo={lastMessageId:$lastMessageId,userId:$userId};</script>";
     }
     // Output the global scripts
     echo "<script src='$webRoot/media/js/global.js'></script>";

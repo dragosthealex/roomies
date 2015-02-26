@@ -87,7 +87,7 @@
 
   // Variable to hold things related to conversations
   conv = {
-    // Variable to hold ids of conversations with unread messages
+    // Variable to hold ids of unread messages
     unread: {
       sent: [],
       received: []
@@ -97,8 +97,8 @@
     box: {}
   },
 
-  // Variable to hold the longpollInfo, set by the server
-  longpollInfo = window.longpollInfo,
+  // Variable to hold the info set by the server
+  info = window.roomiesInfo,
 
   // Variable to hold whether the mouse is down
   mouseIsDown = false,
@@ -323,7 +323,7 @@
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
       xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 4) {
+        if (xmlhttp.readyState === 4 && xmlhttp.status) {
           // If there was anything output, new error
           if (xmlhttp.status === 404) {
             newError("Not found suck balls");
@@ -565,9 +565,9 @@
   // When the page loads, the user scrolls or the window is resized, configure things
   window.onscroll = window.onresize = window.onload = configure;
 
-  // Loop through all unread sent messages and add the user id (uniquely) to the unread sent ids
+  // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
   forEach.call(document.getElementsByClassName('unread sent'), function (message) {
-    var messageId = message.parentNode.parentNode.getAttribute('data-message-id');
+    var messageId = message.getAttribute('data-message-id');
     conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
   });
 
@@ -603,8 +603,6 @@
       fetchingPrevious: false
     };
   });
-
-  window.roomies = roomies;
 
   // Ajax function
   function ajax(obj) {
@@ -665,30 +663,49 @@
     }
   }
 
-  // Set up longpolling
-  var longpoll = function () {
-    var frIds = [];
-    forEach.call(document.getElementsByClassName('friend-request'), function (friendRequest) {
-      var id = friendRequest.getAttribute('data-fr-id');
-      !isNaN(id) && frIds.push(+id);
-    });
-    ajax({
-      url: "/php/longpoll.php?unread=" + conv.unread.sent.join(",")
-                          + "&lastMessageId=" + longpollInfo.lastMessageId
-                          + "&friendRequests=" + frIds.join(","),
+  if (info) {
+    // Set up longpolling
+    var longpoll = function () {
+      var frIds = [];
+      forEach.call(document.getElementsByClassName('friend-request'), function (friendRequest) {
+        var id = friendRequest.getAttribute('data-fr-id');
+        !isNaN(id) && frIds.push(+id);
+      });
+      ajax({
+        url: "/php/longpoll.php?unread=" + conv.unread.sent.join(",")
+                            + "&lastMessageId=" + info.lastMessageId
+                            + "&friendRequests=" + frIds.join(","),
 
-      success: function (response) {
-        console.log(response);
-        var newMessages = response.newMessages;
-        newMessages.content.length &&
-          (longpollInfo.lastMessageId = newMessages.content[newMessages.content.length-1]['message_id']);
-      },
+        success: function (response) {
+          console.log(response);
+          var newMessages = response.newMessages;
+          newMessages.content.length &&
+            (info.lastMessageId = newMessages.content[newMessages.content.length-1]['message_id']);
 
-      callback: longpoll
-    });
-  };
+          response.readMessage.forEach(function (messageId) {
+            getElementsByMessageId(messageId).forEach(function (element) {
+              element.className = element.className.replace(" unread ", " read ");
+            });
+          });
 
-  longpoll();
 
-  delete window.longpollInfo;
+          // Reset the unread sent messages
+          conv.unread.sent = [];
+          // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
+          forEach.call(document.getElementsByClassName('unread sent'), function (message) {
+            var messageId = message.getAttribute('data-message-id');
+            conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
+          });
+        }
+
+        // callback: longpoll
+      });
+    };
+
+    longpoll();
+
+    delete window.roomiesInfo;
+  }
+
+  window.roomies = roomies;
 }(window, document)); // Localise variables
