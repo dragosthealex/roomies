@@ -59,25 +59,28 @@ class User
     $this->image = $imageUrl;
 
     // Get the rest of the details as mapped ints from the db
-    $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =".$this->id);
-    if(!$stmt->execute())
+    try
     {
-      throw new Exception("Error getting details from database", 1);
-    }
-    $details = $stmt->fetch(PDO::FETCH_ASSOC);
-    // If we don't have details, something is wrong
-    if(!isset($details['first_name'], $details['last_name'], $details['birthday']))
+      $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =".$this->id);
+      if(!$stmt->execute())
       {
-        throw new Exception("Error with details in database", 1);
+        throw new Exception("Error getting details from database", 1);
       }
-    // Assign the unmapped details
-    $this->firstName = $details['first_name'];
-    $this->lastName = $details['last_name'];
-    $this->birthday = $details['birthday'];
+      $details = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $this->details = $details;
+      // Assign the unmapped details
+      $this->firstName = isset($details['first_name'])?$details['firstName']:'';
+      $this->lastName = isset($details['last_name'])?$details['last_name']:'';
+      $this->birthday = isset($details['birthday'])?$details['birthday']:'';
 
-    $stmt = null;
+      $this->details = $details;
+
+      $stmt = null;
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
   }
 
   /**
