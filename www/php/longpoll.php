@@ -133,6 +133,6 @@ try
   echo json_encode($response);
 } catch (Exception $exception)
 {
-  echo json_encode(array('error' => $exception));
+  echo json_encode(array('error' => $exception->getMessage()));
 }
 ?>

@@ -32,7 +32,9 @@
       return !!variable && variable.nodeType === 1;
     },
     "HTMLCollection": function (variable) {
-      return variable.constructor === HTMLCollection;
+      return !Array.prototype.some.call(variable, function (element) {
+        return !is.element(element);
+      });
     }
   },
 
@@ -43,7 +45,7 @@
     }
 
     if (optional ? !(variable === undefined || is[type](variable)) : !is[type](variable)) {
-      throw new TypeError("Expected " + type);
+      throw new TypeError("Expected " + type + ", got " + variable.toString());
     }
   };
 
@@ -69,6 +71,15 @@
     types.forEach(function (typeExpected, i) {
       check(variables[i], typeExpected, i >= arrayStartIndex);
     });
+  };
+
+  window.validate.bool = function (variables) {
+    try {
+      validate(variables)
+      return true;
+    } catch (error) {
+      return false;
+    }
   };
 }());
 
@@ -516,7 +527,9 @@
     }
 
     // Get an array of all the drops that the current element is in
-    var elementsToShowAgain = roomies['getParentsByClassName'](element, 'drop');
+    var elementsToShowAgain = validate.bool([element], "element")
+                              ? roomies['getParentsByClassName'](element, 'drop')
+                              : [];
     // Hide all drops
     roomies['hide'](body.getElementsByClassName('drop'));
     // Show the previous elements again
@@ -657,14 +670,14 @@
             if (response.error) {
               newError(response.error);
             } else {
-              obj.success(response);
+              obj.success && obj.success(response);
             }
           } catch (e) {
             console.error(e);
           }
         }
 
-        obj.callback();
+        obj.callback && obj.callback();
       } // if
     }
 
