@@ -13,13 +13,13 @@ while($stmt->fetch())
 {
   $accDescription = substr($accDescription, 0, 400);
   echo "
-        <li class='li'>
+        <li class='li' style='overflow: hidden's>
           <a style='margin: 5px;' href='./?i=$accId'>
             $accName
           </a>
-          <div style='background-image: url($webRoot/media/img/acc/$accId); width: 100px; height: 100px; background-size: 100%; float: left; margin-right: 16px;'>
+          <div class='acc-short-pic' style='background-image: url($webRoot/media/img/acc/$accId);'>
           </div>
-          <div>
+          <div class='acc-short-desc'>
             $accDescription
           </div>
         </li>

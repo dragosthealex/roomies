@@ -458,6 +458,22 @@
 	overflow: hidden;
 }
 
+.acc-short-desc {
+	height: 2em;
+	overflow: hidden;
+	margin: 1em 0px 0px;
+}
+
+.acc-short-pic {
+  background-size: cover;
+  float: left;
+  margin-right: 16px;
+  width: 4em;
+  height: 4em;
+  background-position: center center;
+}
+
+
 .table, .td, .th {
 	border: 1px solid black;
 	border-collapse: collapse;
