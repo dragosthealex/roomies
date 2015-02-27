@@ -28,7 +28,7 @@ function locationMap($location)
       return $webRoot.'/media/img/accommodation/';
       break;
     case 1:
-      return $webRoot.'/media/img/usr/'
+      return $webRoot.'/media/img/usr/';
     default:
       break;
   }

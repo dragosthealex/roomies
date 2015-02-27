@@ -379,7 +379,7 @@
 	display: block;
 }
 
-.ph-drop, .ph-message {
+.ph-drop, .ph-message, .ph-pic {
 	margin: 1em 0;
 	cursor: default;
 	text-align: center;
@@ -462,7 +462,7 @@
 	margin: 1em 0px 0px;
 }
 
-.acc-short-pic {
+.acc-pic {
   background-size: cover;
   float: left;
   margin-right: 16px;
@@ -471,6 +471,25 @@
   background-position: center center;
 }
 
+.pic-main {
+	height: 192px;
+	width: 60%;
+	float: left;
+  margin-right: 16px;
+	background-size: contain;
+  background-repeat: no-repeat;
+  background-color: #EFEFEF;
+  background-position: center center;
+}
+
+.pic-wrapper {
+	margin: 1em 0;
+	overflow: hidden;
+}
+
+.pic-thumbs {
+	height: 190px;
+}
 
 .table, .td, .th {
 	border: 1px solid black;
