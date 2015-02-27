@@ -1,3 +1,77 @@
+!Array.isArray && (Array.isArray = function(arg) {
+  return Object.prototype.toString.call(arg) === '[object Array]';
+});
+
+(function (undefined) {
+  var
+
+  // Functions for testing types of variables
+  is = {
+    "string": function (variable) {
+      return typeof variable === "string";
+    },
+    "number": function (variable) {
+      return typeof variable === "number";
+    },
+    "stringable": function (variable) {
+      return is.string(variable) || is.number(variable);
+    },
+    "function": function (variable) {
+      return typeof variable === "function";
+    },
+    "object": function (variable) {
+      return typeof variable === "object";
+    },
+    "boolean": function (variable) {
+      return typeof variable === "boolean";
+    },
+    "array": function (variable) {
+      return Array.isArray(variable);
+    },
+    "element": function (variable) {
+      return !!variable && variable.nodeType === 1;
+    },
+    "HTMLCollection": function (variable) {
+      return variable.constructor === HTMLCollection;
+    }
+  },
+
+  // Function for testing a type of a variable
+  check = function (variable, type, optional) {
+    if (!(type in is)) {
+      throw new Error("Invalid type: " + type)
+    }
+
+    if (optional ? !(variable === undefined || is[type](variable)) : !is[type](variable)) {
+      throw new TypeError("Expected " + type);
+    }
+  };
+
+  window.validate = function (variables) {
+    var
+    types = Array.prototype.slice.call(arguments, 1),
+    // Pop the last element off and retreive it.
+    lastElement = types.pop(),
+    arrayStartIndex = -1;
+
+    if (Array.isArray(lastElement)) {
+      arrayStartIndex = types.length;
+    }
+
+    // Concatenate the last element back on, if it was there.
+    // If the last element is an array, each element of it will be added, otherwise it will be added.
+    lastElement && (types = types.concat(lastElement));
+
+    if (variables.length !== types.length) {
+      throw new Error("Variables supplied: " + variables.length + ". Types supplied: " + types.length);
+    }
+
+    types.forEach(function (typeExpected, i) {
+      check(variables[i], typeExpected, i >= arrayStartIndex);
+    });
+  };
+}());
+
 (function (window, document, undefined) {
   var
   // Localise <html>, <body>, originalTitle, header and newError()
@@ -14,45 +88,12 @@
   some    = Array.prototype.some,
   concat  = Array.prototype.concat,
 
-  // Objects for testing types of variables
-  type = {
-    "stringable": {
-      "string": true,
-      "number": true
-    },
-    "string": {
-      "string": true
-    },
-    "number": {
-      "number": true
-    },
-    "function": {
-      "function": true
-    },
-    "object": {
-      "object": true
-    },
-    "boolean": {
-      "boolean": true
-    }
-  },
-
   // Function for validating types of variables
-  validate = function (variables) {
-    slice.call(arguments, 1).forEach(function (typeExpected, i) {
-      if (!type[typeExpected]) {
-        throw new Error('Invalid type: ' + typeExpected);
-      }
-      var typeFound = typeof variables[i];
-      if (!(typeFound in type[typeExpected])) {
-        throw new Error('Expected ' + typeExpected + ', found ' + typeFound);
-      }
-    });
-  },
+  validate = window.validate,
 
   // Function for getting message elements by their message id
   getElementsByMessageId = function (messageId) {
-    validate(arguments, 'stringable');
+    validate(arguments, "stringable");
 
     // Preset the array of elements
     var elements = [];
@@ -76,7 +117,7 @@
 
   // A function to return the offset of an element from the document
   offset = function (element) {
-    validate(arguments, 'object');
+    validate(arguments, "element");
     var x = 0, y = 0;
     while (element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
         x += element.offsetLeft - element.scrollLeft;
@@ -230,7 +271,7 @@
   roomies = {
     // A function to hide a list of elements
     'hide': function (elements) {
-      validate(arguments, 'object');
+      validate(arguments, "HTMLCollection");
 
       forEach.call(elements, function (element) {
         !hiddenRegex.test(element.className) && (element.className += "hidden ");
@@ -238,7 +279,7 @@
     },
 
     'show': function (elements) {
-      validate(arguments, 'object');
+      validate(arguments, "HTMLCollection");
 
       forEach.call(elements, function (element) {
         while (hiddenRegex.test(element.className)) {
@@ -254,7 +295,7 @@
 
     // A function to toggle the visibility of an element
     'toggle': function (element) {
-      validate(arguments, 'object');
+      validate(arguments, "element");
 
       // If the element is hidden, show it, else hide it
       roomies[hiddenRegex.test(element.className) ? "show" : "hide"]([element]);
@@ -262,21 +303,21 @@
 
     // A function to delete an element
     'delete': function (element) {
-      validate(arguments, 'object');
+      validate(arguments, "element");
 
       element.parentNode && element.parentNode.removeChild(element);
     },
 
     // A function to delete an element, given an id
     'deleteById': function (id) {
-      validate(arguments, 'string');
+      validate(arguments, "string");
 
       roomies['delete'](document.getElementById(id));
     },
 
     // A function to delete a list of elements, given a className
     'deleteByClassName': function (className) {
-      validate(arguments, 'string');
+      validate(arguments, "string");
 
       forEach.call(document.getElementsByClassName(className), function (element) {
         roomies['delete'](element);
@@ -284,7 +325,7 @@
     },
 
     'scrollToBottom': function (id, parent) {
-      validate(arguments, 'string');
+      validate(arguments, "string", "number");
 
       var element = document.getElementById(id), i;
       if (element) {
@@ -296,19 +337,19 @@
     },
 
     // A function to return an array of all parent drops
-    'getParentsByClassName': function getParentsByClassName(element, className) {
-      validate(arguments, 'object', 'string');
+    'getParentsByClassName': function (element, className) {
+      validate(arguments, "element", "string");
 
       return (!element || element === body)
               ? []
               : new RegExp('(^| )'+className+'( |$)').test(element.className)
-                ? [element].concat(getParentsByClassName(element.parentNode, className))
-                : getParentsByClassName(element.parentNode, className);
+                ? [element].concat(roomies.getParentsByClassName(element.parentNode, className))
+                : roomies.getParentsByClassName(element.parentNode, className);
     },
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
     'scroll': function (element, mouseY) {
-      validate(arguments, 'object', 'number');
+      validate(arguments, "element", "number");
 
       mouseY += (window.pageYOffset || html.scrollTop || body.scrollTop || 0);
       mouseY -= offset(element).top;
@@ -318,8 +359,8 @@
     },
 
     // A function to update something in the page
-    'update': function (part, url, className1, className2, callBack) {
-      validate(arguments, 'string', 'string');
+    'update': function (part, url, className1, className2, callback) {
+      validate(arguments, "string", "string", ["string", "string", "function"]);
 
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
@@ -372,7 +413,7 @@
             }
           }
 
-          typeof callBack === 'function' && callBack();
+          typeof callback === 'function' && callback();
         } // if
       }; // onreadystatechange
 
@@ -386,7 +427,7 @@
 
     // A function to use ajax on an element
     'ajax': function (element) {
-      validate(arguments, 'object');
+      validate(arguments, "element");
 
       var url = element.getAttribute('data-ajax-url'),
           originalText = element.innerHTML,
@@ -444,10 +485,10 @@
         element.innerHTML = element.getAttribute('data-ajax-text');
       } // if
 
-      var callBack;
-      if (callBack = element.getAttribute('data-ajax-callback')) {
-        callBack = callBack.split(" ");
-        roomies[callBack[0]](callBack[1], callBack[2], callBack[3], callBack[4]);
+      var callback, i;
+      for (i = 1; callback = element.getAttribute('data-ajax-callback-'+i); i += 1) {
+        callback = callback.split(" ");
+        roomies[callback[0]](callback[1], callback[2], callback[3], callback[4]);
       } // if
     }
   };
@@ -498,15 +539,6 @@
       roomies['ajax'](element);
       return false;
     } // if
-
-    // If the element is a scroll bar, scroll something.
-    // if (element.className === 'scroll-tracker') {
-    //   roomies['scroll'](element.parentNode, e.clientY);
-    //   return false;
-    // } else if (element.className === 'scroll-bar') {
-    //   roomies['scroll'](element, e.clientY);
-    //   return false;
-    // }
   }; // onclick
 
   /**
@@ -591,7 +623,8 @@
     }
     scrollArea.onscroll = function () {
       scrollAreaFunc(this);
-    };
+    }
+    scrollAreaFunc(scrollArea);
   });
 
   forEach.call(body.getElementsByClassName("conversation"), function (conversation) {
@@ -624,14 +657,14 @@
             if (response.error) {
               newError(response.error);
             } else {
-              obj.success && obj.success(response);
+              obj.success(response);
             }
           } catch (e) {
             console.error(e);
           }
         }
 
-        obj.callback && obj.callback();
+        obj.callback();
       } // if
     }
 
@@ -668,7 +701,7 @@
         !isNaN(id) && frIds.push(+id);
       });
       ajax({
-        url: "/php/longpoll.php?unread=" + conv.unread.sent.join(",")
+        url: "../php/longpoll.php?unread=" + conv.unread.sent.join(",")
                             + "&lastMessageId=" + info.lastMessageId
                             + "&friendRequests=" + frIds.join(","),
 

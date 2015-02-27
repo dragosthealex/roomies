@@ -20,7 +20,7 @@ if(!isset($_GET['conv']))
   $stmt->execute();
   if(!$stmt->rowCount())
   {
-    $conv = "No messages yet. Nobody loves you. Seriously";
+    $conv = '<ul class="ul conversation" id="main_conversation"><li class="ph ph-last ph-message" data-placeholder="No messages."></li></ul>';
   }
   else
   {

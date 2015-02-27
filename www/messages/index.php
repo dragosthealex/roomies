@@ -79,7 +79,7 @@ if(isset($_GET['conv']))
           ><input type="submit" class="input-button block " value="Send"
                   data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
                   data-ajax-post="message"
-                  data-ajax-callback="scrollToBottom conv 1">
+                  data-ajax-callback-1="scrollToBottom conv 1">
           <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange()}())</script>
         </div>
       </div>

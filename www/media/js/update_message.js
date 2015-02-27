@@ -12,7 +12,7 @@
   var updateMessages = function () {
     update('messageNew', '../php/update_message.process.php?type=new&lastId='
       + conv.lastChild.getAttribute('data-message-id') + '&otherId=' + otherId,
-      null, null, updateMessages);
+      undefined, undefined, updateMessages);
   };
 
   var updateMessagesAgain = function () {

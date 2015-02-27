@@ -15,7 +15,7 @@ $stmt->bindColumn(1, $otherUserId);
     <div class="drop-list-wrapper scroll-wrapper">
       <div class="drop-list-area scroll-area">
         <ul class="ul">
-          <li class="drop-placeholder" data-placeholder="No friend requests."></li>
+          <li class="ph ph-last ph-drop" data-placeholder="No friend requests."></li>
 <?php
 while($stmt->fetch())
 {
@@ -31,11 +31,12 @@ while($stmt->fetch())
         <div class='drop-item-header-right'>
           <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
              data-ajax-text='Accepting...'
-             data-ajax-callback='deleteById drop-item-fr-$otherUserId'
+             data-ajax-callback-1='deleteById drop-item-fr-$otherUserId'
+             onclick=''
              class='link-button button2'>Accept</a>
           <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
              data-ajax-text='Ignoring...'
-             data-ajax-callback='deleteById drop-item-fr-$otherUserId'
+             data-ajax-callback-1='deleteById drop-item-fr-$otherUserId'
              class='link-button button2'>Ignore</a>
         </div>
         <a href='/profile/$otherUsername' class='link'>$otherUsername</a>

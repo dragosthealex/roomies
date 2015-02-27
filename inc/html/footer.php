@@ -37,8 +37,9 @@ else
         $stmt->bindColumn(1, $lastMessageId);
         $stmt->execute();
         $stmt->fetch();
-        echo "<script>roomiesInfo={lastMessageId:$lastMessageId,userId:$userId};</script>";
+        echo "<script>roomiesInfo={lastMessageId:$lastMessageId,userId:$userId,webRoot:'$webRoot'};</script>";
     }
+    echo "<script>roomiesInfo={webRoot:'$webRoot'}</script>"
     // Output the global scripts
     echo "<script src='$webRoot/media/js/global.js'></script>";
     // If there are other scripts to output, output those too

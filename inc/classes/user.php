@@ -618,7 +618,7 @@ class User
 
 
 // Helper function to get the conversations
-private function getConv($offset)
+private function getConv($offset=0)
 {
       // Localise stuff
     $con = $this->con;
@@ -742,14 +742,20 @@ private function getConv($offset)
   public function getUnreadCount()
   {
     $count = 0;
-    $unreadArray = $this->getConv(0)['unreadArray'];
-    foreach ($unreadArray as $unread)
+    
+    $conv = $this->getConv();
+    if ($conv != ''  && isset($conv['unreadArray']))
     {
-      if ($unread > 0)
+      $unreadArray = $this->getConv(0)['unreadArray'];
+      foreach ($unreadArray as $unread)
       {
-        $count++;
+        if ($unread > 0)
+        {
+          $count++;
+        }
       }
     }
+
     return $count;
   }
 

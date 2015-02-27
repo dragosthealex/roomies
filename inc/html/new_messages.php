@@ -13,7 +13,7 @@ $messages = $user->getNotifMessages(0);
     <div class="drop-list-wrapper scroll-wrapper">
       <div class="scroll-area drop-list-area">
         <ul class="ul">
-          <li class="drop-placeholder" data-placeholder="No messages."></li>
+          <li class="ph ph-last ph-drop" data-placeholder="No messages."></li>
 <?php
 if ($messages)
 {
