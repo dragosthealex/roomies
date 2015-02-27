@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.3.9
+-- version 4.3.10
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 22, 2015 at 03:02 PM
+-- Generation Time: Feb 27, 2015 at 06:21 PM
 -- Server version: 5.6.23-log
 -- PHP Version: 5.5.21-pl0-gentoo
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `2014_comp10120_x7`
 --
-CREATE DATABASE IF NOT EXISTS `2014_comp10120_x7` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `2014_comp10120_x7`;
 
 -- --------------------------------------------------------
 
@@ -51,16 +49,25 @@ INSERT INTO `comp101lab8users` (`id`, `name`, `email`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `raccomodations`
+-- Table structure for table `raccommodations`
 --
 
-DROP TABLE IF EXISTS `raccomodations`;
-CREATE TABLE IF NOT EXISTS `raccomodations` (
-  `accom_id` int(11) NOT NULL,
-  `accom_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
-  `accom_pic_id` int(11) NOT NULL,
-  `accom_avg_review` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DROP TABLE IF EXISTS `raccommodations`;
+CREATE TABLE IF NOT EXISTS `raccommodations` (
+  `accommodation_id` int(11) NOT NULL,
+  `accommodation_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `accommodation_no_photos` int(11) NOT NULL,
+  `accommodation_date` date NOT NULL,
+  `accommodation_rating` char(4) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'N/A',
+  `accommodation_description` varchar(10000) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `raccommodations`
+--
+
+INSERT INTO `raccommodations` (`accommodation_id`, `accommodation_name`, `accommodation_no_photos`, `accommodation_date`, `accommodation_rating`, `accommodation_description`) VALUES
+(1, 'Whitworth Park', 0, '2015-02-25', 'N/A', 'Bedding Packs: To assist you and limit what you have to transport to the hall you can order a bedding pack online. The price for a single bedding pack is £20.00 and the pack includes a hollow fibre pillow, a 13.5tog duvet, a sheet, a pillowcase and a duvet cover. Double bedding packs are available at a price of £36.00.\r\n\r\nWhitworth Park is centrally located on the University of Manchester campus, close to sports centre, libraries and Students Union.\r\n\r\nIt comprises of eight low-rise houses containing one to three storey flats for groups of seven, eight or nine students. Accommodation is in single study bedrooms, with shared kitchen, lounge and bathroom in each flat.\r\n\r\nGrove House houses the administrative and social centre of the community. Facilities include two squash courts, launderette, bar, gym and large dance hall.\r\n\r\nActive Residents Association. Visit the Whitworth Park RA Website...*.\r\n\r\nPostgraduate students are housed in parts of Thorncliffe and Aberdeen.');
 
 -- --------------------------------------------------------
 
@@ -693,11 +700,11 @@ INSERT INTO `rquestionsmap` (`question_id`, `question_text`, `question_answers`)
 DROP TABLE IF EXISTS `rreviews`;
 CREATE TABLE IF NOT EXISTS `rreviews` (
   `review_id` int(11) NOT NULL,
-  `review_accom_id` int(11) NOT NULL,
+  `review_acc_id` int(11) NOT NULL,
   `review_text` text COLLATE utf8_unicode_ci,
   `review_rating` int(11) DEFAULT NULL,
-  `review_user_id` int(11) DEFAULT NULL,
-  `review_user_fname` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL
+  `review_author` int(11) DEFAULT NULL,
+  `review_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -755,7 +762,7 @@ CREATE TABLE IF NOT EXISTS `rusers` (
   `user_cookie` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `facebook_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `image_url` varchar(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT '/media/img/default.gif'
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `rusers`
@@ -772,8 +779,9 @@ INSERT INTO `rusers` (`user_id`, `username`, `user_email`, `user_salt`, `user_pa
 (27, 'SirKiwiTheGreat', 'kiwis@gmail.com', '835198187', '09cfc5f0c89cc125c2508e7095bd4add6ec1c39e8cd6f51780227906e2209ac8', 'user', '', '', '', '', '/media/img/default.gif'),
 (28, 'test_init_perc', 'test_init_perc@yahoo.com', '1841271249', '0a6079d6de193e2db8be8ab090e7ed6c81b96ff719a9bb0c7a393fd1f2a87b63', 'user', '', '', '', '', '/media/img/default.gif'),
 (29, 'johnTheRapist', 'john@gmail.com', '260991738', '2a213ad966944aa148f0a5871aa765f15155b87adb8f2e1b3ec61f3cfc31338e', 'user', '', '', '', '', '/media/img/default.gif'),
-(49, 'alexFacebook', 'dragosthealx@gmail.com', '1922294828', 'e456b4f45a512087dc7d99254244bcaf333422db11f56e301e9f88a20e20eee8', 'user', '', '', ':6a8ec544305557555c5ab365faa91dfb77cf4358505808d5292817172457158d', '797073513702931', 'https://graph.facebook.com/797073513702931/picture?type=large'),
-(50, 'asdasd', 'asdsd@asasd.cim', '1852453316', 'a9619e99a93fe4c05aaeb01fc2ad88b1bdfd4aea6508edca4a6044f185df2591', 'user', '', '', '', '', '/media/img/default.gif');
+(49, 'alexFacebook', 'dragosthealx@gmail.com', '1922294828', 'e456b4f45a512087dc7d99254244bcaf333422db11f56e301e9f88a20e20eee8', 'user', '', '', '', '797073513702931', 'https://graph.facebook.com/797073513702931/picture?type=large'),
+(50, 'asdasd', 'asdsd@asasd.cim', '1852453316', 'a9619e99a93fe4c05aaeb01fc2ad88b1bdfd4aea6508edca4a6044f185df2591', 'user', '', '', '', '', '/media/img/default.gif'),
+(53, 'Bob-facebook', 'kerplll_rosenthalsky_1424621506@tfbnw.ne', '1710536754', '9b1cb646b471ad5143df808dd6dac5e870dccdbcbe55c101acf1218cb84745be', 'user', '', '', '', '1377925132525015', 'https://graph.facebook.com/1377925132525015/picture?type=large');
 
 -- --------------------------------------------------------
 
@@ -809,10 +817,10 @@ ALTER TABLE `comp101lab8users`
   ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `email` (`email`);
 
 --
--- Indexes for table `raccomodations`
+-- Indexes for table `raccommodations`
 --
-ALTER TABLE `raccomodations`
-  ADD PRIMARY KEY (`accom_id`);
+ALTER TABLE `raccommodations`
+  ADD PRIMARY KEY (`accommodation_id`);
 
 --
 -- Indexes for table `ranswers`
@@ -902,10 +910,10 @@ ALTER TABLE `ruser_qa`
 ALTER TABLE `comp101lab8users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 --
--- AUTO_INCREMENT for table `raccomodations`
+-- AUTO_INCREMENT for table `raccommodations`
 --
-ALTER TABLE `raccomodations`
-  MODIFY `accom_id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `raccommodations`
+  MODIFY `accommodation_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `ranswers`
 --
@@ -955,7 +963,7 @@ ALTER TABLE `rtempusers`
 -- AUTO_INCREMENT for table `rusers`
 --
 ALTER TABLE `rusers`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The user id',AUTO_INCREMENT=51;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'The user id',AUTO_INCREMENT=54;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
