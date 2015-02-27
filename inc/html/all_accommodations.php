@@ -1,4 +1,8 @@
 <?php
+/*
+This outputs the accommodations as LI elements, containing name, main photo and short desc
+*/
+
 echo "<div class='all-accommodations'><ul class='ul'>";
 $stmt = $con->prepare("SELECT accommodation_id, accommodation_name, accommodation_description FROM raccommodations LIMIT 50");
 $stmt->execute();
