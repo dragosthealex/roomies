@@ -69,7 +69,7 @@ class User
       $details = $stmt->fetch(PDO::FETCH_ASSOC);
 
       // Assign the unmapped details
-      $this->firstName = isset($details['first_name'])?$details['firstName']:'';
+      $this->firstName = isset($details['first_name'])?$details['first_name']:'';
       $this->lastName = isset($details['last_name'])?$details['last_name']:'';
       $this->birthday = isset($details['birthday'])?$details['birthday']:'';
 
@@ -717,7 +717,7 @@ private function getConv($offset)
     $params['text'] = $reviewText;
     $params['accId'] = $accId;
 
-    try 
+    try
     {
       $review = new Review($con, 'insert', $params);
       if($review->getError())

@@ -3,8 +3,9 @@
   // Localise <html>, <body>, originalTitle, header and newError()
   html = document.documentElement,
   body = document.body,
+  main = body.getElementsByClassName('main')[0],
   originalTitle = document.title,
-  header = document.getElementsByClassName('header')[0],
+  header = body.getElementsByClassName('header')[0],
   newError = window.newError,
 
   // Localise some array methods
@@ -58,7 +59,7 @@
     // Cast messageId to a string
     messageId += '';
     // Loop through all the messages, and find the ones with the message id
-    forEach.call(document.getElementsByClassName('message'), function (element) {
+    forEach.call(body.getElementsByClassName('message'), function (element) {
       element.getAttribute('data-message-id') === messageId && elements.push(element);
     });
     // Return the list of elements
@@ -204,13 +205,13 @@
     // Get all of the elements which need a box-shadow, and possibly the header
     // For each element which needs a box-shadow, apply one
     (modifyHeader ? [header] : []).concat(
-      slice.call(document.getElementsByClassName("box")),
-      slice.call(document.getElementsByClassName("column-box"))
+      slice.call(main.getElementsByClassName("box")),
+      slice.call(main.getElementsByClassName("column-box"))
     ).forEach(function (element) {
       element.style.boxShadow = boxShadow;
     });
 
-    forEach.call(document.getElementsByClassName('drop'), function (drop) {
+    forEach.call(body.getElementsByClassName('drop'), function (drop) {
       // roomies['toggle'](drop);
       var dropParent = roomies['getParentsByClassName'](drop, 'drop-parent')[0];
       var right = (dropParent.parentNode.offsetWidth - (dropParent.offsetLeft + dropParent.offsetWidth) + (dropParent.offsetWidth / 2) - 8);
@@ -405,7 +406,7 @@
           } else if ((hideText = element.getAttribute('data-ajax-hide')) && xmlhttp.status === 200) {
             hideText = hideText.split(" ");
 
-            forEach.call(document.getElementsByClassName(hideText[0]), function (element) {
+            forEach.call(body.getElementsByClassName(hideText[0]), function (element) {
               element.style.display = "none";
             });
 
@@ -476,7 +477,7 @@
     // Get an array of all the drops that the current element is in
     var elementsToShowAgain = roomies['getParentsByClassName'](element, 'drop');
     // Hide all drops
-    roomies['hide'](document.getElementsByClassName('drop'));
+    roomies['hide'](body.getElementsByClassName('drop'));
     // Show the previous elements again
     elementsToShowAgain.forEach(function (elementToShow) {
       roomies['toggle'](elementToShow);
@@ -562,34 +563,29 @@
     }
   };
 
+  // Loop through all elements in the body and ensure that
+  // the className contains a space at the start and end,
+  // for manipulating classNames later.
+  concat.apply(body, body.getElementsByTagName('*')).forEach(function (element) {
+    element.className = ' ' + element.className + ' ';
+  });
+
   // When the page loads, the user scrolls or the window is resized, configure things
   window.onscroll = window.onresize = window.onload = configure;
 
   // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
-  forEach.call(document.getElementsByClassName('unread sent'), function (message) {
+  forEach.call(body.getElementsByClassName('unread sent'), function (message) {
     var messageId = message.getAttribute('data-message-id');
     conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
   });
 
   // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
-  forEach.call(document.getElementsByClassName('unread received'), function (message) {
+  forEach.call(body.getElementsByClassName('unread received'), function (message) {
     var messageId = message.parentNode.parentNode.getAttribute('data-message-id');
     conv.unread.received.indexOf(messageId) === -1 && conv.unread.received.push(messageId);
   });
 
-  // Loop through all elements in the body and ensure that
-  // the className contains a space at the start and end,
-  // for manipulating classNames later.
-  [body].concat(body.getElementsByTagName('*')).forEach(function (element) {
-    if (!/^ /.test(element.className)) {
-      element.className = ' ' + element.className;
-    }
-    if (!/ $/.test(element.className)) {
-      element.className += ' ';
-    }
-  });
-
-  forEach.call(document.getElementsByClassName('scroll-area'), function (scrollArea) {
+  forEach.call(body.getElementsByClassName('scroll-area'), function (scrollArea) {
     if (scrollArea.scrollHeight > scrollArea.offsetHeight) {
       scrollArea.innerHTML += "<div class=' scroll-bar '><div class=' scroll-tracker '></div></div>";
     }
@@ -598,7 +594,7 @@
     };
   });
 
-  forEach.call(document.getElementsByClassName("conversation"), function (conversation) {
+  forEach.call(body.getElementsByClassName("conversation"), function (conversation) {
     conv.box[conversation.parentNode.getAttribute("data-conv-id")] = {
       fetchingPrevious: false
     };
@@ -667,7 +663,7 @@
     // Set up longpolling
     var longpoll = function () {
       var frIds = [];
-      forEach.call(document.getElementsByClassName('friend-request'), function (friendRequest) {
+      forEach.call(body.getElementsByClassName('friend-request'), function (friendRequest) {
         var id = friendRequest.getAttribute('data-fr-id');
         !isNaN(id) && frIds.push(+id);
       });
@@ -692,7 +688,7 @@
           // Reset the unread sent messages
           conv.unread.sent = [];
           // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
-          forEach.call(document.getElementsByClassName('unread sent'), function (message) {
+          forEach.call(body.getElementsByClassName('unread sent'), function (message) {
             var messageId = message.getAttribute('data-message-id');
             conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
           });
