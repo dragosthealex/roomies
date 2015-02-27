@@ -20,9 +20,9 @@
     setTimeout(updateMessages, 1000);
   };
 
-  updateMessages();
+  // updateMessages();
 
-  setTimeout(function () {
-    convParent.scrollTop = convParent.scrollHeight;
-  }, 100);
+  // setTimeout(function () {
+  //   convParent.scrollTop = convParent.scrollHeight;
+  // }, 100);
 }(window)); // Localise the window

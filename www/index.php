@@ -55,7 +55,7 @@ if(!LOGGED_IN)
 						<form method="POST" name="signin" action="./login/index.php" onsubmit="return this.email.value?this.password.value?true:(this.password.focus(),false):(this.email.focus(),false)">
 							<input type="text" name="login" placeholder="Email/Username" class="input block" required>
 							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
-							<label for="remember_me" class="cr-label">
+							<label for="remember_me" class="cr-label cr-label-block">
 								<input type="checkbox" id="remember_me" name="rememberMe" class="cr">
 								<span class="cr-button"></span>
 								<span class="cr-text">Remember me</span>

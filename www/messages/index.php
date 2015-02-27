@@ -71,7 +71,7 @@ if(isset($_GET['conv']))
           <div class="textarea-holder"
             ><textarea class="textarea" id="message" placeholder="Write a message..." oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false" onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"></textarea>
           </div
-          ><label for="pressEnterToSend" class="cr-label"
+          ><label for="pressEnterToSend" class="cr-label cr-label-block"
             ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')" class="cr">
             <span class="cr-button"></span>
             <span class="cr-text">Press Enter to send</span>
@@ -80,7 +80,7 @@ if(isset($_GET['conv']))
                   data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
                   data-ajax-post="message"
                   data-ajax-callback-1="scrollToBottom conv 1">
-          <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange()}())</script>
+          <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange();p=p.previousSibling.firstChild;p.scrollTop=p.scrollHeight}())</script>
         </div>
       </div>
     </div>
