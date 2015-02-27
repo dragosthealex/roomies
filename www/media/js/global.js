@@ -701,7 +701,7 @@
         !isNaN(id) && frIds.push(+id);
       });
       ajax({
-        url: "../php/longpoll.php?unread=" + conv.unread.sent.join(",")
+        url: info.webRoot + "/php/longpoll.php?unread=" + conv.unread.sent.join(",")
                             + "&lastMessageId=" + info.lastMessageId
                             + "&friendRequests=" + frIds.join(","),
 
