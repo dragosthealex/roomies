@@ -17,7 +17,7 @@ while($stmt->fetch())
           <a style='margin: 5px;' href='./?i=$accId'>
             $accName
           </a>
-          <div class='acc-short-pic' style='background-image: url($webRoot/media/img/acc/$accId);'>
+          <div class='acc-short-pic' style='background-image: url($webRoot/media/img/acc/$accId.jpg);'>
           </div>
           <div class='acc-short-desc'>
             $accDescription
