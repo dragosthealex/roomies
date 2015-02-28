@@ -23,6 +23,12 @@ This script provides variables:
 -> $otherName, the other user name
 -> $otherUserId, the other user id
 */
+if(isset($_GET['conv']))
+{
+  $otherUserId = htmlentities($_GET['conv']);
+  $otherUser = new User($con, $otherUserId);
+  $otherUserId = $otherUser->getIdentifier('id');
+}
 include __ROOT__."/inc/html/messages_page.php";
 
 // Include head and header
@@ -30,12 +36,6 @@ require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 
 // Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footers
-if(isset($_GET['conv']))
-{
-  $otherUserId = htmlentities($_GET['conv']);
-  $otherUser = new User($con, $otherUserId);
-  $otherUserId = $otherUser->getIdentifier('id');
-}
 ?>
 
 <div class="column-wrapper">
@@ -62,9 +62,8 @@ if(isset($_GET['conv']))
           <h2 class="h2"><?=$otherName?></h2>
         </div>
         <div class="scroll-wrapper">
-          <div class="scroll-area" data-conv-id="<?=$otherUserId?>">
-            <?=($err)?$err:$conv?>
-          </div>
+          <div class="scroll-area" id="main_conversation_scroll"><?=($err)?$err:$conv?></div>
+          <script>setTimeout(function(){var p=document.getElementById("main_conversation_scroll");p.scrollTop=p.scrollHeight},100)</script>
         </div>
         <div class="box-padding">
           <!--TODO: CHANGE METHOD TO POST-->
@@ -80,7 +79,7 @@ if(isset($_GET['conv']))
                   data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
                   data-ajax-post="message"
                   data-ajax-callback-1="scrollToBottom conv 1">
-          <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange();p=p.previousSibling.firstChild;p.scrollTop=p.scrollHeight}())</script>
+          <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange()}())</script>
         </div>
       </div>
     </div>

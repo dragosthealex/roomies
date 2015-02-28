@@ -222,7 +222,7 @@ class Conversation
     $messages = $this->messages;
 
     // The conversation as text
-    $conv = "<ul class='ul conversation' id='main_conversation'>";
+    $conv = "<ul class='ul conversation' id='main_conversation' data-conv-id='$id2'>";
 
     // Make the users and localise stuff
     $user1 = new User($con, $id1);

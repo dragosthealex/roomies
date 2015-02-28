@@ -20,7 +20,7 @@ if(!isset($_GET['conv']))
   $stmt->execute();
   if(!$stmt->rowCount())
   {
-    $conv = '<ul class="ul conversation" id="main_conversation"><li class="ph ph-last ph-message" data-placeholder="No messages."></li></ul>';
+    $conv = '<ul class="ul conversation" id="main_conversation" data-conv-id="$otherUserId"><li class="ph ph-last ph-message" data-placeholder="No messages."></li></ul>';
   }
   else
   {

@@ -26,6 +26,7 @@ try
   $lastMessageId = htmlentities($_GET['lastMessageId']);
 
   $userId = $user->getIdentifier('id');
+  $userName = $user->getName();
 
   $stmts = array(
     // First query: Find new messages for this user
@@ -107,9 +108,40 @@ try
 
 
   // New messages
-  while ($row = $stmts[0]->fetch(PDO::FETCH_ASSOC))
+  while ($message = $stmts[0]->fetch(PDO::FETCH_ASSOC))
   {
-    array_push($response['newMessages']['content'], $row);
+    // Replace '\n' with '<br>'
+    $message['message_text'] = nl2br($message['message_text']);
+    $read = ($message['messages_read'])?'read':'unread';
+
+    // Get the name and whether it was sent or received
+    if ($message['message_user_id1'] == $userId)
+    {
+      $id = $message['message_user_id1'];
+      $name = $userName;
+      $sentOrReceived = 'sent';
+    }
+    else
+    {
+      $id = $message['message_user_id2'];
+      $otherUser = new User($con, $message['message_user_id2']);
+      $name = $otherUser->getName();
+      $sentOrReceived = 'received';
+    }
+
+    array_push(
+      $response['newMessages']['content'], 
+      array(
+        $read.' '.$sentOrReceived,
+        $message['message_id'],
+        $message['message_timestamp'],
+        $id.'.jpg',
+        $name,
+        $message['message_text'],
+        $message['message_user_id1'],
+        $message['message_user_id2']
+      )
+    );
   }
 
   // Read message
