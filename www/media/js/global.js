@@ -1,113 +1,131 @@
 !Array.isArray && (Array.isArray = function(arg) {
   return Object.prototype.toString.call(arg) === '[object Array]';
 });
-var calls = 0;
-function iSuspectToBeLoopingInfititely() {
-  calls += 1;
-  if (calls > 10000) { throw new Error('SHIT: ' + arguments.callee.caller); }
-}
+
 (function (undefined) {
-iSuspectToBeLoopingInfititely();
   var
 
   // Functions for testing types of variables
   is = {
-    "string": function (variable) {
-iSuspectToBeLoopingInfititely();
+    "string": [true,
+    function (variable) {
       return typeof variable === "string";
-    },
-    "number": function (variable) {
-iSuspectToBeLoopingInfititely();
+    }],
+    "number": [true, function (variable) {
       return typeof variable === "number";
-    },
-    "stringable": function (variable) {
-iSuspectToBeLoopingInfititely();
-      return is.string(variable) || is.number(variable);
-    },
-    "numeric": function (variable) {
-iSuspectToBeLoopingInfititely();
-      return variable >= 0 || variable < 0;
-    },
-    "function": function (variable) {
-iSuspectToBeLoopingInfititely();
+    }],
+    "stringable": [false,
+    function (variable) {
+      return is.string[1](variable) || is.number[1](variable);
+    }],
+    "numeric": [false,
+    function (variable) {
+      return !is.boolean[1](variable) && (variable >= 0 || variable < 0);
+    }],
+    "function": [true,
+    function (variable) {
       return typeof variable === "function";
-    },
-    "object": function (variable) {
-iSuspectToBeLoopingInfititely();
+    }],
+    "object": [false,
+    function (variable) {
       return typeof variable === "object";
-    },
-    "boolean": function (variable) {
-iSuspectToBeLoopingInfititely();
+    }],
+    "boolean": [true,
+    function (variable) {
       return typeof variable === "boolean";
-    },
-    "array": function (variable) {
-iSuspectToBeLoopingInfititely();
+    }],
+    "array": [true,
+    function (variable) {
       return Array.isArray(variable);
-    },
-    "element": function (variable) {
-iSuspectToBeLoopingInfititely();
+    }],
+    "element": [true,
+    function (variable) {
       return !!variable && variable.nodeType === 1;
-    },
-    "HTMLCollection": function (variable) {
-iSuspectToBeLoopingInfititely();
+    }],
+    "HTMLCollection": [true,
+    function (variable) {
       return !Array.prototype.some.call(variable, function (element) {
-iSuspectToBeLoopingInfititely();
-        return !is.element(element);
+        return !is.element[1](element);
       });
-    }
+    }],
+    "null": [true,
+    function (variable) {
+      return variable === null;
+    }],
+    "undefined": [true,
+    function (variable) {
+      return variable === undefined;
+    }]
   },
 
   // Function for testing a type of a variable
   check = function (variable, type, optional) {
-iSuspectToBeLoopingInfititely();
-    if (!(type in is)) {
+    if (!(type in is && type !== undefined)) {
       throw new Error("Invalid type: " + type)
     }
 
-    if (optional ? !(variable === undefined || is[type](variable)) : !is[type](variable)) {
-      throw new TypeError("Expected " + type + ", got " + variable.toString());
+    if (optional ? !(variable === undefined || is[type][1](variable)) : !is[type][1](variable)) {
+      throw new TypeError("Expected " + type + ", got " + typeof variable);
     }
-  };
+  },
 
-  window.validate = function (variables) {
-iSuspectToBeLoopingInfititely();
+  doValidate = function (args) {
     var
-    types = Array.prototype.slice.call(arguments, 1),
+    variables = args[0],
+    types = Array.prototype.slice.call(args, 1),
     // Pop the last element off and retreive it.
     lastElement = types.pop(),
     arrayStartIndex = -1;
 
-    if (Array.isArray(lastElement)) {
-      arrayStartIndex = types.length;
+    if (args.length < 2) {
+      throw new Error("Must supply at least two arguments.");
     }
 
-    // Concatenate the last element back on, if it was there.
-    // If the last element is an array, each element of it will be added, otherwise it will be added.
-    lastElement && (types = types.concat(lastElement));
+    // If the last element is an array, add each element of it.
+    if (Array.isArray(lastElement)) {
+      arrayStartIndex = types.length;
+      lastElement.forEach(function (element) {
+        types.push(element);
+      });
+    } else if (lastElement !== undefined) {
+      // If not array, concatenate the last element back on if it was there.
+      types.push(lastElement);
+    }
 
     if (variables.length !== types.length) {
       throw new Error("Variables supplied: " + variables.length + ". Types supplied: " + types.length);
     }
 
     types.forEach(function (typeExpected, i) {
-iSuspectToBeLoopingInfititely();
       check(variables[i], typeExpected, i >= arrayStartIndex);
     });
   };
 
-  window.validate.bool = function (variables) {
-iSuspectToBeLoopingInfititely();
+  window.validate = function () {
+    doValidate(arguments);
+  };
+
+  window.validate.bool = function () {
     try {
-      validate(variables)
+      doValidate(arguments);
       return true;
     } catch (error) {
       return false;
     }
   };
+
+  window.validate.which = function (variable) {
+    var type;
+    for (type in is) {
+      if (is[type][0] && validate.bool([variable], type)) {
+        return type;
+      }
+    }
+    return "object";
+  };
 }());
 
 (function (window, document, undefined) {
-iSuspectToBeLoopingInfititely();
   var
   // Localise <html>, <body>, originalTitle, header and newError()
   html = document.documentElement,
@@ -128,7 +146,6 @@ iSuspectToBeLoopingInfititely();
 
   // Function for getting message elements by their message id
   getElementsByMessageId = function (messageId) {
-iSuspectToBeLoopingInfititely();
     validate(arguments, "stringable");
 
     // Preset the array of elements
@@ -137,7 +154,6 @@ iSuspectToBeLoopingInfititely();
     messageId += '';
     // Loop through all the messages, and find the ones with the message id
     forEach.call(body.getElementsByClassName('message'), function (element) {
-iSuspectToBeLoopingInfititely();
       element.getAttribute('data-message-id') === messageId && elements.push(element);
     });
     // Return the list of elements
@@ -146,7 +162,6 @@ iSuspectToBeLoopingInfititely();
 
   // Function for getting message elements by their message id
   getElementsByConvId = function (convId) {
-iSuspectToBeLoopingInfititely();
     validate(arguments, "stringable");
 
     // Preset the array of elements
@@ -155,7 +170,6 @@ iSuspectToBeLoopingInfititely();
     convId += '';
     // Loop through all the messages, and find the ones with the message id
     forEach.call(body.getElementsByClassName('conversation'), function (element) {
-iSuspectToBeLoopingInfititely();
       element.getAttribute('data-conv-id') === convId && elements.push(element);
     });
     // Return the list of elements
@@ -164,7 +178,6 @@ iSuspectToBeLoopingInfititely();
 
   // A function to get the current size of the page
   size = function () {
-iSuspectToBeLoopingInfititely();
     return {
       width:  window.innerWidth  || html.clientWidth  || body.clientWidth,
       height: window.innerHeight || html.clientHeight || body.clientHeight
@@ -173,7 +186,6 @@ iSuspectToBeLoopingInfititely();
 
   // A function to return the offset of an element from the document
   offset = function (element) {
-iSuspectToBeLoopingInfititely();
     validate(arguments, "element");
     var x = 0, y = 0;
     while (element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
@@ -211,7 +223,6 @@ iSuspectToBeLoopingInfititely();
   hiddenRegex = /(^| )hidden( |$)/,
 
   scrollAreaFunc = function (element) {
-iSuspectToBeLoopingInfititely();
     var scrollBars = element.getElementsByClassName('scroll-bar');
     var minusScrollBarWidth = element.clientWidth - element.offsetWidth;
     var convstn = element.getElementsByClassName('conversation');
@@ -219,7 +230,6 @@ iSuspectToBeLoopingInfititely();
 
     if (minusScrollBarWidth) {
       forEach.call(element.childNodes, function (child) {
-iSuspectToBeLoopingInfititely();
         if (child.style && !/ scroll-bar /.test(child.className)) {
           child.style.marginRight = minusScrollBarWidth + "px";
         }
@@ -233,7 +243,6 @@ iSuspectToBeLoopingInfititely();
 
     if (element.scrollHeight <= element.offsetHeight && scrollBars.length) {
       forEach.call(scrollBars, function (scrollBar) {
-iSuspectToBeLoopingInfititely();
         scrollBar.parentNode.removeChild(scrollBar);
       });
     }
@@ -242,7 +251,6 @@ iSuspectToBeLoopingInfititely();
       convBox.fetchingPrevious = true;
       roomies['update']('messageOld', '../php/update_message.process.php?type=old&otherId=' + convId, 'message', null,
         function () {
-iSuspectToBeLoopingInfititely();
           convBox.fetchingPrevious = false;
         }
       );
@@ -269,7 +277,6 @@ iSuspectToBeLoopingInfititely();
 
   // A function to configure things based on the window size and distance from top
   configure = function () {
-iSuspectToBeLoopingInfititely();
     // Get the distance to the top of the page
     var scrollTop = (   window.pageYOffset
                      || document.documentElement.scrollTop
@@ -312,12 +319,10 @@ iSuspectToBeLoopingInfititely();
       slice.call(main.getElementsByClassName("box")),
       slice.call(main.getElementsByClassName("column-box"))
     ).forEach(function (element) {
-iSuspectToBeLoopingInfititely();
       element.style.boxShadow = boxShadow;
     });
 
     forEach.call(body.getElementsByClassName('drop'), function (drop) {
-iSuspectToBeLoopingInfititely();
       // roomies['toggle'](drop);
       var dropParent = roomies['getParentsByClassName'](drop, 'drop-parent')[0];
       var right = (dropParent.parentNode.offsetWidth - (dropParent.offsetLeft + dropParent.offsetWidth) + (dropParent.offsetWidth / 2) - 8);
@@ -336,28 +341,23 @@ iSuspectToBeLoopingInfititely();
   roomies = {
     // A function to hide a list of elements
     'hide': function (elements) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "HTMLCollection");
 
       forEach.call(elements, function (element) {
-iSuspectToBeLoopingInfititely();
         !hiddenRegex.test(element.className) && (element.className += "hidden ");
       });
     },
 
     'show': function (elements) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "HTMLCollection");
 
       forEach.call(elements, function (element) {
-iSuspectToBeLoopingInfititely();
         while (hiddenRegex.test(element.className)) {
           element.className = element.className.replace(hiddenRegex, ' ');
         }
 
         // Get any scroll areas and ensure they have a scrollbar
         forEach.call(element.getElementsByClassName('scroll-area'), function (scrollArea) {
-iSuspectToBeLoopingInfititely();
           scrollAreaFunc(scrollArea);
         });
       });
@@ -365,7 +365,6 @@ iSuspectToBeLoopingInfititely();
 
     // A function to toggle the visibility of an element
     'toggle': function (element) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "element");
 
       // If the element is hidden, show it, else hide it
@@ -374,7 +373,6 @@ iSuspectToBeLoopingInfititely();
 
     // A function to delete an element
     'delete': function (element) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "element");
 
       element.parentNode && element.parentNode.removeChild(element);
@@ -382,7 +380,6 @@ iSuspectToBeLoopingInfititely();
 
     // A function to delete an element, given an id
     'deleteById': function (id) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "string");
 
       roomies['delete'](document.getElementById(id));
@@ -390,17 +387,14 @@ iSuspectToBeLoopingInfititely();
 
     // A function to delete a list of elements, given a className
     'deleteByClassName': function (className) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "string");
 
       forEach.call(document.getElementsByClassName(className), function (element) {
-iSuspectToBeLoopingInfititely();
         roomies['delete'](element);
       });
     },
 
     'scrollToBottom': function (id, parent) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "string", "numeric");
 
       var element = document.getElementById(id), i;
@@ -414,7 +408,6 @@ iSuspectToBeLoopingInfititely();
 
     // A function to return an array of all parent drops
     'getParentsByClassName': function (element, className) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "element", "string");
 
       return (!element || element === body)
@@ -426,7 +419,6 @@ iSuspectToBeLoopingInfititely();
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
     'scroll': function (element, mouseY) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "element", "number");
 
       mouseY += (window.pageYOffset || html.scrollTop || body.scrollTop || 0);
@@ -438,13 +430,11 @@ iSuspectToBeLoopingInfititely();
 
     // A function to update something in the page
     'update': function (part, url, className1, className2, callback) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "string", "string", ["string", "string", "function"]);
 
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
       xmlhttp.onreadystatechange = function () {
-iSuspectToBeLoopingInfititely();
         if (xmlhttp.readyState === 4 && xmlhttp.status) {
           // If there was anything output, new error
           if (xmlhttp.status === 404) {
@@ -507,7 +497,6 @@ iSuspectToBeLoopingInfititely();
 
     // A function to use ajax on an element
     'ajax': function (element) {
-iSuspectToBeLoopingInfititely();
       validate(arguments, "element");
 
       var url = element.getAttribute('data-ajax-url'),
@@ -516,7 +505,6 @@ iSuspectToBeLoopingInfititely();
           xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
       xmlhttp.onreadystatechange = function () {
-iSuspectToBeLoopingInfititely();
         if (xmlhttp.readyState === 4) {
           // Return the text to its original state
           element.innerHTML = originalText;
@@ -530,7 +518,6 @@ iSuspectToBeLoopingInfititely();
             hideText = hideText.split(" ");
 
             forEach.call(body.getElementsByClassName(hideText[0]), function (element) {
-iSuspectToBeLoopingInfititely();
               element.style.display = "none";
             });
 
@@ -551,7 +538,6 @@ iSuspectToBeLoopingInfititely();
         post = post.split(" ");
 
         post.forEach(function (id) {
-iSuspectToBeLoopingInfititely();
           var element = document.getElementById(id);
 
           letter += "&" + id + "=" + encodeURIComponent(element.value.trim());
@@ -585,7 +571,6 @@ iSuspectToBeLoopingInfititely();
    * A function to handle click events on the window
    */
   window.onclick = function (e) {
-iSuspectToBeLoopingInfititely();
     // If the button press is not the left button, then return true.
     if ((e.which && e.which !== 1) || (e.button !== 1 && e.button !== 0)) {
       return true;
@@ -612,7 +597,6 @@ iSuspectToBeLoopingInfititely();
     roomies['hide'](body.getElementsByClassName('drop'));
     // Show the previous elements again
     elementsToShowAgain.forEach(function (elementToShow) {
-iSuspectToBeLoopingInfititely();
       roomies['toggle'](elementToShow);
     });
 
@@ -637,7 +621,6 @@ iSuspectToBeLoopingInfititely();
    * A function to detect if the mouse has been pressed
    */
   window.onmousedown = function (e) {
-iSuspectToBeLoopingInfititely();
     var element = target = e.target;
     mouseIsDown = true;
 
@@ -650,7 +633,6 @@ iSuspectToBeLoopingInfititely();
    * A function to detect if the mouse has been released
    */
   window.onmouseup = function () {
-iSuspectToBeLoopingInfititely();
     mouseIsDown = false;
   };
 
@@ -658,7 +640,6 @@ iSuspectToBeLoopingInfititely();
    * A function to clear the selected text
    */
   var clearSelection = function (element) {
-iSuspectToBeLoopingInfititely();
     var selection;
 
     if (document.selection && document.selection.empty) {
@@ -672,7 +653,6 @@ iSuspectToBeLoopingInfititely();
    * A function to detect mouse movement
    */
   window.onmousemove = function (e) {
-iSuspectToBeLoopingInfititely();
     // Shortcut the element
     var element = target;
 
@@ -695,7 +675,6 @@ iSuspectToBeLoopingInfititely();
   // the className contains a space at the start and end,
   // for manipulating classNames later.
   concat.apply(body, body.getElementsByTagName('*')).forEach(function (element) {
-iSuspectToBeLoopingInfititely();
     element.className = ' ' + element.className + ' ';
   });
 
@@ -704,32 +683,27 @@ iSuspectToBeLoopingInfititely();
 
   // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
   forEach.call(body.getElementsByClassName('unread sent'), function (message) {
-iSuspectToBeLoopingInfititely();
     var messageId = message.getAttribute('data-message-id');
     conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
   });
 
   // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
   forEach.call(body.getElementsByClassName('unread received'), function (message) {
-iSuspectToBeLoopingInfititely();
     var messageId = message.parentNode.parentNode.getAttribute('data-message-id');
     conv.unread.received.indexOf(messageId) === -1 && conv.unread.received.push(messageId);
   });
 
   forEach.call(body.getElementsByClassName('scroll-area'), function (scrollArea) {
-iSuspectToBeLoopingInfititely();
     if (scrollArea.scrollHeight > scrollArea.offsetHeight) {
       scrollArea.innerHTML += "<div class=' scroll-bar '><div class=' scroll-tracker '></div></div>";
     }
     scrollArea.onscroll = function () {
-iSuspectToBeLoopingInfititely();
       scrollAreaFunc(this);
     }
     scrollAreaFunc(scrollArea);
   });
 
   forEach.call(body.getElementsByClassName("conversation"), function (conversation) {
-iSuspectToBeLoopingInfititely();
     conv.box[conversation.getAttribute("data-conv-id")] = {
       fetchingPrevious: false
     };
@@ -737,13 +711,10 @@ iSuspectToBeLoopingInfititely();
 
   // Ajax function
   function ajax(obj) {
-iSuspectToBeLoopingInfititely();
     validate(arguments, "object");
     var args = [obj.url];
-    args.push(obj.success  || function () {
-iSuspectToBeLoopingInfititely();});
-    args.push(obj.callback || function () {
-iSuspectToBeLoopingInfititely();});
+    args.push(obj.success  || function () {});
+    args.push(obj.callback || function () {});
     args.push(obj.post     || "");
     args.push(obj.reset    || false);
     validate(args, "string", "function", "function", "string", "boolean");
@@ -752,7 +723,6 @@ iSuspectToBeLoopingInfititely();});
     var postValues;
 
     xmlhttp.onreadystatechange = function () {
-iSuspectToBeLoopingInfititely();
       var response;
       if (xmlhttp.readyState === 4 && xmlhttp.status) {
         if (xmlhttp.status !== 200) {
@@ -764,7 +734,6 @@ iSuspectToBeLoopingInfititely();
               newError(response.error);
             } else {
               obj.success && setTimeout(function () {
-iSuspectToBeLoopingInfititely();
                 obj.success(response)
               }, 0);
             }
@@ -782,17 +751,28 @@ iSuspectToBeLoopingInfititely();
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     if (obj.post) {
-      obj.post.split(" ").forEach(function (id) {
-iSuspectToBeLoopingInfititely();
-        var element = document.getElementById(id);
+      switch (validate.which(obj.post)) {
+        case "string":
+        obj.post.split(" ").forEach(function (id) {
+          var element = document.getElementById(id);
 
-        element && postValues.push(id + "=" + encodeURIComponent(element.value.trim()));
+          element && postValues.push(id + "=" + encodeURIComponent(element.value.trim()));
 
-        if (resetValues) {
-          element.value = '';
-          element.oninput && element.oninput();
-        }
-      });
+          if (resetValues) {
+            element.value = '';
+            element.oninput && element.oninput();
+          }
+        });
+        break;
+        case "array":
+        obj.forEach(function (input) {
+          postValues.push(input.name + "=" + input.value);
+        });
+        break;
+        default:
+        postValues = [];
+        break;
+      }
 
       obj.focusId && document.getElementById(obj.focusId).focus();
 
@@ -805,10 +785,8 @@ iSuspectToBeLoopingInfititely();
   if (info) {
     // Set up longpolling
     var longpoll = function () {
-iSuspectToBeLoopingInfititely();
       var frIds = [];
       forEach.call(body.getElementsByClassName('friend-request'), function (friendRequest) {
-iSuspectToBeLoopingInfititely();
         var id = friendRequest.getAttribute('data-fr-id');
         !isNaN(id) && frIds.push(+id);
       });
@@ -818,33 +796,27 @@ iSuspectToBeLoopingInfititely();
                             + "&friendRequests=" + frIds.join(","),
 
         success: function (response) {
-iSuspectToBeLoopingInfititely();
           console.log(response);
           var newMessages = response.newMessages;
           newMessages.content.length &&
             (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
 
           response.readMessage.forEach(function (messageId) {
-iSuspectToBeLoopingInfititely();
             getElementsByMessageId(messageId).forEach(function (element) {
-iSuspectToBeLoopingInfititely();
               element.className = element.className.replace(" unread ", " read ");
             });
           });
 
           newMessages.content.forEach(function (message) {
-iSuspectToBeLoopingInfititely();
             var otherId = info.userId === +message[6] ? message[7] : message[6];
-            
+
             var messageHTML = "";
 
             newMessages.template.forEach(function (templatePart, i, template) {
-iSuspectToBeLoopingInfititely();
               messageHTML += templatePart + (i < template.length - 1 ? message[i] : "");
             });
 
             getElementsByConvId(otherId).forEach(function (conv) {
-iSuspectToBeLoopingInfititely();
               conv.innerHTML += messageHTML;
               conv.parentNode.scrollTop = conv.parentNode.scrollHeight;
             });
@@ -854,7 +826,6 @@ iSuspectToBeLoopingInfititely();
           conv.unread.sent = [];
           // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
           forEach.call(body.getElementsByClassName('unread sent'), function (message) {
-iSuspectToBeLoopingInfititely();
             var messageId = message.getAttribute('data-message-id');
             conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
           });
