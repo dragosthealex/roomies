@@ -461,7 +461,7 @@ class User
       }
       // Get the number of unread messages from this user
       $noNewMessages = (isset($unreadArray[$id2]) && $unreadArray[$id2])?"({$unreadArray[$id2]})":"";
-      $addReadClass = ($noNewMessages)?"read":"";
+      $addReadClass = ($noNewMessages)?"unread":"";
 
       // If the message was sent, add "sent" to the message class
       $sentClass = $userId == $senderId ? ' drop-item-text-sent ' : '';

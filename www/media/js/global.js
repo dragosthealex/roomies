@@ -134,6 +134,10 @@
   originalTitle = document.title,
   header = body.getElementsByClassName('header')[0],
   newError = window.newError,
+  frequestsDrop = document.getElementById('frequests-drop'),
+  frequestsDropList = document.getElementById('frequests-drop-list'),
+  messageDrop = document.getElementById('message-drop'),
+  messageDropList = document.getElementById('message-drop-list'),
 
   // Localise some array methods
   slice   = Array.prototype.slice,
@@ -171,6 +175,22 @@
     // Loop through all the messages, and find the ones with the message id
     forEach.call(body.getElementsByClassName('conversation'), function (element) {
       element.getAttribute('data-conv-id') === convId && elements.push(element);
+    });
+    // Return the list of elements
+    return elements;
+  },
+
+  // Function for getting message elements by their friend request id
+  getElementsByRequestId = function (requestId) {
+    validate(arguments, "stringable");
+
+    // Preset the array of elements
+    var elements = [];
+    // Cast messageId to a string
+    requestId += '';
+    // Loop through all the messages, and find the ones with the message id
+    forEach.call(body.getElementsByClassName('friend-request'), function (element) {
+      element.getAttribute('data-fr-id') === requestId && elements.push(element);
     });
     // Return the list of elements
     return elements;
@@ -415,6 +435,12 @@
               : new RegExp('(^| )'+className+'( |$)').test(element.className)
                 ? [element].concat(roomies.getParentsByClassName(element.parentNode, className))
                 : roomies.getParentsByClassName(element.parentNode, className);
+    },
+
+    // A function to update the notif counts
+    'updateNofifCount': function () {
+      frequestsDrop.nextSibling.setAttribute('data-icon-number', frequestsDrop.getElementsByClassName('friend-request').length);
+      messageDrop.nextSibling.setAttribute('data-icon-number', messageDrop.getElementsByClassName('drop-item-link unread').length);
     },
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
@@ -797,11 +823,17 @@
 
         success: function (response) {
           console.log(response);
-          var newMessages = response.newMessages;
+
+          var
+          newMessages = response.newMessages,
+          readMessage = response.readMessage,
+          newRequests = response.newRequests,
+          oldRequests = response.oldRequests;
+
           newMessages.content.length &&
             (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
 
-          response.readMessage.forEach(function (messageId) {
+          readMessage.forEach(function (messageId) {
             getElementsByMessageId(messageId).forEach(function (element) {
               element.className = element.className.replace(" unread ", " read ");
             });
@@ -821,6 +853,24 @@
               conv.parentNode.scrollTop = conv.parentNode.scrollHeight;
             });
           });
+
+          oldRequests.forEach(function (requestId) {
+            getElementsByRequestId(requestId).forEach(function (element) {
+              roomies['delete'](element);
+            });
+          });
+
+          newRequests.content.forEach(function (request) {
+            var requestHTML = "";
+
+            newRequests.template.forEach(function (templatePart, i, template) {
+              requestHTML += templatePart + (i < template.length - 1 ? request[i] : "");
+            });
+
+            frequestsDropList.innerHTML += requestHTML;
+          });
+
+          roomies['updateNofifCount']();
 
           // Reset the unread sent messages
           conv.unread.sent = [];

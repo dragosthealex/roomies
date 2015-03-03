@@ -9,6 +9,7 @@
 
 include '../../inc/init.php';
 include __ROOT__.'/inc/classes/conversation.php';
+include __ROOT__.'/inc/classes/Request.php';
 
 if (!isset($_GET['unread'], $_GET['friendRequests'], $_GET['lastMessageId'], $_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
@@ -22,7 +23,9 @@ header("Content-type: application/json");
 try
 {
   $unreadIds = explode(',', htmlentities($_GET['unread']));
-  $friendRequestIds = explode(',', htmlentities($_GET['friendRequests']));
+  $friendRequestIds = htmlentities($_GET['friendRequests']);
+  $friendRequestIds = strlen($friendRequestIds) ? explode(',', $friendRequestIds) : array();
+  $noOfRequests = count($friendRequestIds);
   $lastMessageId = htmlentities($_GET['lastMessageId']);
 
   $userId = $user->getIdentifier('id');
@@ -30,17 +33,20 @@ try
 
   $stmts = array(
     // First query: Find new messages for this user
+    'newMessages' =>
     $con->prepare("SELECT * FROM rmessages
                            WHERE (message_user_id1 = $userId OR message_user_id2 = $userId)
                              AND message_id > '$lastMessageId'"),
 
     // Second query: Find where messages are now read
+    'readMessage' =>
     $con->prepare("SELECT message_id FROM rmessages
                     WHERE messages_read = 1
                       AND (message_user_id1 = $userId)
                       AND (message_id = '".implode("' OR message_id = '", $unreadIds)."')"),
 
     // Third query: Find new friend requests
+    'newRequests' =>
     $con->prepare("SELECT conexion_user_id1
                      FROM rconexions
                     WHERE conexion_user_id2 = $userId
@@ -48,10 +54,11 @@ try
                       AND (conexion_user_id1 != '".implode("' OR conexion_user_id1 != '", $friendRequestIds)."')"),
 
     // Fourth query: Find deprecated friend requests
+    'oldRequests' =>
     $con->prepare("SELECT conexion_user_id1
                      FROM rconexions
                     WHERE conexion_user_id2 = $userId
-                      AND conexion_status != 2
+                      AND conexion_status = 2
                       AND (conexion_user_id1 = '".implode("' OR conexion_user_id1 = '", $friendRequestIds)."')")
   );
 
@@ -66,23 +73,38 @@ try
     return true;
   }
 
-  function rowCount(&$stmts)
+  function rowCount(&$stmts, &$noOfRequests)
   {
+    // Initialise the row count to 0
     $rowCount = 0;
-    foreach ($stmts as $stmt) {
-      $rowCount += $stmt->rowCount();
-    }
+
+    // Add the number of new messages
+    $rowCount += $stmts['newMessages']->rowCount();
+
+    // Add the number of messages which are now read
+    $rowCount += $stmts['readMessage']->rowCount();
+
+    // Add the number of new requests
+    $rowCount += $stmts['newRequests']->rowCount();
+
+    // Add the number of requests which are no longer in the database
+    $rowCount += $noOfRequests;
+    $rowCount -= $stmts['oldRequests']->rowCount();
+
+    // Return the row count
     return $rowCount;
   }
 
+  // Try executing. If this fails, something went wrong.
   if (!execute($stmts))
   {
     throw new Exception('Query error!', 1);
   }
 
+  // Longpoll
   for ($i = 0; $i < 50; $i++)
   {
-    if (rowCount($stmts))
+    if (rowCount($stmts, $noOfRequests))
     {
       break;
     }
@@ -94,7 +116,7 @@ try
 
   $response = array(
     'newRequests' => array(
-      'template' => array(),
+      'template' => Request::$template,
       'content'  => array()
     ),
     'oldRequests' => array(),
@@ -102,13 +124,12 @@ try
       'template' => Conversation::$template,
       'content'  => array()
     ),
-    'readMessage' => array(),
-    'stmts' => $stmts
+    'readMessage' => array()
   );
 
 
   // New messages
-  while ($message = $stmts[0]->fetch(PDO::FETCH_ASSOC))
+  while ($message = $stmts['newMessages']->fetch(PDO::FETCH_ASSOC))
   {
     // Replace '\n' with '<br>'
     $message['message_text'] = nl2br($message['message_text']);
@@ -145,21 +166,48 @@ try
   }
 
   // Read message
-  while ($row = $stmts[1]->fetch(PDO::FETCH_ASSOC))
+  while ($row = $stmts['readMessage']->fetch(PDO::FETCH_ASSOC))
   {
     array_push($response['readMessage'], $row['message_id']);
   }
 
   // New requests
-  while ($row = $stmts[2]->fetch(PDO::FETCH_ASSOC))
+  while ($row = $stmts['newRequests']->fetch(PDO::FETCH_ASSOC))
   {
-    array_push($response['newRequests']['content'], $row['conexion_user_id1']);
+    $otherUser = new User($con, $row['conexion_user_id1']);
+    $otherUserId = $otherUser->getIdentifier('id');
+    $otherUsername = $otherUser->getIdentifier('username');
+    $percentage = $user->getPercentageWith($otherUser);
+
+    array_push($response['newRequests']['content'], array(
+      $otherUserId,
+      $otherUserId,
+      $otherUsername,
+      $otherUserId,
+      $otherUserId,
+      $otherUserId,
+      $otherUserId,
+      $otherUsername,
+      $otherUsername,
+      (160-160*$percentage/100),
+      (160*$percentage/100),
+      $percentage
+    ));
   }
 
   // Old requests
-  while ($row = $stmts[3]->fetch(PDO::FETCH_ASSOC))
+  $remainingRequests = array();
+  while ($row = $stmts['oldRequests']->fetch(PDO::FETCH_ASSOC))
   {
-    array_push($response['oldRequests'], $row['conexion_user_id1']);
+    array_push($remainingRequests, $row['conexion_user_id1']);
+  }
+  // For each old requests, if it is not in the remaining requests, add it to the oldRequests array
+  foreach ($friendRequestIds as $friendRequestId)
+  {
+    if (!in_array($friendRequestId, $remainingRequests))
+    {
+      array_push($response['oldRequests'], $friendRequestId);
+    }
   }
 
   echo json_encode($response);
