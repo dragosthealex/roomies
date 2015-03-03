@@ -14,5 +14,5 @@ To do:
   <title><?=$title?></title>
   <link rel="stylesheet" type="text/css" href="<?=$webRoot?>/media/css/style.css">
 </head>
-<body class="body">
+<body class="body <?=LOGGED_IN?'logged-in':'logged-out'?>">
 <script src="<?=$webRoot?>/media/js/facebook_api.js"></script>

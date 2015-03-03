@@ -231,7 +231,7 @@
 
 .drop-icon-border {
 	margin-top: -1px;
-	border-bottom-color: #e9e6e5;
+	border-bottom-color: rgba(0,0,0,0.15);
 }
 
 .drop-box {
@@ -241,13 +241,12 @@
 	border-radius: 2px;
 	border-width: 1px;
 	border-style: solid;
-	border-color: #e9e6e5 #e4e0df #d5d1d0;
+	border-color: rgba(0,0,0,0.15);
 	background: #ffffff;
 	height: 100%;
 }
 
 .drop-mini .drop-box {
-	border-color: rgba(0,0,0,0.15);
 	padding: .5em 0;
 }
 
@@ -1018,6 +1017,9 @@
 @media (max-width: 976px) {
 	.header {
 		position: absolute;
+	}
+
+	.logged-in .header {
 		text-align: left;
 	}
 
@@ -1049,7 +1051,7 @@
 
 /* Mobile version - inherits from small version*/
 @media (max-width: 623px) {
-	.header {
+	.logged-in .header {
 		text-align: center;
 	}
 
