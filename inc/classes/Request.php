@@ -14,7 +14,9 @@ class Request
     // $otherUserId
     '"><div class="drop-item-box"><a class="drop-item-pic" href="/profile/?u=',
     // $otherUsername
-    '" style="background-image: url(/media/img/anonymous.jpg)"></a><h3 class="drop-item-header"><div class="drop-item-header-right"><a data-ajax-url="../php/friends.process.php?a=3&amp;id=',
+    '" style="background-image: url(',
+    // $otherUserImage
+    ')"></a><h3 class="drop-item-header"><div class="drop-item-header-right"><a data-ajax-url="../php/friends.process.php?a=3&amp;id=',
     // $otherUserId
     '" data-ajax-text="Accepting..." data-ajax-callback-1="deleteById drop-item-fr-',
     // $otherUserId

@@ -43,7 +43,7 @@ try
     $con->prepare("SELECT message_id FROM rmessages
                     WHERE messages_read = 1
                       AND (message_user_id1 = $userId)
-                      AND (message_id = '".implode("' OR message_id = '", $unreadIds)."')"),
+                      AND (message_user_id2 = '".implode("' OR message_user_id2 = '", $unreadIds)."')"),
 
     // Third query: Find new friend requests
     'newRequests' =>
@@ -127,6 +127,7 @@ try
     'readMessage' => array()
   );
 
+  $todayDateTime = new DateTime();
 
   // New messages
   while ($message = $stmts['newMessages']->fetch(PDO::FETCH_ASSOC))
@@ -135,19 +136,50 @@ try
     $message['message_text'] = nl2br($message['message_text']);
     $read = ($message['messages_read'])?'read':'unread';
 
+    $senderId = $message['message_user_id1'];
+    $receiverId = $message['message_user_id2'];
+
     // Get the name and whether it was sent or received
-    if ($message['message_user_id1'] == $userId)
+    $sent = $senderId == $userId;
+    $otherUser = new User($con, $sent ? $receiverId : $senderId);
+    $otherUserId = $otherUser->getIdentifier('id');
+    $otherUserName = $otherUser->getName();
+    $otherUserUsername = $otherUser->getIdentifier('username');
+    $senderName = $sent ? $userName : $otherUserName;
+    $sentOrReceived = $sent ? 'sent' : 'received';
+
+    $msgDateTime = date_create_from_format('Y-m-d H:i:s', $message['message_timestamp']);
+    $diff = $todayDateTime->diff($msgDateTime);
+    $diff = (int) $diff->format('%a');
+    // If today, output the time and "Today"
+    if ($diff == 0)
     {
-      $id = $message['message_user_id1'];
-      $name = $userName;
-      $sentOrReceived = 'sent';
+      $msgDateTimeTitle = 'Today';
+      $msgDateTimeText = $msgDateTime->format('H:i');
     }
+    // Else, if yesterday, output "yesterday"
+    else if ($diff == 1)
+    {
+      $msgDateTimeTitle = 'Yesterday';
+      $msgDateTimeText = 'Yesterday';
+    }
+    // Else, if within the last 6 days, output the day name
+    else if ($diff < 6)
+    {
+      $msgDateTimeTitle = $msgDateTime->format('l');
+      $msgDateTimeText = $msgDateTime->format('D');
+    }
+    // Else, if the year is still the same, output the date (e.g. 12 February)
+    else if ($msgDateTime->format('Y') == $todayDateTime->format('Y'))
+    {
+      $msgDateTimeTitle = $msgDateTime->format('j F');
+      $msgDateTimeText = $msgDateTimeTitle;
+    }
+    // Else output the date as DD/MM/YYYY
     else
     {
-      $id = $message['message_user_id2'];
-      $otherUser = new User($con, $message['message_user_id2']);
-      $name = $otherUser->getName();
-      $sentOrReceived = 'received';
+      $msgDateTimeTitle = $msgDateTime->format('d/m/Y');
+      $msgDateTimeText = $msgDateTimeTitle;
     }
 
     array_push(
@@ -156,11 +188,16 @@ try
         $read.' '.$sentOrReceived,
         $message['message_id'],
         $message['message_timestamp'],
-        $id.'.jpg',
-        $name,
+        $senderId.'.jpg',
+        $senderName,
         $message['message_text'],
-        $message['message_user_id1'],
-        $message['message_user_id2']
+        $senderId,
+        $receiverId,
+        $otherUserUsername,
+        $otherUserName,
+        $msgDateTimeTitle,
+        $msgDateTimeText,
+        $otherUser->getIdentifier('image')
       )
     );
   }
@@ -183,6 +220,7 @@ try
       $otherUserId,
       $otherUserId,
       $otherUsername,
+      $otherUser->getIdentifier('image'),
       $otherUserId,
       $otherUserId,
       $otherUserId,

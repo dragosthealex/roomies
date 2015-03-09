@@ -477,8 +477,8 @@ class User
         continue;
       }
       // Get the number of unread messages from this user
-      $noNewMessages = (isset($unreadArray[$id2]) && $unreadArray[$id2])?"({$unreadArray[$id2]})":"";
-      $addReadClass = ($noNewMessages)?'unread':'';
+      $unreadCount = isset($unreadArray[$id2]) ? $unreadArray[$id2] : 0;
+      $addReadClass = ($userId == $senderId ? 'sent' : 'received') . ' ' . ($unreadCount ? 'unread' : 'read');
 
       // If the message was sent, add "sent" to the message class
       $sentClass = $userId == $senderId ? ' drop-item-text-sent ' : '';
@@ -525,16 +525,14 @@ class User
       }
 
       $messages .=
-      "
-      <li class='drop-item'>
-        <a href='/messages/$otherUserUsername' class='drop-item-link $addReadClass'>
-          <span class='drop-item-pic' style='background-image: url(/media/img/anonymous.jpg)'></span>
-          <h3 class='drop-item-header'>$otherUserName $noNewMessages</h3>
-          <p class='drop-item-text $sentClass'>$firstLine</p>
-          <p class='drop-item-footer' title='$msgDateTimeTitle'>$msgDateTimeText</p>
-        </a>
-      </li>
-      ";
+        "<li class='drop-item message-drop-item' data-conv-id='$id2'>"
+      .   "<a href='/messages/$otherUserUsername' class='drop-item-link $addReadClass'>"
+      .     "<span class='drop-item-pic' style='background-image: url(".$otherUser->getIdentifier('image').")'></span>"
+      .     "<h3 class='drop-item-header' data-unread-count='$unreadCount'>$otherUserName</h3>"
+      .     "<p class='drop-item-text $sentClass'>$firstLine</p>"
+      .     "<p class='drop-item-footer' title='$msgDateTimeTitle'>$msgDateTimeText</p>"
+      .   "</a>"
+      . "</li>";
     }
 
     return $messages;

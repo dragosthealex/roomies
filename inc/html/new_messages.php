@@ -12,9 +12,9 @@ $messages = $user->getNotifMessages(0);
     <h2 class="drop-header">Messages</h2>
     <div class="drop-list-wrapper scroll-wrapper">
       <div class="scroll-area drop-list-area">
-        <ul class="ul" id="message-drop-list">
-          <li class="ph ph-last ph-drop" data-placeholder="No messages."></li>
-<?php
+        <ul class="ul" id="message-drop-list"
+          ><li class="ph ph-last ph-drop" data-placeholder="No messages."></li
+><?php
 if ($messages)
 {
   echo $messages;
@@ -24,8 +24,7 @@ $unreadCount = $user->getUnreadCount();
 if ($unreadCount > 99) {
   $unreadCount = "99+";
 }
-?>
-        </ul>
+      ?></ul>
       </div>
     </div>
     <a href='<?=$webRoot?>/messages' class='drop-footer link'>View all</a>
