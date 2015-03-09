@@ -55,6 +55,10 @@
     "undefined": [true,
     function (variable) {
       return variable === undefined;
+    }],
+    "stringOrArray": [false,
+    function (variable) {
+      return is.string[1](variable) || is.array[1](variable);
     }]
   },
 
@@ -457,6 +461,23 @@
       }
     },
 
+    'markAsRead': function (convId) {
+      validate(arguments, "numeric");
+
+      var exampleConv = getElementsByConvId(convId)[0];
+      exampleConv && exampleConv.getElementsByClassName("unread received").length && ajax({
+        url: info.webRoot + "/php/read_conversation.process.php",
+        post: [{name: "convId", value: convId}],
+        success: function (response) {
+          response.forEach(function (messageId) {
+            getElementsByMessageId(messageId).forEach(function (element) {
+              element.className = element.className.replace(" unread ", " read ");
+            });
+          });
+        }
+      });
+    },
+
     // A function to return an array of all parent drops
     'getParentsByClassName': function (element, className) {
       validate(arguments, "element", "string");
@@ -740,8 +761,8 @@
 
   // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
   forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
-    var convId = roomies.getParentsByClassName(message, 'conversation')[0].getAttribute('data-conv-id');
-    conv.unread.sent.indexOf(convId) === -1 && conv.unread.sent.push(convId);
+    var messageId = message.getAttribute('data-message-id');
+    conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
   });
 
   // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
@@ -772,8 +793,22 @@
 
   forEach.call(body.getElementsByClassName("conversation"), function (conversation) {
     conv.box[conversation.getAttribute("data-conv-id")] = {
-      fetchingPrevious: false
+      fetchingPrevious: false,
+      focused: false
     };
+  });
+
+  forEach.call(body.getElementsByClassName("textarea"), function (textarea) {
+    var convId;
+    if (convId = textarea.getAttribute('data-conv-id')) {
+      textarea.onfocus = function () {
+        conv.box[convId].focused = true;
+        roomies.markAsRead(convId);
+      };
+      textarea.onblur = function () {
+        conv.box[convId].focused = false;
+      };
+    }
   });
 
   // Ajax function
@@ -784,10 +819,10 @@
     args.push(obj.callback || function () {});
     args.push(obj.post     || "");
     args.push(obj.reset    || false);
-    validate(args, "string", "function", "function", "string", "boolean");
+    validate(args, "string", "function", "function", "stringOrArray", "boolean");
 
     var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    var postValues;
+    var postValues = [];
 
     xmlhttp.onreadystatechange = function () {
       var response;
@@ -832,12 +867,9 @@
         });
         break;
         case "array":
-        obj.forEach(function (input) {
+        obj.post.forEach(function (input) {
           postValues.push(input.name + "=" + input.value);
         });
-        break;
-        default:
-        postValues = [];
         break;
       }
 
@@ -858,11 +890,25 @@
         !isNaN(id) && frIds.push(+id);
       });
       ajax({
-        url: info.webRoot + "/php/longpoll.php?unread=" + conv.unread.sent.join(",")
-                            + "&lastMessageId=" + info.lastMessageId
-                            + "&friendRequests=" + frIds.join(","),
+        url: info.webRoot + "/php/longpoll.php",
+
+        post: [
+          {
+            name: 'unread',
+            value: conv.unread.sent.join(",")
+          },
+          {
+            name: 'lastMessageId',
+            value: info.lastMessageId
+          },
+          {
+            name: "friendRequests",
+            value: frIds.join(",")
+          }
+        ],
 
         success: function (response) {
+          if (response.nothingChanged) return;
           console.log(response);
 
           var
@@ -883,7 +929,7 @@
             });
           });
 
-          var unreadCount = [];
+          var toRead = [];
 
           newMessages.content.forEach(function (message) {
             var sent = info.userId == message[6];
@@ -902,6 +948,11 @@
             conv.unread.received[otherId] = conv.unread.received[otherId] || 0;
             !sent && conv.unread.received[otherId]++;
 
+            conv.box[otherId].focused && (
+              conv.unread.received[otherId] = 0,
+              toRead.indexOf(otherId) === -1 && toRead.push(otherId)
+            );
+
             getMessageDropItemByConvId(otherId).innerHTML =
               "<a href='/messages/" + message[8] + "' class=' drop-item-link " + message[0] + " '>"
             + "<span class=' drop-item-pic ' style='background-image: url(" + message[12] + ")'></span>"
@@ -909,6 +960,10 @@
             + "<p class=' drop-item-text" + (sent?" drop-item-text-sent":"") + " '>" + message[5] + "</p>"
             + "<p class=' drop-item-footer ' title='" + message[10] + "'>" + message[11] + "</p>"
             + "</a>";
+          });
+
+          toRead.forEach(function (convId) {
+            roomies.markAsRead(convId);
           });
 
           oldRequests.forEach(function (requestId) {
@@ -932,9 +987,13 @@
           // Reset the unread sent messages
           conv.unread.sent = [];
           // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
+          // forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
+          //   var convId = roomies.getParentsByClassName(message, 'conversation')[0].getAttribute('data-conv-id');
+          //   conv.unread.sent.indexOf(convId) === -1 && conv.unread.sent.push(convId);
+          // });
           forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
-            var convId = roomies.getParentsByClassName(message, 'conversation')[0].getAttribute('data-conv-id');
-            conv.unread.sent.indexOf(convId) === -1 && conv.unread.sent.push(convId);
+            var messageId = message.getAttribute('data-message-id');
+            conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
           });
         },
 

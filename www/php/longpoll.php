@@ -2,16 +2,16 @@
 /**
  * File for longpolling.
  * Requires:
- * $_GET['unread'] - a list of ids of other users who haven't read messages
- *                   sent by the current user
- * $_GET['timestamp'] - The datetime (Y-m-d H:i:s) of the latest message sent to the user
+ * $_POST['unread'] - a list of ids of other users who haven't read messages
+ *                    sent by the current user
+ * $_POST['timestamp'] - The datetime (Y-m-d H:i:s) of the latest message sent to the user
  */
 
 include '../../inc/init.php';
 include __ROOT__.'/inc/classes/conversation.php';
 include __ROOT__.'/inc/classes/Request.php';
 
-if (!isset($_GET['unread'], $_GET['friendRequests'], $_GET['lastMessageId'], $_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
+if (!isset($_POST['unread'], $_POST['friendRequests'], $_POST['lastMessageId'], $_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__.'/inc/html/notfound.php';
 }
@@ -22,11 +22,11 @@ header("Content-type: application/json");
 
 try
 {
-  $unreadIds = explode(',', htmlentities($_GET['unread']));
-  $friendRequestIds = htmlentities($_GET['friendRequests']);
+  $unreadIds = explode(',', htmlentities($_POST['unread']));
+  $friendRequestIds = htmlentities($_POST['friendRequests']);
   $friendRequestIds = strlen($friendRequestIds) ? explode(',', $friendRequestIds) : array();
   $noOfRequests = count($friendRequestIds);
-  $lastMessageId = htmlentities($_GET['lastMessageId']);
+  $lastMessageId = htmlentities($_POST['lastMessageId']);
 
   $userId = $user->getIdentifier('id');
   $userName = $user->getName();
@@ -43,7 +43,7 @@ try
     $con->prepare("SELECT message_id FROM rmessages
                     WHERE messages_read = 1
                       AND (message_user_id1 = $userId)
-                      AND (message_user_id2 = '".implode("' OR message_user_id2 = '", $unreadIds)."')"),
+                      AND (message_id = '".implode("' OR message_id = '", $unreadIds)."')"),
 
     // Third query: Find new friend requests
     'newRequests' =>
@@ -127,11 +127,14 @@ try
     'readMessage' => array()
   );
 
+  $nothingChanged = TRUE;
+
   $todayDateTime = new DateTime();
 
   // New messages
   while ($message = $stmts['newMessages']->fetch(PDO::FETCH_ASSOC))
   {
+    $nothingChanged = FALSE;
     // Replace '\n' with '<br>'
     $message['message_text'] = nl2br($message['message_text']);
     $read = ($message['messages_read'])?'read':'unread';
@@ -205,12 +208,14 @@ try
   // Read message
   while ($row = $stmts['readMessage']->fetch(PDO::FETCH_ASSOC))
   {
+    $nothingChanged = FALSE;
     array_push($response['readMessage'], $row['message_id']);
   }
 
   // New requests
   while ($row = $stmts['newRequests']->fetch(PDO::FETCH_ASSOC))
   {
+    $nothingChanged = FALSE;
     $otherUser = new User($con, $row['conexion_user_id1']);
     $otherUserId = $otherUser->getIdentifier('id');
     $otherUsername = $otherUser->getIdentifier('username');
@@ -244,8 +249,14 @@ try
   {
     if (!in_array($friendRequestId, $remainingRequests))
     {
+      $nothingChanged = FALSE;
       array_push($response['oldRequests'], $friendRequestId);
     }
+  }
+
+  if ($nothingChanged)
+  {
+    $response = array('nothingChanged' => 1);
   }
 
   echo json_encode($response);
