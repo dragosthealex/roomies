@@ -697,6 +697,100 @@
 
 /* End temporary checkbox/radio styles */
 
+/*Liam's CSS*/
+.cupid-wrapper {
+	height: 100px;
+}
+.answer-block {
+	float: left;
+	display: inline-block;
+	width: 100px;
+}
+.r-a {
+	position: absolute;
+	top: -10em;
+	left: 0;
+}
+.r-text {
+	float:top;
+	text-align: center;
+	margin-top: 8px;
+	display: block;
+	word-wrap: break-word;
+}
+.span-left {
+	position: fixed;
+	width: 100px;
+	height: 16px;
+	border: 1px solid  #d9d6d5;
+	background: #f6f6f6; 
+	border-top-left-radius: 7px;
+	border-bottom-left-radius: 7px;
+	display: block;
+	cursor: pointer;
+}
+
+.span-left:after {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 94px;
+	height: 10px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	content: "";
+
+}
+
+.span-right {
+	position: fixed;
+	width: 100px;
+	height: 16px;
+	border: 1px solid #d9d6d5;
+	background: #f6f6f6; 
+	border-top-right-radius: 7px;
+	border-bottom-right-radius: 7px;
+	display: block;
+	cursor: pointer;
+}
+
+.span-right:after {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 94px;
+	height: 10px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	content: "";
+
+}
+
+.span-center {
+	position: fixed;
+	width: 100px;
+	height: 16px;
+	border: 1px solid  #d9d6d5;
+	background: #f6f6f6; 
+	display: block;
+	cursor: pointer;
+}
+
+.span-center:after {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 94px;
+	height: 10px;
+	content: "";
+
+}
+
+.r-a:checked + label span:after {
+	background: #e37314;
+
+}
+
 .block {
 	display: block;
 	box-sizing: border-box;

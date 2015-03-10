@@ -41,6 +41,7 @@ class Question
   {
     $this->con = $con;
     $this->userId = $userId;
+    $this->id = $id;
 
     // Get the question answer
     $stmt = $con->prepare("SELECT question_text, question_answers FROM rquestionsmap WHERE question_id = $id");
@@ -251,36 +252,57 @@ class Question
       "
         </div>
         <div class='question-answers for-others'>
+        <p>Answers I accept</p>
       ";
       foreach ($answers as $answerId => $answer)
       {
         $answerText = $answer->getText();
         $answerId = $answer->getId();
         $question .=
-        "
-          <div class='answer'>
-            <p class='text'>
-              $answerText
-            </p>
-            <input class='answer-checkbox' name='question$id' type='checkbox' value='$answerId'></input>
-          </div>
-        ";
+           "
+            <label for='$answerId' class='cr-label cr-label-block'>
+              <input type='checkbox' id='$answerId' name='$answerId' class='cr'>
+              <span class='cr-button'></span>
+              <span class='cr-text'>$answerText</span>
+            </label>
+           ";
       }
       $question .=
       "
-        </div>
-        <div class='importance'>
-          <p class='text'>Irellevant</p>
-          <input class='importance-radio' name='importance_questions_$id' type='radio' value='0'></input>
-          <p class='text'>Not too important</p>
-          <input class='importance-radio' name='importance_questions_$id' type='radio' value='1'></input>
-          <p class='text'>Somewhat important</p>
-          <input class='importance-radio' name='importance_questions_$id' type='radio' value='2'></input>
-          <p class='text'>Very important</p>
-          <input class='importance-radio' name='importance_questions_$id' type='radio' value='3'></input>
-        </div>
       </div>
+      <p>Importance to me:</p>
+      <div class='cupid-wrapper'>
+                            <div class='answer-block'>
+                                <input type='radio' name='importance_questions_$id' id='1importance_questions_$id' class='r-a' value='0'>
+                                <label for='1importance_questions_$id'>
+                                    <span class='span-left'></span>
+                                    <span class='r-text'>Irrelevant</span>
+                                </label>
+                            </div>
+                            <div class='answer-block'>
+                                <input type='radio' name='importance_questions_$id' id='2importance_questions_$id' class='r-a' value='1'>
+                                <label for='2importance_questions_$id'>
+                                    <span class='span-center'></span>
+                                    <span class='r-text'>Not Too Important</span>
+                                </label>
+                            </div>
+                            <div class='answer-block'>
+                                <input type='radio' name='importance_questions_$id' id='3importance_questions_$id' class='r-a' value='2'>
+                                <label for='3importance_questions_$id'>
+                                    <span class='span-center'></span>
+                                    <span class='r-text'>Somewhat Important</span>
+                                </label>
+                            </div>
+                            <div class='answer-block'>
+                                <input type='radio' name='importance_questions_$id' id='4importance_questions_$id' class='r-a' value='3'>
+                                <label for='4importance_questions_$id'>
+                                    <span class='span-right'></span>
+                                    <span class='r-text'>Important</span>
+                                </label>
+                            </div>
+                        </div>
       ";
+      //Add a submit button after changing into a form
       return $question;
     }
   }
