@@ -14,7 +14,7 @@ $stmt->bindColumn(1, $otherUserId);
     <h2 class="drop-header">Friend Requests</h2>
     <div class="drop-list-wrapper scroll-wrapper">
       <div class="drop-list-area scroll-area">
-        <ul class="ul">
+        <ul class="ul" id="frequests-drop-list">
           <li class="ph ph-last ph-drop" data-placeholder="No friend requests."></li>
 <?php
 while($stmt->fetch())
@@ -26,17 +26,18 @@ while($stmt->fetch())
   "
   <li class='drop-item friend-request' id='drop-item-fr-$otherUserId' data-fr-id='$otherUserId'>
     <div class='drop-item-box'>
-      <a class='drop-item-pic' href='/profile/?u=$otherUsername' style='background-image: url(/media/img/anonymous.jpg)'></a>
+      <a class='drop-item-pic' href='/profile/?u=$otherUsername' style='background-image: url(".$otherUser->getIdentifier('image').")'></a>
       <h3 class='drop-item-header'>
         <div class='drop-item-header-right'>
           <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
              data-ajax-text='Accepting...'
              data-ajax-callback-1='deleteById drop-item-fr-$otherUserId'
-             onclick=''
+             data-ajax-callback-2='updateNofifCount'
              class='link-button button2'>Accept</a>
           <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
              data-ajax-text='Ignoring...'
              data-ajax-callback-1='deleteById drop-item-fr-$otherUserId'
+             data-ajax-callback-2='updateNofifCount'
              class='link-button button2'>Ignore</a>
         </div>
         <a href='/profile/$otherUsername' class='link'>$otherUsername</a>
@@ -57,8 +58,7 @@ if ($requestCount > 99) {
     </div>
     <a href='<?=$webRoot?>/friends/requests' class='drop-footer link'>View all</a>
   </div>
-</div>
-<span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop" data-icon-number="<?=$requestCount?>">
+</div><span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop" data-icon-number="<?=$requestCount?>">
   <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
 </span>
 <?php

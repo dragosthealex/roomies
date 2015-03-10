@@ -68,7 +68,10 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
         <div class="box-padding">
           <!--TODO: CHANGE METHOD TO POST-->
           <div class="textarea-holder"
-            ><textarea class="textarea" id="message" placeholder="Write a message..." oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false" onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"></textarea>
+            ><textarea class="textarea" id="message" placeholder="Write a message..."
+                       oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"
+                       onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"
+                       data-conv-id="<?=$otherUserId?>"></textarea>
           </div
           ><label for="pressEnterToSend" class="cr-label cr-label-block"
             ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')" class="cr">

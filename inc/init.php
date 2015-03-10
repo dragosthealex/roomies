@@ -14,7 +14,13 @@ else if (!REQUIRE_SESSION && LOGGED_IN)
 
 // The local root of the Roomies git repository:
 define('__ROOT__', dirname(dirname(__FILE__)));
+
+function __autoload($class) {
+  include_once __ROOT__.'/inc/classes/'.$class.'.php';
+}
+
 include __ROOT__.'/inc/classes/user.php';
+
 // Setting session name
 $session_name = 'some_name';
 

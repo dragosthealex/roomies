@@ -231,7 +231,7 @@
 
 .drop-icon-border {
 	margin-top: -1px;
-	border-bottom-color: #e9e6e5;
+	border-bottom-color: rgba(0,0,0,0.15);
 }
 
 .drop-box {
@@ -241,13 +241,12 @@
 	border-radius: 2px;
 	border-width: 1px;
 	border-style: solid;
-	border-color: #e9e6e5 #e4e0df #d5d1d0;
+	border-color: rgba(0,0,0,0.15);
 	background: #ffffff;
 	height: 100%;
 }
 
 .drop-mini .drop-box {
-	border-color: rgba(0,0,0,0.15);
 	padding: .5em 0;
 }
 
@@ -292,7 +291,7 @@
 	color: inherit;
 }
 
-.drop-item-link:hover {
+.drop-item-link:hover, .drop-item-link.unread {
 	background-color: #f2f0ef;
 }
 
@@ -317,8 +316,10 @@
 	position: absolute;
 	top: .5em;
 	left: .8em;
+	background-position: center center;
+	background-image: url('../img/default.gif');
 	background-color: #efefef;
-	background-size: 100% 100%;
+	background-size: cover;
 	width: 3.90625em;
 	height: 3.90625em;
 }
@@ -336,6 +337,14 @@
 
 .drop-item-header {
 	font-weight: bold;
+}
+
+.drop-item-header[data-unread-count]:after {
+	content: " (" attr(data-unread-count) ")";
+}
+
+.drop-item-header[data-unread-count='0']:after {
+	display: none;
 }
 
 .drop-item-header-right {
@@ -771,7 +780,7 @@
 	margin: 0 1em 0 0;
 	float: left;
 	background-position: center center;
-	background-image: url('../img/profile-picture-placeholder.gif');
+	background-image: url('../img/default.gif');
 	background-size: cover;
 	height: 6.8em;
 	width: 6.8em;
@@ -898,8 +907,21 @@
 }
 
 .message .text {
+	position: relative;
 	margin: 0;
 	font-size: .9em;
+}
+
+.message.read.sent:last-child .text:after {
+	display: block;
+	background-position: 0 center;
+	background-repeat: no-repeat;
+	background-image: url(../../media/img/read.png);
+	margin-top: 8px;
+	padding-left: 14px;
+	content: "Read";
+	opacity: .5;
+	font-size: .8em;
 }
 
 .sent + .sent .text, .received + .received .text {
@@ -1018,6 +1040,9 @@
 @media (max-width: 976px) {
 	.header {
 		position: absolute;
+	}
+
+	.logged-in .header {
 		text-align: left;
 	}
 
@@ -1049,7 +1074,7 @@
 
 /* Mobile version - inherits from small version*/
 @media (max-width: 623px) {
-	.header {
+	.logged-in .header {
 		text-align: center;
 	}
 

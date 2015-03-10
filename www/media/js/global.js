@@ -55,6 +55,10 @@
     "undefined": [true,
     function (variable) {
       return variable === undefined;
+    }],
+    "stringOrArray": [false,
+    function (variable) {
+      return is.string[1](variable) || is.array[1](variable);
     }]
   },
 
@@ -134,6 +138,10 @@
   originalTitle = document.title,
   header = body.getElementsByClassName('header')[0],
   newError = window.newError,
+  frequestsDrop = document.getElementById('frequests-drop'),
+  frequestsDropList = document.getElementById('frequests-drop-list'),
+  messageDrop = document.getElementById('message-drop'),
+  messageDropList = document.getElementById('message-drop-list'),
 
   // Localise some array methods
   slice   = Array.prototype.slice,
@@ -171,6 +179,53 @@
     // Loop through all the messages, and find the ones with the message id
     forEach.call(body.getElementsByClassName('conversation'), function (element) {
       element.getAttribute('data-conv-id') === convId && elements.push(element);
+    });
+    // Return the list of elements
+    return elements;
+  },
+
+  // Function for getting message drop items by their conv id
+  getMessageDropItemByConvId = function (convId) {
+    validate(arguments, "stringable");
+
+    // Preset the messageDropItem
+    var messageDropItem = null;
+    // Cast messageId to a string
+    convId += "";
+    // Loop through all the message drop items, and find the one with the convid
+    forEach.call(body.getElementsByClassName("message-drop-item"), function (element) {
+      element.getAttribute("data-conv-id") === convId && (messageDropItem = element);
+    });
+    // If the messageDropItem is still null, create a new one
+    messageDropItem === null && (
+      // <li
+      messageDropItem = document.createElement("li"),
+      // class="drop-item message-drop-item"
+      messageDropItem.className = " drop-item message-drop-item ",
+      // data-conv-id=convId>
+      messageDropItem.setAttribute("data-conv-id", convId)
+    );
+    
+    // Insert after the placeholder
+    messageDropList.childNodes.length > 1
+    ? messageDropList.insertBefore(messageDropItem, messageDropList.childNodes[1])
+    : messageDropList.appendChild(messageDropItem);
+
+    // Return the messageDropItem
+    return messageDropItem;
+  },
+
+  // Function for getting message elements by their friend request id
+  getElementsByRequestId = function (requestId) {
+    validate(arguments, "stringable");
+
+    // Preset the array of elements
+    var elements = [];
+    // Cast messageId to a string
+    requestId += '';
+    // Loop through all the messages, and find the ones with the message id
+    forEach.call(body.getElementsByClassName('friend-request'), function (element) {
+      element.getAttribute('data-fr-id') === requestId && elements.push(element);
     });
     // Return the list of elements
     return elements;
@@ -249,7 +304,7 @@
 
     if (convId && (convBox = conv.box[convId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
       convBox.fetchingPrevious = true;
-      roomies['update']('messageOld', '../php/update_message.process.php?type=old&otherId=' + convId, 'message', null,
+      roomies.update('messageOld', '../php/update_message.process.php?type=old&otherId=' + convId, 'message', null,
         function () {
           convBox.fetchingPrevious = false;
         }
@@ -324,7 +379,7 @@
 
     forEach.call(body.getElementsByClassName('drop'), function (drop) {
       // roomies['toggle'](drop);
-      var dropParent = roomies['getParentsByClassName'](drop, 'drop-parent')[0];
+      var dropParent = roomies.getParentsByClassName(drop, 'drop-parent')[0];
       var right = (dropParent.parentNode.offsetWidth - (dropParent.offsetLeft + dropParent.offsetWidth) + (dropParent.offsetWidth / 2) - 8);
       var dropIcon = drop.getElementsByClassName('drop-icon')[0];
       var dropIconBorder = drop.getElementsByClassName('drop-icon-border')[0];
@@ -406,6 +461,23 @@
       }
     },
 
+    'markAsRead': function (convId) {
+      validate(arguments, "numeric");
+
+      var exampleConv = getElementsByConvId(convId)[0];
+      exampleConv && exampleConv.getElementsByClassName("unread received").length && ajax({
+        url: info.webRoot + "/php/read_conversation.process.php",
+        post: [{name: "convId", value: convId}],
+        success: function (response) {
+          response.forEach(function (messageId) {
+            getElementsByMessageId(messageId).forEach(function (element) {
+              element.className = element.className.replace(" unread ", " read ");
+            });
+          });
+        }
+      });
+    },
+
     // A function to return an array of all parent drops
     'getParentsByClassName': function (element, className) {
       validate(arguments, "element", "string");
@@ -415,6 +487,12 @@
               : new RegExp('(^| )'+className+'( |$)').test(element.className)
                 ? [element].concat(roomies.getParentsByClassName(element.parentNode, className))
                 : roomies.getParentsByClassName(element.parentNode, className);
+    },
+
+    // A function to update the notif counts
+    'updateNofifCount': function () {
+      frequestsDrop.nextSibling.setAttribute('data-icon-number', frequestsDrop.getElementsByClassName('friend-request').length);
+      messageDrop.nextSibling.setAttribute('data-icon-number', messageDrop.getElementsByClassName('drop-item-link unread received').length);
     },
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
@@ -591,18 +669,18 @@
 
     // Get an array of all the drops that the current element is in
     var elementsToShowAgain = validate.bool([element], "element")
-                              ? roomies['getParentsByClassName'](element, 'drop')
+                              ? roomies.getParentsByClassName(element, 'drop')
                               : [];
     // Hide all drops
-    roomies['hide'](body.getElementsByClassName('drop'));
+    roomies.hide(body.getElementsByClassName('drop'));
     // Show the previous elements again
     elementsToShowAgain.forEach(function (elementToShow) {
-      roomies['toggle'](elementToShow);
+      roomies.toggle(elementToShow);
     });
 
     // If a target was hidden and needs toggling, toggle it
     if (target && targetWasAlreadyHidden) {
-      roomies['toggle'](target);
+      roomies.toggle(target);
     } // if
 
     // If a target needs deleting, do so.
@@ -612,7 +690,7 @@
 
     // If the element employs ajax, do some ajax.
     if (element.hasAttribute('data-ajax-url')) {
-      roomies['ajax'](element);
+      roomies.ajax(element);
       return false;
     } // if
   }; // onclick
@@ -626,7 +704,7 @@
 
     element.className === ' scroll-tracker ' && (element = element.parentNode);
 
-    return element.className !== ' scroll-bar ' || (roomies['scroll'](element, e.clientY), false);
+    return element.className !== ' scroll-bar ' || (roomies.scroll(element, e.clientY), false);
   };
 
   /**
@@ -664,7 +742,7 @@
       }
 
       if (element.className === ' scroll-bar ') {
-        roomies['scroll'](element, e.clientY);
+        roomies.scroll(element, e.clientY);
         clearSelection();
         e.preventDefault();
       }
@@ -682,15 +760,25 @@
   window.onscroll = window.onresize = window.onload = configure;
 
   // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
-  forEach.call(body.getElementsByClassName('unread sent'), function (message) {
+  forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
     var messageId = message.getAttribute('data-message-id');
     conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
   });
 
   // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
-  forEach.call(body.getElementsByClassName('unread received'), function (message) {
-    var messageId = message.parentNode.parentNode.getAttribute('data-message-id');
-    conv.unread.received.indexOf(messageId) === -1 && conv.unread.received.push(messageId);
+  forEach.call(body.getElementsByClassName('unread received message'), function (message) {
+    var convId = roomies.getParentsByClassName(message, 'conversation')[0];
+    convId = convId && convId.getAttribute('data-conv-id');
+    convId && (
+      conv.unread.received[convId] = conv.unread.received[convId] || 0,
+      conv.unread.received[convId]++
+    );
+  });
+
+  // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
+  forEach.call(body.getElementsByClassName('unread received drop-item-link'), function (dropItemLink) {
+    var convId = dropItemLink.parentNode.getAttribute('data-conv-id');
+    conv.unread.received[convId] = +dropItemLink.childNodes[1].getAttribute('data-unread-count');
   });
 
   forEach.call(body.getElementsByClassName('scroll-area'), function (scrollArea) {
@@ -705,8 +793,22 @@
 
   forEach.call(body.getElementsByClassName("conversation"), function (conversation) {
     conv.box[conversation.getAttribute("data-conv-id")] = {
-      fetchingPrevious: false
+      fetchingPrevious: false,
+      focused: false
     };
+  });
+
+  forEach.call(body.getElementsByClassName("textarea"), function (textarea) {
+    var convId;
+    if (convId = textarea.getAttribute('data-conv-id')) {
+      textarea.onfocus = function () {
+        conv.box[convId].focused = true;
+        roomies.markAsRead(convId);
+      };
+      textarea.onblur = function () {
+        conv.box[convId].focused = false;
+      };
+    }
   });
 
   // Ajax function
@@ -717,10 +819,10 @@
     args.push(obj.callback || function () {});
     args.push(obj.post     || "");
     args.push(obj.reset    || false);
-    validate(args, "string", "function", "function", "string", "boolean");
+    validate(args, "string", "function", "function", "stringOrArray", "boolean");
 
     var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    var postValues;
+    var postValues = [];
 
     xmlhttp.onreadystatechange = function () {
       var response;
@@ -765,12 +867,9 @@
         });
         break;
         case "array":
-        obj.forEach(function (input) {
+        obj.post.forEach(function (input) {
           postValues.push(input.name + "=" + input.value);
         });
-        break;
-        default:
-        postValues = [];
         break;
       }
 
@@ -784,6 +883,95 @@
 
   if (info) {
     // Set up longpolling
+    var longpollSuccess = function (response) {
+      if (response.nothingChanged) return;
+      console.log(response);
+
+      var
+      newMessages = response.newMessages,
+      readMessage = response.readMessage,
+      newRequests = response.newRequests,
+      oldRequests = response.oldRequests;
+
+      newMessages.content.length &&
+        (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
+
+      readMessage.forEach(function (messageId) {
+        getElementsByMessageId(messageId).forEach(function (element) {
+          element.className = element.className.replace(" unread ", " read ");
+          roomies.getParentsByClassName(element, "conversation").forEach(function (element) {
+            element.parentNode.scrollTop = element.parentNode.scrollHeight;
+          });
+        });
+      });
+
+      var toRead = [];
+
+      newMessages.content.forEach(function (message) {
+        var sent = info.userId == message[6];
+        var otherId = sent ? message[7] : message[6];
+        var messageHTML = "";
+
+        newMessages.template.forEach(function (templatePart, i, template) {
+          messageHTML += templatePart + (i < template.length - 1 ? message[i] : "");
+        });
+
+        getElementsByConvId(otherId).forEach(function (conv) {
+          conv.innerHTML += messageHTML;
+          conv.parentNode.scrollTop = conv.parentNode.scrollHeight;
+        });
+
+        conv.unread.received[otherId] = conv.unread.received[otherId] || 0;
+        !sent && conv.unread.received[otherId]++;
+
+        conv.box[otherId] && conv.box[otherId].focused && (
+          conv.unread.received[otherId] = 0,
+          toRead.indexOf(otherId) === -1 && toRead.push(otherId)
+        );
+
+        getMessageDropItemByConvId(otherId).innerHTML =
+          "<a href='/messages/" + message[8] + "' class=' drop-item-link " + message[0] + " '>"
+        + "<span class=' drop-item-pic ' style='background-image: url(" + message[12] + ")'></span>"
+        + "<h3 class=' drop-item-header ' data-unread-count='" + conv.unread.received[otherId] + "'>" + message[9] + "</h3>"
+        + "<p class=' drop-item-text" + (sent?" drop-item-text-sent":"") + " '>" + message[5] + "</p>"
+        + "<p class=' drop-item-footer ' title='" + message[10] + "'>" + message[11] + "</p>"
+        + "</a>";
+      });
+
+      toRead.forEach(function (convId) {
+        roomies.markAsRead(convId);
+      });
+
+      oldRequests.forEach(function (requestId) {
+        getElementsByRequestId(requestId).forEach(function (element) {
+          roomies['delete'](element);
+        });
+      });
+
+      newRequests.content.forEach(function (request) {
+        var requestHTML = "";
+
+        newRequests.template.forEach(function (templatePart, i, template) {
+          requestHTML += templatePart + (i < template.length - 1 ? request[i] : "");
+        });
+
+        frequestsDropList.innerHTML += requestHTML;
+      });
+
+      roomies.updateNofifCount();
+
+      // Reset the unread sent messages
+      conv.unread.sent = [];
+      // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
+      // forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
+      //   var convId = roomies.getParentsByClassName(message, 'conversation')[0].getAttribute('data-conv-id');
+      //   conv.unread.sent.indexOf(convId) === -1 && conv.unread.sent.push(convId);
+      // });
+      forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
+        var messageId = message.getAttribute('data-message-id');
+        conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
+      });
+    };
     var longpoll = function () {
       var frIds = [];
       forEach.call(body.getElementsByClassName('friend-request'), function (friendRequest) {
@@ -791,45 +979,24 @@
         !isNaN(id) && frIds.push(+id);
       });
       ajax({
-        url: info.webRoot + "/php/longpoll.php?unread=" + conv.unread.sent.join(",")
-                            + "&lastMessageId=" + info.lastMessageId
-                            + "&friendRequests=" + frIds.join(","),
+        url: info.webRoot + "/php/longpoll.php",
 
-        success: function (response) {
-          console.log(response);
-          var newMessages = response.newMessages;
-          newMessages.content.length &&
-            (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
+        post: [
+          {
+            name: 'unread',
+            value: conv.unread.sent.join(",")
+          },
+          {
+            name: 'lastMessageId',
+            value: info.lastMessageId
+          },
+          {
+            name: "friendRequests",
+            value: frIds.join(",")
+          }
+        ],
 
-          response.readMessage.forEach(function (messageId) {
-            getElementsByMessageId(messageId).forEach(function (element) {
-              element.className = element.className.replace(" unread ", " read ");
-            });
-          });
-
-          newMessages.content.forEach(function (message) {
-            var otherId = info.userId === +message[6] ? message[7] : message[6];
-
-            var messageHTML = "";
-
-            newMessages.template.forEach(function (templatePart, i, template) {
-              messageHTML += templatePart + (i < template.length - 1 ? message[i] : "");
-            });
-
-            getElementsByConvId(otherId).forEach(function (conv) {
-              conv.innerHTML += messageHTML;
-              conv.parentNode.scrollTop = conv.parentNode.scrollHeight;
-            });
-          });
-
-          // Reset the unread sent messages
-          conv.unread.sent = [];
-          // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
-          forEach.call(body.getElementsByClassName('unread sent'), function (message) {
-            var messageId = message.getAttribute('data-message-id');
-            conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
-          });
-        },
+        success: longpollSuccess,
 
         callback: longpoll
       });
