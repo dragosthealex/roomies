@@ -7,26 +7,23 @@ include __ROOT__."/inc/classes/answer.php";
 * Represents a question. Has question text, question answers (with text and values), has importance
 *
 */
-class Question
+include_once 'Base.php';
+class Question extends Base
 {
-  // The db handler
-  private $con;
-  // The id of question
-  private $id;
   // The text body of the question
   private $text;
   // The array containing the answers (strings)
-  private $answers;
+  private $answers = array();
   // The answer chosen by user
-  private $answerForMe;
+  private $answerForMe = '';
   // The answers wanted for others, chosen by user. array
-  private $answersForThem;
+  private $answersForThem = array();
   // The importance chosen by user
   private $importance;
   // The user id;
   private $userId;
-  // The answers as string
-  private $questionInfo;
+  // The answers as string array
+  private $questionInfo = '';
 
   /**
   * Constructor
@@ -45,54 +42,71 @@ class Question
 
     // Get the question answer
     $stmt = $con->prepare("SELECT question_text, question_answers FROM rquestionsmap WHERE question_id = $id");
-    $stmt->execute();
-    $stmt->bindColumn(1, $text);
-    $stmt->bindColumn(2, $answerIds);
-    $stmt->fetch();
-
-    $this->text = $text;
-    $answers = array();
-    $answerIds = explode(":", $answerIds);
-    
-    foreach($answerIds as $answerId)
+    try
     {
-      $answer = new Answer($con, $answerId);
-      array_push($answers, $answer);
-    }
-
-    // The answeres are OBJECTS. have ids and texts
-    $this->answers = $answers;
-
-    /*
-    The question info will be stored as a string containin three int values delimited by a colon (:).
-    The first will be the answer that applies to the user.
-    The second will be an array of answers that user would like others to have
-    The third will be the importance of the question
-    */
-
-    if($userId)
-    {
-      $stmt = $con->prepare("SELECT question".$id." FROM ruser_qa WHERE answer_user_id = ".$userId);
-      $stmt->execute();
-      $stmt->bindColumn(1, $questionInfo);
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting the text and answers for question $id", 1);
+      }
+      $stmt->bindColumn(1, $text);
+      $stmt->bindColumn(2, $answerIds);
       $stmt->fetch();
+
+      $this->text = $text;
+      $answers = array();
+      $answerIds = explode(":", $answerIds);
+      
+      foreach($answerIds as $answerId)
+      {
+        $answer = new Answer($con, $answerId);
+        if($answer->getError())
+        {
+          throw new Exception("Error with answer $answerId in question $id", 1);
+        }
+        array_push($answers, $answer);
+      }
+
+      // The answeres are OBJECTS. have ids and texts
+      $this->answers = $answers;
+
+      /*
+      The question info will be stored as a string containin three int values delimited by a colon (:).
+      The first will be the answer that applies to the user.
+      The second will be an array of answers that user would like others to have
+      The third will be the importance of the question
+      */
+
+      if($userId)
+      {
+        $stmt = $con->prepare("SELECT question".$id." FROM ruser_qa WHERE answer_user_id = ".$userId);
+        if(!$stmt->execute())
+        {
+          throw new Exception("Error getting questions for user $userId", 1);
+        }
+        $stmt->bindColumn(1, $questionInfo);
+        $stmt->fetch();
+      }
+      else
+      {
+        $questionInfo = '';
+      }
+      // Check if the question was answered
+      if($questionInfo)
+      {
+        $questionInfo = explode(":", $questionInfo);
+        $this->answerForMe = $questionInfo[0];
+        // Explode the accepted answers for them into an array;
+        $answersForThem = $questionInfo[1];
+        $answersForThem = explode(",", $answersForThem);
+        $this->answersForThem = $answersForThem;
+        $this->importance = $questionInfo[2];
+      }
+      $this->questionInfo = $questionInfo;
     }
-    else
+    catch (Exception $e)
     {
-      $questionInfo = 0;
+      $this->errorMsg = $e->getMessage();
     }
-    // Check if the question was answered
-    if($questionInfo)
-    {
-      $questionInfo = explode(":", $questionInfo);
-      $this->answerForMe = $questionInfo[0];
-      // Explode the accepted answers for them into an array;
-      $answersForThem = $questionInfo[1];
-      $answersForThem = explode(",", $answersForThem);
-      $this->answersForThem = $answersForThem;
-      $this->importance = $questionInfo[2];
-    }
-    $this->questionInfo = $questionInfo;
 
     $stmt = null;
   }
@@ -156,18 +170,20 @@ class Question
   */
   public function toString()
   {
+    // Localise stuff
+    $con = $this->con;
     $answers = $this->answers;
     $text = $this->text;
     $id = $this->id;
 
-    if(isset($this->answersForMe) && $this->answerForMe)
+    if(isset($this->answerForMe) && $this->answerForMe)
     {
       // Get the text of the answer for me
       $forMe = new Answer($con, $this->answerForMe);
       $forMe = $forMe->getText();
 
       $forThem = $this->answersForThem;
-      $forThem = explode(",", $forThem);
+      $forThem = isset($forThem[0])?$forThem:explode(",", $forThem);
 
       // Get the text of the answers for them
       $forThemText = array();
@@ -188,6 +204,7 @@ class Question
           </p>
         </div>
         <div class='question-answers for-me'>
+          My Answer:
           <div class='answer answered'>
             <p class='text'>
               $forMe
@@ -195,6 +212,7 @@ class Question
           </div>
         </div>
         <div class='question-answers for-others'>
+          Answers I accept:
       ";
       foreach ($forThemText as $answer)
       {
@@ -211,17 +229,20 @@ class Question
       "
           </div>
           <div class='importance answered'>
+            Importance:
             <p class='text'>$importance</p>
           </div>
         </div>
       ";
+      return $question;
     }
     else
     {
       $count = 0;
       $question = 
       "
-        <div class='question'>
+      <div class='question'>
+        <form id='question_form_$id'>
           <div class='question-text'>
             <p class='text'>
               $text
@@ -241,7 +262,7 @@ class Question
         $question .=
         "
             <div class='answer'>
-              <input type='radio' id='$id"."_$count' name='answers_for_q_$id' class='r-a'>
+              <input type='radio' id='$id"."_$count' name='answers_for_q_$id' class='r-a' value='$answerId'>
               <label for='$id"."_$count' class='cr-label cr-label-block'>
                 <span class='r-a-circle'></span>
                 <span class='r-a-circle-text'>$answerText</span>
@@ -256,6 +277,7 @@ class Question
           <div class='question-answers for-others'>
             <p>Answers I accept</p>
       ";
+      $answersName = '';
       foreach ($answers as $answerId => $answer)
       {
         /*
@@ -266,12 +288,13 @@ class Question
         $question .=
          "
             <label for='$id"."_$count' class='cr-label cr-label-block'>
-              <input type='checkbox' id='$id"."_$count' name='accepting_for_q_".$id."_$answerId' class='cr'>
+              <input type='checkbox' id='$id"."_$count' name='accepting_for_q_".$id."_$answerId' class='cr' value='$answerId'>
               <span class='cr-button'></span>
               <span class='cr-text'>$answerText</span>
             </label>
          ";
         $count ++;
+        $answersName .= 'accepting_for_q_".$id."_$answerId ';
       }
       $question .=
       "
@@ -293,21 +316,23 @@ class Question
                 </label>
             </div>
             <div class='answer-block'>
-                <input type='radio' name='importance_questions_$id' id='3importance_questions_$id' class='r-a' value='2'>
+                <input type='radio' name='importance_questions_$id' id='3importance_questions_$id' class='r-a' value='10'>
                 <label for='3importance_questions_$id'>
                     <span class='span-center'></span>
                     <span class='r-text'>Somewhat Important</span>
                 </label>
             </div>
             <div class='answer-block'>
-                <input type='radio' name='importance_questions_$id' id='4importance_questions_$id' class='r-a' value='3'>
+                <input type='radio' name='importance_questions_$id' id='4importance_questions_$id' class='r-a' value='50'>
                 <label for='4importance_questions_$id'>
                     <span class='span-right'></span>
                     <span class='r-text'>Important</span>
                 </label>
             </div>
           </div>
-        </div>
+          <input type='button' class='input-button block' data-ajax-url='../php/match.process.php' data-ajax-post='question_form_$id answers_for_q_$id $answersName importance_questions_$id' value='Submit'>
+        </form>
+      </div>
       ";
       //Add a submit button after changing into a form
       return $question;

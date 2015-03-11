@@ -618,11 +618,14 @@ void function (window, document, undefined) {
         switch (validate.which(obj.post)) {
           case "string":
           // get the first element and assume it is a form
+          /*
+          If you have a form, you need to supply its ID and the name of its inputs in a string, sepparated by ' ', in 'data-ajax-post'
+          */
           var form = document.getElementById(obj.post.split(" ")[0]) || {};
           // if the "form" is actually a form:
-          if (form.nodeType === "FORM") {
+          if (form.tagName === "FORM") {
             obj.post.split(" ").slice(1).forEach(function (elementName) {
-              addValueToPostValues(elementName, form.element[elementName]);
+              addValueToPostValues(elementName, form.elementName);
             });
           } else {
             obj.post.split(" ").forEach(function (id) {
@@ -639,7 +642,6 @@ void function (window, document, undefined) {
         }
 
         obj.focusId && document.getElementById(obj.focusId).focus();
-
         xmlhttp.send(postValues.join("&"));
       } else {
         xmlhttp.send();

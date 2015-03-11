@@ -58,7 +58,14 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					$questions = $user->getQuestion();
 					foreach($questions as $question)
 					{
-						echo $question->toString();
+						if($question->getError())
+						{
+							echo $question->getError();
+						}
+						else
+						{
+							echo $question->toString();
+						}
 					}
 					?>
 				</div>

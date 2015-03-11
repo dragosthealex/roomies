@@ -4,10 +4,9 @@
  *
  * Represents an answer.
  */
-class Answer
+include_once 'Base.php';
+class Answer extends Base
 {
-  // The id of the answer
-  private $id;
   // The text of the answer
   private $text;
 
@@ -23,22 +22,32 @@ class Answer
   {
     // Query the database for the answer with the given $id
     $stmt = $con->prepare("SELECT answer_text FROM ranswers WHERE answer_id = '$id'");
-    $stmt->execute();
-
-    // If the answer does not exist, throw an exception and return
-    if (!$stmt->rowCount())
+    try
     {
-      throw new Exception("Error: Invalid Answer Id: $id");
-      return;
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting answer text from db, answer id: $id", 1);
+        
+      }
+      // If the answer does not exist, throw an exception and return
+      if (!$stmt->rowCount())
+      {
+        throw new Exception("Error: Invalid Answer Id: $id");
+        return;
+      }
+
+      // Get the text of the answer
+      $stmt->bindColumn(1, $text);
+      $stmt->fetch();
+
+      // Set the private variables
+      $this->id = $id;
+      $this->text = $text;
     }
-
-    // Get the text of the answer
-    $stmt->bindColumn(1, $text);
-    $stmt->fetch();
-
-    // Set the private variables
-    $this->id = $id;
-    $this->text = $text;
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
   }
 
   /**
