@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED???
 /*
 This creates new conversation and returns it as string
 */

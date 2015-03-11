@@ -291,7 +291,7 @@
 	color: inherit;
 }
 
-.drop-item-link:hover, .drop-item-link.unread {
+.drop-item-link:hover, .drop-item-link.received.unread {
 	background-color: #f2f0ef;
 }
 

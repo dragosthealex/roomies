@@ -1,4 +1,5 @@
 <?php
+// ALMOST DEPRECATED
 require_once '../../inc/init.php';
 session_write_close();
 require_once '../../inc/classes/conversation.php';

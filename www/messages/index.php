@@ -28,6 +28,7 @@ if(isset($_GET['conv']))
   $otherUserId = htmlentities($_GET['conv']);
   $otherUser = new User($con, $otherUserId);
   $otherUserId = $otherUser->getIdentifier('id');
+  $resOtherUserId = $otherUser->getIdentifier('id');
 }
 include __ROOT__."/inc/html/messages_page.php";
 
@@ -71,7 +72,8 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             ><textarea class="textarea" id="message" placeholder="Write a message..."
                        oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"
                        onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"
-                       data-conv-id="<?=$otherUserId?>"></textarea>
+                       data-conv-id="<?=$resOtherUserId?>"
+                       data-focus></textarea>
           </div
           ><label for="pressEnterToSend" class="cr-label cr-label-block"
             ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')" class="cr">
@@ -79,15 +81,16 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             <span class="cr-text">Press Enter to send</span>
           </label
           ><input type="submit" class="input-button block " value="Send"
-                  data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>"
+                  data-ajax-url="../php/messages.process.php?receiver=<?=$resOtherUserId?>"
                   data-ajax-post="message"
-                  data-ajax-callback-1="scrollToBottom conv 1">
+                  data-ajax-callback-1="scrollToBottom conv 1"
+                  data-ajax-callback-2="focusById message">
           <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange()}())</script>
         </div>
       </div>
     </div>
   </div>
 <?php
-$scripts = array('update_message');
+// $scripts = array('update_message');
 include __ROOT__."/inc/html/footer.php";
 ?>

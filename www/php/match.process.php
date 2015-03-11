@@ -17,6 +17,10 @@ if(!is_numeric($_GET['id']))
   exit();
 }
 
+header('Content-type: application/json');
+
+$response = array();
+
 $id = $user->getIdentifier('id');
 $otherUserId = htmlentities($_GET['id']);
 $city = $user->getIdentifier('city');
@@ -132,4 +136,5 @@ while($match = $stmt->fetch(PDO::FETCH_ASSOC))
   }
 }
 
+echo json_encode($response);
 ?>

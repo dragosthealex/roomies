@@ -2,7 +2,7 @@
   return Object.prototype.toString.call(arg) === '[object Array]';
 });
 
-(function (undefined) {
+void function (undefined) {
   var
 
   // Functions for testing types of variables
@@ -96,7 +96,7 @@
       types.push(lastElement);
     }
 
-    if (variables.length !== types.length) {
+    if (variables.length > types.length || (Array.isArray(lastElement) && variables.length < types.length - lastElement.length)) {
       throw new Error("Variables supplied: " + variables.length + ". Types supplied: " + types.length);
     }
 
@@ -127,9 +127,9 @@
     }
     return "object";
   };
-}());
+} ();
 
-(function (window, document, undefined) {
+void function (window, document, undefined) {
   var
   // Localise <html>, <body>, originalTitle, header and newError()
   html = document.documentElement,
@@ -142,6 +142,7 @@
   frequestsDropList = document.getElementById('frequests-drop-list'),
   messageDrop = document.getElementById('message-drop'),
   messageDropList = document.getElementById('message-drop-list'),
+  hasFocus = true,
 
   // Localise some array methods
   slice   = Array.prototype.slice,
@@ -185,8 +186,8 @@
   },
 
   // Function for getting message drop items by their conv id
-  getMessageDropItemByConvId = function (convId) {
-    validate(arguments, "stringable");
+  getMessageDropItemByConvId = function (convId, dontCreateNew) {
+    validate(arguments, "stringable", ["boolean"]);
 
     // Preset the messageDropItem
     var messageDropItem = null;
@@ -197,19 +198,21 @@
       element.getAttribute("data-conv-id") === convId && (messageDropItem = element);
     });
     // If the messageDropItem is still null, create a new one
-    messageDropItem === null && (
-      // <li
-      messageDropItem = document.createElement("li"),
-      // class="drop-item message-drop-item"
-      messageDropItem.className = " drop-item message-drop-item ",
-      // data-conv-id=convId>
-      messageDropItem.setAttribute("data-conv-id", convId)
-    );
+    dontCreateNew || (
+      messageDropItem === null && (
+        // <li
+        messageDropItem = document.createElement("li"),
+        // class="drop-item message-drop-item"
+        messageDropItem.className = " drop-item message-drop-item ",
+        // data-conv-id=convId>
+        messageDropItem.setAttribute("data-conv-id", convId)
+      ),
     
-    // Insert after the placeholder
-    messageDropList.childNodes.length > 1
-    ? messageDropList.insertBefore(messageDropItem, messageDropList.childNodes[1])
-    : messageDropList.appendChild(messageDropItem);
+      // Insert after the placeholder
+      messageDropList.childNodes.length > 1
+      ? messageDropList.insertBefore(messageDropItem, messageDropList.childNodes[1])
+      : messageDropList.appendChild(messageDropItem)
+    );
 
     // Return the messageDropItem
     return messageDropItem;
@@ -260,7 +263,7 @@
     },
     // Variable to hold the ids of all the conversation boxes,
     // along with information about them
-    box: {}
+    box: []
   },
 
   // Variable to hold the info set by the server
@@ -280,8 +283,8 @@
   scrollAreaFunc = function (element) {
     var scrollBars = element.getElementsByClassName('scroll-bar');
     var minusScrollBarWidth = element.clientWidth - element.offsetWidth;
-    var convstn = element.getElementsByClassName('conversation');
-    var convId = !!convstn.length && convstn[0].getAttribute("data-conv-id"), convBox;
+    var convstn = element.getElementsByClassName('conversation')[0];
+    var convId = convstn && convstn.getAttribute("data-conv-id"), convBox;
 
     if (minusScrollBarWidth) {
       forEach.call(element.childNodes, function (child) {
@@ -302,13 +305,29 @@
       });
     }
 
-    if (convId && (convBox = conv.box[convId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
+    if (convstn && (convBox = conv.box[convId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
       convBox.fetchingPrevious = true;
-      roomies.update('messageOld', '../php/update_message.process.php?type=old&otherId=' + convId, 'message', null,
-        function () {
+      roomies.ajax({
+        url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0",
+        success: function (response) {
+          response = response[0];
+          var newHTML = "";
+          forEach.call(response, function (message) {
+            response.template.forEach(function (templatePart, i, template) {
+              newHTML += templatePart + (i < template.length - 1 ? message[i] : "");
+            });
+          });
+
+          if (response.length) {
+            var previousScrollHeight = element.scrollHeight - element.scrollTop;
+            convstn.innerHTML = newHTML + convstn.innerHTML;
+            element.scrollTop = element.scrollHeight - previousScrollHeight;
+          }
+        },
+        complete: function () {
           convBox.fetchingPrevious = false;
         }
-      );
+      });
     }
 
     var boxShadow = "none";
@@ -394,6 +413,11 @@
 
   // An object which holds javascript functions for interactivity
   roomies = {
+    // A function to focus on an element by its id
+    "focusById": function (id) {
+      (document.getElementById(id) || {focus:function(){}}).focus();
+    },
+
     // A function to hide a list of elements
     'hide': function (elements) {
       validate(arguments, "HTMLCollection");
@@ -465,7 +489,7 @@
       validate(arguments, "numeric");
 
       var exampleConv = getElementsByConvId(convId)[0];
-      exampleConv && exampleConv.getElementsByClassName("unread received").length && ajax({
+      exampleConv && exampleConv.getElementsByClassName("unread received").length && roomies.ajax({
         url: info.webRoot + "/php/read_conversation.process.php",
         post: [{name: "convId", value: convId}],
         success: function (response) {
@@ -474,6 +498,14 @@
               element.className = element.className.replace(" unread ", " read ");
             });
           });
+
+          var messageDropLink = getMessageDropItemByConvId(convId, true);
+          if (messageDropLink && (messageDropLink = messageDropLink.firstChild) && / received /.test(messageDropLink.className)) {
+            messageDropLink.className = messageDropLink.className.replace(" unread ", " read ");
+          }
+          roomies.updateUnreadReceived();
+          roomies.updateNofifCount();
+          roomies.updateTitle();
         }
       });
     },
@@ -493,6 +525,31 @@
     'updateNofifCount': function () {
       frequestsDrop.nextSibling.setAttribute('data-icon-number', frequestsDrop.getElementsByClassName('friend-request').length);
       messageDrop.nextSibling.setAttribute('data-icon-number', messageDrop.getElementsByClassName('drop-item-link unread received').length);
+      slice.call(messageDropList.childNodes, 1).forEach(function (childNode) {
+        var convId = childNode.getAttribute('data-conv-id');
+        childNode.firstChild.childNodes[1].setAttribute("data-unread-count", conv.unread.received[convId] || 0);
+      });
+    },
+
+    "resetUnreadReceived": function (prevNo, convId) {
+      conv.unread.received[convId] = 0;
+    },
+
+    "updateUnreadReceived": function () {
+      // Reset the unread received message counter
+      conv.unread.received.forEach(roomies.resetUnreadReceived);
+      // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
+      forEach.call(body.getElementsByClassName('unread received message'), function (message) {
+        var convId = roomies.getParentsByClassName(message, 'conversation')[0];
+        (convId = convId && convId.getAttribute('data-conv-id'))
+        && (conv.unread.received[convId] = (conv.unread.received[convId] || 0) + 1);
+      });
+    },
+
+    "updateTitle": function () {
+      var count = 0;
+      conv.unread.received.forEach(function(n){n&&count++;console.log(n)});
+      document.title = (count ? "(" + count + ") " : "") + originalTitle;
     },
 
     // A function to scroll an scroll thingy, given the scrollbar element and the distance from the top of the element
@@ -506,142 +563,89 @@
       element.parentNode.scrollTop = (element.parentNode.scrollHeight - boxHeight) * ((mouseY - (trackerHeight / 2) * boxHeight) / (1 - trackerHeight)) / boxHeight;
     },
 
-    // A function to update something in the page
-    'update': function (part, url, className1, className2, callback) {
-      validate(arguments, "string", "string", ["string", "string", "function"]);
+    // Ajax function
+    "ajax": function (obj) {
+      validate(arguments, "object");
+      var args = [obj.url];
+      args.push(obj.success  || function () {});
+      args.push(obj.error  || function () {});
+      args.push(obj.complete || function () {});
+      args.push(obj.callback || function () {});
+      args.push(obj.post     || "");
+      args.push(obj.reset    || false);
+      validate(args, "string", "function", "function", "function", "function", "stringOrArray", "boolean");
 
-      var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+      var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+      var postValues = [];
+      var addValueToPostValues = function (key, element, dontResetValue) {
+        element && postValues.push(key + "=" + encodeURIComponent(element.value.trim()));
+
+        dontResetValue || (
+          element.value = "",
+          element.oninput && element.oninput()
+        );
+      };
 
       xmlhttp.onreadystatechange = function () {
+        var response;
         if (xmlhttp.readyState === 4 && xmlhttp.status) {
-          // If there was anything output, new error
-          if (xmlhttp.status === 404) {
-            newError("Not found suck balls");
-          } else if (xmlhttp.status === 200 && xmlhttp.responseText) {
-            var objs = JSON.parse(xmlhttp.responseText);
-            var obj;
-            var newHTML = [];
-
-            for (var i = 0; i < objs.length; i += 1) {
-              obj = objs[i];
-              newHTML[i] = "";
-
-              for (var j = 0; j < obj.length; j += 1) {
-                for (var k = 0; k < obj.template.length - 1; k += 1) {
-                  newHTML[i] += obj.template[k] + obj[j][k];
-                }
-                newHTML[i] += obj.template[obj.template.length - 1];
+          if (xmlhttp.status !== 200) {
+            newError(xmlhttp.responseText);
+          } else {
+            try {
+              response = JSON.parse(xmlhttp.responseText);
+              if (response.error) {
+                newError(response.error);
+              } else {
+                obj.success && setTimeout(function () {
+                  obj.success(response)
+                }, 0);
               }
-            }
-
-            var convElement = document.getElementById('main_conversation');
-            var convParent = convElement.parentNode;
-
-            switch (part) {
-              case 'messageNew':
-                if (objs[0].length) {
-                  var scrolledAtBottom = convParent.scrollHeight - convParent.scrollTop - convParent.offsetHeight === 0;
-                  convElement.innerHTML += newHTML[0];
-                  if (scrolledAtBottom) {
-                    convParent.scrollTop = convParent.scrollHeight;
-                  }
-                  document.title = (conv.unread.received.length ? "(" + conv.unread.received.length + ") " : "") + originalTitle;
-                }
-                if (objs[1].length) {
-                  document.getElementById('allConversations').innerHTML = newHTML[1];
-                }
-                break;
-              case 'messageOld':
-                if (objs[0].length) {
-                  var previousScrollHeight = convParent.scrollHeight - convParent.scrollTop;
-                  convElement.innerHTML = newHTML[0] + convElement.innerHTML;
-                  convParent.scrollTop = convParent.scrollHeight - previousScrollHeight;
-                }
-                break;
+            } catch (e) {
+              console.error(e);
             }
           }
 
-          typeof callback === 'function' && callback();
+          obj.complete && setTimeout(obj.complete, 0);
         } // if
-      }; // onreadystatechange
+      }
 
-      var delimiter = /\?/.test(url) ? '&' : '?';
-
-      xmlhttp.open('GET', url + delimiter + "offset1=" + document.getElementsByClassName(className1).length
-                                          + "&offset2=" + document.getElementsByClassName(className2).length);
-      xmlhttp.setRequestHeader('Roomies','cactus');
-      xmlhttp.send();
-    },
-
-    // A function to use ajax on an element
-    'ajax': function (element) {
-      validate(arguments, "element");
-
-      var url = element.getAttribute('data-ajax-url'),
-          originalText = element.innerHTML,
-          hideText,
-          xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-
-      xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 4) {
-          // Return the text to its original state
-          element.innerHTML = originalText;
-
-          // If there was anything output, new error
-          if (xmlhttp.status === 404) {
-            newError("Not found suck balls");
-          } else if (xmlhttp.responseText) {
-            newError(xmlhttp.responseText);
-          } else if ((hideText = element.getAttribute('data-ajax-hide')) && xmlhttp.status === 200) {
-            hideText = hideText.split(" ");
-
-            forEach.call(body.getElementsByClassName(hideText[0]), function (element) {
-              element.style.display = "none";
-            });
-
-            document.getElementById(hideText[1]).removeAttribute('style');
-          } // if
-        } // if
-      }; // onreadystatechange
-
-      var post = element.getAttribute('data-ajax-post');
-
-      xmlhttp.open((post ? 'POST' : 'GET'), url);
-      xmlhttp.setRequestHeader('Roomies','cactus');
+      xmlhttp.open((obj.post ? "POST" : "GET"), obj.url);
+      xmlhttp.setRequestHeader("Roomies", "cactus");
       xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-      if (post) {
-        var letter = "kiwi=awesome";
+      if (obj.post) {
+        switch (validate.which(obj.post)) {
+          case "string":
+          // get the first element and assume it is a form
+          var form = document.getElementById(obj.post.split(" ")[0]) || {};
+          // if the "form" is actually a form:
+          if (form.nodeType === "FORM") {
+            obj.post.split(" ").slice(1).forEach(function (elementName) {
+              addValueToPostValues(elementName, form.element[elementName]);
+            });
+          } else {
+            obj.post.split(" ").forEach(function (id) {
+              addValueToPostValues(id, document.getElementById(id));
+            });
+          }
+          break;
 
-        post = post.split(" ");
+          case "array":
+          obj.post.forEach(function (input) {
+            postValues.push(input.name + "=" + input.value);
+          });
+          break;
+        }
 
-        post.forEach(function (id) {
-          var element = document.getElementById(id);
+        obj.focusId && document.getElementById(obj.focusId).focus();
 
-          letter += "&" + id + "=" + encodeURIComponent(element.value.trim());
-          element.value = '';
-          element.oninput && element.oninput();
-          element.focus();
-        });
-
-        xmlhttp.send(letter);
+        xmlhttp.send(postValues.join("&"));
       } else {
         xmlhttp.send();
       }
 
-      if (element.hasAttribute('data-ajax-text')) {
-        element.innerHTML = element.getAttribute('data-ajax-text');
-      } // if
-
-      var callback, i;
-      for (i = 1; callback = element.getAttribute('data-ajax-callback-'+i); i += 1) {
-        callback = callback.split(" ");
-        callback[4] ? roomies[callback[0]](callback[1], callback[2], callback[3], callback[4]) :
-        callback[3] ? roomies[callback[0]](callback[1], callback[2], callback[3]) :
-        callback[2] ? roomies[callback[0]](callback[1], callback[2]) :
-        callback[1] ? roomies[callback[0]](callback[1]) :
-        (callback[0] && roomies[callback[0]]())
-      } // if
+      obj.callback && setTimeout(obj.callback, 0);
     }
   };
 
@@ -684,13 +688,49 @@
     } // if
 
     // If a target needs deleting, do so.
-    if (target = document.getElementById(element.getAttribute('data-delete'))) {
-      roomies['delete'](target);
+    if (target = document.getElementById(element.getAttribute("data-delete"))) {
+      roomies["delete"](target);
     } // if
 
     // If the element employs ajax, do some ajax.
-    if (element.hasAttribute('data-ajax-url')) {
-      roomies.ajax(element);
+    var ajaxUrl = element.getAttribute("data-ajax-url");
+    if (ajaxUrl) {
+      var originalText = element.innerHTML;
+
+      roomies.ajax({
+        url: ajaxUrl,
+        success: function () {
+          var hideText = element.getAttribute("data-ajax-hide");
+          if (hideText) {
+            hideText = hideText.split(" ");
+
+            forEach.call(body.getElementsByClassName(hideText[0]), function (element) {
+              element.style.display = "none";
+            });
+
+            document.getElementById(hideText[1]).removeAttribute("style");
+          }
+        },
+        complete: function () {
+          element.innerHTML = originalText;
+        },
+        callback: function () {
+          if (element.hasAttribute("data-ajax-text")) {
+            element.innerHTML = element.getAttribute("data-ajax-text");
+          } // if
+
+          var callback, i;
+          for (i = 1; callback = element.getAttribute("data-ajax-callback-"+i); i += 1) {
+            callback = callback.split(" ");
+            callback[4] ? roomies[callback[0]](callback[1], callback[2], callback[3], callback[4]) :
+            callback[3] ? roomies[callback[0]](callback[1], callback[2], callback[3]) :
+            callback[2] ? roomies[callback[0]](callback[1], callback[2]) :
+            callback[1] ? roomies[callback[0]](callback[1]) :
+            callback[0] ? roomies[callback[0]]() : undefined;
+          } // if
+        },
+        post: element.getAttribute("data-ajax-post")
+      });
       return false;
     } // if
   }; // onclick
@@ -752,8 +792,10 @@
   // Loop through all elements in the body and ensure that
   // the className contains a space at the start and end,
   // for manipulating classNames later.
+  var elementToFocus;
   concat.apply(body, body.getElementsByTagName('*')).forEach(function (element) {
     element.className = ' ' + element.className + ' ';
+    element.hasAttribute("data-focus") && (elementToFocus = element);
   });
 
   // When the page loads, the user scrolls or the window is resized, configure things
@@ -765,15 +807,8 @@
     conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
   });
 
-  // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
-  forEach.call(body.getElementsByClassName('unread received message'), function (message) {
-    var convId = roomies.getParentsByClassName(message, 'conversation')[0];
-    convId = convId && convId.getAttribute('data-conv-id');
-    convId && (
-      conv.unread.received[convId] = conv.unread.received[convId] || 0,
-      conv.unread.received[convId]++
-    );
-  });
+  // Update unread received count
+  roomies.updateUnreadReceived();
 
   // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
   forEach.call(body.getElementsByClassName('unread received drop-item-link'), function (dropItemLink) {
@@ -798,12 +833,21 @@
     };
   });
 
+  window.onfocus = function () {
+    hasFocus = true;
+  };
+  window.onblur = function () {
+    hasFocus = false;
+  };
+
   forEach.call(body.getElementsByClassName("textarea"), function (textarea) {
     var convId;
     if (convId = textarea.getAttribute('data-conv-id')) {
       textarea.onfocus = function () {
         conv.box[convId].focused = true;
-        roomies.markAsRead(convId);
+        setTimeout(function () {
+          conv.box[convId].focused && roomies.markAsRead(convId);
+        }, 100);
       };
       textarea.onblur = function () {
         conv.box[convId].focused = false;
@@ -811,77 +855,7 @@
     }
   });
 
-  // Ajax function
-  function ajax(obj) {
-    validate(arguments, "object");
-    var args = [obj.url];
-    args.push(obj.success  || function () {});
-    args.push(obj.callback || function () {});
-    args.push(obj.post     || "");
-    args.push(obj.reset    || false);
-    validate(args, "string", "function", "function", "stringOrArray", "boolean");
-
-    var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    var postValues = [];
-
-    xmlhttp.onreadystatechange = function () {
-      var response;
-      if (xmlhttp.readyState === 4 && xmlhttp.status) {
-        if (xmlhttp.status !== 200) {
-          newError(xmlhttp.responseText);
-        } else {
-          try {
-            response = JSON.parse(xmlhttp.responseText);
-            if (response.error) {
-              newError(response.error);
-            } else {
-              obj.success && setTimeout(function () {
-                obj.success(response)
-              }, 0);
-            }
-          } catch (e) {
-            console.error(e);
-          }
-        }
-
-        obj.callback && setTimeout(obj.callback, 0);
-      } // if
-    }
-
-    xmlhttp.open((obj.post ? 'POST' : 'GET'), obj.url);
-    xmlhttp.setRequestHeader('Roomies','cactus');
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-    if (obj.post) {
-      switch (validate.which(obj.post)) {
-        case "string":
-        obj.post.split(" ").forEach(function (id) {
-          var element = document.getElementById(id);
-
-          element && postValues.push(id + "=" + encodeURIComponent(element.value.trim()));
-
-          if (resetValues) {
-            element.value = '';
-            element.oninput && element.oninput();
-          }
-        });
-        break;
-        case "array":
-        obj.post.forEach(function (input) {
-          postValues.push(input.name + "=" + input.value);
-        });
-        break;
-      }
-
-      obj.focusId && document.getElementById(obj.focusId).focus();
-
-      xmlhttp.send(postValues.join("&"));
-    } else {
-      xmlhttp.send();
-    }
-  }
-
-  if (info) {
+  if (info.userId) {
     // Set up longpolling
     var longpollSuccess = function (response) {
       if (response.nothingChanged) return;
@@ -916,24 +890,22 @@
           messageHTML += templatePart + (i < template.length - 1 ? message[i] : "");
         });
 
-        getElementsByConvId(otherId).forEach(function (conv) {
-          conv.innerHTML += messageHTML;
-          conv.parentNode.scrollTop = conv.parentNode.scrollHeight;
+        getElementsByConvId(otherId).forEach(function (element) {
+          var
+          parent = element.parentNode,
+          wasAtBottom = parent.scrollHeight - parent.scrollTop - parent.offsetHeight < 50;
+          element.innerHTML += messageHTML;
+          wasAtBottom && (parent.scrollTop = parent.scrollHeight);
         });
 
-        conv.unread.received[otherId] = conv.unread.received[otherId] || 0;
-        !sent && conv.unread.received[otherId]++;
-
-        conv.box[otherId] && conv.box[otherId].focused && (
-          conv.unread.received[otherId] = 0,
-          toRead.indexOf(otherId) === -1 && toRead.push(otherId)
-        );
+        var activeElement = document.activeElement;
+        document.hasFocus() && activeElement && activeElement.getAttribute("data-conv-id") == otherId && toRead.indexOf(otherId) === -1 && toRead.push(otherId);
 
         getMessageDropItemByConvId(otherId).innerHTML =
           "<a href='/messages/" + message[8] + "' class=' drop-item-link " + message[0] + " '>"
         + "<span class=' drop-item-pic ' style='background-image: url(" + message[12] + ")'></span>"
         + "<h3 class=' drop-item-header ' data-unread-count='" + conv.unread.received[otherId] + "'>" + message[9] + "</h3>"
-        + "<p class=' drop-item-text" + (sent?" drop-item-text-sent":"") + " '>" + message[5] + "</p>"
+        + "<p class=' drop-item-text" + (sent?" drop-item-text-sent":"") + " '>" + message[5].split("<br>")[0].substring(0, 200) + "</p>"
         + "<p class=' drop-item-footer ' title='" + message[10] + "'>" + message[11] + "</p>"
         + "</a>";
       });
@@ -941,6 +913,10 @@
       toRead.forEach(function (convId) {
         roomies.markAsRead(convId);
       });
+
+      roomies.updateUnreadReceived();
+      roomies.updateNofifCount();
+      roomies.updateTitle();
 
       oldRequests.forEach(function (requestId) {
         getElementsByRequestId(requestId).forEach(function (element) {
@@ -962,11 +938,6 @@
 
       // Reset the unread sent messages
       conv.unread.sent = [];
-      // Loop through all unread sent messages and add the conv id (uniquely) to the unread sent ids
-      // forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
-      //   var convId = roomies.getParentsByClassName(message, 'conversation')[0].getAttribute('data-conv-id');
-      //   conv.unread.sent.indexOf(convId) === -1 && conv.unread.sent.push(convId);
-      // });
       forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
         var messageId = message.getAttribute('data-message-id');
         conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
@@ -978,7 +949,7 @@
         var id = friendRequest.getAttribute('data-fr-id');
         !isNaN(id) && frIds.push(+id);
       });
-      ajax({
+      roomies.ajax({
         url: info.webRoot + "/php/longpoll.php",
 
         post: [
@@ -998,14 +969,17 @@
 
         success: longpollSuccess,
 
-        callback: longpoll
+        complete: longpoll
       });
     };
+    longpoll();
+  }
 
-    info.userId && longpoll();
+  elementToFocus&&(elementToFocus.focus&&elementToFocus.focus(),elementToFocus.onfocus&&elementToFocus.onfocus());
 
+  if (info) {
     delete window.roomiesInfo;
   }
 
   window.roomies = roomies;
-}(window, document)); // Localise variables
+} (window, document); // Localise variables

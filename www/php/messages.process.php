@@ -11,31 +11,26 @@ if(!isset($_POST['message']) || !isset($_GET['receiver']) || !isset($_SERVER['HT
   include __ROOT__."/inc/html/notfound.php";
   exit();
 }
-else
+
+header('Content-type: application/json');
+
+$response = array();
+
+// Get stuff
+$id1 = $user->getIdentifier('id');
+$id2 = htmlentities($_GET['receiver']);
+$messageText = htmlentities(trim($_POST['message']));
+
+// If empty message, don't do anything
+if ($messageText != '')
 {
-  $id1 = $user->getIdentifier('id');
-  $id2 = htmlentities($_GET['receiver']);
-
-  // Escape stuff
-  $messageText = htmlentities(trim($_POST['message']));
-
-  // If empty message, don't do anything
-  if ($messageText == '')
-  {
-    exit();
-  }
-
-  // Values for setting the message
-  $values[0] = $id1;
-  $values[1] = $id2;
-  $values[2] = $messageText;
-
   // Read all messages in this conv
   $conversation = new Conversation($con, $id1, $id2);
   $conversation->readMessages();
 
   // Insert message in DB
-  $message = new Message($con, 'text', $values);
-
+  $message = new Message($con, 'text', array($id1, $id2, $messageText));
 }
+
+echo json_encode($response);
 ?>

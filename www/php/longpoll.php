@@ -42,7 +42,7 @@ try
     'readMessage' =>
     $con->prepare("SELECT message_id FROM rmessages
                     WHERE messages_read = 1
-                      AND (message_user_id1 = $userId)
+                      AND (message_user_id1 = $userId OR message_user_id2 = $userId)
                       AND (message_id = '".implode("' OR message_id = '", $unreadIds)."')"),
 
     // Third query: Find new friend requests
@@ -136,7 +136,7 @@ try
   {
     $nothingChanged = FALSE;
     // Replace '\n' with '<br>'
-    $message['message_text'] = nl2br($message['message_text']);
+    $message['message_text'] = nl2br($message['message_text'], false);
     $read = ($message['messages_read'])?'read':'unread';
 
     $senderId = $message['message_user_id1'];

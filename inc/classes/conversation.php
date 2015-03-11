@@ -233,7 +233,7 @@ class Conversation
     foreach ($messages as $message)
     {
       // Replace '\n' with '<br>'
-      $message['message_text'] = nl2br($message['message_text']);
+      $message['message_text'] = nl2br($message['message_text'], false);
       $read = ($message['messages_read'])?'read':'unread';
 
       // Get the name and whether it was sent or received

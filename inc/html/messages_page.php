@@ -50,9 +50,6 @@ else
   $conversation = new Conversation ($con, $userId, $otherUserId);
   $conv = $conversation->toString();
   $title = "$otherName - Messages";
-  // Read all messages in this conv
-  $conversation = new Conversation($con, $user->getIdentifier('id'), $otherUserId);
-  $conversation->readMessages();
 }
 
 // Get 10 conversations from the user, starting from offset, ordered desc by time
