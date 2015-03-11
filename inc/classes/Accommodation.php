@@ -151,7 +151,7 @@ class Accommodation extends Base
     $id = $this->id;
     $description = $this->description;
     $date = $this->date;
-    $reviews = $this->reviews;
+    $reviews = ($this->reviews)?$this->reviews:array();
     $rating = $this->rating;
     $name = $this->name;
     $authorId = $this->author;
