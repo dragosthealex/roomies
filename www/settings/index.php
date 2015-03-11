@@ -27,7 +27,7 @@ function validate_pass($con, $id, $pass)
 		}
 
 		// Check if it's good pass
-		if($pass == hash('sha256', $dbPass.$dbSalt))
+		if(hash('sha256', $pass.$dbSalt) == $dbPass)
 		{
 			return true;
 		}

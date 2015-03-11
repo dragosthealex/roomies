@@ -32,16 +32,21 @@
   </div>
   <div class="cr-label">
     <label for="check1">
-      <input id="check1" class="cr" type="radio" name="invisible">Make me invisible
+      <input id="check1" class="cr" type="checkbox" name="invisible">Make me invisible
       <span class="cr-button"></span>
     </label>
   </div>
   <div class="cr-label">
     <label for="check2">
-      <input id="check2" class="cr" type="radio" name="invisible">Delete account
+      <input id="check2" class="cr" type="checkbox" name="delete">Delete account
       <span class="cr-button"></span>
     </label>
   </div>
+  <span>
+    <p>
+      Your current Password:
+    </p>
+  </span>
   <input class="input" placeholder="Current Password" required type="password" name="currentPass">
   <input class="input-button" type="submit" value="Update">
 </form>
@@ -58,7 +63,7 @@ if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2']) && $_POST['e
   $email2 = filter_input(INPUT_POST, 'email2', FILTER_VALIDATE_EMAIL);   
   $email1 = htmlentities($_POST["email1"]);
   $email2 = htmlentities($_POST['email2']);
-
+  $pass = htmlentities($_POST['currentPass']);
   try
   {
     // Check if conf email matches email
@@ -82,23 +87,21 @@ if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2']) && $_POST['e
     //if email is valid, update the table
     $stmt = $con->prepare("UPDATE rusers SET user_email='$email1' WHERE user_id = $id");
     $stmt->execute();
+    echo "Your email was updated.";
   }
   catch (Exception $e)
   {
     echo $e->getMessage();
   }
-  finally
-  {
-    $cactus = null;
-    $stmt = null;
-    $id = null;
-  }
+  $cactus = null;
+  $stmt = null;
+  $id = null;
 }
 
 //PASSWORD
 if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_POST['password1'] && $_POST['password2'] && $_POST['currentPass'])
 {
-  $id = $user->getIdentifier['id'];
+  $id = $user->getIdentifier('id');
 
   $password1 = htmlentities($_POST['password1']);
   $password2 = htmlentities($_POST['password2']);
@@ -116,7 +119,7 @@ if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_P
       throw new Exception("You inserted invalid characters", 1);
     }
 
-    if(!validate_pass($con, $id, $password1))
+    if(!validate_pass($con, $id, $currentPass))
     {
       throw new Exception("Your password was incorrect", 1);
     }
@@ -124,22 +127,21 @@ if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_P
 
     // Create random salt, hash the pass
     $salt = mt_rand();
-    $password = hash('sha256', $password.$salt);
+    $password = hash('sha256', $password1.$salt);
 
     $stmt = $con->prepare("UPDATE rusers SET user_salt = '$salt', user_pass  = '$password' WHERE user_id = $id");
     $stmt->execute();
+    echo "Your password was changed";
   }
   catch (Exception $e)
   {
     echo $e->getMessage();
   }
-  finally
-  {
-    $id = null;
-    $stmt = null;
-    $salt = null;
-    $password = null;
-  }
+
+  $id = null;
+  $stmt = null;
+  $salt = null;
+  $password = null;
 }
 
 
