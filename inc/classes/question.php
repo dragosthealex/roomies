@@ -188,17 +188,11 @@ class Question
           </p>
         </div>
         <div class='question-answers for-me'>
-      ";
-      $question .=
-      "
-        <div class='answer answered'>
-          <p class='text'>
-            $forMe
-          </p>
-        </div>
-      ";      
-      $question .=
-      "
+          <div class='answer answered'>
+            <p class='text'>
+              $forMe
+            </p>
+          </div>
         </div>
         <div class='question-answers for-others'>
       ";
@@ -237,19 +231,24 @@ class Question
       ";
       foreach ($answers as $answer)
       {
-        $count ++;
+        /*
+        The answers to different q can have the same id i.e. the answer 'yes' has the id 1 everywhere.
+        So we need to set the answers id attribute with a unique count.
+        We set the name for the radio buttons to be "answers_for_q_$questionId"
+        */
         $answerText = $answer->getText();
         $answerId = $answer->getId();
         $question .=
         "
           <div class='answer'>
-            <label for='$answerId$count' class='cr-label cr-label-block'>
-              <input type='radio' id='$answerId$count' name='$answerId' class='r-a'>
+            <input type='radio' id='$id"."_$count' name='answers_for_q_$id' class='r-a'>
+            <label for='$id"."_$count' class='cr-label cr-label-block'>
               <span class='r-a-circle'></span>
-               <span class='r-a-circle-text'>$answerText</span>
+              <span class='r-a-circle-text'>$answerText</span>
             </label>
           </div>
         ";      
+        $count ++;
       }
       $question .=
       "
@@ -259,16 +258,20 @@ class Question
       ";
       foreach ($answers as $answerId => $answer)
       {
+        /*
+        We set the name for the radio buttons to be unique "accepting_for_q_$questionId_$answerId"
+        */
         $answerText = $answer->getText();
         $answerId = $answer->getId();
         $question .=
            "
-            <label for='$answerId' class='cr-label cr-label-block'>
-              <input type='checkbox' id='$answerId' name='$answerId' class='cr'>
+            <label for='$id"."_$count' class='cr-label cr-label-block'>
+              <input type='checkbox' id='$id"."_$count' name='accepting_for_q_".$id."_$answerId' class='cr'>
               <span class='cr-button'></span>
               <span class='cr-text'>$answerText</span>
             </label>
            ";
+        $count ++;
       }
       $question .=
       "
