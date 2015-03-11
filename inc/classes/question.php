@@ -224,6 +224,7 @@ class Question
     }
     else
     {
+      $count = 0;
       $question = 
       "
       <div class='question'>
@@ -236,15 +237,17 @@ class Question
       ";
       foreach ($answers as $answer)
       {
+        $count ++;
         $answerText = $answer->getText();
         $answerId = $answer->getId();
         $question .=
         "
           <div class='answer'>
-            <p class='text'>
-              $answerText
-            </p>
-            <input class='answer-radio' name='question$id' type='radio' value='$answerId'></input>
+            <label for='$answerId$count' class='cr-label cr-label-block'>
+              <input type='radio' id='$answerId$count' name='$answerId' class='r-a'>
+              <span class='r-a-circle'></span>
+               <span class='r-a-circle-text'>$answerText</span>
+            </label>
           </div>
         ";      
       }
