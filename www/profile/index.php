@@ -60,11 +60,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					{
 						echo $question->toString();
 					}
-
 					?>
-					<p class="text">
-
-					</p>
 				</div>
 			</div>
 		</div>

@@ -209,11 +209,11 @@ class Question
       }
       $question .=
       "
+          </div>
+          <div class='importance answered'>
+            <p class='text'>$importance</p>
+          </div>
         </div>
-        <div class='importance answered'>
-          <p class='text'>$importance</p>
-        </div>
-      </div>
       ";
     }
     else
@@ -221,13 +221,13 @@ class Question
       $count = 0;
       $question = 
       "
-      <div class='question'>
-        <div class='question-text'>
-          <p class='text'>
-            $text
-          </p>
-        </div>
-        <div class='question-answers for-me'>
+        <div class='question'>
+          <div class='question-text'>
+            <p class='text'>
+              $text
+            </p>
+          </div>
+          <div class='question-answers for-me'>
       ";
       foreach ($answers as $answer)
       {
@@ -240,21 +240,21 @@ class Question
         $answerId = $answer->getId();
         $question .=
         "
-          <div class='answer'>
-            <input type='radio' id='$id"."_$count' name='answers_for_q_$id' class='r-a'>
-            <label for='$id"."_$count' class='cr-label cr-label-block'>
-              <span class='r-a-circle'></span>
-              <span class='r-a-circle-text'>$answerText</span>
-            </label>
-          </div>
+            <div class='answer'>
+              <input type='radio' id='$id"."_$count' name='answers_for_q_$id' class='r-a'>
+              <label for='$id"."_$count' class='cr-label cr-label-block'>
+                <span class='r-a-circle'></span>
+                <span class='r-a-circle-text'>$answerText</span>
+              </label>
+            </div>
         ";      
         $count ++;
       }
       $question .=
       "
-        </div>
-        <div class='question-answers for-others'>
-        <p>Answers I accept</p>
+          </div>
+          <div class='question-answers for-others'>
+            <p>Answers I accept</p>
       ";
       foreach ($answers as $answerId => $answer)
       {
@@ -264,49 +264,50 @@ class Question
         $answerText = $answer->getText();
         $answerId = $answer->getId();
         $question .=
-           "
+         "
             <label for='$id"."_$count' class='cr-label cr-label-block'>
               <input type='checkbox' id='$id"."_$count' name='accepting_for_q_".$id."_$answerId' class='cr'>
               <span class='cr-button'></span>
               <span class='cr-text'>$answerText</span>
             </label>
-           ";
+         ";
         $count ++;
       }
       $question .=
       "
-      </div>
-      <p>Importance to me:</p>
-      <div class='cupid-wrapper'>
-                            <div class='answer-block'>
-                                <input type='radio' name='importance_questions_$id' id='1importance_questions_$id' class='r-a' value='0'>
-                                <label for='1importance_questions_$id'>
-                                    <span class='span-left'></span>
-                                    <span class='r-text'>Irrelevant</span>
-                                </label>
-                            </div>
-                            <div class='answer-block'>
-                                <input type='radio' name='importance_questions_$id' id='2importance_questions_$id' class='r-a' value='1'>
-                                <label for='2importance_questions_$id'>
-                                    <span class='span-center'></span>
-                                    <span class='r-text'>Not Too Important</span>
-                                </label>
-                            </div>
-                            <div class='answer-block'>
-                                <input type='radio' name='importance_questions_$id' id='3importance_questions_$id' class='r-a' value='2'>
-                                <label for='3importance_questions_$id'>
-                                    <span class='span-center'></span>
-                                    <span class='r-text'>Somewhat Important</span>
-                                </label>
-                            </div>
-                            <div class='answer-block'>
-                                <input type='radio' name='importance_questions_$id' id='4importance_questions_$id' class='r-a' value='3'>
-                                <label for='4importance_questions_$id'>
-                                    <span class='span-right'></span>
-                                    <span class='r-text'>Important</span>
-                                </label>
-                            </div>
-                        </div>
+          </div>
+          <p>Importance to me:</p>
+          <div class='cupid-wrapper'>
+            <div class='answer-block'>
+                <input type='radio' name='importance_questions_$id' id='1importance_questions_$id' class='r-a' value='0'>
+                <label for='1importance_questions_$id'>
+                    <span class='span-left'></span>
+                    <span class='r-text'>Irrelevant</span>
+                </label>
+            </div>
+            <div class='answer-block'>
+                <input type='radio' name='importance_questions_$id' id='2importance_questions_$id' class='r-a' value='1'>
+                <label for='2importance_questions_$id'>
+                    <span class='span-center'></span>
+                    <span class='r-text'>Not Too Important</span>
+                </label>
+            </div>
+            <div class='answer-block'>
+                <input type='radio' name='importance_questions_$id' id='3importance_questions_$id' class='r-a' value='2'>
+                <label for='3importance_questions_$id'>
+                    <span class='span-center'></span>
+                    <span class='r-text'>Somewhat Important</span>
+                </label>
+            </div>
+            <div class='answer-block'>
+                <input type='radio' name='importance_questions_$id' id='4importance_questions_$id' class='r-a' value='3'>
+                <label for='4importance_questions_$id'>
+                    <span class='span-right'></span>
+                    <span class='r-text'>Important</span>
+                </label>
+            </div>
+          </div>
+        </div>
       ";
       //Add a submit button after changing into a form
       return $question;
