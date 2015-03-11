@@ -143,7 +143,7 @@ class Accommodation extends Base
   public function toJson()
   {
     // Set the reviews if not already
-    if (!isset($reviews[0]))
+    if (!isset($this->reviews[0]))
     {
       $this->setReviews();
     }
