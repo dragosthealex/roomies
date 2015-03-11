@@ -22,29 +22,36 @@ if (!isset($_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] !== 'cactus')
 
 require_once __ROOT__.'/inc/classes/user.php';
 
-if(isset($_GET['a']))
+header('Content-type: application/json');
+
+$response = array();
+
+// No action supplied.
+if(!isset($_GET['a']))
 {
-  $action = htmlentities($_GET['a']);
-
-  if(isset($_GET['id']))
-  {
-    $otherUser = new User($con, $_GET['id']);
-    $user->addFriend($otherUser, $action);
-    $status = $user->friendshipStatus($otherUser);
-
-    if(!$status && $action)
-    {
-      echo "Error. Operation failed.";
-    }
-  }
-  else
-  {
-    echo "Error. User ids not passed.";
-  }
+  $response['error'] = 'Action not supplied.';
 }
+
+// No other id supplied.
+else if (!isset($_GET['id']))
+{
+  $response['error'] = 'User id not supplied.';
+}
+
+// Action and id both supplied
 else
 {
-  require_once __ROOT__.'/inc/html/notfound.php';
-  exit();
+  // Apply the action to the user of the other id
+  $action = htmlentities($_GET['a']);
+  $otherUser = new User($con, $_GET['id']);
+  $user->addFriend($otherUser, $action);
+
+  // Check if it worked
+  if(!$user->friendshipStatus($otherUser) && $action)
+  {
+    $response['error'] = 'Operation failed.';
+  }
 }
+
+echo json_encode($response);
 ?>

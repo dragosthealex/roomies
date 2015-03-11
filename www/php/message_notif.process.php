@@ -1,4 +1,5 @@
 <?php
+// DEPRECATED
 // This thing process stuff
 
 require_once '../../init.php';

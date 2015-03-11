@@ -143,7 +143,7 @@ class Accommodation extends Base
   public function toJson()
   {
     // Set the reviews if not already
-    if (!isset($reviews[0]))
+    if (!isset($this->reviews[0]))
     {
       $this->setReviews();
     }
@@ -151,7 +151,7 @@ class Accommodation extends Base
     $id = $this->id;
     $description = $this->description;
     $date = $this->date;
-    $reviews = $this->reviews;
+    $reviews = ($this->reviews)?$this->reviews:array();
     $rating = $this->rating;
     $name = $this->name;
     $authorId = $this->author;
