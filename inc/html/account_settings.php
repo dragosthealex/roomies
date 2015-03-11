@@ -1,7 +1,7 @@
 <?php
 $message = '';
 //EMAIL 
-if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2']) && $_POST['email1'] && $_POST['email2'] && $_POST['currentPass'])
+if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2'], $_POST['submit1']) && $_POST['email1'] && $_POST['email2'] && $_POST['currentPass'])
 {
   // THIS IS THE ID
   $cactus = $user2->getCredential('id');
@@ -46,7 +46,7 @@ if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2']) && $_POST['e
 }
 
 //PASSWORD
-if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_POST['password1'] && $_POST['password2'] && $_POST['currentPass'])
+if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass'], $_POST['submit1']) && $_POST['password1'] && $_POST['password2'] && $_POST['currentPass'])
 {
   //$id = $user2->getCredential('id');
   $id = $user2->getCredential('id');
@@ -93,7 +93,7 @@ if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_P
 }
 
 // INVISIBLE
-if(isset($_POST['currentPass']) && $_POST['currentPass'])
+if(isset($_POST['currentPass'], $_POST['submit1']) && $_POST['currentPass'])
 {
   $currentPass = htmlentities($_POST['currentPass']);
   $id = $user2->getCredential('id');
@@ -105,14 +105,11 @@ if(isset($_POST['currentPass']) && $_POST['currentPass'])
       throw new Exception("Your password was incorrect", 1);
     }
 
-    
-    $stmt = $con->prepare("SELECT is_invisible FROM rusersettings WHERE setting_user_id = $id");
-    if(!$stmt->execute())
+    $dbInvisible = $user2->getSetting('is_invisible');
+    if($user2->getError())
     {
-      throw new Exception("Error getting invisible status from database", 1);
+      throw new Exception($user2->getError(), 1);
     }
-    $stmt->bindColumn(1, $dbInvisible);
-    $stmt->fetch();
 
     // Check if the set value is different from db
     if($dbInvisible && !isset($_POST['invisible']))
@@ -142,7 +139,7 @@ if(isset($_POST['currentPass']) && $_POST['currentPass'])
 }
 
 // SET PRIVATE
-if(isset($_POST['currentPass'], $_POST['privacy']) && $_POST['currentPass'])
+if(isset($_POST['currentPass'], $_POST['privacy'], $_POST['submit1']) && $_POST['currentPass'])
 {
   $currentPass = htmlentities($_POST['currentPass']);
   $id = $user2->getCredential('id');
@@ -228,6 +225,7 @@ function valid_pass($password)
       <span class="cr-button"></span>
     </label>
   </div>
+  <!--TODO: IMPLEMENT DELETE ACCOUNT-->
   <div class="cr-label">
     <label for="check2">
       <input id="check2" class="cr" type="checkbox" name="delete">Delete account
@@ -240,6 +238,6 @@ function valid_pass($password)
     </p>
   </span>
   <input class="input" placeholder="Current Password" required type="password" name="currentPass">
-  <input class="input-button" type="submit" value="Update">
+  <input class="input-button" type="submit" name="submit1" value="Update">
   <?=$message?>
 </form>

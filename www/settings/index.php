@@ -49,27 +49,27 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 	<div class="box-padding">
 		<ul class="ul">
 	    <li class="li tab">
-	      <a class="link-button" name="questions" onclick="show(this);">
+	      <a href="#" class="link-button" name="account_settings" onclick="show(this.getAttribute('name'));">
 	        Account Settings
 	      </a>
 	    </li>
 	    <li class="li tab">
-	      <a class="link-button" name="insert" onclick="show(this);">
+	      <a href="#" class="link-button" name="notif_settings" onclick="show(this.getAttribute('name'));">
 	        Notifications
 	      </a>
 	    </li>
 	    <li class="li tab">
-	      <a class="link-button" name="insert" onclick="show(this);">
+	      <a href="#" class="link-button" name="insert" onclick="show(this.getAttribute('name'));">
 	        Connected accounts
 	      </a>
 	    </li>
 	    <li class="li tab">
-	      <a class="link-button" name="insert" onclick="show(this);">
+	      <a href='#' class="link-button" name="insert" onclick="show(this.getAttribute('name'));">
 	        My reviews
 	      </a>
 	    </li>
 	    <li class="li tab">
-	      <a class="link-button" name="insert" onclick="show(this);">
+	      <a href="#" class="link-button" name="insert" onclick="show(this.getAttribute('name'));">
 	        SHITFUCK
 	      </a>
 	    </li>
@@ -81,6 +81,21 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 	</div>
 </div>
 
+<script>
+function show(id) {
+	var forms = document.getElementsByTagName("FORM"),
+			index;
+	for (index=0; index<forms.length; index++)	{
+		if(forms[index].getAttribute('id') == id)	{
+			forms[index].style.display = "block";
+		}
+		else {
+			forms[index].style.display = "none";
+		}
+	}
+}
+
+</script>
 <?php
 require_once __ROOT__."/inc/html/footer.php";
 ?>
