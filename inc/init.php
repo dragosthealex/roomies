@@ -20,6 +20,7 @@ function __autoload($class) {
 }
 
 include __ROOT__.'/inc/classes/user.php';
+include __ROOT__.'/inc/classes/CurrentUser.php';
 
 // Setting session name
 $session_name = 'some_name';
@@ -133,6 +134,14 @@ if(LOGGED_IN)
     exit();
   }
   $user = new User($con, $_SESSION['user']['id']);
+  // for implementing step by step
+  
+  $user2 = new CurrentUser($con);
+  if($user2->getError())
+  {
+    echo $user2->getError();
+    exit();
+  }
 }
 else
 {

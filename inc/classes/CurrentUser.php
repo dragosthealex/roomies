@@ -20,6 +20,7 @@ class CurrentUser extends GeneralUser
     $username = isset($_SESSION['user']['username'])?$_SESSION['user']['username']:'';
     $email = isset($_SESSION['user']['email'])?$_SESSION['user']['email']:'';
 
+    echo $id . "<br> $username <br> $email"; 
     try
     {
       // Problem if we don't have an id
@@ -29,7 +30,7 @@ class CurrentUser extends GeneralUser
       }
 
       // Get the user
-      $stmt = $con->prepare("SELECT * FROM details WHERE profile_filter_id =".$this->id);
+      $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =$id");
       if(!$stmt->execute())
       {
         throw new Exception("Error getting details from database", 1);
@@ -45,7 +46,7 @@ class CurrentUser extends GeneralUser
       $this->birthday = $details['birthday'];
 
       // Assingn the details
-      $this->details = $details
+      $this->details = $details;
 
       // Assign the rest of credentials
       $this->id = $id;
@@ -66,7 +67,7 @@ class CurrentUser extends GeneralUser
   *
   * @return - $name(String), the first+last name
   */
-  public function getName()
+  public function getName($friendshipStatus = 0)
   {
     return $this->name;
   }
@@ -103,7 +104,7 @@ class CurrentUser extends GeneralUser
         {
           if($status)
           {
-            throw new Exception("There Is already a connection in database", 1)
+            throw new Exception("There Is already a connection in database", 1);
           }
 
           $stmt = $con->prepare("INSERT INTO rconexions (conexion_user_id1, conexion_user_id2, conexion_status)
@@ -241,7 +242,7 @@ class CurrentUser extends GeneralUser
     }
     catch (Exception $e)
     {
-      $this->setError($->getMessage());
+      $this->setError($this->getMessage());
     }
   }
 
@@ -464,7 +465,7 @@ private function getConv($offset)
   } // getConv method
 
   // Helper method to get friend requests
-  private getNotifRequestsContent($offset)
+  private function getNotifRequestsContent($offset)
   {
     // Localise id
     $id = $this->id;
@@ -530,7 +531,7 @@ private function getConv($offset)
   }// function getNotifRequestsContent()
 
   // Helper function to get notif requests template
-  private getNotifRequestsTemplate()
+  private function getNotifRequestsTemplate()
   {
     $requestsTemplate = array("<li class='drop-item' id='drop-item-fr-",
                               "'><div class='drop-item-box'><a class='drop-item-pic' href='/profile/?u=",
@@ -652,8 +653,6 @@ private function getConv($offset)
     }
     return $conversations;
   }
-
-
 }
 
 

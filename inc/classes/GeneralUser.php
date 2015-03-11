@@ -23,7 +23,8 @@ abstract class GeneralUser extends Base
   protected $birthday;
   // The name
   protected $name;
-
+  // The settings for this user, assoc array
+  protected $settings;
   /**
   * Function getCredential($key)
   *
@@ -49,6 +50,7 @@ abstract class GeneralUser extends Base
       default:
         return isset($this->details[$key])?$this->details[$key]:'Wrong key';
         break;
+    }
   }
 
   /**
@@ -85,17 +87,6 @@ abstract class GeneralUser extends Base
     }
 
   return $trueDetails;
-  }
-  /**
-  * Function getName()
-  *
-  * Gets the username by default
-  *
-  * @return - $username
-  */
-  public function getName()
-  {
-    return $this->username;
   }
 
   /*
@@ -202,6 +193,47 @@ abstract class GeneralUser extends Base
   protected function getImagePath()
   {
 
+  }
+
+  /**
+  * Function getSetting($key)
+  *
+  * Depending on the key, it returns the setting value for this user
+  *
+  * @param - $key(String), the key that determins which setting value should be returned
+  * @return - $value(Int), the value of the key
+  */
+  public function getSetting($key)
+  {
+    if(!isset($this->settings[0]))
+    {
+      $this->setSettings();
+    }
+    return isset($this->settings[$key])?$this->settings[$key]:'';
+  }// function getSetting
+
+  // Helper function to set this user's settings
+  private function setSettings()
+  {
+    // Localise stuff
+    $con = $this->con;
+    $id = $this->id;
+    $settings = array();
+
+    $stmt = $con->prepare("SELECT * FROM rusersettings WHERE setting_user_id = $id");
+    try
+    {
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting settings from db", 1);
+      }
+      $settings = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+    $this->settings = $settings;
   }
 }
 

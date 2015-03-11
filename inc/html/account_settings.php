@@ -1,63 +1,10 @@
-<form action="" method="POST" id="account_settings">
-  <span>
-    <p>
-      Change your password:
-    <p>
-  </span>
-  <input class="input" placeholder="New Password" type="password" name="password1">
-  <input class="input" placeholder="Repeat New Password" type="password" name="password2">
-  <span>
-    <p>
-      Change your email: 
-    </p>
-  </span>
-  <input class="input" placeholder="New Email" type="email" name="email1">
-  <input class="input" placeholder="Repeat New Email" type="email" name="email2">
-  <span>
-    <p>
-      Privacy Settings: 
-    </p>
-  </span>
-  <div class="cr-label">
-    <label for="radio1">
-      <input id="radio1" class="cr" type="radio" name="privacy" value="public">Show my full name
-      <span class="cr-button r-button"></span>
-    </label>
-  </div>
-  <div class="cr-label">
-    <label for="radio2">
-      <input id="radio2" class="cr" type="radio" name="privacy" value="private">Only show username
-      <span class="cr-button r-button"></span>
-    </label>
-  </div>
-  <div class="cr-label">
-    <label for="check1">
-      <input id="check1" class="cr" type="checkbox" name="invisible">Make me invisible
-      <span class="cr-button"></span>
-    </label>
-  </div>
-  <div class="cr-label">
-    <label for="check2">
-      <input id="check2" class="cr" type="checkbox" name="delete">Delete account
-      <span class="cr-button"></span>
-    </label>
-  </div>
-  <span>
-    <p>
-      Your current Password:
-    </p>
-  </span>
-  <input class="input" placeholder="Current Password" required type="password" name="currentPass">
-  <input class="input-button" type="submit" value="Update">
-</form>
-
 <?php
-
+$message = '';
 //EMAIL 
 if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2']) && $_POST['email1'] && $_POST['email2'] && $_POST['currentPass'])
 {
   // THIS IS THE ID
-  $cactus = $user->getIdentifier('id');
+  $cactus = $user2->getCredential('id');
       
   $email1 = filter_input(INPUT_POST, 'email1', FILTER_VALIDATE_EMAIL);
   $email2 = filter_input(INPUT_POST, 'email2', FILTER_VALIDATE_EMAIL);   
@@ -87,11 +34,11 @@ if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2']) && $_POST['e
     //if email is valid, update the table
     $stmt = $con->prepare("UPDATE rusers SET user_email='$email1' WHERE user_id = $id");
     $stmt->execute();
-    echo "Your email was updated.";
+    $message .= "Your email was updated." . "<br>";
   }
   catch (Exception $e)
   {
-    echo $e->getMessage();
+    $message .= $e->getMessage() . "<br>";
   }
   $cactus = null;
   $stmt = null;
@@ -101,7 +48,8 @@ if(isset($_POST['currentPass'], $_POST['email1'], $_POST['email2']) && $_POST['e
 //PASSWORD
 if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_POST['password1'] && $_POST['password2'] && $_POST['currentPass'])
 {
-  $id = $user->getIdentifier('id');
+  //$id = $user2->getCredential('id');
+  $id = $user2->getCredential('id');
 
   $password1 = htmlentities($_POST['password1']);
   $password2 = htmlentities($_POST['password2']);
@@ -131,11 +79,11 @@ if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_P
 
     $stmt = $con->prepare("UPDATE rusers SET user_salt = '$salt', user_pass  = '$password' WHERE user_id = $id");
     $stmt->execute();
-    echo "Your password was changed";
+    $message .= "Your password was changed. <br>";
   }
   catch (Exception $e)
   {
-    echo $e->getMessage();
+    $message .= $e->getMessage() . "<br>";
   }
 
   $id = null;
@@ -144,8 +92,83 @@ if(isset($_POST['password1'], $_POST['password2'], $_POST['currentPass']) && $_P
   $password = null;
 }
 
+// INVISIBLE
+if(isset($_POST['currentPass']) && $_POST['currentPass'])
+{
+  $currentPass = htmlentities($_POST['currentPass']);
+  $id = $user2->getCredential('id');
 
+  try
+  {
+    if(!validate_pass($con, $id, $currentPass))
+    {
+      throw new Exception("Your password was incorrect", 1);
+    }
 
+    
+    $stmt = $con->prepare("SELECT is_invisible FROM rusersettings WHERE setting_user_id = $id");
+    if(!$stmt->execute())
+    {
+      throw new Exception("Error getting invisible status from database", 1);
+    }
+    $stmt->bindColumn(1, $dbInvisible);
+    $stmt->fetch();
+
+    // Check if the set value is different from db
+    if($dbInvisible && !isset($_POST['invisible']))
+    {
+      $dbInvisible = 0;
+      $message .= "Your invisible status was updated. <br>";
+    }
+    else if(!$dbInvisible && $_POST['invisible'])
+    {
+      $dbInvisible = 1;
+      $message .= "Your invisible status was updated. <br>";
+    }
+
+    // Update setting
+    $stmt = $con->prepare("UPDATE rusersettings SET is_invisible=$dbInvisible WHERE setting_user_id = $id");
+    if(!$stmt->execute())
+    {
+      throw new Exception("Error updating invisible status", 1);
+    }
+    $stmt->execute();
+
+  }
+  catch (Exception $e)
+  {
+    $message .= $e->getMessage() . "<br>";
+  }
+}
+
+// SET PRIVATE
+if(isset($_POST['currentPass'], $_POST['privacy']) && $_POST['currentPass'])
+{
+  $currentPass = htmlentities($_POST['currentPass']);
+  $id = $user2->getCredential('id');
+
+  try
+  {
+    if(!validate_pass($con, $id, $currentPass))
+    {
+      throw new Exception("Your password was incorrect", 1);
+    }
+
+    $isPrivate = ($_POST['privacy'] == 'private')?1:0;
+    $stmt = $con->prepare("UPDATE rusersettings SET is_private=$isPrivate WHERE setting_user_id=$id");
+    if(!$stmt->execute())
+    {
+      throw new Exception("Error updating private status", 1);
+    }
+    $message .= "Your private status was updated. <br>";
+  }
+  catch (Exception $e)
+  {
+    $message .= $e->getMessage();
+  }
+}
+
+// Validate the new password
 function valid_pass($password) 
 {
    $r1='/[A-Z]/';  //Uppercase
@@ -166,3 +189,57 @@ function valid_pass($password)
    return TRUE;
 } //end valid_pass
 ?>
+
+<form action="" method="POST" id="account_settings">
+  <span>
+    <p>
+      Change your password:
+    <p>
+  </span>
+  <input class="input" placeholder="New Password" type="password" name="password1">
+  <input class="input" placeholder="Repeat New Password" type="password" name="password2">
+  <span>
+    <p>
+      Change your email: 
+    </p>
+  </span>
+  <input class="input" placeholder="New Email" type="email" name="email1">
+  <input class="input" placeholder="Repeat New Email" type="email" name="email2">
+  <span>
+    <p>
+      Privacy Settings: 
+    </p>
+  </span>
+  <div class="cr-label">
+    <label for="radio1">
+      <input id="radio1" class="cr" type="radio" name="privacy" value="public" <?=$user2->getSetting('is_private')?'':'checked'?>>Show my full name
+      <span class="cr-button r-button"></span>
+    </label>
+  </div>
+  <div class="cr-label">
+    <label for="radio2">
+      <input id="radio2" class="cr" type="radio" name="privacy" value="private" <?=$user2->getSetting('is_private')?'checked':''?>>Only show username
+      <span class="cr-button r-button"></span>
+    </label>
+  </div>
+  <div class="cr-label">
+    <label for="check1">
+      <input id="check1" class="cr" type="checkbox" name="invisible" <?=$user2->getSetting('is_invisible')?'checked':''?>>Make me invisible
+      <span class="cr-button"></span>
+    </label>
+  </div>
+  <div class="cr-label">
+    <label for="check2">
+      <input id="check2" class="cr" type="checkbox" name="delete">Delete account
+      <span class="cr-button"></span>
+    </label>
+  </div>
+  <span>
+    <p>
+      Your current Password:
+    </p>
+  </span>
+  <input class="input" placeholder="Current Password" required type="password" name="currentPass">
+  <input class="input-button" type="submit" value="Update">
+  <?=$message?>
+</form>
