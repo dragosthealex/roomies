@@ -67,9 +67,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
       $stmt->fetch();
       if(!$stmt->rowCount())
       {
-        //There was a problem
-        //require_once __ROOT__."/inc/html/problem.php";
-        exit();
+        throw new Exception("Error. $id is not in users table", 1);
       }
 
       // Format the birthday
@@ -111,13 +109,26 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
         // Insert new rows in db, initialising the percentages for this user and others in their city with 0
         $stmt = $con->prepare("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
                                 VALUES ($otherUserId, $id, $mapCity)");
-        $stmt->execute();
+        if(!$stmt->execute())
+        {
+          throw new Exception("Error initialising percentages", 1);
+        }
+      }
+
+      // Initialise the settings for this user
+      $stmt = $con->prepare("INSERT INTO rusersettings (setting_user_id) VALUES ($id)");
+      if(!$stmt->execute)
+      {
+        throw new Exception("Error initialising settings", 1);
       }
 
       // Insert those values in rdetails
       $stmt = $con->prepare("INSERT INTO rdetails (profile_filter_id, first_name, last_name, birthday, country, language, gender, uni_city )
                               VALUES ($id, '$firstName', '$lastName', '$birthday', '$mapCountry', '$mapLanguage', '$mapGender', '$mapCity')");
-      $stmt->execute();
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error inserting details", 1);
+      }
 
       $stmt = null;
     }
