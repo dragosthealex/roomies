@@ -578,14 +578,27 @@ void function (window, document, undefined) {
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
       var postValues = [];
       var addValueToPostValues = function (key, element, dontResetValue) {
+        if (!element) return;
+
         console.debug(element);
-        element && (
-          postValues.push(key + "=" + encodeURIComponent(element.type === "checkbox" ? element.checked : element.value.trim())),
+
+        var value;
+        if (element.type === "checkbox") {
+          value = element.checked;
+        } else if (typeof element.value === "string") {
+          value = element.value;
           dontResetValue || element.nodeName !== "TEXTAREA" || (
             element.value = "",
             element.oninput && element.oninput()
-          )
-        );
+          );
+        } else if (element.length) {
+          forEach.call(element, function (element) {
+            element.checked && (value = element.value);
+          });
+        }
+        if (value !== undefined) {
+          postValues.push(key + "=" + encodeURIComponent(element.type === "checkbox" ? element.checked : element.value.trim()));
+        }
       };
 
       xmlhttp.onreadystatechange = function () {
