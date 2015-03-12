@@ -163,25 +163,23 @@ class Accommodation extends Base
     $authorName = $author->getName();
 
     // Create the JSON
-    $json = "{\"id\"          : \"$id\",
-              \"authorName\"  : \"$authorName\",
-              \"authorId\"    : \"$authorId\",
-              \"description\" : \"$description\",
-              \"rating\"      : \"$rating\",
-              \"noOfPhotos\"  : \"$noOfPhotos\",
-              \"name\"        : \"$name\",
-              \"reviews\"     : [\"\"
-            ";
+    $reviewsJson = '';
     foreach ($reviews as $key => $review)
     {
       $review = $review->toJson();
-      $json .= ",\"$review\"";
+      $reviewsJson .= ",\"$review\"";
     }
+    $jsonArray = array(
+              "id"          => "$id",
+              "authorName"  => "$authorName",
+              "authorId"    => "$authorId",
+              "description" => "$description",
+              "rating"      => "$rating",
+              "noOfPhotos"  => "$noOfPhotos",
+              "name"        => "$name",
+              "reviews"     => "$reviewsJson");
 
-    // Close json
-    $json .= "]}";
-
-    return $json;
+    return json_encode($jsonArray);
   }
 
   /**
