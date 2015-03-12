@@ -52,6 +52,7 @@ class OtherUser extends GeneralUser
       $this->id = $id;
       $this->username = $username;
       $this->email = $email;
+      $this->con = $con;
 
       // Get the rest of the details as mapped ints from the db
       $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =$id");
@@ -62,7 +63,7 @@ class OtherUser extends GeneralUser
       $details = $stmt->fetch(PDO::FETCH_ASSOC);
 
       // Assign the unmapped details
-      $this->name = $details['first_name'] . $details['last_name'];
+      $this->name = $details['first_name'] . " " . $details['last_name'];
       $this->birthday = $details['birthday'];
       // Assign the details
       $this->details = $details;
@@ -89,16 +90,34 @@ class OtherUser extends GeneralUser
     $con = $this->con;
     $id = $this->id;
 
-    // Search for privacy
-    // TODO
+    // Get privacy setting
+    $stmt = $con->prepare("SELECT is_private FROM rusersettings WHERE setting_user_id = $id");
+    try
+    {
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting privacy details from db", 1);
+      }
+      $stmt->bindColumn(1, $isPrivate);
+      if(!$stmt->rowCount())
+      {
+        throw new Exception("Weird. There are no settings for this user in db", 1);
+      }
+      $stmt->fetch();
 
-    // Get for the status
-    if($friendshipStatus == 1)
-    {
-      return $this->name;
+      // Get for the status
+      if($friendshipStatus == 1 || !$isPrivate)
+      {
+        return $this->name;
+      }
+      else
+      {
+        return $this->username;
+      }
     }
-    else
+    catch (Exception $e)
     {
+      $this->errorMsg = $e->getMessage();
       return $this->username;
     }
   }

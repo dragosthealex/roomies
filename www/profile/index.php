@@ -132,6 +132,13 @@ $nameOrUsername = $otherUser->getName($status);
 $title = "$otherUsername";
 $userImagePath = $otherUser->getCredential('image');
 
+$errorMsg = '';
+$errorMsg .= ($otherUser->getError())?$otherUser->getError() . "<br>":'';
+$errorMsg .= ($user2->getError())?$user2->getError() . "<br>":'';
+
+
+
+
 // Include head and header
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
@@ -183,6 +190,9 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 						   data-ajax-hide='blockUnblock blockButton' <?=$unblockButtonHide?>
 						   class='link-button blockUnblock' id='unblockButton'>Unblock</a>
 					</div>
+					<!--JUST DEBUGGING-->
+					<?=$errorMsg?>
+					<!--END JUST DEBUGGING-->
 				</div>
 			</div>
 		</div>
