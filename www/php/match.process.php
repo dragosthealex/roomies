@@ -4,7 +4,7 @@ Gets user  ID of other user through AJAX. Update percentages in table.
 */
 require_once "../../inc/init.php";
 
-if(!LOGGED_IN || !isset($_GET['q_no'], $_POST['q_ans'], $_POST['q_acc_1'], $_POST['q_imp'], $_SERVER['HTTP_ROOMIES'])
+if(!LOGGED_IN || !isset($_GET['q_no'], $_POST['q_ans'], $_POST['q_acc'], $_POST['q_imp'], $_SERVER['HTTP_ROOMIES'])
               || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__."/inc/html/notfound.php";
@@ -19,11 +19,8 @@ $id = $user->getIdentifier('id');
 $city = $user->getIdentifier('city');
 $questionNo = htmlentities($_GET['q_no']);
 $myAnswer = htmlentities($_POST['q_ans']);
-$myAccepted = array();
-for ($i = 1; isset($_POST["q_acc_$i"]); $i++)
-{
-  array_push($myAccepted, $_POST["q_acc_$i"]);
-}
+$myAccepted = htmlentities($_POST['q_acc']);
+$myAccepted = explode(",", $myAccepted);
 $myImportance = htmlentities($_POST['q_imp']);
 
 $stmt = $con->prepare("SELECT percentage_user_id1, percentage_user_id2, id1_1, id1_10, id1_50, id2_1, id2_10, id2_50, id1_max, id2_max

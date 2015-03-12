@@ -241,10 +241,11 @@ class Question extends Base
       $question = 
       "
         <div class='question'>
-          <script>window.checkForm=function(e,i,c,p,q,r,j){
+          <script>window.checkForm=function(e,i,c,p,q,r,j,z,y){
             p=q=r=!1;e=e.parentNode.parentNode.parentNode;
             for(j=1;j<=c;j++)p=p||document.getElementById('q_'+i+'_ans_'+j).checked;
-            for(j=0;j<=c;j++)q=q||document.getElementById('q_'+i+'_acc_'+j).checked;
+            y=document.getElementById('q_'+i+'_acc');y.value='';
+            for(j=0;j<=c;j++)(z=document.getElementById('q_'+i+'_acc_'+j),j&&z.checked&&(y.value=y.value?y.value.split(',').concat(z.value).join(','):z.value),q=q||z.checked);
             for(j=0;j<=3;j++)r=r||document.getElementById('q_'+i+'_imp_'+j).checked;
             e.children[e.children.length-2].disabled=!(p&&q&&r);
           }</script>
@@ -310,6 +311,7 @@ class Question extends Base
                   <span class='cr-text'>Any of the above</span>
                 </label>
               </div>
+              <input type='hidden' name='q_acc' id='q_{$id}_acc'>
               <h4 class='h4'>Importance</h4>
               <input type='radio' name='q_imp' id='q_{$id}_imp_0' class='cp-0' value='0'>
               <div class='cr-block'><div class='cr-label'><div class='cr-text'>Irrelevant</div></div></div>
@@ -330,7 +332,7 @@ class Question extends Base
                   <span class='cr-text'>Very</span>
                 </label>
               </div>
-              <input disabled type='button' class='input-button' data-ajax-url='../php/match.process.php?q_no={$id}' data-ajax-post='q_{$id} q_ans {$acceptedAnswerNames} q_imp' value='Answer'>
+              <input disabled type='button' class='input-button' data-ajax-url='../php/match.process.php?q_no={$id}' data-ajax-post='q_{$id} q_ans q_acc q_imp' value='Answer'>
               <input type='button' class='input-button cancel-button' data-toggle='q_$id' value='Cancel'>
             </form>
           </div>
