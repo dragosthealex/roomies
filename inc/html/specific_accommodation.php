@@ -57,6 +57,9 @@ else
     </div>
   </div>
 </div>
+<div class="box-padding">
+  Here da details, i.e. rating etc
+</div>  
 <div class='acc-long-desc'>
   <?=$accomInfo['description'];?>
 </div>
