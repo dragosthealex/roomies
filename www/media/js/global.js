@@ -580,7 +580,7 @@ void function (window, document, undefined) {
       var addValueToPostValues = function (key, element, dontResetValue) {
         element && (
           postValues.push(key + "=" + encodeURIComponent(element.type === "checkbox" ? element.checked : element.value.trim())),
-          dontResetValue || (
+          dontResetValue || element.nodeName !== "TEXTAREA" || (
             element.value = "",
             element.oninput && element.oninput()
           )
