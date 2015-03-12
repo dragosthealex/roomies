@@ -86,7 +86,5 @@ else
             <span class="cr-text">Press Enter to send</span>
           </label
           ><input type="submit" class="input-button block " value="Send"
-                  data-ajax-url=""
-                  data-ajax-post="message"
-                  data-ajax-callback-1="scrollToBottom conv 1"
-                  data-ajax-callback-2="focusById message">
+                  data-ajax-url="../php/reviews.process.php"
+                  data-ajax-post="message">
