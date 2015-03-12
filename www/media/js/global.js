@@ -585,8 +585,8 @@ void function (window, document, undefined) {
         var value;
         if (element.type === "checkbox") {
           value = element.checked;
-        } else if (typeof element.value === "string") {
-          value = element.value;
+        } else if (element.value) {
+          value = element.value.trim();
           dontResetValue || element.nodeName !== "TEXTAREA" || (
             element.value = "",
             element.oninput && element.oninput()
@@ -597,7 +597,7 @@ void function (window, document, undefined) {
           });
         }
         if (value !== undefined) {
-          postValues.push(key + "=" + encodeURIComponent(element.type === "checkbox" ? element.checked : element.value.trim()));
+          postValues.push(key + "=" + encodeURIComponent(value));
         }
       };
 
