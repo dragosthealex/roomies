@@ -292,14 +292,14 @@ class Question extends Base
          "
               <div class='cr-block'>
                 <label for='q_{$id}_acc_{$count}' class='cr-label'>
-                  <input type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$answerId}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
+                  <input type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
                   <span class='cr-button'></span>
                   <span class='cr-text'>{$answerText}</span>
                 </label>
               </div>
          ";
+        $acceptedAnswerNames .= "q_acc_{$count} ";
         $count ++;
-        $acceptedAnswerNames .= "q_acc_{$answerId} ";
       }
       $question .=
       "
