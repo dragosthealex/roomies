@@ -53,8 +53,8 @@
             </ul>
           </div>
         </div>
-        <span class="icon-holder" data-toggle="extra-drop" data-hide="drop">
-          <span class="icon icon-down" data-toggle="extra-drop" data-hide="drop"></span>
+        <span class="icon-holder" data-toggle="extra-drop">
+          <span class="icon icon-down" data-toggle="extra-drop"></span>
         </span>
       </li>
     </ul>

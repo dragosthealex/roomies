@@ -29,6 +29,6 @@ if ($unreadCount > 99) {
     </div>
     <a href='<?=$webRoot?>/messages' class='drop-footer link'>View all</a>
   </div>
-</div><span class="icon-holder" title="Messages" data-toggle="message-drop" data-hide="drop" data-icon-number="<?=$unreadCount?>">
-  <span class="icon icon-messages" data-toggle="message-drop" data-hide="drop"></span>
+</div><span class="icon-holder" title="Messages" data-toggle="message-drop" data-icon-number="<?=$unreadCount?>">
+  <span class="icon icon-messages" data-toggle="message-drop"></span>
 </span>

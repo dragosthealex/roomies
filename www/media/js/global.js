@@ -578,11 +578,12 @@ void function (window, document, undefined) {
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
       var postValues = [];
       var addValueToPostValues = function (key, element, dontResetValue) {
-        element && postValues.push(key + "=" + encodeURIComponent(element.value.trim()));
-
-        dontResetValue || (
-          element.value = "",
-          element.oninput && element.oninput()
+        element && (
+          postValues.push(key + "=" + encodeURIComponent(element.type === "checkbox" ? element.checked : element.value.trim())),
+          dontResetValue || (
+            element.value = "",
+            element.oninput && element.oninput()
+          )
         );
       };
 
@@ -623,9 +624,9 @@ void function (window, document, undefined) {
           */
           var form = document.getElementById(obj.post.split(" ")[0]) || {};
           // if the "form" is actually a form:
-          if (form.tagName === "FORM") {
+          if (form.nodeName === "FORM") {
             obj.post.split(" ").slice(1).forEach(function (elementName) {
-              addValueToPostValues(elementName, form.elementName);
+              addValueToPostValues(elementName, form.elements[elementName]);
             });
           } else {
             obj.post.split(" ").forEach(function (id) {
@@ -656,7 +657,7 @@ void function (window, document, undefined) {
    */
   window.onclick = function (e) {
     // If the button press is not the left button, then return true.
-    if ((e.which && e.which !== 1) || (e.button !== 1 && e.button !== 0)) {
+    if ((e.which && e.which !== 1) || (e.button !== 1 && e.button !== 0) || e.target.disabled) {
       return true;
     } // if
 
@@ -665,34 +666,26 @@ void function (window, document, undefined) {
     // Localise the class string of the target
     var className = element.className;
 
-    // Localise a variable for later use
-    var target, targets, targetWasAlreadyHidden = false;
-
-    // If a target needs toggling, check if it was already hidden
-    if (target = document.getElementById(element.getAttribute('data-toggle'))) {
-      targetWasAlreadyHidden = hiddenRegex.test(target.className);
-    }
+    // Localise variables for later use
+    var target, targets;
 
     // Get an array of all the drops that the current element is in
-    var elementsToShowAgain = validate.bool([element], "element")
-                              ? roomies.getParentsByClassName(element, 'drop')
-                              : [];
-    // Hide all drops
-    roomies.hide(body.getElementsByClassName('drop'));
-    // Show the previous elements again
-    elementsToShowAgain.forEach(function (elementToShow) {
-      roomies.toggle(elementToShow);
+    var elementsToKeepOpen = validate.bool([element], "element")
+                             ? roomies.getParentsByClassName(element, 'drop')
+                             : [];
+    // Hide all drops, except those in the elements to keep open
+    forEach.call(body.getElementsByClassName("drop"), function (dropElement) {
+      elementsToKeepOpen.indexOf(dropElement) === -1 && roomies.hide([dropElement]);
     });
 
-    // If a target was hidden and needs toggling, toggle it
-    if (target && targetWasAlreadyHidden) {
-      roomies.toggle(target);
-    } // if
-
-    // If a target needs deleting, do so.
-    if (target = document.getElementById(element.getAttribute("data-delete"))) {
-      roomies["delete"](target);
-    } // if
+    // If targets needs hiding, hide them
+    (targets = document.getElementsByClassName(element.getAttribute("data-hide"))).length && roomies.hide(targets);
+    // If targets needs showing, show them
+    (targets = document.getElementsByClassName(element.getAttribute("data-show"))).length && roomies.show(targets);
+    // If a target needs toggling, toggle it
+    (target = document.getElementById(element.getAttribute("data-toggle"))) && roomies.toggle(target);
+    // If a target needs deleting, delete it
+    (target = document.getElementById(element.getAttribute("data-delete"))) && roomies["delete"](target);
 
     // If the element employs ajax, do some ajax.
     var ajaxUrl = element.getAttribute("data-ajax-url");

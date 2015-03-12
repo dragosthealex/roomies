@@ -58,8 +58,8 @@ if ($requestCount > 99) {
     </div>
     <a href='<?=$webRoot?>/friends/requests' class='drop-footer link'>View all</a>
   </div>
-</div><span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-hide="drop" data-icon-number="<?=$requestCount?>">
-  <span class="icon icon-frequests" data-toggle="frequests-drop" data-hide="drop"></span>
+</div><span class="icon-holder" title="Friend Requests" data-toggle="frequests-drop" data-icon-number="<?=$requestCount?>">
+  <span class="icon icon-frequests" data-toggle="frequests-drop"></span>
 </span>
 <?php
 $stmt = null;

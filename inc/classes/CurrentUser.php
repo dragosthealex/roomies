@@ -19,7 +19,7 @@ class CurrentUser extends GeneralUser
     $id = isset($_SESSION['user']['id'])?$_SESSION['user']['id']:'';
     $username = isset($_SESSION['user']['username'])?$_SESSION['user']['username']:'';
     $email = isset($_SESSION['user']['email'])?$_SESSION['user']['email']:'';
- 
+
     try
     {
       // Problem if we don't have an id

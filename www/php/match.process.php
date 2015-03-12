@@ -4,14 +4,8 @@ Gets user  ID of other user through AJAX. Update percentages in table.
 */
 require_once "../../inc/init.php";
 
-if(!LOGGED_IN || !$_GET['id'] || !isset($_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus'
-  || !isset($_GET['q_no']) || !isset($_GET['q_ans']) || !isset($_GET['q_acc']) || !isset($_get['q_imp']))
-{
-  include __ROOT__."/inc/html/notfound.php";
-  exit();
-}
-
-if(!is_numeric($_GET['id']))
+if(!LOGGED_IN || !isset($_GET['q_no'], $_POST['q_ans'], $_POST['q_acc_1'], $_POST['q_imp'], $_SERVER['HTTP_ROOMIES'])
+              || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__."/inc/html/notfound.php";
   exit();
@@ -22,13 +16,15 @@ header('Content-type: application/json');
 $response = array();
 
 $id = $user->getIdentifier('id');
-$otherUserId = htmlentities($_GET['id']);
 $city = $user->getIdentifier('city');
 $questionNo = htmlentities($_GET['q_no']);
-$myAnswer = htmlentities($_GET['q_ans']);
-$myAccepted = htmlentities($_GET['q_acc']);
-$myAccepted = explode(",", $myAccepted);
-$myImportance = htmlentities($_GET['q_imp']);
+$myAnswer = htmlentities($_POST['q_ans']);
+$myAccepted = array();
+for ($i = 1; isset($_POST["q_acc_$i"]); $i++)
+{
+  array_push($myAccepted, $_POST["q_acc_$i"]);
+}
+$myImportance = htmlentities($_POST['q_imp']);
 
 $stmt = $con->prepare("SELECT percentage_user_id1, percentage_user_id2, id1_1, id1_10, id1_50, id2_1, id2_10, id2_50, id1_max, id2_max
                         FROM rpercentages
