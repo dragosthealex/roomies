@@ -280,7 +280,6 @@ class Question extends Base
       "
               <h4 class='h4'>Answer(s) you&rsquo;ll accept</h4>
       ";
-      $acceptedAnswerNames = '';
       $count = 1;
       foreach ($answers as $answerId => $answer)
       {
@@ -299,7 +298,6 @@ class Question extends Base
                 </label>
               </div>
          ";
-        $acceptedAnswerNames .= "q_acc_{$count} ";
         $count ++;
       }
       $question .=
