@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2+deb7u1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 11, 2015 at 11:40 PM
--- Server version: 5.5.41
--- PHP Version: 5.4.36-0+deb7u3
+-- Generation Time: Mar 12, 2015 at 03:16 AM
+-- Server version: 5.5.41-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.6
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `roomies`
+-- Database: `2014_comp10120_x7`
 --
 
 -- --------------------------------------------------------
@@ -459,138 +459,19 @@ CREATE TABLE IF NOT EXISTS `rmessages` (
   `message_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `messages_read` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`message_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=183 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=184 ;
 
 --
 -- Dumping data for table `rmessages`
 --
 
 INSERT INTO `rmessages` (`message_id`, `message_user_id1`, `message_user_id2`, `message_text`, `message_timestamp`, `messages_read`) VALUES
-(4, 27, 21, 'wassup?', '2015-02-13 18:22:20', 1),
-(5, 21, 27, 'fine, u?', '2015-02-13 21:28:16', 1),
-(6, 27, 21, 'nuthing suck balls', '2015-02-13 18:22:24', 1),
-(7, 27, 21, 'fuck you too!\n<br>\nshitfuck', '2015-02-13 21:28:16', 1),
-(8, 12, 21, 'how are you?', '2015-02-13 18:22:41', 1),
-(9, 21, 12, 'Fine, dear Sir. How are you?', '2015-02-13 18:22:35', 1),
-(11, 21, 12, 'do you like mayonaise?', '2015-02-13 19:27:39', 1),
-(12, 21, 12, 'heyyy, answer!!!', '2015-02-13 19:27:39', 1),
-(13, 21, 12, '''''''''''''''''''''''', '2015-02-13 19:27:39', 1),
-(14, 21, 12, '&lt;div&gt;', '2015-02-13 19:27:39', 1),
-(15, 21, 12, '''', '2015-02-13 19:27:39', 1),
-(16, 12, 21, 'shit?', '2015-02-13 19:27:39', 1),
-(17, 12, 21, '&lt;div&gt;Test&lt;/div&gt;', '2015-02-13 19:29:53', 1),
-(18, 12, 21, '&lt;div&gt;Test&lt;/div&gt;&lt;br&gt;&lt;p&gt;No&lt;/p&gt;\nYes.', '2015-02-13 19:30:18', 1),
-(19, 21, 27, 'asdasd', '2015-02-13 21:28:16', 1),
-(20, 21, 12, 'shit biatch', '2015-02-13 21:47:01', 1),
-(26, 12, 21, 'blob', '2015-02-13 22:06:38', 1),
-(34, 12, 21, 'LOL', '2015-02-13 22:42:04', 1),
-(35, 21, 12, 'shit', '2015-02-13 22:45:33', 1),
-(36, 12, 21, 'bleh', '2015-02-13 22:45:51', 1),
-(37, 21, 12, 'shit', '2015-02-13 22:48:02', 1),
-(38, 21, 12, 'shit2', '2015-02-13 22:48:02', 1),
-(39, 21, 12, 'asdasd', '2015-02-13 22:49:20', 1),
-(40, 21, 12, 'asdasd2', '2015-02-13 22:49:23', 1),
-(41, 12, 21, 'test', '2015-02-13 22:51:18', 1),
-(42, 21, 12, 'shit', '2015-02-13 22:51:31', 1),
-(43, 12, 21, 'test', '2015-02-13 22:54:00', 1),
-(44, 21, 12, 'fuck you', '2015-02-13 23:05:29', 1),
-(45, 21, 12, 'heyyy :3\n', '2015-02-13 23:07:02', 1),
-(46, 12, 21, 'Wahey!', '2015-02-13 23:07:13', 1),
-(47, 12, 21, 'Wahey!hhghgfh', '2015-02-13 23:07:51', 1),
-(48, 21, 12, 'stuff', '2015-02-14 01:23:05', 1),
-(49, 21, 12, 'okay, aparently single quotation mark doesnt work\n', '2015-02-14 01:23:33', 1),
-(50, 21, 12, 'also, textarea is too large for phone. i think its bc i set it to 60 cols', '2015-02-14 01:24:32', 1),
-(51, 12, 21, 'I think I remember that single quotation mark only displayed 1 mark when 2 were used... something for you to work on while I work in style.css :P\nJust installing apache and shit on an Ubuntu VM', '2015-02-14 01:27:55', 1),
-(52, 21, 12, 'okay. why not work on laptop? :o', '2015-02-14 01:29:12', 1),
-(53, 21, 12, 'I also need to fix the stuff that shows how many unread messages are', '2015-02-14 01:30:45', 1),
-(54, 21, 12, 'and the thing thay clears the textarea when sent', '2015-02-14 01:31:17', 1),
-(55, 12, 21, 'This screen is clean, and this PC is faster, even on VM xD', '2015-02-14 01:40:26', 1),
-(56, 12, 21, 'Will work on the styling, and having a message appear in the title upon a new message', '2015-02-14 01:40:51', 1),
-(57, 12, 21, 'Also considering having the recursive function only retrieve the unread messages... then spamming every 1 or 2 seconds would not be that bad (ignore le weird sentences... avoiding apostrophes for now).', '2015-02-14 01:42:14', 1),
-(58, 12, 21, 'Just figuring out what to install, to get PDO and shit all working fast', '2015-02-14 01:42:49', 1),
-(59, 12, 21, 'Got it configured and shit. Shall begin styling.', '2015-02-14 02:05:30', 1),
-(60, 21, 12, 'okay. ill fix the things now', '2015-02-14 02:05:58', 1),
-(61, 12, 21, 'Can you add detection of empty strings, please? I will remove the empty string messages from the db for now... because the styling will look glitchy unless I specifically cater to the idea of allowing empty strings', '2015-02-14 02:42:45', 1),
-(64, 12, 21, 'test?', '2015-02-14 02:44:25', 1),
-(65, 12, 21, 'something broke ._.', '2015-02-14 02:44:32', 1),
-(66, 12, 21, 'Strange. Maybe it was being slow?', '2015-02-14 02:46:39', 1),
-(68, 21, 12, 'I think your message got sent two times. Ill add detection', '2015-02-14 02:49:44', 1),
-(69, 12, 21, 'Yeah, some weird shit happened. Not sure what...', '2015-02-14 02:51:00', 1),
-(70, 12, 21, 'Same weird shit happening again... hmmm', '2015-02-14 02:53:42', 1),
-(71, 12, 21, 'Can you make it so that, if $_GET[unread] is set, it only retrieves unread messages?', '2015-02-14 02:59:10', 1),
-(72, 12, 21, 'Also, seems to go buggy whenever I use single quotes, I think', '2015-02-14 02:59:32', 1),
-(73, 12, 21, 'Some basic styling pushed. Nothing on the textarea yet, but it should almost feel instant-chat-like.', '2015-02-14 03:24:42', 1),
-(74, 12, 21, 'Well, hopefully.', '2015-02-14 03:27:59', 1),
-(75, 12, 21, 'Im currently trying to get the auto-scrolling fixed, so I might send some random messages. :P', '2015-02-14 03:38:58', 1),
-(91, 21, 12, 'shit fuck 1', '2015-02-14 14:29:29', 1),
-(92, 21, 12, 'shit fuck 2', '2015-02-14 14:29:34', 1),
-(93, 21, 12, 'blob', '2015-02-14 14:33:52', 1),
-(94, 21, 12, 'shti', '2015-02-14 14:34:56', 1),
-(95, 21, 12, 'works', '2015-02-14 14:36:01', 1),
-(96, 21, 12, 'works?', '2015-02-14 15:07:34', 1),
-(97, 21, 12, 'blub', '2015-02-14 15:08:04', 1),
-(98, 21, 12, 'blub', '2015-02-14 15:08:11', 1),
-(99, 21, 12, 'asdasd', '2015-02-14 15:10:51', 1),
-(100, 21, 12, 'asdasd', '2015-02-14 15:12:15', 1),
-(101, 21, 12, 'asdasd', '2015-02-14 15:12:16', 1),
-(102, 21, 12, 'asdasd', '2015-02-14 15:12:16', 1),
-(103, 21, 12, 'asdasd', '2015-02-14 15:12:16', 1),
-(104, 21, 12, 'asdasd', '2015-02-14 15:12:17', 1),
-(105, 21, 12, 'asdasd', '2015-02-14 15:12:17', 1),
-(106, 21, 12, 'asdasd', '2015-02-14 15:12:17', 1),
-(107, 21, 12, 'Testing shit...', '2015-02-14 15:23:08', 1),
-(108, 21, 12, 'test2', '2015-02-14 15:23:31', 1),
-(109, 21, 12, 'test again', '2015-02-14 15:30:55', 1),
-(110, 21, 12, 'hooray, works', '2015-02-14 15:31:01', 1),
-(111, 21, 12, 'test?', '2015-02-14 15:43:53', 1),
-(112, 21, 12, '''', '2015-02-14 16:06:05', 1),
-(113, 21, 12, '''''', '2015-02-14 16:06:12', 1),
-(114, 21, 12, '&quot;', '2015-02-14 16:06:18', 1),
-(115, 21, 12, '''', '2015-02-14 16:12:58', 1),
-(116, 21, 12, '&amp; ', '2015-02-14 16:13:23', 1),
-(117, 21, 12, '&lt;div&gt; ', '2015-02-14 16:13:29', 1),
-(118, 21, 12, '? : &quot;', '2015-02-14 16:13:34', 1),
-(119, 21, 12, '!@#$%^&amp;*()', '2015-02-14 16:13:41', 1),
-(120, 21, 12, '''', '2015-02-14 16:13:44', 1),
-(121, 21, 12, 'it works now, doesn''t it?', '2015-02-14 16:13:53', 1),
-(122, 21, 12, '''; DROP rmessages;', '2015-02-14 16:15:43', 1),
-(123, 21, 12, 'it looks awesome on mobile btw', '2015-02-14 17:15:08', 1),
 (124, 12, 12, 'Here''s a test:\n&lt;div class=&quot;test&quot;&gt;&lt;br&gt;&lt;/div&gt;\n&lt;div class=''test''&gt;&lt;/div&gt;', '2015-02-14 17:15:09', 1),
-(125, 21, 12, 'testing focus', '2015-02-14 17:15:32', 1),
 (126, 12, 12, 'I haven''t even started on the mobile version yet ._.', '2015-02-14 17:16:03', 1),
-(127, 21, 12, 'test focus again', '2015-02-14 17:16:16', 1),
 (128, 12, 12, 'Gonna fix the chat replacing issue', '2015-02-14 17:17:45', 1),
-(129, 21, 12, 'testing again', '2015-02-14 17:19:23', 1),
-(130, 21, 12, 'yeah.. the problem is that when I send, it should focus again on the message. instead it doesn''t do that\n', '2015-02-14 17:19:50', 1),
-(131, 21, 12, 'commencing stress test', '2015-02-14 17:20:08', 1),
-(132, 21, 12, 'a', '2015-02-14 17:20:08', 1),
-(133, 21, 12, 'a', '2015-02-14 17:20:09', 1),
-(134, 21, 12, 'a', '2015-02-14 17:20:12', 1),
-(135, 21, 12, 'a', '2015-02-14 17:20:12', 1),
-(136, 21, 12, 'a', '2015-02-14 17:20:12', 1),
-(137, 21, 12, 'a', '2015-02-14 17:20:13', 1),
-(138, 21, 12, 'a', '2015-02-14 17:20:14', 1),
-(139, 21, 12, 'a', '2015-02-14 17:20:14', 1),
-(140, 21, 12, 'okay, this works.', '2015-02-14 17:20:24', 1),
-(141, 21, 12, 'looks nice btw', '2015-02-14 17:20:39', 1),
 (142, 12, 12, 'I''m not seeing my messages when I refresh though o.o', '2015-02-14 17:27:20', 1),
 (143, 12, 12, 'Well, only when I send a new message, all of the recent ones I sent get displayed', '2015-02-14 17:27:46', 1),
 (144, 12, 12, 'Ah... I''m so confused right now.\nWe need the longpolling thing to only check for the unread messages sent by the other user, and the send button to only get the unread messages sent by the other user along with the single most recent message sent by the current user (i.e. th message they just sent)', '2015-02-14 17:38:47', 1),
-(145, 12, 21, 'I''m thinking that we need 3 different types of output from message process php:\n1) The update that happens after the user sends a message (to return the last message sent by the current user).\n2) The longpolling: Only retrieve messages sent by the other person, that are unread.\n3) The scrolling up: Retrieve all messages, given an offset.', '2015-02-14 17:50:46', 1),
-(146, 21, 12, 'message.process does not give any output', '2015-02-14 17:51:27', 1),
-(147, 21, 12, 'the output is given by update_mesage', '2015-02-14 17:51:43', 1),
-(148, 12, 21, 'I meant update_message process', '2015-02-14 17:51:52', 1),
-(149, 21, 12, 'oh, the new messages will be appended by js?', '2015-02-14 17:52:28', 1),
-(150, 12, 21, 'So I''ll have JS send a variable _GET[''type''] = ''new'' or ''old'' or ''sent''\n(New =&gt; get the new messages sent by other user, and mark them as read)\n(Old =&gt; get the old messages sent by either user, given an offset)\n(Sent =&gt; get the &quot;New&quot; messages AND the most recent message sent by the current user)', '2015-02-14 17:55:02', 1),
-(151, 12, 21, 'Yeah, rather than replaced', '2015-02-14 17:55:31', 1),
-(152, 12, 21, 'Then we can scrap the _GET[''unread''] stuff.', '2015-02-14 17:55:55', 1),
-(153, 21, 12, 'yes', '2015-02-14 18:09:01', 1),
-(154, 12, 21, 'AH!', '2015-02-14 18:33:56', 1),
-(155, 12, 21, 'I got it. Maybe.', '2015-02-14 18:34:01', 1),
-(156, 12, 21, 'Little change up in ideas (I know, annoying).', '2015-02-14 18:34:15', 1),
-(157, 12, 21, 'Once we get the proper long-polling in place (not just the current consta-repeat thing), we can send the timestamp in _GET, and the server gets all messages from either user that were sent &gt;= the timestamp. (This is for type=new btw).', '2015-02-14 18:35:41', 1),
-(158, 12, 21, 'What time do you think you''ll be up tomorrow?\nI''m thinking of coming in, because I don''t want to work on this and fuck shit up w/ merge errors, unless you got Skype?', '2015-02-14 18:44:22', 1),
-(159, 12, 21, 'Oh, and remember when I mentioned that there''s OFFSET in SQL?\nhttp://www.petefreitag.com/item/451.cfm\ne.g. LIMIT 50 OFFSET $offset', '2015-02-14 19:05:17', 1),
 (160, 12, 12, 'Test?', '2015-02-14 19:09:48', 1),
 (161, 12, 12, 'Test', '2015-02-14 19:28:06', 1),
 (162, 12, 12, 'newtest', '2015-02-15 03:18:57', 1),
@@ -599,21 +480,14 @@ INSERT INTO `rmessages` (`message_id`, `message_user_id1`, `message_user_id2`, `
 (165, 12, 12, 'newtest4', '2015-02-15 03:37:55', 1),
 (166, 12, 12, 'newtest5', '2015-02-15 03:40:47', 1),
 (167, 12, 12, 'newtest6', '2015-02-15 03:50:56', 1),
-(168, 21, 12, 'biatch', '2015-02-19 15:35:42', 1),
-(169, 21, 12, 'see dis', '2015-02-19 15:35:47', 1),
-(170, 21, 12, 'muthafucka', '2015-02-19 15:35:55', 1),
-(171, 21, 12, 'hey, see this?', '2015-02-20 18:58:25', 1),
-(172, 21, 12, 'see?', '2015-02-20 19:07:25', 1),
-(173, 21, 12, 'asdasd', '2015-02-20 19:07:34', 1),
-(174, 21, 12, 'asdasd', '2015-02-20 19:07:36', 1),
-(175, 21, 27, 'asdasd', '2015-02-20 19:14:08', 1),
-(176, 49, 12, 'shit fuck', '2015-02-27 21:41:48', 0),
-(177, 49, 12, 'fuck', '2015-02-27 21:41:53', 0),
-(178, 49, 12, 'shit', '2015-02-27 21:41:55', 0),
-(179, 49, 12, 'piss', '2015-02-27 21:41:57', 0),
-(180, 49, 12, 'arse', '2015-02-27 21:41:59', 0),
-(181, 49, 12, 'asdasd', '2015-02-27 21:42:03', 0),
-(182, 49, 12, 'fuck\n\n\nshit piss', '2015-02-27 21:42:20', 0);
+(176, 49, 12, 'shit fuck', '2015-02-27 21:41:48', 1),
+(177, 49, 12, 'fuck', '2015-02-27 21:41:53', 1),
+(178, 49, 12, 'shit', '2015-02-27 21:41:55', 1),
+(179, 49, 12, 'piss', '2015-02-27 21:41:57', 1),
+(180, 49, 12, 'arse', '2015-02-27 21:41:59', 1),
+(181, 49, 12, 'asdasd', '2015-02-27 21:42:03', 1),
+(182, 49, 12, 'fuck\n\n\nshit piss', '2015-02-27 21:42:20', 1),
+(183, 12, 49, 'fdsfds', '2015-03-12 02:57:43', 0);
 
 -- --------------------------------------------------------
 
@@ -642,23 +516,14 @@ CREATE TABLE IF NOT EXISTS `rpercentages` (
 --
 
 INSERT INTO `rpercentages` (`percentage_user_id1`, `percentage_user_id2`, `percentage`, `id1_1`, `id1_10`, `id1_50`, `id2_1`, `id2_10`, `id2_50`, `id1_max`, `id2_max`, `percentage_city`) VALUES
-(12, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(12, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(12, 22, 10, 0, 0, 11, 0, 0, 0, 550, 242, 1),
 (12, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(12, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(12, 27, 62, 0, 0, 10, 0, 0, 2, 550, 242, 1),
 (12, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(12, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(21, 22, 10, 0, 0, 1, 0, 0, 0, 50, 50, 1),
-(21, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(21, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(21, 27, 10, 0, 0, 0, 0, 0, 1, 50, 50, 1),
-(21, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(21, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(21, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(21, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(12, 54, 21, 0, 1, 0, 0, 0, 2, 110, 242, 1),
 (22, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
@@ -827,6 +692,18 @@ CREATE TABLE IF NOT EXISTS `rusersettings` (
 --
 
 INSERT INTO `rusersettings` (`setting_user_id`, `is_private`, `is_invisible`, `notif_request`, `notif_accept`, `notif_message`, `notif_over90`, `notif_fbfriend`) VALUES
+(11, 1, 0, 1, 1, 1, 1, 1),
+(12, 1, 0, 1, 1, 1, 1, 1),
+(22, 1, 0, 1, 1, 1, 1, 1),
+(23, 1, 0, 1, 1, 1, 1, 1),
+(24, 1, 0, 1, 1, 1, 1, 1),
+(26, 1, 0, 1, 1, 1, 1, 1),
+(27, 1, 0, 1, 1, 1, 1, 1),
+(28, 1, 0, 1, 1, 1, 1, 1),
+(29, 1, 0, 1, 1, 1, 1, 1),
+(49, 1, 0, 1, 1, 1, 1, 1),
+(50, 1, 0, 1, 1, 1, 1, 1),
+(53, 1, 0, 1, 1, 1, 1, 1),
 (54, 1, 1, 0, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
