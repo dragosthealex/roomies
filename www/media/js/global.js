@@ -578,6 +578,7 @@ void function (window, document, undefined) {
       var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
       var postValues = [];
       var addValueToPostValues = function (key, element, dontResetValue) {
+        console.debug(element);
         element && (
           postValues.push(key + "=" + encodeURIComponent(element.type === "checkbox" ? element.checked : element.value.trim())),
           dontResetValue || element.nodeName !== "TEXTAREA" || (
