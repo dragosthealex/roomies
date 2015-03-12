@@ -55,8 +55,9 @@ abstract class Comment extends Base
               "date"        => "$date",
               "parentId"    => "$parentId",
               "replies"     => "$replies");
+    
     // Return it;
-    return $json;
+    return json_encode($jsonArray);
   }
 
   // Gets the replies of this comment as an array string

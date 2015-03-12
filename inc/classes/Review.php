@@ -94,12 +94,14 @@ class Review extends Comment
     }
   }// function __construct
 
+  // Gets the replies for this review
   protected function getReplies()
   {
     // Localise stuff
     $con = $this->con;
     $reviewId = $this->id;
     $accId = $this->parent;
+    $replies = "[\"\"";
 
     // Get the replies
     $stmt = $con->prepare("SELECT reply_id FROM rreplies WHERE parent_id = '$reviewId'");
@@ -108,10 +110,6 @@ class Review extends Comment
       if(!$stmt->execute())
       {
         throw new Exception("Error getting replies from database", 1);
-      }
-      if(!$stmt->rowCount())
-      {
-        $replies = "[\"\"]";
       }
 
       // Go through every reply
@@ -127,8 +125,11 @@ class Review extends Comment
         {
           continue;
         }
+        $replies .= $reply->toJson();
       }
-      // Return the replies
+
+      // Close and Return the replies
+      $replies .= "]";
       return $replies;
     }
     catch (Exception $e)

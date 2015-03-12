@@ -93,6 +93,12 @@ class Reply extends Comment
         $this->setError("Weird input");
       break;
     }
+
+    // Gets the replies for this reply. To be implemented
+    protected function getReplies()
+    {
+      return "[\"\"]";   
+    }
   }
 
 }// class Reply
