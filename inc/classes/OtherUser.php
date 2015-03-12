@@ -46,6 +46,7 @@ class OtherUser extends GeneralUser
       $stmt->bindColumn(1, $id);
       $stmt->bindColumn(2, $username);
       $stmt->bindColumn(3, $email);
+      $stmt->fetch();
 
       // Set the instance vars
       $this->id = $id;
@@ -53,7 +54,7 @@ class OtherUser extends GeneralUser
       $this->email = $email;
 
       // Get the rest of the details as mapped ints from the db
-      $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =".$this->id);
+      $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =$id");
       if(!$stmt->execute())
       {
         throw new Exception("Error getting details from database", 1);
@@ -73,6 +74,34 @@ class OtherUser extends GeneralUser
       $this->setError($e->getMessage());
     }
   }// function __construct()
+
+  /**
+  * Function getName(optional $friendshipStatus)
+  *
+  * Gets the name or the username of this user, depending on their privacy settings, and on the friendship status
+  *
+  * @param - $friendshipStatus(int), the friendship status
+  * @return - $name(String), the username or name
+  */
+  public function getName($friendshipStatus = 0)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $id = $this->id;
+
+    // Search for privacy
+    // TODO
+
+    // Get for the status
+    if($friendshipStatus == 1)
+    {
+      return $this->name;
+    }
+    else
+    {
+      return $this->username;
+    }
+  }
 }// class OtherUser
 
 

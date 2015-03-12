@@ -19,8 +19,9 @@ function __autoload($class) {
   include_once __ROOT__.'/inc/classes/'.$class.'.php';
 }
 
-include __ROOT__.'/inc/classes/user.php';
-include __ROOT__.'/inc/classes/CurrentUser.php';
+include_once __ROOT__.'/inc/classes/user.php';
+include_once __ROOT__.'/inc/classes/CurrentUser.php';
+include_once __ROOT__.'/inc/classes/OtherUser.php';
 
 // Setting session name
 $session_name = 'some_name';

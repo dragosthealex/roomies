@@ -23,8 +23,8 @@ if (!isset($_GET['u']))
 if ($_GET['u'] == $_SESSION['user']['username'])
 {
   // I'm on my profile
-  $title = $user->getName();
-  $userImagePath = $user->getIdentifier('image');
+  $title = $user2->getName();
+  $userImagePath = $user2->getCredential('image');
 
   // Include head and header
   require_once __ROOT__."/inc/html/head.php";
@@ -39,7 +39,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 			<div class="profile-box">
 				<span class="profile-picture" style="background-image: url('<?=$userImagePath?>');"></span>
 				<div class="profile-box-inner">
-					<h2 class="h2 profile-name"><?=$user->getName()?></h2>
+					<h2 class="h2 profile-name"><?=$user2->getName()?></h2>
 					<div class="profile-links">
 						<a class='link-button'>Edit Profile</a>
 					</div>
@@ -55,7 +55,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					<h2 class="h2">Questionnaire</h2>
 					<!-- php to retrieve 'Questionnaire' from database should be here' -->
 					<?php
-					$questions = $user->getQuestion();
+					$questions = $user2->getQuestion();
 					foreach($questions as $question)
 					{
 						if($question->getError())
@@ -78,7 +78,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					<h2 class="h2">My Details</h2>
 					<?php
           // retrieve list from database
-          $details = $user->getDetails();
+          $details = $user2->getDetails();
 					foreach ($details as $detail)
 					{
 						echo "$detail <br>";
@@ -96,10 +96,10 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 // Get the user and heck if exists;
 $otherUsername = $_GET['u'];
 
-$otherUser = new User($con, $otherUsername);
-$otherUserId = $otherUser->getIdentifier('id');
-$otherUsername = $otherUser->getIdentifier('username');
-$userId = $user->getIdentifier('id');
+$otherUser = new OtherUser($con, $otherUsername);
+$otherUserId = $otherUser->getCredential('id');
+$otherUsername = $otherUser->getCredential('username');
+$userId = $user2->getCredential('id');
 
 if(!isset($otherUserId) || !$otherUserId)
 {
@@ -119,7 +119,7 @@ $stmt = null;
 // for testing, blocked is definded false
 $blocked = 0;
 
-$status = $user->friendshipStatus($otherUser);
+$status = $user2->friendshipStatus($otherUser);
 $addFriendHide       = $status == 0 ? '' : 'style="display: none"';
 $alreadyFriendsHide  = $status == 1 ? '' : 'style="display: none"';
 $requestSentHide     = $status == 2 ? '' : 'style="display: none"';
@@ -127,10 +127,10 @@ $requestReceivedHide = $status == 3 ? '' : 'style="display: none"';
 $blockButtonHide     = $status != 4 ? '' : 'style="display: none"';
 $unblockButtonHide   = $status == 4 ? '' : 'style="display: none"';
 
-$nameOrUsername = ($status == 1)?$otherUser->getName():$otherUsername;
+$nameOrUsername = $otherUser->getName($status);
 
 $title = "$otherUsername";
-$userImagePath = $otherUser->getIdentifier('image');
+$userImagePath = $otherUser->getCredential('image');
 
 // Include head and header
 require_once __ROOT__."/inc/html/head.php";

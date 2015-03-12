@@ -148,32 +148,14 @@ abstract class GeneralUser extends Base
   }
 
   /**
-  * Function getName(optional $friendshipStatus)
+  * Abstract function getName(optional $friendshipStatus)
   *
   * Gets the name or the username of this user, depending on their privacy settings, and on the friendship status
   *
   * @param - $friendshipStatus(int), the friendship status
   * @return - $name(String), the username or name
   */
-  public function getName($friendshipStatus = 0)
-  {
-    // Localise stuff
-    $con = $this->con;
-    $id = $this->id;
-
-    // Search for privacy
-    // TODO
-
-    // Get for the status
-    if($friendshipStatus == 1)
-    {
-      return $this->name;
-    }
-    else
-    {
-      return $this->username;
-    }
-  }
+  public abstract function getName($friendshipStatus = 0);
 
   /**
   * Function getQuestionInfo($questionNo)

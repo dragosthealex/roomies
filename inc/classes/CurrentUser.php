@@ -19,8 +19,7 @@ class CurrentUser extends GeneralUser
     $id = isset($_SESSION['user']['id'])?$_SESSION['user']['id']:'';
     $username = isset($_SESSION['user']['username'])?$_SESSION['user']['username']:'';
     $email = isset($_SESSION['user']['email'])?$_SESSION['user']['email']:'';
-
-    echo $id . "<br> $username <br> $email"; 
+ 
     try
     {
       // Problem if we don't have an id
@@ -42,7 +41,7 @@ class CurrentUser extends GeneralUser
       }
 
       // Assign the unmapped STRING details
-      $this->name = $details['first_name'] . $details['last_name'];
+      $this->name = $details['first_name'] . " " . $details['last_name'];
       $this->birthday = $details['birthday'];
 
       // Assingn the details
@@ -92,7 +91,7 @@ class CurrentUser extends GeneralUser
   public function addFriend($otherUser, $action)
   {
     // Localise stuff
-    $otherUserId = $otherUser->getIdentifier('id');
+    $otherUserId = $otherUser->getCredential('id');
     $con = $this->con;
     $thisUserId = $this->id;
     $status = $this->friendshipStatus($otherUser);
@@ -160,7 +159,7 @@ class CurrentUser extends GeneralUser
   */
   public function friendshipStatus($otherUser)
   {
-    $otherUserId = $otherUser->getIdentifier('id');
+    $otherUserId = $otherUser->getCredential('id');
     $con = $this->con;
     $thisUserId = $this->id;
 
@@ -217,8 +216,8 @@ class CurrentUser extends GeneralUser
 
     // Localise stuff
     $thisUserId = $this->id;
-    $otherUserId = $otherUser->getIdentifier('id');
-    $city = $this->getIdentifier('city');
+    $otherUserId = $otherUser->getCredential('id');
+    $city = $this->getCredential('city');
 
     // Get the percentage from db
     $stmt = $con->prepare("SELECT percentage FROM rpercentages
@@ -316,9 +315,9 @@ class CurrentUser extends GeneralUser
       $sentClass = $userId == $senderId ? ' drop-item-text-sent ' : '';
 
       // Get name
-      $otherUser = new User($con, $id2);
+      $otherUser = new OtherUser($con, $id2);
       $otherUserName = $otherUser->getName();
-      $otherUserUsername = $otherUser->getIdentifier('username');
+      $otherUserUsername = $otherUser->getCredential('username');
 
       $firstLine = explode("<br>", $text)[0];
 
@@ -605,7 +604,7 @@ private function getConv($offset)
 
     foreach ($messagePartners as $key => $otherUserId)
     {
-      $otherUser = new User($con, $otherUserId);
+      $otherUser = new OtherUser($con, $otherUserId);
       $otherUserName = $otherUser->getName();
       $noNewMessages = (isset($unreadArray[$otherUserId]) && $unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
 
@@ -637,9 +636,9 @@ private function getConv($offset)
     $conversations = "";
     foreach ($messagePartners as $otherUserId)
     {
-      $otherUser = new User($con, $otherUserId);
+      $otherUser = new OtherUser($con, $otherUserId);
       $otherUserName = $otherUser->getName();
-      $otherUserUsername = $otherUser->getIdentifier('username');
+      $otherUserUsername = $otherUser->getCredential('username');
       $noNewMessages = (isset($unreadArray[$otherUserId]) && $unreadArray[$otherUserId])?"({$unreadArray[$otherUserId]})":"";
 
       $conversations .=
