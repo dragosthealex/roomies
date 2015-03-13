@@ -102,7 +102,7 @@ if(!LOGGED_IN)
 						<option class="option" value="" selected>Choose a University</option>
 						<option class="option" value="1">University of Manchester</option>
 					</select
-					><input type="submit" value="Filter" class="input-button select-submit">
+					><input type="submit" value="Filter" class="input-button">
 					<a href="#" class="link-button float-right">View All</a>
 				</form>
 			</div>

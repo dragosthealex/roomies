@@ -16,9 +16,7 @@ if(!LOGGED_IN)
 // Include head and header
 require_once __ROOT__."/inc/html/head.php";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
-
 ?>
-
 <div class="column-wrapper">
   <div class="column-2">
     <div class="column-box">
@@ -35,5 +33,4 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
     </div>
   </div>
 </div>
-
 <?php require_once __ROOT__."/inc/html/footer.php";?>

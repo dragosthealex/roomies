@@ -224,8 +224,8 @@ function valid_pass($password)
     </div>
     <h3 class="h3">Confirm changes</h3>
     <div class="input-wrapper">
-      <input class="input" placeholder="Current Password" required type="password" name="currentPass">
-      <input class="input-button" type="submit" name="submit1" value="Update">
+      <input class="input has-submit" placeholder="Current Password" required type="password" name="currentPass"
+      ><input class="input-button" type="submit" name="submit1" value="Update">
     </div>
     <?=$message?>
   </div>
