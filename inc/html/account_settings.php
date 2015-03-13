@@ -187,57 +187,47 @@ function valid_pass($password)
 } //end valid_pass
 ?>
 
-<form action="" method="POST" id="account_settings">
-  <span>
-    <p>
-      Change your password:
-    <p>
-  </span>
-  <input class="input" placeholder="New Password" type="password" name="password1">
-  <input class="input" placeholder="Repeat New Password" type="password" name="password2">
-  <span>
-    <p>
-      Change your email: 
-    </p>
-  </span>
-  <input class="input" placeholder="New Email" type="email" name="email1">
-  <input class="input" placeholder="Repeat New Email" type="email" name="email2">
-  <span>
-    <p>
-      Privacy Settings: 
-    </p>
-  </span>
-  <div class="cr-label">
-    <label for="radio1">
-      <input id="radio1" class="cr" type="radio" name="privacy" value="public" <?=$user2->getSetting('is_private')?'':'checked'?>>Show my full name
-      <span class="cr-button r-button"></span>
-    </label>
+<form action="" method="POST" class="settings account-settings">
+  <div class="box-padding">
+    <h3 class="h3">Change Email</h3>
+    <div class="input-wrapper">
+      <input class="input" placeholder="New Email" type="email" name="email1">
+      <input class="input" placeholder="Repeat New Email" type="email" name="email2">
+    </div>
+    <h3 class="h3">Change Password</h3>
+    <div class="input-wrapper">
+      <input class="input" placeholder="New Password" type="password" name="password1">
+      <input class="input" placeholder="Repeat New Password" type="password" name="password2">
+    </div>
+    <h3 class="h3">Privacy</h3>
+    <div class="indented-section">
+      <label for="radio1" class="cr-label">
+        <input id="radio1" class="cr" type="radio" name="privacy" value="public" <?=$user2->getSetting('is_private')?'':'checked'?>>
+        <span class="cr-button r-button"></span>
+        <span class="cr-text">Show my full name</span>
+      </label>
+      <label for="radio2" class="cr-label">
+        <input id="radio2" class="cr" type="radio" name="privacy" value="private" <?=$user2->getSetting('is_private')?'checked':''?>>
+        <span class="cr-button r-button"></span>
+        <span class="cr-text">Only show username</span>
+      </label>
+      <label for="check1" class="cr-label">
+        <input id="check1" class="cr" type="checkbox" name="invisible" <?=$user2->getSetting('is_invisible')?'checked':''?>>
+        <span class="cr-button"></span>
+        <span class="cr-text">Make me invisible</span>
+      </label>
+      <!--TODO: IMPLEMENT DELETE ACCOUNT-->
+      <label for="check2" class="cr-label">
+        <input id="check2" class="cr" type="checkbox" name="delete">
+        <span class="cr-button"></span>
+        <span class="cr-text">Delete account</span>
+      </label>
+    </div>
+    <h3 class="h3">Confirm changes</h3>
+    <div class="input-wrapper">
+      <input class="input" placeholder="Current Password" required type="password" name="currentPass">
+      <input class="input-button" type="submit" name="submit1" value="Update">
+    </div>
+    <?=$message?>
   </div>
-  <div class="cr-label">
-    <label for="radio2">
-      <input id="radio2" class="cr" type="radio" name="privacy" value="private" <?=$user2->getSetting('is_private')?'checked':''?>>Only show username
-      <span class="cr-button r-button"></span>
-    </label>
-  </div>
-  <div class="cr-label">
-    <label for="check1">
-      <input id="check1" class="cr" type="checkbox" name="invisible" <?=$user2->getSetting('is_invisible')?'checked':''?>>Make me invisible
-      <span class="cr-button"></span>
-    </label>
-  </div>
-  <!--TODO: IMPLEMENT DELETE ACCOUNT-->
-  <div class="cr-label">
-    <label for="check2">
-      <input id="check2" class="cr" type="checkbox" name="delete">Delete account
-      <span class="cr-button"></span>
-    </label>
-  </div>
-  <span>
-    <p>
-      Your current Password:
-    </p>
-  </span>
-  <input class="input" placeholder="Current Password" required type="password" name="currentPass">
-  <input class="input-button" type="submit" name="submit1" value="Update">
-  <?=$message?>
 </form>

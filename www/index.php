@@ -58,7 +58,7 @@ if(!LOGGED_IN)
 							<label for="remember_me" class="cr-label">
 								<input type="checkbox" id="remember_me" name="rememberMe" class="cr">
 								<span class="cr-button"></span>
-								<span class="cr-text">Remember me</span>
+								<span class="cr-text cr-text-faded">Remember me</span>
 							</label>
 							<input type="submit" value="Sign in" class="input-button block">
 

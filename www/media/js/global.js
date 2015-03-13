@@ -1,3 +1,4 @@
+try{
 !Array.isArray && (Array.isArray = function(arg) {
   return Object.prototype.toString.call(arg) === '[object Array]';
 });
@@ -1004,3 +1005,4 @@ void function (window, document, undefined) {
 
   if (roomiesInfo)delete roomiesInfo;
 } (window, document); // Localise variables
+}catch(e){newError("<strong>JavaScript Error</strong><br><br>"+e)}

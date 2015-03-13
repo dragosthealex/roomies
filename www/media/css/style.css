@@ -417,7 +417,7 @@
 	max-width: 976px;
 }
 
-.box, .column-box, .question {
+.box, .column-box, .question, .settings {
 	margin: 16px;
 	border-radius: 2px;
 	/*border: 1px solid #d2c7be;*/
@@ -457,6 +457,10 @@
 	width: 500px;
 	text-align: center;
 	color: #534e4d;
+}
+
+.indented-section {
+	padding: 0 8px;
 }
 
 .details-box {
@@ -635,6 +639,14 @@
 	margin: 8px 0;
 }
 
+.input-wrapper {
+	margin: 1em 0;
+}
+
+.input-wrapper .link-button, .input-wrapper .input-button, .input-wrapper .input {
+	margin: 0;
+}
+
 /*.input-text-valid {
 	border-color: #00adaa;
 }*/
@@ -686,15 +698,9 @@
 	position: relative;
 	display: block;
 	margin: 8px 0;
-	height: 18px;
 	line-height: 18px;
-	color: #888;
 	font-size: .9em;
 	cursor: pointer;
-}
-
-.cr-block .cr-label {
-	margin: 0 !important;
 }
 
 .cr {
@@ -703,15 +709,19 @@
 }
 
 .cr-button {
-	position: relative;
+	position: absolute;
+	top: 0;
+	left: 0;
 	display: block;
 	float: left;
-	margin: 0 .6em 0 0;
-	border: 1px solid #d9d6d5;
+	border: 1px solid #d5d1d0;
 	height: 16px;
 	width: 16px;
 	background: #fff;
-	cursor: pointer;
+}
+
+.cr-label:hover .cr-button {
+	border-color: #a5a1a0;
 }
 
 .cr:focus + .cr-button {
@@ -741,13 +751,15 @@
 
 .cr-text {
 	display: block;
-	float: left;
-	cursor: pointer;
+	padding-left: 26px;
+	color: #444;
 }
 
-.cr-button:hover + .cr-text,
-.cr-text:hover,
-.cr-block .cr-text {
+.cr-text-faded {
+	color: #888;
+}
+
+.cr-label:hover .cr-text-faded {
 	color: #444;
 }
 
@@ -759,31 +771,31 @@
 	margin: 8px 0 0;
 }
 
-.question {
+.question, .settings {
 	margin: 16px 0;
 }
 
-.cp-0, .cp-0 + .cr-block, .cp-0:checked + .cr-block + .cr-block {
+.cp-0, .cp-0 + .indented-section, .cp-0:checked + .indented-section + .indented-section {
 	display: none;
 }
 
-.cp-0:checked + .cr-block {
+.cp-0:checked + .indented-section {
 	display: block;
 }
 
 .cp-label {
 	display: inline-block !important;
+	margin: 0 0 8px !important;
 	width: 33.3333%;
 	height: auto;
 }
 
 .cp-label .cr-button {
-	margin: 0;
-	float: none;
 	width: auto;
+	right: 0;
 }
 
-.cp-label .cp-button:after {
+.cp-label .cr-button:after {
 	width: auto;
 	right: 3px;
 }
@@ -806,9 +818,8 @@
 }
 
 .cp-label .cr-text {
-	float: none;
 	text-align: center;
-	padding: 8px 0 0;
+	padding: 26px 0 0;
 	word-wrap: break-word;
 }
 
