@@ -10,7 +10,7 @@ For the sake of layout, let the body/html be closed on every page
 <div class="box">
 	<ul class="box-padding footer">
 		<li class="footer-item">Roomies &copy; 2014</li>
-		<li class="footer-item"><a href="#" class="footer-link">About</a></li>
+		<li class="footer-item"><a href="../inc/Terms.php" class="footer-link">About</a></li>
 		<li class="footer-item"><a href="#" class="footer-link">Terms</a></li>
 		<li class="footer-item"><a href="#" class="footer-link">Privacy</a></li>
 		<li class="footer-item"><a href="#" class="footer-link">Cookies</a></li>
