@@ -605,7 +605,9 @@ void function (window, document, undefined) {
       xmlhttp.onreadystatechange = function () {
         var response;
         if (xmlhttp.readyState === 4 && xmlhttp.status) {
-          if (xmlhttp.status !== 200) {
+          if (xmlhttp.status === 503) {
+            // If 503, then the server is being a cunt.
+          } else if (xmlhttp.status !== 200) {
             newError(xmlhttp.responseText);
           } else {
             try {

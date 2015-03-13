@@ -102,7 +102,7 @@ try
   }
 
   // Longpoll
-  for ($i = 0; $i < 50; $i++)
+  for ($i = 0; $i < 30; $i++)
   {
     if (rowCount($stmts, $noOfRequests))
     {

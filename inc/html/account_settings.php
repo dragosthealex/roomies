@@ -186,7 +186,6 @@ function valid_pass($password)
    return TRUE;
 } //end valid_pass
 ?>
-
 <form action="" method="POST" class="settings account-settings">
   <div class="box-padding">
     <h3 class="h3">Change Email</h3>

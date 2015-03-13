@@ -89,15 +89,7 @@ if(isset($_POST['currentPass'], $_POST['submit2']) && $_POST['currentPass'] && $
     $message .= $e->getMessage();
   }
 }
-
 ?>
-
-
-
-
-
-
-
 <form action="" method="POST" class="settings notif-settings hidden">
   <div class="box-padding">
     <h3 class="h3">I want to get an email when&hellip;</h3>
