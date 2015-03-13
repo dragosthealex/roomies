@@ -4,9 +4,11 @@ This creates new conversation and returns it as string
 */
 require_once '../../inc/init.php';
 require_once __ROOT__."/inc/classes/conversation.php";
+require_once __ROOT__."/inc/classes/Group.php";
 // Initialise the values
 $otherName = "Conversation";
-
+$errorMsg = "";
+$groupId = 0;
 // Localise this user id
 $userId = $user2->getCredential('id');
 
@@ -14,13 +16,7 @@ if(!isset($_GET['conv']))
 {
 
   // Construct condition for checking every group the user is in
-  $groupCondition = '1=0 ';
-  $myGroups = $user2->getCredential('groups');
-  foreach ($myGroups as $groupId) 
-  {
-    $groupCondition .= "OR message_group = $groupId";
-  }
-
+  $groupCondition = "message_group='" . implode("' OR message_group='", $myGroups). "'";
 
   // Get the latest conversation
   $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, message_group FROM rmessages
@@ -46,7 +42,7 @@ if(!isset($_GET['conv']))
       $otherUserId = $userId == $id1 ? $id2 : $id1;
       $otherUser = new OtherUser($con, $otherUserId);
       $otherName = $otherUser->getName();
-      $convToRedirect = $otherUser->getIdentifier('username');
+      $convToRedirect = $otherUser->getCredential('username');
     }
     else
     {
@@ -76,7 +72,23 @@ else
   {
     // It means we have a group conv
     $groupId = explode('-',htmlentities($_GET['conv']))[1];
-    $conversation = new Conversation($con, $userId, $otherUserId);
+    if(!$user2->inGroup($groupId))
+    {
+      header("Location: ./");
+      exit();
+    }
+    $conversation = new Conversation($con, $userId, 0, 0, $groupId);
+    $conv = $conversation->toString();
+
+    if($conversation->getError())
+    {
+      $errorMsg = $conversation->getError();
+      $conv = '';
+    }
+
+    $thisGroup = new Group($con, 'get', array('id' => "$groupId"));
+    $title = $thisGroup->getDetail('name');
+    $otherName = $title;
   }
 }
 

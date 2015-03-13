@@ -40,6 +40,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 
 <div class="column-wrapper">
+  <?=$errorMsg?>
     <!--About me-->
     <div class="column-2">
       <div class="column-box">
@@ -81,7 +82,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             <span class="cr-text cr-text-faded">Press Enter to send</span>
           </label
           ><input type="submit" class="input-button block " value="Send"
-                  data-ajax-url="../php/messages.process.php?receiver=<?=$resOtherUserId?>"
+                  data-ajax-url="../php/messages.process.php?receiver=<?=$resOtherUserId?>&gid=<?=$groupId?>"
                   data-ajax-post="message"
                   data-ajax-callback-1="scrollToBottom conv 1"
                   data-ajax-callback-2="focusById message">

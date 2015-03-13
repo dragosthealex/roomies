@@ -21,6 +21,8 @@ abstract class GeneralUser extends Base
   protected $questions;
   // The birthday
   protected $birthday;
+  // The image path
+  protected $image;
   // The name
   protected $name;
   // The settings for this user, assoc array
@@ -51,6 +53,9 @@ abstract class GeneralUser extends Base
         return $this->rank;
       case 'groups':
         return $this->groups;
+      case 'image':
+        return $this->image;
+        break;
       default:
         return isset($this->details[$key])?$this->details[$key]:'Wrong key';
         break;

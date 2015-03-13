@@ -286,6 +286,7 @@ void function (window, document, undefined) {
     var minusScrollBarWidth = element.clientWidth - element.offsetWidth;
     var convstn = element.getElementsByClassName('conversation')[0];
     var convId = convstn && convstn.getAttribute("data-conv-id"), convBox;
+    var grpId = convstn && convstn.getAttribute("data-group-id");
 
     if (minusScrollBarWidth) {
       forEach.call(element.childNodes, function (child) {
@@ -309,7 +310,7 @@ void function (window, document, undefined) {
     if (convstn && (convBox = conv.box[convId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
       convBox.fetchingPrevious = true;
       roomies.ajax({
-        url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0",
+        url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0&gid=" + grpId,
         success: function (response) {
           response = response[0];
           var newHTML = "";

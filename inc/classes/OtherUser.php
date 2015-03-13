@@ -29,7 +29,7 @@ class OtherUser extends GeneralUser
       }
 
       // Get the user from db
-      $stmt = $con->prepare("SELECT user_id, username, user_email FROM rusers
+      $stmt = $con->prepare("SELECT user_id, username, user_email, image_url FROM rusers
                              WHERE user_id = '$key' 
                               OR user_email = '$key'
                               OR username = '$key'");
@@ -46,6 +46,7 @@ class OtherUser extends GeneralUser
       $stmt->bindColumn(1, $id);
       $stmt->bindColumn(2, $username);
       $stmt->bindColumn(3, $email);
+      $stmt->bindColumn(4, $imageUrl);
       $stmt->fetch();
 
       // Set the instance vars
@@ -53,6 +54,7 @@ class OtherUser extends GeneralUser
       $this->username = $username;
       $this->email = $email;
       $this->con = $con;
+      $this->image = $imageUrl;
 
       // Get the rest of the details as mapped ints from the db
       $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =$id");
