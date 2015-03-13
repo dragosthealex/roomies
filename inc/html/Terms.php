@@ -1,6 +1,6 @@
 <?php
+  include '../init.php';
   $title = "Terms and Conditions";
-  include '../../inc/init.php';
   require_once __ROOT__."/inc/html/head.php";
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
