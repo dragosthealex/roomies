@@ -25,6 +25,8 @@ abstract class GeneralUser extends Base
   protected $name;
   // The settings for this user, assoc array
   protected $settings;
+  // The array of groups IDs the user is in
+  protected $groups = array();
   /**
   * Function getCredential($key)
   *
@@ -47,6 +49,8 @@ abstract class GeneralUser extends Base
         break;
       case 'rank':
         return $this->rank;
+      case 'groups':
+        return $this->groups;
       default:
         return isset($this->details[$key])?$this->details[$key]:'Wrong key';
         break;
