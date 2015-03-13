@@ -527,7 +527,7 @@ class User
       $messages .=
         "<li class='drop-item message-drop-item' data-conv-id='$id2'>"
       .   "<a href='/messages/$otherUserUsername' class='drop-item-link $addReadClass'>"
-      .     "<span class='drop-item-pic' style='background-image: url(".$otherUser->getIdentifier('image').")'></span>"
+      .     "<span class='drop-item-pic' style='background-image: url(".$otherUser->getIdentifier('image')."), url(../media/img/default.gif)'></span>"
       .     "<h3 class='drop-item-header' data-unread-count='$unreadCount'>$otherUserName</h3>"
       .     "<p class='drop-item-text $sentClass'>$firstLine</p>"
       .     "<p class='drop-item-footer' title='$msgDateTimeTitle'>$msgDateTimeText</p>"

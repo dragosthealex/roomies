@@ -303,7 +303,7 @@ class Question extends Base
       $question .=
       "
               <div class='cr-block'>
-                <label for='q_{$id}_acc_0' class='cr-label block'>
+                <label for='q_{$id}_acc_0' class='cr-label'>
                   <input type='checkbox' id='q_{$id}_acc_0' class='cr' onchange='var i,e;for(i=1;i<{$count};i++)(((e=document.getElementById(\"q_{$id}_acc_\"+i)).checked=this.checked),(e.disabled=this.checked));document.getElementById(\"q_{$id}_imp_0\").checked=this.checked;checkForm(this,{$id},{$totalCount})'>
                   <span class='cr-button'></span>
                   <span class='cr-text'>Any of the above</span>

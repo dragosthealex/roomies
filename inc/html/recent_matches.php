@@ -99,7 +99,7 @@ while($stmt->fetch())
   // ";
   echo "<li class='profile-box-item'>
       <div class='profile-box'>
-        <a href='profile/$otherUsername' style='background-image: url(\"$userImagePath\")' class='profile-picture'></a><!--style='background-image: url(\"$userImagePath\");'-->
+        <a href='profile/$otherUsername' style='background-image: url(\"$userImagePath\"), url($webRoot/media/img/default.gif)' class='profile-picture'></a>
         <div class='profile-box-inner'>
           <a href='profile/$otherUsername' class='h2 profile-name'>$nameOrUsername</a>
           <div class='profile-percent' style='color:rgba(".(160-160*$percentage/100).",".(160*$percentage/100).",0,1);'>$percentage%</div>

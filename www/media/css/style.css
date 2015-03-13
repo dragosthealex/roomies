@@ -143,6 +143,7 @@
 }
 
 .icon-user, .icon-holder:hover .icon-user {
+	background-size: cover;
 	opacity: 1 !important;
 }
 
@@ -683,17 +684,16 @@
 
 .cr-label {
 	position: relative;
-	display: inline-block;
+	display: block;
 	margin: 8px 0;
 	height: 18px;
 	line-height: 18px;
 	color: #888;
 	font-size: .9em;
+	cursor: pointer;
 }
 
 .cr-block .cr-label {
-	display: block;
-	cursor: pointer;
 	margin: 0 !important;
 }
 
@@ -993,8 +993,10 @@
 	position: absolute;
 	top: 18px;
 	left: 16px;
+	background-position: center;
 	background-color: #EFEFEF;
-	background-size: 33px 33px;
+	background-image: url(../img/default.png);
+	background-size: cover;
 	width: 33px;
 	height: 33px;
 }
@@ -1296,6 +1298,11 @@
 		color: inherit;
 		font-weight: normal;
 		font-size: 1.2em;
+	}
+
+	.profile-links {
+		height: 2.3em;
+		overflow: hidden;
 	}
 
 	.profile-percent {

@@ -28,7 +28,7 @@ class Conversation
     // The message timestamp
     "'><span class='message-pic' style='background-image:url(",
     // The name of the user's picture
-    ")'></span><a class='message-name'>",
+    "), url(../media/img/default.gif)'></span><a class='message-name'>",
     // The name of the sender
     "</a><p class='text'>",
     // The message itself

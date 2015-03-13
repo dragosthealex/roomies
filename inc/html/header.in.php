@@ -5,7 +5,7 @@
     <ul class="header-nav">
       <li class="header-item">
         <a href="<?=$webRoot?>/profile/<?=$user->getIdentifier('username')?>" class="icon-holder user-icon-holder">
-          <span class="icon icon-user" style="background-image: url('<?=$webRoot?>/media/img/anonymous.jpg')"></span>
+          <span class="icon icon-user" style="background-image: url('<?=$user->getIdentifier("image")?>'), url(../media/img/default.gif)"></span>
         </a>
       </li>
       <li class="header-item">

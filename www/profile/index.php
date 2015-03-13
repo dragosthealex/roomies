@@ -37,7 +37,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
   <div class="box">
 		<div class="box-padding">
 			<div class="profile-box">
-				<span class="profile-picture" style="background-image: url('<?=$userImagePath?>');"></span>
+				<span class="profile-picture" style="background-image: url('<?=$userImagePath?>'), url(<?=$webRoot?>/media/img/default.gif);"></span>
 				<div class="profile-box-inner">
 					<h2 class="h2 profile-name"><?=$user2->getName()?></h2>
 					<div class="profile-links">
@@ -147,7 +147,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
   <div class="box">
 		<div class="box-padding">
 			<div class="profile-box">
-				<span class="profile-picture" style="background-image: url('<?=$userImagePath?>');"></span>
+				<span class="profile-picture" style="background-image: url('<?=$userImagePath?>'), url(<?=$webRoot?>/media/img/default.gif);"></span>
 				<div class="profile-box-inner">
 					<h2 class="h2 profile-name"><?=$nameOrUsername?></h2>
 					<div class="profile-links">

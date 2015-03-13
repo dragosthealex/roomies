@@ -55,7 +55,7 @@ if(!LOGGED_IN)
 						<form method="POST" name="signin" action="./login/index.php" onsubmit="return this.login.value?this.password.value?true:(this.password.focus(),false):(this.login.focus(),false)">
 							<input type="text" name="login" placeholder="Email/Username" class="input block" required>
 							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
-							<label for="remember_me" class="cr-label block">
+							<label for="remember_me" class="cr-label">
 								<input type="checkbox" id="remember_me" name="rememberMe" class="cr">
 								<span class="cr-button"></span>
 								<span class="cr-text">Remember me</span>
@@ -145,25 +145,12 @@ else
 		<div class="box">
 			<div class="box-padding">
 				<div class="profile-box">
-					<span class="profile-picture" style="background-image: url('<?=$userImagePath?>');"></span>
-						<div class="profile-box-inner" style="float:left;">
-							<h2 class="h2"><?=$user->getName()?></h2>
-							<div class="links-wrapper">
-							<ul class="ul">
-								<li class="float-left">
-									<a class="link-button toggle " data-target="notifications">Notifications</a>
-								</li>
-								<li class="float-left">
-									<a href="#reviews" class="link-button">Review</a>
-								</li>
-								<li class="float-left">
-									<a href="search/" class="link-button">Search</a>
-								</li>
-								<li class="float-left">
-									<a href="messages/" class="link-button">Messages</a>
-								</li>
-							</ul>
-						</div>
+					<span class="profile-picture" style="background-image: url('<?=$userImagePath?>'), url(<?=$webRoot?>/media/img/default.gif);"></span>
+					<h2 class="h2 profile-name"><?=$user->getName()?></h2>
+					<div class="profile-links">
+						<a href="#reviews" class="link-button">Review</a>
+						<a href="<?=$webRoot?>/search" class="link-button">Search</a>
+						<a href="<?=$webRoot?>/messages" class="link-button">Messages</a>
 					</div>
 				</div>
 			</div>
