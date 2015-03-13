@@ -199,7 +199,6 @@ try
           $match['id1_'.$myImportance]--;
         }
 
-        $response['error'] .= "<br> now ". implode(',',$myAccepted)."   old ".implode(',',$oldMyAccepted) ."<br>";
         // Calculate the new score that represents how much would I like them
         if($match['id1_max'])
         {
