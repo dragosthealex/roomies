@@ -75,7 +75,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
                        data-conv-id="<?=$resOtherUserId?>"
                        data-focus></textarea>
           </div
-          ><label for="pressEnterToSend" class="cr-label cr-label-block"
+          ><label for="pressEnterToSend" class="cr-label block"
             ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')" class="cr">
             <span class="cr-button"></span>
             <span class="cr-text">Press Enter to send</span>

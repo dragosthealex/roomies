@@ -51,8 +51,6 @@ else
             echo "<script src='$webRoot/media/js/$script.js'></script>";
         }
     }
-    // Output the script to delete the global methods (prevent users using them)
-    echo "<script src='$webRoot/media/js/close.js'></script>";
 } // else
 ?>
 </body>

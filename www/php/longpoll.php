@@ -150,6 +150,7 @@ try
     $otherUserUsername = $otherUser->getIdentifier('username');
     $senderName = $sent ? $userName : $otherUserName;
     $sentOrReceived = $sent ? 'sent' : 'received';
+    $senderImage = $sent ? $user->getIdentifier('image') : $otherUser->getIdentifier('image');
 
     $msgDateTime = date_create_from_format('Y-m-d H:i:s', $message['message_timestamp']);
     $diff = $todayDateTime->diff($msgDateTime);
@@ -191,7 +192,7 @@ try
         $read.' '.$sentOrReceived,
         $message['message_id'],
         $message['message_timestamp'],
-        $senderId.'.jpg',
+        $senderImage,
         $senderName,
         $message['message_text'],
         $senderId,

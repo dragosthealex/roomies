@@ -664,6 +664,10 @@ void function (window, document, undefined) {
 
       obj.callback && setTimeout(obj.callback, 0);
     }
+  },
+
+  // Object to store functions to be called by ajax upon success of a request
+  successFunctions = {
   };
 
   /**
@@ -708,7 +712,11 @@ void function (window, document, undefined) {
 
       roomies.ajax({
         url: ajaxUrl,
-        success: function () {
+        success: function (response) {
+          var successFunctionName = element.getAttribute("data-ajax-success");
+          successFunctionName && successFunctions[successFunctionName]
+                              && successFunctions[successFunctionName](response);
+
           var hideText = element.getAttribute("data-ajax-hide");
           if (hideText) {
             hideText = hideText.split(" ");
@@ -796,6 +804,14 @@ void function (window, document, undefined) {
         e.preventDefault();
       }
     }
+  };
+
+  /**
+   * A function to detect keydown
+   */
+  window.onkeydown = function (e) {
+    e.keyCode===27&&((document.getElementById("errorList")||{}).innerHTML="");
+    return true;
   };
 
   // Loop through all elements in the body and ensure that
@@ -986,9 +1002,5 @@ void function (window, document, undefined) {
 
   elementToFocus&&(elementToFocus.focus&&elementToFocus.focus(),elementToFocus.onfocus&&elementToFocus.onfocus());
 
-  if (info) {
-    delete window.roomiesInfo;
-  }
-
-  window.roomies = roomies;
+  if (roomiesInfo)delete roomiesInfo;
 } (window, document); // Localise variables

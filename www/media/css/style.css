@@ -1111,10 +1111,29 @@
 }
 
 .errorBox {
+	position: relative;
 	margin: 16px auto;
 	box-shadow: 0px 2px 4px rgba(0,0,0,0.16) !important;
-	padding: 16px;
+	padding: 16px 32px 16px 16px;
 	max-width: 600px;
+	text-align: left;
+}
+
+.errorX {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-image: url(../img/x.png);
+	width: 32px;
+	height: 32px;
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.errorX:hover {
+	opacity: 1;
 }
 
 .mobile-only {

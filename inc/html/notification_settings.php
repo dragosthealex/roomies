@@ -105,32 +105,32 @@ if(isset($_POST['currentPass'], $_POST['submit2']) && $_POST['currentPass'] && $
     </p>
   </span>
   <div>
-    <label for="check3" class='cr-label cr-label-block'>
+    <label for="check3" class='cr-label block'>
       <input id="check3" class="cr" type="checkbox" name="notif_request" <?=$user2->getSetting('notif_request')?'checked':''?>>I receive a friend request.
       <span class="cr-button"></span>
     </label>
   </div>
   <div>
-    <label for="check4" class='cr-label cr-label-block'>
+    <label for="check4" class='cr-label block'>
       <input id="check4" class="cr" type="checkbox" name="notif_accept" <?=$user2->getSetting('notif_accept')?'checked':''?>>Someone accepts a friend request that I sent.
       <span class="cr-button"></span>
     </label>
   </div>
   <div>
-    <label for="check5" class='cr-label cr-label-block'>
+    <label for="check5" class='cr-label block'>
       <input id="check5" class="cr" type="checkbox" name="notif_message" <?=$user2->getSetting('notif_message')?'checked':''?>>I have a new message.
       <span class="cr-button"></span>
     </label>
   </div>
   <div>
-    <label for="check6" class='cr-label cr-label-block'>
+    <label for="check6" class='cr-label block'>
       <input id="check6" class="cr" type="checkbox" name="notif_over90" <?=$user2->getSetting('notif_over90')?'checked':''?>>I have a new over 90% match.
       <span class="cr-button"></span>
     </label>
   </div>
   <!--TODO: IMPLEMENT FB FRIENDS CHECK-->
   <div>
-    <label for="check7" class='cr-label cr-label-block'>
+    <label for="check7" class='cr-label block'>
       <input id="check7" class="cr" type="checkbox" name="notif_fbfriend" <?=$user2->getSetting('notif_fbfriend')?'checked':''?>>One of my Facebook friends registers on Roomies.
       <span class="cr-button"></span>
     </label>

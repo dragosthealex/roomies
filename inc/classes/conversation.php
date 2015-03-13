@@ -26,7 +26,7 @@ class Conversation
     // The message id
     "' data-message-timestamp='",
     // The message timestamp
-    "'><span class='message-pic' style='background-image:url(/media/img/usr/",
+    "'><span class='message-pic' style='background-image:url(",
     // The name of the user's picture
     ")'></span><a class='message-name'>",
     // The name of the sender
@@ -159,10 +159,10 @@ class Conversation
     $conv .= "],\"length\":$numberOfLoadedMessages";
 
     // Make the users and localise stuff
-    $user1 = new User($con, $id1);
-    $user2 = new User($con, $id2);
-    $user1Name = $user1->getName();
-    $user2Name = $user2->getName();
+    $userOfId1 = new User($con, $id1);
+    $userOfId2 = new User($con, $id2);
+    $userOfId1Name = $userOfId1->getName();
+    $userOfId2Name = $userOfId2->getName();
 
     foreach ($messages as $key => $message)
     {
@@ -176,13 +176,15 @@ class Conversation
       if ($message['message_user_id1'] == $id1)
       {
         $id = $id1;
-        $name = $user1Name;
+        $image = $userOfId1->getIdentifier('image');
+        $name = $userOfId1Name;
         $sentOrReceived = 'sent';
       }
       else
       {
         $id = $id2;
-        $name = $user2Name;
+        $image = $userOfId2->getIdentifier('image');
+        $name = $userOfId2Name;
         $sentOrReceived = 'received';
       }
 
@@ -192,7 +194,7 @@ class Conversation
         \"$read $sentOrReceived\",
           $message[message_id],
         \"$message[message_timestamp]\",
-        \"$id.jpg\",
+        \"$image\",
         \"$name\",
         \"$message[message_text]\"
       ]";
@@ -225,10 +227,10 @@ class Conversation
     $conv = "<ul class='ul conversation' id='main_conversation' data-conv-id='$id2'>";
 
     // Make the users and localise stuff
-    $user1 = new User($con, $id1);
-    $user2 = new User($con, $id2);
-    $user1Name = $user1->getName();
-    $user2Name = $user2->getName();
+    $userOfId1 = new User($con, $id1);
+    $userOfId2 = new User($con, $id2);
+    $userOfId1Name = $userOfId1->getName();
+    $userOfId2Name = $userOfId2->getName();
 
     foreach ($messages as $message)
     {
@@ -240,13 +242,15 @@ class Conversation
       if ($message['message_user_id1'] == $id1)
       {
         $id = $id1;
-        $name = $user1Name;
+        $image = $userOfId1->getIdentifier('image');
+        $name = $userOfId1Name;
         $sentOrReceived = 'sent';
       }
       else
       {
         $id = $id2;
-        $name = $user2Name;
+        $image = $userOfId2->getIdentifier('image');
+        $name = $userOfId2Name;
         $sentOrReceived = 'received';
       }
 
@@ -255,7 +259,7 @@ class Conversation
       $conv .= $template[0].$read.' '.$sentOrReceived
               .$template[1].$message['message_id']
               .$template[2].$message['message_timestamp']
-              .$template[3].$id.'.jpg'
+              .$template[3].$image
               .$template[4].$name
               .$template[5].$message['message_text']
               .$template[6];
