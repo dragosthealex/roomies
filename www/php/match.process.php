@@ -26,13 +26,17 @@ $response['error'] = '';
 
 // The currentUser's Id
 $id = $user2->getCredential('id');
-$city = $user2->getCredential('city');
+$city = $user2->getCredential('uni_city');
 $questionNo = htmlentities($_GET['q_no']);
 
 $myAnswer = htmlentities($_POST['q_ans']);
 $myAccepted = htmlentities($_POST['q_acc']);
 $myAccepted = explode(",", $myAccepted);
 $myImportance = htmlentities($_POST['q_imp']);
+
+
+// TODO: FIX BUG WHERE PERCENTAGE IS INCREASED EACH TIME YOU ANSWER THE SAME QEUSTION
+// TODO: IMPLEMENT MARGIN
 
 try
 {
@@ -59,6 +63,7 @@ try
                           FROM rpercentages
                           WHERE percentage_city = '$city' 
                           AND (percentage_user_id1 = $id OR percentage_user_id2 = $id)");
+  
   if(!$stmt->execute())
   {
     throw new Exception("Error getting matching details from database. Surprise buttsecs", 1);
@@ -75,7 +80,7 @@ try
       // Check if we have any errors
       if($otherUser->getError())
       {
-        $errorMsg .= "Error initialising user $id2";
+        $errorMsg .= "Error initialising user $id2: ".$otherUser->getError();
         continue;
       }
 
@@ -114,10 +119,10 @@ try
           $id1Score = ($match['id1_1'] + $match['id1_10']*10 + $match['id1_50']*50)/$match['id1_max'];
         }
 
-        // Make sure is not 0
-        $id2Score = $id2Score?$id2Score:0.01;
-        $id1Score = $id1Score?$id1Score:0.01;
-        $percentage = sqrt($id2Score * $id1Score)*100;
+        // Make sure that neither is 0
+        $id2Score = $id2Score ? $id2Score : 0.001;
+        $id1Score = $id1Score ? $id1Score : 0.001;
+        $percentage = sqrt($id2Score * $id1Score)*100 + 20;
 
         $stmt2 = $con->prepare("UPDATE rpercentages SET id1_1='$match[id1_1]', id1_10='$match[id1_10]', percentage='$percentage',
                                 id1_50='$match[id1_50]', id2_1='$match[id2_1]', id2_10='$match[id2_10]', 
@@ -137,7 +142,7 @@ try
        // Check if we have any errors
       if($otherUser->getError())
       {
-        $errorMsg .= "Error initialising user $id2";
+        $response['error'] .= "Error initialising user $id2: ". $otherUser->getError();
         continue;
       }
 
@@ -146,6 +151,7 @@ try
       $otherAnswer = isset($otherUserQuestionInfo[0])?$otherUserQuestionInfo[0]:'';
       $otherAccepted = isset($otherUserQuestionInfo[1])?explode(',', $otherUserQuestionInfo[1]):'';
       $otherImportance = isset($otherUserQuestionInfo[2])?$otherUserQuestionInfo[2]:'';
+      
 
       if($otherAnswer && $otherAccepted && $otherImportance)
       {
@@ -166,6 +172,7 @@ try
 
         $match['id2_max'] += $otherImportance;
 
+        $response['error'] .= "max1 : " . $match['id1_max'] . " max2: " . $match['id2_max'] . "<br>";
         // Check if their answer is between my accepted
         if(in_array($myAnswer, $otherAccepted) && $otherImportance != '0')
         {
@@ -176,15 +183,15 @@ try
           $id2Score = ($match['id2_1'] + $match['id2_10']*10 + $match['id2_50']*50)/$match['id2_max'];
         }
 
-        // Make sure is not 0
-        $id2Score = $id2Score?$id2Score:0.01;
-        $id1Score = $id1Score?$id1Score:0.01;
-        $percentage = sqrt($id2Score * $id1Score)*100;
-
+        // Make sure that neither is 0
+        $id2Score = $id2Score ? $id2Score : 0.001;
+        $id1Score = $id1Score ? $id1Score : 0.001;
+        $percentage = sqrt($id2Score * $id1Score)*100 + 20;
+        
         $stmt2 = $con->prepare("UPDATE rpercentages SET id1_1='$match[id1_1]', id1_10='$match[id1_10]', percentage='$percentage',
                                 id1_50='$match[id1_50]', id2_1='$match[id2_1]', id2_10='$match[id2_10]', 
                                 id2_50='$match[id2_50]', id1_max='$match[id1_max]', id2_max='$match[id2_max]'
-                                WHERE percentage_user_id1 = $id AND percentage_user_id2 = $id2");
+                                WHERE percentage_user_id1 = $id2 AND percentage_user_id2 = $id");
         if(!$stmt2->execute())
         {
           throw new Exception("Error updating matching details with user $id2", 1);
