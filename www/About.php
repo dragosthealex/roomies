@@ -1,6 +1,6 @@
 <html>
   <body>
-    <h3> About </h3>
+    <h2 class = "h2"> About </h2>
     findRoomies is a room-mate matching website and service that is primarily aimed at university students in Manchester, 
     more specifically those currently enrolled in the University of Manchester. The website also offers reviews and ratings of
     current university and private accommodation all of which is provided by our users.
