@@ -74,17 +74,15 @@ else
   </ul>
 </div>
 <div class="textarea-holder" style="margin-top:1em;"
-            ><textarea class="textarea" id="message" placeholder="Write a review..."
-                       oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"
-                       onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"
-                       data-conv-id="<?=$resOtherUserId?>"
-                       data-focus></textarea>
-          </div
-          ><label for="pressEnterToSend" class="cr-label"
-            ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')" class="cr">
-            <span class="cr-button"></span>
-            <span class="cr-text">Press Enter to send</span>
-          </label
-          ><input type="submit" class="input-button block " value="Send"
-                  data-ajax-url="../php/reviews.process.php"
-                  data-ajax-post="message">
+  ><textarea class="textarea" id="message" placeholder="Write a review..."
+             oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"
+             onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"></textarea>
+</div
+><label for="pressEnterToSend" class="cr-label"
+  ><input type="checkbox" id="pressEnterToSend" onchange="var b=this.parentNode.nextSibling,c=b.className;b.className=this.checked?c+'hidden ':c.replace(' hidden ', ' ');rCookie.set('pressEnterToSend',this.checked,Infinity,'/')" class="cr">
+  <span class="cr-button"></span>
+  <span class="cr-text">Press Enter to send</span>
+</label
+><input type="submit" class="input-button block " value="Send"
+        data-ajax-url="../php/reviews.process.php"
+        data-ajax-post="message">
