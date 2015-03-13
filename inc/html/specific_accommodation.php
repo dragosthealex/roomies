@@ -64,14 +64,7 @@ else
   <?=$accomInfo['description'];?>
 </div>
 <div class='acc-long-comments' style="margin-top:1em;">
-  <ul class='ul'>
-    <li class='li'>
-      shit review 1
-    </li>
-    <li class='li'>
-      shit review 2
-    </li>
-  </ul>
+  <?php include_once __ROOT__.'/inc/html/accommodation_reviews.php'; ?>
 </div>
 <div class="textarea-holder" style="margin-top:1em;"
   ><textarea class="textarea" id="message" placeholder="Write a review..."

@@ -684,6 +684,75 @@
 .option[value=""] {
 	color: #888;
 }
+/* CSS for reviews */
+.review-Box {
+	overflow: hidden;
+	margin: 0px;
+	float: top;
+}
+
+.review-Header {
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid #d5d1d0;
+	padding-bottom: 5px;
+	float: top;
+}
+
+.author-Details {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-left: 5px;
+	padding-left: 5px;
+	overflow: hidden;
+}
+.author-text {
+	overflow: hidden;
+	margin: 0px;
+	padding: 0px;
+	height: 42px;
+}
+.author-name  {
+	font-size: 15px;
+	padding-left: 8px;
+	padding-bottom: 5px;
+}
+.date-text {
+	font-size: 12px;
+	padding-left: 8px;
+	color: #909090;
+}
+
+.review-Text {
+	padding-left: 10px;
+	font-size: 12px;
+	padding-bottom: 10px;
+}
+
+.like-Reply {
+
+}
+
+.reply-Box {
+
+}
+
+.reply-Header {
+
+}
+
+.reply {
+
+}
+
+.profile-review {
+	height: 40px;
+	width: 40px;
+	border: 1px solid #d5d1d0;
+	float: left;
+}
+
 
 /* Checkbox/radio styles. */
 

@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-  <link rel="stylesheet" type="text/css" href="media/css/style.css">
-</head>
-<body>
-  <div class="main">
-    <div class="column-2">
-      <div class="column-box">
-        <div class="box-padding">
-          <div class="review-Box">
+<?php
+// $reviews = $accomInfo['reviews'];
+
+// $replyText = $reviews[$y]['replies'][$x]['text'];
+?>
+<div class="review-Box">
             <div class="review-Header">
               Reviews
             </div>
@@ -44,10 +38,3 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</body>
-</html>
