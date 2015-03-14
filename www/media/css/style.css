@@ -695,6 +695,7 @@
 	overflow: hidden;
 	margin: 0px;
 	float: top;
+	margin-top: 5px;
 }
 
 .review-header {
@@ -745,6 +746,7 @@
 
 .reply-box {
 	overflow: hidden;
+	border-bottom: 1px solid #d5d1d0;
 }
 
 .reply-header {
