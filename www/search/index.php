@@ -45,7 +45,7 @@ else
 
 // Output the result list
 echo '<div class="box"><div class="box-padding"><ul class="ul">';
-include_once __ROOT__.'/inc/html/recent_matches.php';
+include_once __ROOT__.'/inc/html/search_results.php';
 echo '</ul></div></div>';
 
 // Include the footer of the page
