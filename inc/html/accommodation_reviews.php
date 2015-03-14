@@ -3,11 +3,11 @@
 
 // $replyText = $reviews[$y]['replies'][$x]['text'];
 ?>
-<div class="review-Box">
-            <div class="review-Header">
+<div class="review-box">
+            <div class="review-header">
               Reviews
             </div>
-            <div class="author-Details">
+            <div class="author-details">
                 <div class="profile-review">
 
                 </div>
@@ -20,13 +20,13 @@
                   </div>
                 </div>
             </div>
-            <div class="review-Text">
+            <div class="review-text">
               The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
             </div>
             <div class="date-text">
               Like - Reply
             </div>
-            <div class="like-Reply">
+            <div class="like-reply">
 
             </div>
             <div class="reply-box">
