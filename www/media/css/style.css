@@ -717,7 +717,7 @@
 	padding-left: 8px;
 	padding-bottom: 5px;
 }
-.date-text {
+.date-text, .like-reply {
 	font-size: 12px;
 	padding-left: 8px;
 	color: #909090;
@@ -732,6 +732,8 @@
 }
 
 .like-reply {
+	margin-bottom: 8px;
+	padding-left: 12px;
 
 }
 
@@ -753,18 +755,27 @@
 
 .author-link {
 	color: #e37314;
-	font-style: bold;
+	font-weight: bold;
 }
 
 .reply-text {
-	width: 85%;
+	position: relative;
+	padding-left: 50px;
 }
 
-.profile-review {
+.review-pic, .reply-pic {
 	height: 40px;
 	width: 40px;
 	border: 1px solid #d5d1d0;
 	float: left;	
+}
+
+.reply-pic {
+	height: 30px;
+	width: 30px;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 .reply-profile-box {
