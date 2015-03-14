@@ -425,6 +425,7 @@ void function (window, document, undefined) {
       validate(arguments, "HTMLCollection");
 
       forEach.call(elements, function (element) {
+        element.disabled === false && (element.disabled = true);
         !hiddenRegex.test(element.className) && (element.className += "hidden ");
       });
     },
@@ -433,6 +434,8 @@ void function (window, document, undefined) {
       validate(arguments, "HTMLCollection");
 
       forEach.call(elements, function (element) {
+        element.disabled && (element.disabled = false);
+
         while (hiddenRegex.test(element.className)) {
           element.className = element.className.replace(hiddenRegex, ' ');
         }

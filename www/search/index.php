@@ -6,16 +6,16 @@ if (!LOGGED_IN) die();
 // Temporary user array (supposed to get from /inc/init.php)
 // Gonna just fill the values in as myself
 $testUser = array(
-    'name' =>    'Daniel Hodgson',
-    'picture' => 'anonymous.jpg',
-    'filters' => array(
-        0 => 'English',
-        1 => 'Atheism',
-        2 => 'Unaffiliated',
-        3 => 'Coffee',
-        4 => false,
-        // 6 => This person doesn't like or dislike trees.
-    )
+  'name' =>    'Daniel Hodgson',
+  'picture' => 'anonymous.jpg',
+  'filters' => array(
+    0 => 'English',
+    1 => 'Atheism',
+    2 => 'Unaffiliated',
+    3 => 'Coffee',
+    4 => false,
+    // 6 => This person doesn't like or dislike trees.
+  )
 );
 
 // Include the head of the page
@@ -27,11 +27,40 @@ include __ROOT__.'/inc/html/head.php';
 include __ROOT__.'/inc/html/header.in.php';
 
 // TODO: Output the top of the search page, with the ignore form
-// If the user is ignoring some filters, put them into $ignore
-if (isset($_POST['ignore']))
-    $ignore = $_POST['ignore'];
-else
-    $ignore = array();
+?>
+<div class="box">
+  <form method="GET" class="box-padding">
+    <div class="input-wrapper" style="z-index:999">
+      <select class="select" name="gender">
+        <option value="2">Female</option>
+        <option value="1">Male</option>
+        <option value="3">Other</option>
+        <option value="0">All genders</option>
+      </select>
+      <div class="input">
+        <span id="age-toggler" class="height-toggler"></span>
+        <div class="height23">
+          <div data-toggle="age-toggler">Ages 18 to 30</div>
+          <div class="input-wrapper">
+            <input class="input" style="width:50px" name="age1"> -
+            <input class="input" style="width:50px" name="age2">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="input-wrapper">
+      <input class="input-button" type="submit" value="Search" data-hide="Options">
+      <input class="input-button cancel-button" type="button" value="Clear">
+    </div>
+  </form>
+</div>
+<?php
+
+// // If the user is ignoring some filters, put them into $ignore
+// if (isset($_POST['ignore']))
+//     $ignore = $_POST['ignore'];
+// else
+//     $ignore = array();
 
 // TODO: The search algorithm, using filters array from $_POST and putting the
 // results for each user into an array, $results, with:

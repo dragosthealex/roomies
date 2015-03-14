@@ -630,9 +630,13 @@
 }
 
 .input, .select {
+	box-sizing: border-box;
 	border: 1px solid #d9d6d5;
 	background: #fff;
-	padding: .5em .6em;
+	padding: 0 .6em;
+	height: 2.3em;
+	line-height: 2.3em;
+	vertical-align: top;
 }
 
 .input {
@@ -640,11 +644,17 @@
 }
 
 .input-wrapper {
+	position: relative;
 	margin: 1em 0;
 }
 
 .input-wrapper .link-button, .input-wrapper .input-button, .input-wrapper .input {
 	margin: 0;
+}
+
+.height23 {
+	height: 2.3em;
+	overflow: hidden;
 }
 
 /*.input-text-valid {
@@ -669,11 +679,7 @@
 
 .has-submit {
 	margin: 0;
-	box-sizing: border-box;
 	border-right-width: 0;
-	padding: 0 .6em;
-	height: 2.3em;
-	vertical-align: top;
 }
 
 .has-submit + .input-button {
@@ -962,9 +968,13 @@
 }
 
 .small-text, .footer {
-	line-height: 1.6;
 	color: #888;
 	font-size: .8em;
+}
+
+.small-text {
+	line-height: 1.6;
+	margin: 8px 0;
 }
 
 .link {
@@ -1255,6 +1265,10 @@
 
 .mobile-only {
 	display: none;
+}
+
+.height-toggler.hidden + * {
+	height: auto;
 }
 
 /* Large version */
