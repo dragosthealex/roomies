@@ -759,6 +759,11 @@
 
 }
 
+.click-me {
+	text-decoration: none;
+	color: black;
+}
+
 .author-link {
 	color: #e37314;
 	font-weight: bold;

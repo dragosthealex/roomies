@@ -26,9 +26,9 @@
               </div>
               <div class="reply-box">
                 <div class="review-header" style="border-top: 1px solid #d5d1d0; padding-top: 5px; text-align: right; padding-right: 10px;">
-                  Replies
+                  <a class="click-me" onclick="toggleReply(this)">Replies</a>
                 </div>
-                <div class="reply">
+                <div class="reply" id="hide">
 
                     <div class="author-details">
 
@@ -42,3 +42,16 @@
                 </div>
               </div>
             </div>
+<script type="text/javascript">
+  document.getElementById('hide').style.display = 'none';
+
+  function toggleReply(param) {
+    var parent = param.parentNode;
+    var nextItem = parent.nextElementSibling;
+    if (nextItem.style.display == 'none') {
+      nextItem.style.display = '';
+    } else {
+      nextItem.style.display = 'none';
+    }
+  }
+</script>
