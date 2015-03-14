@@ -29,12 +29,22 @@
             <div class="like-Reply">
 
             </div>
-            <div class="reply-Box">
-              <div class="review-Header">
-                <!-- Replies -->
-              </div>
-              <div class="reply">
+            <div class="reply-box">
+                <div class="review-header" style="border-top: 1px solid #d5d1d0; padding-top: 5px; text-align: right; padding-right: 10px;">
+                  Replies
+                </div>
+                <div class="reply">
 
+                    <div class="author-details">
+                        <div class="profile-review">
+
+                        </div>
+                      <div class="reply-text">
+                            <a class="author-link">Alex Radu</a> - The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                      </div>
+                    </div>
+
+                </div>
               </div>
             </div>
           </div>

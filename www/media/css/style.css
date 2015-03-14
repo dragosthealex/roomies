@@ -685,13 +685,13 @@
 	color: #888;
 }
 /* CSS for reviews */
-.review-Box {
+.review-box {
 	overflow: hidden;
 	margin: 0px;
 	float: top;
 }
 
-.review-Header {
+.review-header {
 	margin-top: 5px;
 	margin-left: 5px;
 	margin-bottom: 5px;
@@ -700,12 +700,11 @@
 	float: top;
 }
 
-.author-Details {
+.author-details {
 	padding-top: 5px;
 	padding-bottom: 5px;
 	margin-left: 5px;
 	padding-left: 5px;
-	overflow: hidden;
 }
 .author-text {
 	overflow: hidden;
@@ -724,33 +723,58 @@
 	color: #909090;
 }
 
-.review-Text {
+.review-text, .reply-text{
+	line-height: 1.3;
 	padding-left: 10px;
-	font-size: 12px;
+	font-size: 0.8em;
 	padding-bottom: 10px;
+	display: inline-block;
 }
 
-.like-Reply {
-
-}
-
-.reply-Box {
+.like-reply {
 
 }
 
-.reply-Header {
+.reply-box {
+
+}
+
+.reply-header {
 
 }
 
 .reply {
+	margin-left: 5px;
+	padding-left: 5px;
+	margin-top: 10px;
+	overflow: hidden;
 
+}
+
+.author-link {
+	color: #e37314;
+	font-style: bold;
+}
+
+.reply-text {
+	width: 85%;
 }
 
 .profile-review {
 	height: 40px;
 	width: 40px;
 	border: 1px solid #d5d1d0;
+	float: left;	
+}
+
+.reply-profile-box {
+	width: 42px;
+	/*height: 100%;*/
+	/*display: table-cell;*/
+	overflow: hidden;
 	float: left;
+	display: inline-block;
+
 }
 
 
