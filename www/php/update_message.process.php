@@ -3,7 +3,7 @@
 require_once '../../inc/init.php';
 session_write_close();
 require_once '../../inc/classes/conversation.php';
-
+$errorMsg = '';
 if(!isset($_GET['type'], $_GET['otherId'], $_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include_once __ROOT__."/inc/html/notfound.php";
@@ -20,32 +20,30 @@ else
   // I will use AJAX to call a separate function. Maybe read_messages.process.php.
   // That takes the message ids from _GET. (Meaning they should be output as data attr).
 
+
   // Get the other user from the id given
   $otherUserId = htmlentities($_GET['otherId']);
-  $otherUser = new User($con, $otherUserId);
-  $otherUserId = $otherUser->getIdentifier('id');
-  $otherUserName = $otherUser->getName();
+  if($otherUserId != '0')
+  {
+    $otherUser = new OtherUser($con, $otherUserId);
+    $errorMsg .= $otherUser->getError();
+    $otherUserId = $otherUser->getCredential('id');
+    $groupId = -1;
+  }
+  else
+  {
+    $groupId = htmlentities($_GET['gid']);
+    if(!$user2->inGroup($groupId))
+    {
+      exit('[]');
+    }
+  }
 
   // Get the current user id and name
   $userId = $user->getIdentifier('id');
   $userName = $user->getName();
 
   switch ($_GET['type']) {
-    case 'new':
-      // Long-polling:
-      // Requires the last id:
-      if (!isset($_GET['lastId']))
-      {
-        break;
-      }
-
-      $conversation = new Conversation(
-        // con, this user, other user, offset
-        $con, $userId, $otherUserId, 0,
-        // longpoll?, last message id, max time
-        true, htmlentities($_GET['lastId']), 60
-      );
-      break;
     case 'old':
       // User scrolled up:
       // Requires the offset:
@@ -58,7 +56,7 @@ else
 
       $conversation = new Conversation(
         // con, this user, other user, offset
-        $con, $userId, $otherUserId, $offset1
+        $con, $userId, $otherUserId, $offset1, $groupId
       );
       break;
   } // switch

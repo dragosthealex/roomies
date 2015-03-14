@@ -286,6 +286,7 @@ void function (window, document, undefined) {
     var minusScrollBarWidth = element.clientWidth - element.offsetWidth;
     var convstn = element.getElementsByClassName('conversation')[0];
     var convId = convstn && convstn.getAttribute("data-conv-id"), convBox;
+    var grpId = convstn && convstn.getAttribute("data-group-id");
 
     if (minusScrollBarWidth) {
       forEach.call(element.childNodes, function (child) {
@@ -309,7 +310,7 @@ void function (window, document, undefined) {
     if (convstn && (convBox = conv.box[convId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
       convBox.fetchingPrevious = true;
       roomies.ajax({
-        url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0",
+        url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0&gid=" + grpId,
         success: function (response) {
           response = response[0];
           var newHTML = "";
@@ -682,18 +683,20 @@ void function (window, document, undefined) {
       return true;
     } // if
 
+    var
     // Localise the element that was clicked and its className
-    var element = e.target;
+    element = e.target,
     // Localise the class string of the target
-    var className = element.className;
-
+    className = element.className,
     // Localise variables for later use
-    var target, targets;
-
+    target = document.getElementById(element.getAttribute("data-toggle")),
+    targets,
     // Get an array of all the drops that the current element is in
-    var elementsToKeepOpen = validate.bool([element], "element")
-                             ? roomies.getParentsByClassName(element, 'drop')
-                             : [];
+    elementsToKeepOpen = validate.bool([element], "element")
+                         ? roomies.getParentsByClassName(element, 'drop')
+                         : [];
+    // Add the toggle target if it exists
+    target && elementsToKeepOpen.push(target);
     // Hide all drops, except those in the elements to keep open
     forEach.call(body.getElementsByClassName("drop"), function (dropElement) {
       elementsToKeepOpen.indexOf(dropElement) === -1 && roomies.hide([dropElement]);
@@ -704,7 +707,7 @@ void function (window, document, undefined) {
     // If targets needs showing, show them
     (targets = document.getElementsByClassName(element.getAttribute("data-show"))).length && roomies.show(targets);
     // If a target needs toggling, toggle it
-    (target = document.getElementById(element.getAttribute("data-toggle"))) && roomies.toggle(target);
+    (target) && roomies.toggle(target);
     // If a target needs deleting, delete it
     (target = document.getElementById(element.getAttribute("data-delete"))) && roomies["delete"](target);
 

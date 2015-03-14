@@ -28,6 +28,16 @@ class CurrentUser extends GeneralUser
         throw new Exception("Id, username or email not found in session", 1);
       }
 
+      // Get the image url and the groups
+      $stmt = $con->prepare("SELECT image_url FROM rusers WHERE user_id = $id");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting user details from database. Ya dun goof", 1);
+      }
+      $stmt->bindColumn(1, $imageUrl);
+      $stmt->bindColumn(2, $groupsThisUserIsIn);
+      $stmt->fetch();
+
       // Get the user
       $stmt = $con->prepare("SELECT * FROM rdetails WHERE profile_filter_id =$id");
       if(!$stmt->execute())
@@ -38,6 +48,19 @@ class CurrentUser extends GeneralUser
       if(!isset($details['first_name'], $details['last_name'], $details['birthday']))
       {
         throw new Exception("Error with details in database", 1);
+      }
+
+      // Get the groups
+      $groups = array();
+      $stmt = $con->prepare("SELECT group_group_id FROM ruser_groups WHERE group_user_id = $id");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting group details from database", 1);
+      }
+      $stmt->bindColumn(1, $groupId);
+      while($stmt->fetch())
+      {
+        array_push($groups, $groupId);
       }
 
       // Assign the unmapped STRING details
@@ -52,6 +75,8 @@ class CurrentUser extends GeneralUser
       $this->username = $username;
       $this->email = $email;
       $this->con = $con;
+      $this->image = $imageUrl;
+      $this->groups = $groups;
     }// try
     catch (Exception $e)
     {
@@ -651,6 +676,36 @@ private function getConv($offset)
       ";
     }
     return $conversations;
+  }
+
+  /**
+  * Function inGroup($groupId)
+  *
+  * Returns true if this user is in group $groupId
+  *
+  * @param - $groupId(int), the id of the group
+  * @return - $inGroup(boolean), true if user in group, false otherwise
+  */
+  public function inGroup($groupId)
+  {
+    // Localise shit
+    $con = $this->con;
+    $id = $this->id;
+
+    // Check if user in group
+    $stmt = $con->prepare("SELECT * FROM ruser_groups WHERE group_group_id = $groupId AND group_user_id = $id");
+    try
+    {
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting checking if user in group", 1);
+      }
+      return (boolean)$stmt->rowCount();
+    }
+    catch (Exception $e)
+    {
+      $this->$errorMsg = $e->getMessage();
+    }
   }
 }
 
