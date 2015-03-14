@@ -1,0 +1,250 @@
+#!/usr/bin/php5
+<?php
+/**
+ * Program to reset the database to the default, ready for presentation.
+ *
+ * Usage: resetDB [OPTION]...
+ * Reset the database to the default (ready for presentation).
+ */
+
+// Define the help and version information
+$information = array(
+    'help' => 'Usage: resetDB [OPTION]...
+Reset the database to the default (ready for presentation).
+
+Mandatory arguments to long options are mandatory for short options too.
+  -a, --all                 reset all tables
+  -A, --almost-all          reset all tables pertaining to users
+  -f, --force               never prompt before removal
+      --keep=TABLE_LIST     prevent emptying of the specified tables
+  -p, --presentation        create guest user
+  -v, --verbose             explain what is being done
+      --help     display this help and exit
+      --version  output version information and exit
+',
+    'version' => shell_exec('git describe')
+);
+
+// Define the options as the string that will be their constant's name
+// (except help or version, since they're special).
+$options = array(
+    'a' => 'ARG_ALL',          'all'          => 'ARG_ALL',
+    'A' => 'ARG_ALMOST_ALL',   'almost-all'   => 'ARG_ALMOST_ALL',
+    'f' => 'ARG_FORCE',        'force'        => 'ARG_FORCE',
+                               'keep'         => 'ARG_KEEP',
+    'p' => 'ARG_PRESENTATION', 'presentation' => 'ARG_PRESENTATION',
+    'v' => 'ARG_VERBOSE',      'verbose'      => 'ARG_VERBOSE'
+);
+$tableListRegex = '/^([a-z_]+,)*([a-z_]+)?$/';
+$optionArgsRegex = array(
+    'keep' => $tableListRegex
+);
+
+// Get the arguments (remove the filename from the args)
+$args = array_slice($argv, 1);
+
+// Initialise arrays to contain the options the user has asked for
+$userOptions = array();
+$userOptionArgs = array();
+
+// Get the user-defined options
+try {
+    foreach ($args as $arg) {
+        // Don't care about anything which is not an option
+        if ($arg[0] != '-') continue;
+
+        // Get the option and its arguments
+        $option = split('=', substr($arg, $arg[1] == '-' ? 2 : 1));
+        $optionName = $option[0];
+        // Exit upon seeing help or version, outputting them
+        if ($optionName == 'help' || $optionName == 'version') {
+            exit($information[$optionName]);
+        } // if
+        $optionArgs = isset($option[1]) ? $option[1] : FALSE;
+
+        // If it's a long option check if the entire word is an option
+        if ($arg[1] == '-') {
+            if (isset($options[$optionName])) {
+                array_push($userOptions, $optionName);
+            } else {
+                throw new Exception($option);
+            } // else
+        } else {
+            // Otherwise, check if each letter is an option
+            foreach (str_split($optionName) as $optionLetter) {
+                if (isset($options[$optionLetter])) {
+                    array_push($userOptions, $optionLetter);
+                } else {
+                    throw new Exception($optionLetter);
+                } // else
+            } // foreach
+        } // else
+
+        // Check if the option takes arguments
+        if ($optionArgs && isset($optionArgsRegex[$optionName])) {
+            $userOptionArgs[$optionName] = $optionArgs;
+        } // if
+    } // foreach
+} catch (Exception $e) {
+    $option = $e->getMessage();
+    die( "resetDB: invalid option -- '$option'"       .PHP_EOL
+        .'Try \'resetDB --help\' for more information.'.PHP_EOL);
+} // catch
+
+// Define all of the user-defined options as true
+foreach ($userOptions as $userOption) {
+    $option = $options[$userOption];
+    // Check if it's defined first
+    if (!defined($option)) {
+        define($option, TRUE);
+    } // if
+} // foreach
+
+// Define the rest of the options as false
+foreach ($options as $option) {
+    if (!defined($option)) {
+        define($option, FALSE);
+    } // if
+} // foreach
+
+// Pre-configure the arguments passed into options
+$tablesToKeep = array();
+try
+{
+    foreach ($userOptionArgs as $optionName => $optionArgs)
+    {
+        // If the option's arguments don't match their given regex, error
+        if (!preg_match($optionArgsRegex[$optionName], $optionArgs))
+            throw new Exception($optionName.': '.$optionArgs);
+
+        // For different options, change different variables
+        switch ($optionName)
+        {
+            case 'k':
+            case 'keep':
+                $tablesToKeep = split(',', $optionArgs);
+                break;
+        } // switch
+    } // foreach
+} catch (Exception $e) {
+    die('resetDB: invalid option '.$e->getMessage.PHP_EOL);
+} // catch
+
+// Get the db info
+require_once 'config.inc.php';
+
+// Connect to the db
+try {
+  $connection = new PDO("mysql:host=$database_host;dbname=$database_name",
+                        $database_user, $database_pass);
+} catch (PDOException $e) {
+  exit('Connection failed: ' . $e->getMessage());
+} // catch
+
+// Define the list of tables
+$statement = $connection->prepare("SHOW TABLES");
+if (!$statement->execute()) {
+    exit('Could not get table list: ' . $statement->errorInfo());
+} // if
+$tables = array();
+while ($table = $statement->fetch()) {
+    array_push($tables, $table[0]);
+} // while
+
+// Initialise the array of tables to empty
+$tablesToEmpty = array();
+
+// Add each table to the list, dependent upon options
+foreach ($tables as $table) {
+    // If this table is in the tables to keep, skip it
+    if (in_array($table, $tablesToKeep)) continue;
+
+    switch ($table) {
+        // All:
+        case 'raccommodations':
+            if (!ARG_ALL) {
+                break;
+            } // if
+        // Almost-all:
+        case 'rdetails':
+        case 'rgroups':
+        case 'rpercentages':
+        case 'rreviews':
+        case 'rtempusers':
+        case 'rusers':
+        case 'rusersettings':
+        case 'ruser_groups':
+        case 'ruser_qa':
+            if (!ARG_ALMOST_ALL && !ARG_ALL) {
+                break;
+            } // if
+        // Default:
+        case 'rconexions':
+        case 'rlog':
+        case 'rmessages':
+            array_push($tablesToEmpty, $table);
+            break;
+    } // switch
+} // foreach
+
+function confirm($message) {
+    $message .= ' [y/N]: ';
+    echo $message;
+    flush();
+    return substr(strtolower(trim(fgets(STDIN))), 0, 1) == 'y';
+}
+
+// Initialise the array of queries
+$queries = array();
+
+// Add queries to empty each table
+foreach ($tablesToEmpty as $table) {
+    // If not forcing emptying, get confirmation
+    // If still emptying this table, add the query to do so
+    if (ARG_FORCE || confirm("Are you sure you want to empty `$table`?")) {
+        if (ARG_VERBOSE) {
+            echo "Emptying `$table`.".PHP_EOL;
+        } // if
+        array_push($queries, "DELETE FROM $table");
+        if (ARG_VERBOSE) {
+            echo "Resetting auto-increment value for `$table`.".PHP_EOL;
+        } // if
+        array_push($queries, "ALTER TABLE $table AUTO_INCREMENT = 1");
+    } // if
+} // foreach
+
+// If adding guest user to the database, add the query to do so
+if (ARG_PRESENTATION && (ARG_FORCE
+    || confirm("Are you sure you want to create the guest user?"))) {
+    // TODO: Add a second guest user and the settings and things for
+    // interaction
+    $username = 'guest';
+    $email    = 'guest@cs.man.ac.uk';
+    $salt     = mt_rand();
+    $pass     = hash('sha256', 'comp10120'.$salt);
+    if (ARG_VERBOSE) {
+        echo 'Creating guest user.'.PHP_EOL;
+    } // if
+    array_push(
+        $queries,
+        "DELETE FROM rdetails WHERE profile_filter_id IN (
+            SELECT user_id FROM rusers WHERE username = 'guest'
+         );
+         DELETE FROM rusers WHERE username = 'guest';
+         INSERT INTO rusers (  username, user_email, user_pass, user_salt)
+              VALUES        ('$username',   '$email',   '$pass',   '$salt');
+         INSERT INTO rdetails (profile_filter_id, first_name, last_name,
+                               birthday, country, language, gender, uni_city)
+              SELECT rusers.user_id, 'Guest', 'Account', '1996-01-01', 221, 1,
+                     1, 1
+                FROM rusers WHERE rusers.username = 'guest'"
+    );
+} // if
+
+// Run the queries
+$statement = $connection->prepare(implode(';', $queries));
+if (!$statement->execute())
+{
+    die($statement->errorInfo()[2].PHP_EOL);
+} // if
+?>
