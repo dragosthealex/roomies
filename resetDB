@@ -127,7 +127,7 @@ try
         } // switch
     } // foreach
 } catch (Exception $e) {
-    die('resetDB: invalid option '.$e->getMessage.PHP_EOL);
+    die('resetDB: invalid option '.$e->getMessage().PHP_EOL);
 } // catch
 
 // Get the db info
