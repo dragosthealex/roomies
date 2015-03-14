@@ -744,7 +744,7 @@
 }
 
 .reply-box {
-
+	overflow: hidden;
 }
 
 .reply-header {
@@ -762,6 +762,7 @@
 .click-me {
 	text-decoration: none;
 	color: black;
+	cursor: pointer;
 }
 
 .author-link {
