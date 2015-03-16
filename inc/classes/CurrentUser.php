@@ -47,7 +47,9 @@ class CurrentUser extends GeneralUser
       $details = $stmt->fetch(PDO::FETCH_ASSOC);
       if(!isset($details['first_name'], $details['last_name'], $details['birthday']))
       {
-        throw new Exception("Error with details in database", 1);
+        $details['first_name'] = '';
+        $details['last_name'] = '';
+        $details['birthday'] = '';
       }
 
       // Get the groups
@@ -157,7 +159,7 @@ class CurrentUser extends GeneralUser
             throw new Exception("Error. Weird status in database", 1);
           }
 
-          
+
           $stmt = $con->prepare("UPDATE rconexions SET conexion_status=1
                                   WHERE conexion_user_id2 = $thisUserId AND conexion_user_id1 = $otherUserId");
           $stmt->execute();
@@ -526,7 +528,7 @@ private function getConv($offset)
       // Push in the array
       array_push($friendRequests, $request);
       /*
-      echo 
+      echo
       "
       <li class='drop-item' id='drop-item-fr-$otherUserId'>
         <div class='drop-item-box'>
@@ -598,7 +600,7 @@ private function getConv($offset)
     $notifications = array('messages' => $notifMessages,
                       'friend_requests' => $notifRequests
                       );
-    
+
     return json_encode($notifications);
   }
 

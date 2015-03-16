@@ -58,7 +58,7 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
       if(!validate('int', $bYear) || !validate('int', $bMonth) || !validate('int', $bDay) || !validate('alphanumeric', $country)
         || !validate('alphanumeric', $language) || !validate('alphanumeric', $gender) || !validate('alphanumeric', $city))
       {
-        throw new Exception("Invalid values for year, month, day, country, language, gender or city.", 1);      
+        throw new Exception("Invalid values for year, month, day, country, language, gender or city.", 1);
       }
       // Check if the ID exists. If not, it must be a problem
       $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");

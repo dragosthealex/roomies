@@ -1,4 +1,4 @@
-#!/usr/bin/php5
+#!/usr/bin/php
 <?php
 /**
  * Program to reset the database to the default, ready for presentation.
@@ -245,6 +245,7 @@ if (ARG_PRESENTATION && (ARG_FORCE
 $statement = $connection->prepare(implode(';', $queries));
 if (!$statement->execute())
 {
-    die($statement->errorInfo()[2].PHP_EOL);
+    $errorInfo = $statement->errorInfo();
+    die($errorInfo[2].PHP_EOL);
 } // if
 ?>
