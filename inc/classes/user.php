@@ -727,7 +727,6 @@ private function getConv($offset=0)
     {
       $this->errorMsg .= $e->getMessage();
     }
-
   }
 
   /**

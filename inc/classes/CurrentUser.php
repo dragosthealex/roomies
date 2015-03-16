@@ -709,6 +709,83 @@ private function getConv($offset)
       $this->$errorMsg = $e->getMessage();
     }
   }
+
+  /**
+  * Function sendReview($accId, $reviewText)
+  *
+  * Sends a review to the accommodation with given id
+  *
+  * @param - $accId(int), the Id of the accommodation
+  *
+  */
+  public function sendReview($accId, $reviewText)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // Prepare for the review;
+    $params['author'] = $userId;
+    $params['text'] = $reviewText;
+    $params['accId'] = $accId;
+
+    try
+    {
+      $review = new Review($con, 'insert', $params);
+      if($review->getError())
+      {
+        throw new Exception("Error in submitting the review: " . $review->getError(), 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg .= $e->getMessage();
+    }
+  }
+
+  /**
+  * Function sendReview($accId, $reviewText)
+  *
+  * Sends a review to the accommodation with given id
+  *
+  * @param - $accId(int), the Id of the accommodation
+  *
+  */
+  public function sendReply($reviewId, $replyText)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // Prepare for the review;
+    $params['author'] = $userId;
+    $params['text'] = $replyText;
+    $params['reviewId'] = $reviewId;
+
+    try
+    {
+      $reply= new Reply($con, 'insert', $params);
+      if($review->getError())
+      {
+        throw new Exception("Error in submitting the reply: " . $reply->getError(), 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg .= $e->getMessage();
+    }
+  }
+
+  /**
+  * Function like($postId, $postType, $likeValue)
+  *
+  * Likes or dislikes a post, depending on the like value
+  *
+  * @param - $postId(int), the post to be liked/disliked
+  * @param - $postType(String), the post type (currently review/reply)
+  * @param - $likeValue(Boolean), if true like, if false dislike
+  */
+  public function like($postId, $)
 }
 
 

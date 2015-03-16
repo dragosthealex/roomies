@@ -12,7 +12,7 @@ class Reply extends Comment
   * Constructor
   *
   * Constructs a Reply object. If $action is 'get', its $params['id'] should be an id, and it will get a reply from db
-  * If $action is 'insert', it will have $params['author'], ['userId'], ['text']
+  * If $action is 'insert', it will have $params['author'], ['reviewId'], ['text']
   *
   */
   public function __construct($con, $action, $params)

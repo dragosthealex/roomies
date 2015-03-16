@@ -30,7 +30,7 @@ class Review extends Comment
           // Check if all values are there
           if(!$author || !$accId || !$text)
           {
-            throw new Exception("All values are mandatory", 1);
+            throw new Exception("Author, id and text values are mandatory", 1);
           }
 
           // Insert into database
