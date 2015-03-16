@@ -5,7 +5,7 @@ if(isset($_POST['currentPass'], $_POST['submit2']) && $_POST['currentPass'] && $
   $ok = 0;
   try 
   {
-    if(!validate_pass($con, $id, $currentPass))
+    if(!validate_pass($con, $id, $_POST['currentPass']))
     {
       throw new Exception("Your password was incorrect", 1);
     }
@@ -29,7 +29,7 @@ if(isset($_POST['currentPass'], $_POST['submit2']) && $_POST['currentPass'] && $
       $notif_request = 0;
       $ok = 1;
     }
-    else if(!$notif_request && $_POST['notif_request'])
+    else if(!$notif_request && isset($_POST['notif_request']))
     {
       $notif_request = 1;
       $ok = 1;
@@ -90,7 +90,7 @@ if(isset($_POST['currentPass'], $_POST['submit2']) && $_POST['currentPass'] && $
   }
 }
 ?>
-<form action="" method="POST" class="settings notif-settings hidden">
+<form action="" method="POST" class="settings notif-settings hidden" onsubmit="rCookie.set('data-hide','settings');rCookie.set('data-show','notif-settings');return true">
   <div class="box-padding">
     <h3 class="h3">I want to get an email when&hellip;</h3>
     <div class="cr-block">

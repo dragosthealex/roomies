@@ -694,16 +694,27 @@ void function (window, document, undefined) {
     // Localise variables for later use
     target = document.getElementById(element.getAttribute("data-toggle")),
     targets,
+    parentSelectors = roomies.getParentsByClassName(element, "selector"),
     // Get an array of all the drops that the current element is in
-    elementsToKeepOpen = validate.bool([element], "element")
-                         ? roomies.getParentsByClassName(element, 'drop')
-                         : [];
-    // Add the toggle target if it exists
-    target && elementsToKeepOpen.push(target);
-    // Hide all drops, except those in the elements to keep open
-    forEach.call(body.getElementsByClassName("drop"), function (dropElement) {
-      elementsToKeepOpen.indexOf(dropElement) === -1 && roomies.hide([dropElement]);
+    exceptions = validate.bool([element], "element")
+                 ? roomies.getParentsByClassName(element, 'drop')
+                 : [];
+    // Add any parent selector's togglers
+    parentSelectors.forEach(function(element){
+      while((element=element.previousSibling)&&element.nodeType!==1);
+      /(^| )selector-toggler( |$)/.test(element.className)&&exceptions.push(element);
     });
+    // Add the toggle target if it exists
+    target && exceptions.push(target);
+    // Function to optionally hide things
+    var optDo = function (className, action) {
+      roomies[action] && forEach.call(body.getElementsByClassName(className), function (element) {
+        exceptions.indexOf(element) === -1 && roomies[action]([element]);
+      });
+    };
+    // Hide all drops, except those in the elements to keep open
+    optDo("drop", "hide");
+    optDo("selector-toggler", "show");
 
     // If targets needs hiding, hide them
     (targets = document.getElementsByClassName(element.getAttribute("data-hide"))).length && roomies.hide(targets);
@@ -1012,5 +1023,15 @@ void function (window, document, undefined) {
   elementToFocus&&(elementToFocus.focus&&elementToFocus.focus(),elementToFocus.onfocus&&elementToFocus.onfocus());
 
   if (roomiesInfo)delete roomiesInfo;
+
+  var cookieInfo;
+  if (cookieInfo=rCookie.get('data-hide')) {
+    roomies['hide'](document.getElementsByClassName(cookieInfo));
+    rCookie.remove('data-hide');
+  }
+  if (cookieInfo=rCookie.get('data-show')) {
+    roomies['show'](document.getElementsByClassName(cookieInfo));
+    rCookie.remove('data-show');
+  }
 } (window, document); // Localise variables
 }catch(e){newError("<strong>JavaScript Error</strong><br><br>"+e)}

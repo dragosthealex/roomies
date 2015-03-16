@@ -117,7 +117,7 @@ if(isset($_POST['currentPass'], $_POST['submit1']) && $_POST['currentPass'])
       $dbInvisible = 0;
       $message .= "Your invisible status was updated. <br>";
     }
-    else if(!$dbInvisible && $_POST['invisible'])
+    else if(!$dbInvisible && isset($_POST['invisible']))
     {
       $dbInvisible = 1;
       $message .= "Your invisible status was updated. <br>";

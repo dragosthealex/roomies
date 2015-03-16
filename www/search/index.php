@@ -30,22 +30,75 @@ include __ROOT__.'/inc/html/header.in.php';
 ?>
 <div class="box">
   <form method="GET" class="box-padding">
-    <div class="input-wrapper" style="z-index:999">
+    <script>
+function checkForm(element, targetStr) {
+  var target = element;
+  Array.prototype.forEach.call(targetStr, function (chr) {
+    if (target) {
+      if (chr==="^") {
+        target=target.parentNode;
+      } else if (chr==="<") {
+        while ((target=target.previousSibling).nodeType!==1);
+      } else if (chr===">") {
+        while ((target=target.previousSibling).nodeType!==1);
+      } else if (!isNaN(+chr)) {
+        target=target.children[chr-1];
+      }
+    };
+  });
+  target && (target.innerHTML=element.value);
+}
+function reCheckForm(element, targetStr) {
+  switch (element.name) {
+    case "age1":
+    case "age2":
+      element.value=element.value.replace(/[^0-9]/, "");
+      !(element.value>=18)&&(element.value=18);
+  }
+  checkForm(element, targetStr);
+}
+    </script>
+    <h2 class="h2">Show me</h2>
+    <div class="input-wrapper" style="z-index:2">
       <select class="select" name="gender">
-        <option value="2">Female</option>
-        <option value="1">Male</option>
-        <option value="3">Other</option>
+        <option value="1">Men</option>
+        <option value="2">Women</option>
+        <option value="3">Trans</option>
         <option value="0">All genders</option>
       </select>
-      <div class="selector" data-toggle="age-toggler">
+      <span id="age-toggler" class="selector-toggler"></span>
+      <div class="selector">
         <div class="selector-text" data-toggle="age-toggler">Ages
-          <span id="lowerAge">18</span> to
-          <span id="upperAge">30</span>
+          <span data-toggle="age-toggler">18</span> to
+          <span data-toggle="age-toggler">30</span>
         </div>
-        <span id="age-toggler" class="height-toggler"></span>
+        <div class="selector-content center">
+          <input class="input" style="width:50px" name="age1" value="18" oninput="checkForm(this, '^<1')" onblur="reCheckForm(this, '^<1')"> -
+          <input class="input" style="width:50px" name="age2" value="30" oninput="checkForm(this, '^<2')" onblur="reCheckForm(this, '^<2')">
+        </div>
+      </div>
+      <select class="select" name="uni_city">
+        <option value="1">In Manchester</option>
+      </select>
+      <select class="select" name="online_last">
+        <option value="1">Online now!</option>
+        <option value="2">Online in the last day</option>
+        <option value="3">Online in the last week</option>
+      </select>
+      <div class="select hidden" name="country" id="filter_country">Cactus</div>
+      <span id="advanced-toggler" class="selector-toggler"></span>
+      <div class="selector">
+        <div class="selector-text" data-toggle="advanced-toggler">Advanced</div>
         <div class="selector-content">
-          <input class="input" style="width:50px" name="age1"> -
-          <input class="input" style="width:50px" name="age2">
+          <a href="#" class="link text block">Country</a>
+          <a href="#" class="link text block">Language</a>
+          <a href="#" class="link text block">Degree</a>
+          <a href="#" class="link text block">Parties</a>
+          <a href="#" class="link text block">Smokes</a>
+          <a href="#" class="link text block">Drinks</a>
+          <a href="#" class="link text block">Drugs</a>
+          <a href="#" class="link text block">and</a>
+          <a href="#" class="link text block">Shit</a>
         </div>
       </div>
     </div>

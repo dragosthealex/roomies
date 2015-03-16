@@ -623,13 +623,13 @@
 	color: #fff;
 }
 
-.input, .input-button, .select, .selector {
+.input, .input-button, .select, .selector, .select-label {
 	display: inline-block;
 	font-family: inherit;
 	font-size: 1em;
 }
 
-.input, .select, .selector {
+.input, .select, .selector, .select-label-text {
 	box-sizing: border-box;
 	border: 1px solid #d9d6d5;
 	background: #fff;
@@ -641,6 +641,19 @@
 
 .input {
 	margin: 8px 0;
+}
+
+.select-label {
+	display: inline-block;
+}
+
+.select-label .select {
+	border-left: 0;
+}
+
+.select-label-text {
+	border-right: 0;
+	float: left;
 }
 
 .input-wrapper {
@@ -657,21 +670,51 @@
 }
 
 .selector-text {
+	position: relative;
+	z-index: 2;
+	margin: -1px 0 0;
 	padding: 0 .6em;
 	cursor: pointer;
 }
 
 .selector-content {
+	position: relative;
+	z-index: 1;
+	margin: -1px -1px 0;
+	padding: 0 .6em;
+	border-width: 0 1px 0;
+	border-style: solid;
+	border-color: #d9d6d5;
 	background: #fff;
 	height: 0;
-	overflow: hidden;
+	max-height: 200px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.center {
+	text-align: center;
+}
+
+.selector-toggler.hidden + .selector .selector-content {
+	border-width: 0 1px 1px;
+	padding: .6em;
+	height: auto;
+}
+
+.selector-toggler.hidden + .selector,
+.selector-toggler.hidden + .selector .selector-content {
+	box-shadow: 0 3px 8px rgba(0,0,0,.24);
 }
 
 /*.input-text-valid {
 	border-color: #00adaa;
 }*/
 
-.input:focus, .select:focus, .height-toggler.hidden + .selector {
+.input:focus, .select:focus,
+.selector-toggler.hidden + .selector,
+.selector-toggler.hidden + .selector .selector-content,
+.select:focus + .select-label-text {
 	border-color: #e37314;
 }
 
@@ -1283,10 +1326,6 @@
 
 .mobile-only {
 	display: none;
-}
-
-.height-toggler.hidden + * {
-	height: auto;
 }
 
 /* Large version */
