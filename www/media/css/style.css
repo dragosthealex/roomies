@@ -623,13 +623,13 @@
 	color: #fff;
 }
 
-.input, .input-button, .select {
+.input, .input-button, .select, .selector {
 	display: inline-block;
 	font-family: inherit;
 	font-size: 1em;
 }
 
-.input, .select {
+.input, .select, .selector {
 	box-sizing: border-box;
 	border: 1px solid #d9d6d5;
 	background: #fff;
@@ -652,8 +652,18 @@
 	margin: 0;
 }
 
-.height23 {
-	height: 2.3em;
+.selector {
+	padding: 0;
+}
+
+.selector-text {
+	padding: 0 .6em;
+	cursor: pointer;
+}
+
+.selector-content {
+	background: #fff;
+	height: 0;
 	overflow: hidden;
 }
 
@@ -661,7 +671,7 @@
 	border-color: #00adaa;
 }*/
 
-.input:focus, .select:focus {
+.input:focus, .select:focus, .height-toggler.hidden + .selector {
 	border-color: #e37314;
 }
 

@@ -37,14 +37,15 @@ include __ROOT__.'/inc/html/header.in.php';
         <option value="3">Other</option>
         <option value="0">All genders</option>
       </select>
-      <div class="input">
+      <div class="selector" data-toggle="age-toggler">
+        <div class="selector-text" data-toggle="age-toggler">Ages
+          <span id="lowerAge">18</span> to
+          <span id="upperAge">30</span>
+        </div>
         <span id="age-toggler" class="height-toggler"></span>
-        <div class="height23">
-          <div data-toggle="age-toggler">Ages 18 to 30</div>
-          <div class="input-wrapper">
-            <input class="input" style="width:50px" name="age1"> -
-            <input class="input" style="width:50px" name="age2">
-          </div>
+        <div class="selector-content">
+          <input class="input" style="width:50px" name="age1"> -
+          <input class="input" style="width:50px" name="age2">
         </div>
       </div>
     </div>
