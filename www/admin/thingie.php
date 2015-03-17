@@ -1,7 +1,8 @@
 <?php
 
+require_once '../../inc/init.php';
 
-$ethnicity = array (
+$ethnicity = array(
             "Asian",
             "Native American",
             "Hispanic / Latin",
@@ -13,7 +14,7 @@ $ethnicity = array (
             "Other",
             "Other2, for those not in Other");
 
-$smokes = array (
+$smokes = array(
             "Yes",
             "Sometimes",
             "When drinking",
@@ -28,18 +29,23 @@ $drinks = array(
             "Desperately",
             "Not at all");
 
-$drugs = array (
+$drugs = array(
             "Often",
             "Sometimes",
             "Never");
 
-$studies = array (
+$parties = array(
+            "Often",
+            "Sometimes",
+            "Never");
+
+$studies = array(
             "Very Often",
             "Often",
             "Sometimes",
             "Rarely",
             "Never");
-$degree = array (
+$degree = array(
             "Accounting, Business & Finance",
             "Agriculture and Horticulture",
             "Archaeology",
@@ -81,11 +87,49 @@ $degree = array (
             "Travel and Tourism",
             "Veterinary Medicine");
 
-$offspring = array (
+$offspring = array(
             "Has a kid",
             "Has kids",
             "Does not have kids",
             "Eats kids");
 
-$pets = array (
+$pets = array(
+            "None",
+            "Dog(s)",
+            "Cat(s)",
+            "Arachnide(s)",
+            "Snake(s)",
+            "Bird(s)",
+            "Rodent(s)",
+            "Little brother(s)"
             );
+
+$signs = array(
+            "Leo",
+            "Aquarius",
+            "Cancer",
+            "Taurus",
+            "Scorpio",
+            "Virgo",
+            "Pisces",
+            "Aries",
+            "Gemini",
+            "Libra",
+            "Sagittarius",
+            "Capricorn");
+
+$arr = array("map_sign" => $signs, "map_pet"=>$pets, "map_offspring" => $offspring, "map_degree" => $degree, "map_studies" => $studies, "map_parties" => $parties, "map_drugs" => $drugs, "map_drinks" => $drinks, "map_tobacco" => $smokes, "map_ethnicity" => $ethnicity);
+
+foreach ($arr as $colName => $values)
+{
+      foreach ($values as $key => $value) 
+      {
+            $key++;
+            $stmt = $con->prepare("UPDATE rfiltersmap SET $colName = '$value' WHERE filter_value = $key");
+            if(!$stmt->execute())
+            {
+                  echo "FUCK ";
+                  echo $colName . " $key <br>";
+            }      
+      }
+}
