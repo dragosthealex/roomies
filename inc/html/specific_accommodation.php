@@ -56,21 +56,31 @@ else
     </div>
   </div>
 </div>
-
+  <div style="margin-bottom: 5px;">Rating: </div>
   <div class="ratings-box">
-    <!-- 10 stars -->
-    <div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
-    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div>
+        <div class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
+        <input type="radio" class="star-cr" name="rating" id="rating1">
+          <label for="rating1" class="star" data-hide="star-b0">
+           
+          </label>
+        <input type="radio" class="star-cr" name="rating" id="rating2">
+          <label for="rating2" class="star" data-hide="star-b0">
+           
+          </label>
+        <input type="radio" class="star-cr" name="rating" id="rating3">
+          <label class="star" for="rating3" data-hide="star-b0">
+           
+          </label>
+        <input type="radio" class="star-cr" name="rating" id="rating4">
+          <label class="star" for="rating4" data-hide="star-b0">
+           
+          </label>
+        <input type="radio" class="star-cr" name="rating" id="rating5">
+          <label class="star" for="rating5" data-hide="star-b0">
+           
+          </label>
+
   </div>
-<!--   Here da details, i.e. rating etc -->
 
 <div class='acc-long-desc'>
   <?=$accomInfo['description'];?>
@@ -93,27 +103,3 @@ else
         data-ajax-url="../php/reviews.process.php?a=1&pid=<?=$accomId?>&ptype=acc"
         data-ajax-post="text">
 </div>
-<script type="text/javascript">
-  function fillPrevRating(el) {
-    // window.alert(el.previousSibling.className);
-    if(el)
-    {
-      el.style.background = '#e37314';
-      fillPrevRating(el.previousSibling);
-
-    }
-      // div.style.background = '#e37314';
-      // div = div.previousSibling;
-    }
-
-
-  function undoPrevRating(el) {
-    if(el)
-    {
-      el.style.background = 'none';
-      undoPrevRating(el.previousSibling);
-
-    }
-  }
-
-</script>

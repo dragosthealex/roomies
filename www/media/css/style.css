@@ -744,21 +744,52 @@
 	color: #888;
 }
 /* CSS for reviews */
+
 .ratings-box {
-	/*border: 1px solid #d5d1d0;*/
-	height: 15px;
-	left: 0;
-	margin-bottom: 10px;
+	height: 20px;
+	margin-bottom: 15px;
+	display: block;
+	background-color: #a5a1a0;
+	width: 100px;
+	position: relative;
+
+
 }
 
-.rating {
-	border: 1px solid #d5d1d0;
-	height: 15px;
-	width: 15px;
-	float: left;
-	margin-left: 2px;
-	margin-right: 2px;
+.bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 210px;
+	height: 20px;
+	background-image: url("../img/ratings-bar2.png");
+	/*z-index: -1;*/
+}
+.wrap {
+	position: absolute;
+	top: 0;
+	left: 0;
 
+}
+
+.rating-above, .rating-below {
+	position: relative;
+	height: 20px;
+	width: 17px;
+	float: left;
+	padding-left: 2px;
+	padding-right: 2px;
+
+}
+
+.rating-below {
+	background: #a5a1a0;
+	/*position: absolute;*/
+	/*top: 0;*/
+}
+
+.rating-above {
+	/*background: red;*/
 }
 
 .review-box {
@@ -950,6 +981,43 @@
 .cr-label:hover .cr-text-faded {
 	color: #444;
 }
+
+.star-cr {
+	position: absolute;
+	left: -9999em;
+}
+
+.star {
+	width: 20px;
+	height: 20px;
+	float:right;
+	background-image: url(../img/star.png);
+	position: relative;
+	cursor: pointer;
+}
+
+.star:after {
+	content: "";
+}
+
+.star-cr:checked ~ .star {
+	background-image: url(../img/star-checked.png);
+}
+
+.star-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 20px;
+	background: #e37314;
+}
+
+/*
+.star-cr:checked ~.star {
+	
+
+}*/
 
 /* End checkbox/radio styles */
 

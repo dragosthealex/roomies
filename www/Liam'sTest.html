@@ -13,6 +13,33 @@
         <div class="main">
         <div class="column-box">
             <div class="column-2">
+              <div class="ratings-box">
+                <div class="wrap">
+                  <div class="rating-below" ></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div>
+                </div>
+                <div class="bar"></div>
+                <div class="wrap">
+                  <div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div>
+                </div>
+              </div>
               <div class="review-header">Reviews</div>
                       <div class="review-box">
                         <div class="author-details">
@@ -121,6 +148,9 @@
     hideAll[i].style.display = 'none';
   }
 
+  var ratingsBelow = document.getElementsByClassName('rating-below');
+  var ratingsAbove = document.getElementsByClassName('rating-above');
+
   function toggleReply(param) {
     var parent = param.parentNode;
     var nextItem = parent.nextElementSibling;
@@ -130,6 +160,37 @@
       nextItem.style.display = 'none';
     }
   }
+
+    function fillPrevRating(el) {
+    var index = 0;
+    while ((el = el.previousSibling) != null) {
+      index ++;
+    }
+
+    for (var i = 0; i < index; i ++)
+    {
+      ratingsBelow[i].style.background = '#e37314';
+    }
+  }
+
+
+  function undoPrevRating(el) {
+    var index = 0;
+    while ((el = el.previousSibling) != null) {
+      index ++;
+    }
+
+    for (var i = 0; i < index; i ++)
+    {
+      ratingsBelow[i].style.background = 'none';
+    }
+  }
+
+  function moveBarDown(el2) {
+    el2.style.zIndex = '0';
+  }
+
+
 </script>
 </body>
 </html>
