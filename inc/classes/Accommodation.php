@@ -166,20 +166,21 @@ class Accommodation extends Base
     try
     {
       // Get the name of the author
-      $author = new User($con, $authorId);
+      $author = new OtherUser($con, $authorId);
       $authorName = $author->getName();
 
       // Create the JSON
       $reviewsJson = array();
       foreach ($reviews as $review)
       {
-        $reviewString = $review->toJson();
+        $reviewArray = json_decode($review->toJson(), 1);
         if($review->getError())
         {
-          $this->errorMsg .= "Erorr with reveiws: " . $reveiw->getError();
+          $this->errorMsg .= "Erorr with reveiws: " . $review->getError();
+          echo $review->getError();
           continue;
         }
-        array_push($reviewsJson, $reviewString);
+        array_push($reviewsJson, $reviewArray);
       }
 
       $jsonArray = array(
@@ -196,7 +197,7 @@ class Accommodation extends Base
     }
     catch (Exception $e)
     {
-      $this->errorMsg = "Error with the accommodation $id: " . $e->getMessage;
+      $this->errorMsg = "Error with the accommodation $id: " . $e->getMessage();
     }
   }
 
@@ -213,7 +214,7 @@ class Accommodation extends Base
     $accId = $this->id;
 
     // Get the review
-    $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_parent_id = '$accId' AND post_type = " . Review::TYPE);
+    $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_parent_id = '$accId' AND post_type = " . Review::TYPE . " ORDER BY post_likes_no DESC");
     try
     {
       if(!$stmt->execute())

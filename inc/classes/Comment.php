@@ -43,7 +43,7 @@ abstract class Comment extends Post
       $authorName = $author->getName();
       if($author->getError())
       {
-        throw new Exception("Error getting author with id $authorId. Strange sh*t goin' on", 1); 
+        throw new Exception("Error getting author with id $authorId. Strange sh*t goin' on: " . $author->getError(), 1); 
       }
 
       // Get the replies
@@ -62,7 +62,7 @@ abstract class Comment extends Post
                 "likesArray"  => $likesArray,
                 "date"        => "$date",
                 "parentId"    => "$parentId",
-                "replies"     => "$replies");
+                "replies"     => $replies);
       
       // Return it;
       return json_encode($jsonArray);

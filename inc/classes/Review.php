@@ -136,11 +136,11 @@ class Review extends Comment
           $this->errorMsg .= "Error with reply $replyId: " . $reply->getError();
           continue;
         }
-        array_push($replies, $reply->toJson());
+        array_push($replies, json_decode($reply->toJson(), 1));
       }
 
       // Close and Return the replies
-      return json_encode($replies);
+      return $replies;
     }
     catch (Exception $e)
     {

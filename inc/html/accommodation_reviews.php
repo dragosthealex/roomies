@@ -10,17 +10,17 @@ $output = ' <div class="review-header">Reviews</div>';
 
 foreach ($reviews as $review) 
 { 
-  $review = json_decode($review, true);
   // Localise stuff
   $authorId = $review['authorId'];
   $author = new OtherUser($con, $authorId);
   $authorName = $author->getName();
   $authorImage = $author->getCredential('image');
+  if($authorImage[0]=='/')$authorImage=$webRoot.$authorImage;
   $postDate = $review['date'];
   $postText = $review['text'];
   $postLikesNo = $review['likesNo'];
   $postLikes = isset($review['likesArray'][0]) ? $review['likesArray'] : array();
-  $postReplies = isset($review['replies'][1]) ? json_decode($review['replies'],true) : array();
+  $postReplies = isset($review['replies'][1]) ? $review['replies'] : array();
   $postRepliesNo = count($postReplies);
   $postId = $review['id'];
 
@@ -38,7 +38,7 @@ foreach ($reviews as $review)
   "
   <div class='review-box' id='review-$postId'>
     <div class='author-details'>
-        <div class='review-pic' style='background-image: url($webRoot"."$authorImage); background-size:cover; background-position:center;'>
+        <div class='review-pic' style='background-image: url($authorImage); background-size:cover; background-position:center;'>
         </div>
         <div class='author-text'>
           <div class='author-name'>
@@ -83,12 +83,12 @@ foreach ($reviews as $review)
   // Loop through replies
   foreach ($postReplies as $reply)
   {
-    $reply = json_decode($reply, true);
     //var_dump($reply);
     $replyId = $reply['id'];
     $replyAuthorId = $reply['authorId'];
     $replyAuthor = new OtherUser($con, $replyAuthorId);
     $replyAuthorImage = $replyAuthor->getCredential('image');
+    if($replyAuthorImage[0]=='/')$replyAuthorImage=$webRoot.$replyAuthorImage;
     $replyAuthorName = $replyAuthor->getName();
     if($replyAuthor->getError())
     {
@@ -106,7 +106,7 @@ foreach ($reviews as $review)
     <div class='reply' id='hide'>
       <div class='author-details'>
         <div class='reply-text'>
-          <div class='reply-pic' style='background-image: url($webRoot"."$replyAuthorImage);background-size:cover; background-position:center;'>
+          <div class='reply-pic' style='background-image: url($replyAuthorImage);background-size:cover; background-position:center;'>
           </div>
           <a class='link' href='$webRoot/profile/$replyAuthorId'>$replyAuthorName</a> - $replyText
         </div>

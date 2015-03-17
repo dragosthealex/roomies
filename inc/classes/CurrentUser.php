@@ -860,10 +860,159 @@ private function getConv($offset)
   /**
   * Function deletePost($postId)
   *
-  * Deletes the given post, if 
+  * Deletes the given post, if is the author of this post
   *
+  * @param - $postId(int), the id of post to be deleted
   */
+  public function deletePost($postId)
+  {
+    // Localise stuff
+    $userId = $this->id;
+    $con = $this->con;
 
+    try
+    {
+      if(!$this->isAuthorOf($postId))
+      {
+        throw new Exception("Sneaky. Trying to delete other users' posts and shit", 1);
+      }
+      $stmt = $con->prepare("DELETE FROM rposts WHERE post_id = $postId");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Weirid sheet happening in the db. Meh", 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }
+
+  /**
+  * Function isAuthorOf($postId)
+  *
+  * Returns true if this user is the author of post with $postId
+  *
+  * @param - $postId(int), the id of the post to be checekd
+  * @return - $value(boolean), true if this user is author of the post
+  */
+  public function isAuthorOf($postId)
+  {
+    // Localise shit
+    $userId = $this->id;
+    $con = $this->con;
+
+    try
+    {
+      // Check the posts table
+      $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_author = $userId AND post_id = $postId");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Your query is messed up while trying to get check if user $userId is author of $postId", 1);
+      }
+      return $stmt->rowCount() ? true : false;
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = "Error with checking if this user is author of $postId: " . $e->getMessage();
+    }
+  }
+  /**
+  * Function updatePost($postId, $text)
+  *
+  * Updates the given post
+  *
+  * @param - $postId(int), the post to be updated
+  * @param - $text(String), the text to update with
+  */
+  public function updatePost($postId, $text)
+  {
+    // Localise shit
+    $userId = $this->id;
+    $con = $this->con;
+
+    try
+    {
+      // Check if user owns post
+      if(!isAuthorOf($postId))
+      {
+        throw new Exception("Stop trying to update others' posts", 1);
+      }
+      // Update table
+      $stmt = $con->prepare("UPDATE rposts SET post_text = $text WHERE post_id = $postId");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Something wron with updating your post", 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function updatePost
+
+  /**
+  * Function hasConnected($key)
+  *
+  * Returns true if this user has connected their account with $key
+  * 
+  * @param - $key(String), the website to check if user has connected with
+  * @return - $value(boolean), true if user is connected with the website
+  */
+  public function hasConnected($key)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // Check if $key_id in table
+    $stmt = $con->prepare("SELECT $key" . '_id' . " FROM rusers WHERE user_id = $userId");
+
+    try
+    {
+
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting the $key id", 1);
+      }
+      $stmt->bindColumn(1, $fbId);
+      $stmt->fetch();
+      return $fbId ? true : false;
+    }
+    catch(Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function hasConnected
+
+  /**
+  * Function disconnect($key)
+  *
+  * Disconnects user from a likned site
+  *
+  * @param - $key(String), the site to disconnect from
+  * @return - $response(boolean), true if succeeded
+  */
+  public function disconnect($key)
+  {
+    // Localise shit
+    $con = $this->con;
+    $userId = $this->id;
+
+    // Delete thingie from table
+    $stmt = $con->prepare("UPDATE rusers SET $key" . '_id' . "='' WHERE user_id = $userId");
+    try
+    {
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error updating $key id in users table", 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }
 }// class CurrentUser
 
 
