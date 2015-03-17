@@ -289,7 +289,9 @@ void function (window, document, undefined) {
           return !hiddenRegex.test(el.className);
         })?'show':'hide']([element.parentNode]);
 
-    element.firstChild.style.marginRight = element.offsetWidth - element.clientWidth - 2 + "px";
+    forEach.call(element.getElementsByClassName('selector-item'), function (item) {
+      item.style.paddingRight = element.offsetWidth - element.clientWidth + 6 + "px";
+    });
     var boxShadow = "0 -2px 0 -1px #fff,0 3px 6px rgba(0,0,0,.24)";
     if (element.scrollTop < element.scrollHeight - element.offsetHeight) {
         boxShadow += ", inset 0 -6px 4px -4px rgba(0,0,0,0.12)";

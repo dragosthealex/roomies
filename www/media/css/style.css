@@ -664,6 +664,7 @@
 
 .select-label-text[data-close]:after {
 	display: inline-block;
+	margin: -1px 0 0;
 	width: 2.3em;
 	height: 2.3em;
 	background-position: center;
@@ -731,6 +732,16 @@
 .selector-item {
 	padding: 8px;
 	line-height: 1;
+}
+
+.selector-button {
+	color: #00adaa;
+	cursor: pointer;
+}
+
+.selector-button:hover {
+	background: #e37314;
+	color: #fff;
 }
 
 .center {

@@ -203,7 +203,7 @@ printHiddenSelect('ethnicity',   $leNumber, $selected, $con);
           foreach ($selected as $key => $value)
           {
             $hiddenClass = $value == 0 ? '' : 'hidden';
-            echo "<li class='selector-item link _ss _ss$count $hiddenClass' data-hide='_ss$count' data-show='_s$count'>"
+            echo "<li class='selector-item selector-button _ss _ss$count $hiddenClass' data-hide='_ss$count' data-show='_s$count'>"
                  .ucwords($key).'</li>';
             $count++;
           }
