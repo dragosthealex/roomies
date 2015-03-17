@@ -103,12 +103,12 @@ foreach ($reviews as $review)
 
     $output .=
     "
-     <div class='reply' id='hide'>
+    <div class='reply' id='hide'>
       <div class='author-details'>
         <div class='reply-text'>
           <div class='reply-pic' style='background-image: url($webRoot"."$replyAuthorImage);background-size:cover; background-position:center;'>
           </div>
-          <a class='link' href='$webRoot/profile/$replyAuthorId'>$replyAuthorName</a> - $replyText;
+          <a class='link' href='$webRoot/profile/$replyAuthorId'>$replyAuthorName</a> - $replyText
         </div>
       </div>
     </div>

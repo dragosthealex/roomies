@@ -2,7 +2,7 @@
 /**
 * Reply class
 *
-* Represents a reply, to a user. Extends the comment, because it hase the same things, the parent being a review (possbile extension for this)
+* Represents a reply, to a user. Extends the post, because it hase the same things, the parent being a review (possbile extension for this)
 */
 require_once __ROOT__.'/inc/classes/Comment.php';
 
@@ -11,9 +11,9 @@ class Reply extends Comment
   // The type of the post
   const TYPE = 1;
   // Overriding Post vars
-  // private $idColumn = 'comment_id';
-  // private $tableName = 'rcomments';
-  // private $likesColumn = 'comment_likes';
+  // private $idColumn = 'post_id';
+  // private $tableName = 'rposts';
+  // private $likesColumn = 'post_likes';
 
   /**
   * Constructor
@@ -43,14 +43,14 @@ class Reply extends Comment
           }
 
           // Insert into database
-          $stmt = $con->prepare("INSERT INTO rreplies (reply_author, reply_review_id, reply_text, reply_date)
-                                 VALUES ('$author', '$reviewId', '$text', '$date')");
+          $stmt = $con->prepare("INSERT INTO rposts (post_author, post_id, post_text, post_date, post_type)
+                                 VALUES ('$author', '$reviewId', '$text', '$date', ". Reply::TYPE . ")");
           if(!$stmt->execute())
           {
             throw new Exception("Error while inserting new review in database", 1);
           }
           // Get the id
-          $id = $con->lastInsertId('reply_id');
+          $id = $con->lastInsertId('post_id');
 
           // Set the instance variables
           $this->id = $id;
@@ -73,7 +73,7 @@ class Reply extends Comment
         // Get the details from db
         try
         {
-          $stmt = $con->prepare("SELECT * FROM rcomments WHERE comment_id = $id");
+          $stmt = $con->prepare("SELECT * FROM rposts WHERE post_id = $id AND post_type = " . Reply::TYPE . "");
           if(!$stmt->execute())
           {
             throw new Exception("Error getting replies. fuck", 1);
@@ -88,13 +88,13 @@ class Reply extends Comment
           $result = $stmt->fetch(PDO::FETCH_ASSOC);
           // Set the instance vars
           $this->id = $id;
-          $this->likesNo = $result['comment_likes_no'];
-          $this->likesArray = $result['comment_likes'] ? explode(':', $result['comment_likes']) : array();
-          $this->date = $result['comment_date'];
-          $this->author = $result['comment_author'];
-          $this->parent = $result['comment_parent_id'];
+          $this->likesNo = $result['post_likes_no'];
+          $this->likesArray = $result['post_likes'] ? explode(':', $result['post_likes']) : array();
+          $this->date = $result['post_date'];
+          $this->author = $result['post_author'];
+          $this->parent = $result['post_parent_id'];
           $this->con = $con;
-          $this->text = $result['comment_text'];
+          $this->text = $result['post_text'];
 
         }
         catch (Exception $e)
@@ -124,7 +124,7 @@ class Reply extends Comment
     try
     {
       // Get the likes array from db
-      $stmt = $con->prepare("SELECT comment_likes, comment_likes_no FROM rcomments  WHERE comment_id = $id");
+      $stmt = $con->prepare("SELECT post_likes, post_likes_no FROM rposts  WHERE post_id = $id AND post_type = " . TYPE . "");
       if(!$stmt->execute())
       {
         throw new Exception("Error getting likes from table for post type " . TYPE . ", $id", 1);
@@ -162,7 +162,7 @@ class Reply extends Comment
       $likesArray= implode(":", $likes);
 
       // Update the table in db
-      $stmt = $con->prepare("UPDATE rcomments SET comment_likes = '$likesArray', comment_likes_no = comment_likes_no+$liked WHERE comment_id = $id");
+      $stmt = $con->prepare("UPDATE rposts SET post_likes = '$likesArray', post_likes_no = post_likes_no+$liked WHERE post_id = $id AND post_type = " . TYPE . "");
       if(!$stmt->execute())
       {
         throw new Exception("Error updating likes for post type " . TYPE . ", $id", 1);

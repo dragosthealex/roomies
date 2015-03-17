@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 17, 2015 at 03:49 PM
+-- Generation Time: Mar 17, 2015 at 06:48 PM
 -- Server version: 5.5.41
 -- PHP Version: 5.4.36-0+deb7u3
 
@@ -74,23 +74,6 @@ INSERT INTO `ranswers` (`answer_id`, `answer_text`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rcomments`
---
-
-CREATE TABLE IF NOT EXISTS `rcomments` (
-  `comment_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `comment_parent_id` int(10) unsigned NOT NULL,
-  `comment_text` text NOT NULL,
-  `comment_likes` varchar(1000) NOT NULL,
-  `comment_author` int(10) unsigned NOT NULL,
-  `comment_date` date NOT NULL,
-  `comment_likes_no` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`comment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `rconexions`
 --
 
@@ -100,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `rconexions` (
   `conexion_user_id2` int(11) NOT NULL,
   `conexion_status` int(11) NOT NULL,
   PRIMARY KEY (`conexion_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=37 ;
 
 --
 -- Dumping data for table `rconexions`
@@ -811,6 +794,33 @@ INSERT INTO `rpercentages` (`percentage_user_id1`, `percentage_user_id2`, `perce
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rposts`
+--
+
+CREATE TABLE IF NOT EXISTS `rposts` (
+  `post_id` int(11) NOT NULL AUTO_INCREMENT,
+  `post_parent_id` int(11) NOT NULL,
+  `post_text` text NOT NULL,
+  `post_likes` varchar(1000) NOT NULL,
+  `post_likes_no` int(11) NOT NULL DEFAULT '0',
+  `post_date` date NOT NULL,
+  `post_type` tinyint(4) NOT NULL,
+  `post_author` int(11) NOT NULL,
+  UNIQUE KEY `post_id` (`post_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `rposts`
+--
+
+INSERT INTO `rposts` (`post_id`, `post_parent_id`, `post_text`, `post_likes`, `post_likes_no`, `post_date`, `post_type`, `post_author`) VALUES
+(1, 2, 'shet reply 1', '', 0, '2015-03-17', 1, 54),
+(2, 1, 'noww...', '', 0, '2015-03-17', 0, 54),
+(3, 2, 'well fuck you, dear sir', '', 0, '2015-03-18', 1, 23);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rquestionsmap`
 --
 
@@ -829,30 +839,6 @@ INSERT INTO `rquestionsmap` (`question_id`, `question_text`, `question_answers`)
 (1, 'Are you a loud person?', '1:2:3'),
 (2, 'How often do you play musical instruments?', '8:7:6:5:4'),
 (3, 'Would you live with someone of other religion than yours?', '1:3:9');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `rreviews`
---
-
-CREATE TABLE IF NOT EXISTS `rreviews` (
-  `review_id` int(11) NOT NULL AUTO_INCREMENT,
-  `review_acc_id` int(11) NOT NULL,
-  `review_text` text COLLATE utf8_unicode_ci,
-  `review_likes` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `review_author` int(11) DEFAULT NULL,
-  `review_date` date NOT NULL,
-  `review_likes_no` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`review_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
-
---
--- Dumping data for table `rreviews`
---
-
-INSERT INTO `rreviews` (`review_id`, `review_acc_id`, `review_text`, `review_likes`, `review_author`, `review_date`, `review_likes_no`) VALUES
-(6, 1, 'shitfuck', NULL, 54, '2015-03-17', 0);
 
 -- --------------------------------------------------------
 
@@ -956,6 +942,7 @@ CREATE TABLE IF NOT EXISTS `rusersettings` (
 
 INSERT INTO `rusersettings` (`setting_user_id`, `is_private`, `is_invisible`, `notif_request`, `notif_accept`, `notif_message`, `notif_over90`, `notif_fbfriend`) VALUES
 (12, 1, 0, 1, 1, 1, 1, 1),
+(23, 1, 0, 1, 1, 1, 1, 1),
 (54, 1, 1, 1, 0, 1, 1, 1);
 
 -- --------------------------------------------------------

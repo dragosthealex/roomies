@@ -762,7 +762,7 @@ private function getConv($offset)
     $userId = $this->id;
 
     // Check if user has reviewed
-    $stmt = $con->prepare("SELECT review_id FROM rreviews WHERE review_acc_id = $accId AND review_author = $userId");
+    $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_parent_id = $accId AND post_author = $userId AND post_type = " . Review::TYPE);
     if(!$stmt->execute())
     {
       throw new Exception("Error in database query when trying to get reviews for $accId", 1);
@@ -858,9 +858,9 @@ private function getConv($offset)
   }// function like
 
   /**
-  * Function 
+  * Function deletePost($postId)
   *
-  *
+  * Deletes the given post, if 
   *
   */
 
