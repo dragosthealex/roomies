@@ -4,19 +4,27 @@
 $errorMsg = '';
 try
 {
-  if(!isset($_GET['submit']) || !$_GET['submit'])
+  if(!count($_GET))
   {
     $id = $user2->getCredential('id');
     $userGender = $user2->getCredential('gender');
     $userLanguage = $user2->getCredential('language');
-    $userNationality = $user2->getCredential('country');
-    $birthday = $user2->getCredential('birthday');
+    $birthday = date_create($user2->getCredential('birthday'));
     $city = $user2->getCredential('uni_city');
-    $birthday = explode("-", $birthday);
-    $lowerBday = ($birthday[0] - 2) . '-' . $birthday[1] . '-' . $birthday[2];
-    $upperBday = ($birthday[0] + 2) . '-' . $birthday[1] . '-' . $birthday[2];
+    $year = date_format($birthday, 'Y');
+    $lowerYear = $year + 2;
+    $upperYear = $year - 2;
+    $eighteenYears = date('Y') - 18;
+    if ($eighteenYears < $lowerYear)
+    {
+      $lowerYear = $eighteenYears;
+    }
+    $month = date_format($birthday, 'm');
+    $day = date_format($birthday, 'd');
+    $lowerBday = $lowerYear . '-' . $month . '-' . $day;
+    $upperBday = $upperYear . '-' . $month . '-' . $day;
 
-    $condition = "language='$userLanguage' AND country='$userNationality' AND birthday<'$upperBday' AND birthday>'$lowerBday' AND uni_city='$city'";
+    $condition = "gender='$userGender' AND language='$userLanguage' AND birthday>='$upperBday' AND birthday<='$lowerBday' AND uni_city='$city'";
   }
   else
   {
@@ -24,21 +32,31 @@ try
     $condition = '';
     foreach ($_GET as $key => $value)
     {
-      if($key != $submit && $key != $upperAge && $key != $lowerAge)
-      {
-        $condition .= "$key='$value' AND ";
-      }
-      if($key == 'upperAge')
-      {
-        $bYear = date('Y') - $value;
-        $upperBday = $bYear . '-00-00';
-        $condition .= "birthday<'$upperBday' AND ";
-      }
-      if($key == 'lowerAge')
-      {
-        $bYear = date('Y') - $value;
-        $lowerBday = $bYear . '-00-00';
-        $condition .= "birthday>'$lowerBday' AND ";
+      if ($value == 0) continue;
+      switch ($key) {
+        case 'online_last':
+          // TODO
+          break;
+
+        case 'upperAge':
+          $bYear = date('Y') - $value;
+          $month = date('m');
+          $day = date('d');
+          $upperBday = $bYear . "-$month-$day";
+          $condition .= "birthday>='$upperBday' AND ";
+          break;
+
+        case 'lowerAge':
+          $bYear = date('Y') - $value;
+          $month = date('m');
+          $day = date('d');
+          $lowerBday = $bYear . "-$month-$day";
+          $condition .= "birthday<='$lowerBday' AND ";
+          break;
+
+        default:
+          $condition .= "$key='$value' AND ";
+          break;
       }
     }
     $condition .= "1=1";
@@ -66,9 +84,9 @@ try
   while($stmt->fetch())
   {
     // The other user id is the id that is not ours
-    $match['id'] = ($id1 == $id) ? $id2 : $id1;
+    $leOtherUser = new OtherUser($con, ($id1 == $id) ? $id2 : $id1);
     $match['percentage'] = $percentage;
-    echo $match['id'] . " " . $match['percentage'] . "<br>";
+    echo '<h4 class=h4>'.$leOtherUser->getName().'</h4><p class=text>'.$match['percentage']."%</p>";
     array_push($matches, $match);
   }
 }

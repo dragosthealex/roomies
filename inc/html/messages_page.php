@@ -14,9 +14,8 @@ $userId = $user2->getCredential('id');
 
 if(!isset($_GET['conv']))
 {
-
   // Construct condition for checking every group the user is in
-  $groupCondition = "message_group='" . implode("' OR message_group='", $myGroups). "'";
+  $groupCondition = "message_group='" . implode("' OR message_group='", $user2->getCredential('groups')). "'";
 
   // Get the latest conversation
   $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, message_group FROM rmessages
@@ -26,7 +25,8 @@ if(!isset($_GET['conv']))
   $stmt->execute();
   if(!$stmt->rowCount())
   {
-    $conv = '<ul class="ul conversation" id="main_conversation" data-conv-id="$otherUserId"><li class="ph ph-last ph-message" data-placeholder="No messages."></li></ul>';
+    $noMessages = true;
+    $conv = '<ul class="ul conversation"><li class="ph ph-last ph-message" data-placeholder="No messages."></li></ul>';
   }
   else
   {

@@ -281,7 +281,28 @@ void function (window, document, undefined) {
   // Variable to hold the regex for the hidden classname
   hiddenRegex = /(^| )hidden( |$)/,
 
-  scrollAreaFunc = function (element) {
+  configureSelector = function (element) {
+    var
+    toggler = document.getElementById(element.parentNode.children[0].getAttribute('data-toggle'));
+    hiddenRegex.test(toggler.className)
+    ||  roomies[some.call(element.firstChild.children, function (el) {
+          return !hiddenRegex.test(el.className);
+        })?'show':'hide']([element.parentNode]);
+
+    element.firstChild.style.marginRight = element.offsetWidth - element.clientWidth - 2 + "px";
+    var boxShadow = "0 -2px 0 -1px #fff,0 3px 6px rgba(0,0,0,.24)";
+    if (element.scrollTop < element.scrollHeight - element.offsetHeight) {
+        boxShadow += ", inset 0 -6px 4px -4px rgba(0,0,0,0.12)";
+        if (element.scrollTop > 0) {
+            boxShadow += ", inset 0 6px 4px -4px rgba(0,0,0,0.12)";
+        }
+    } else if (element.scrollTop > 0) {
+        boxShadow += ", inset 0 6px 4px -4px rgba(0,0,0,0.12)";
+    }
+    element.style.boxShadow = boxShadow;
+  },
+
+  configureScrollArea = function (element) {
     var scrollBars = element.getElementsByClassName('scroll-bar');
     var minusScrollBarWidth = element.clientWidth - element.offsetWidth;
     var convstn = element.getElementsByClassName('conversation')[0];
@@ -442,7 +463,7 @@ void function (window, document, undefined) {
 
         // Get any scroll areas and ensure they have a scrollbar
         forEach.call(element.getElementsByClassName('scroll-area'), function (scrollArea) {
-          scrollAreaFunc(scrollArea);
+          configureScrollArea(scrollArea);
         });
       });
     },
@@ -694,15 +715,15 @@ void function (window, document, undefined) {
     // Localise variables for later use
     target = document.getElementById(element.getAttribute("data-toggle")),
     targets,
-    parentSelectors = roomies.getParentsByClassName(element, "selector"),
     // Get an array of all the drops that the current element is in
     exceptions = validate.bool([element], "element")
                  ? roomies.getParentsByClassName(element, 'drop')
                  : [];
     // Add any parent selector's togglers
-    parentSelectors.forEach(function(element){
+    roomies.getParentsByClassName(element, "selector").forEach(function(element){
       while((element=element.previousSibling)&&element.nodeType!==1);
       /(^| )selector-toggler( |$)/.test(element.className)&&exceptions.push(element);
+      e
     });
     // Add the toggle target if it exists
     target && exceptions.push(target);
@@ -724,6 +745,11 @@ void function (window, document, undefined) {
     (target) && roomies.toggle(target);
     // If a target needs deleting, delete it
     (target = document.getElementById(element.getAttribute("data-delete"))) && roomies["delete"](target);
+
+    // Configure selectors
+    forEach.call(body.getElementsByClassName('selector-content'), function (selector) {
+      selector.onscroll && selector.onscroll();
+    });
 
     // If the element employs ajax, do some ajax.
     var ajaxUrl = element.getAttribute("data-ajax-url");
@@ -866,9 +892,17 @@ void function (window, document, undefined) {
       scrollArea.innerHTML += "<div class=' scroll-bar '><div class=' scroll-tracker '></div></div>";
     }
     scrollArea.onscroll = function () {
-      scrollAreaFunc(this);
+      configureScrollArea(this);
     }
-    scrollAreaFunc(scrollArea);
+    configureScrollArea(scrollArea);
+  });
+
+  // Configure any selector contents
+  forEach.call(body.getElementsByClassName('selector-content'), function (element) {
+    element.onscroll = function () {
+      configureSelector(this);
+    };
+    configureSelector(element);
   });
 
   forEach.call(body.getElementsByClassName("conversation"), function (conversation) {

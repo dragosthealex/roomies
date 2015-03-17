@@ -11,9 +11,9 @@ class Review extends Comment
   // The type of the post
   const TYPE = 0;
   // Overriding Post vars
-  // private $idColumn = 'review_id';
+  // private $idColumn = 'post_id';
   // private $tableName = 'rrevies';
-  // private $likesColumn = 'review_likes';
+  // private $likesColumn = 'post_likes';
   /**
   * Constructor
   *
@@ -40,14 +40,16 @@ class Review extends Comment
           }
 
           // Insert into database
-          $stmt = $con->prepare("INSERT INTO rreviews (review_author, review_acc_id, review_text, review_date)
-                                 VALUES ('$author', '$accId', '$text', '$date')");
+          $stmt = $con->prepare("INSERT INTO rposts (post_author, post_parent_id, post_text, post_date, post_type)
+                                 VALUES ('$author', '$accId', '$text', '$date', " . Review::TYPE . ")");
           if(!$stmt->execute())
           {
             throw new Exception("Error while inserting new review in database", 1);
           }
+          
+          
           // Get the id
-          $id = $con->lastInsertId('review_id');
+          $id = $con->lastInsertId('post_id');
 
           // Set the instance variables
           $this->id = $id;
@@ -71,7 +73,7 @@ class Review extends Comment
         // Get the details from db
         try
         {
-          $stmt = $con->prepare("SELECT * FROM rreviews WHERE review_id = $id");
+          $stmt = $con->prepare("SELECT * FROM rposts WHERE post_id = $id AND post_type = " . Review::TYPE . "");
           $stmt->execute();
 
           // Something wrong if no accommodation with given id
@@ -83,13 +85,13 @@ class Review extends Comment
           $result = $stmt->fetch(PDO::FETCH_ASSOC);
           // Set the instance vars
           $this->id = $id;
-          $this->likesArray = $result['review_likes'] ? explode(':', $result['review_likes']) : array();
-          $this->likesNo = $result['review_likes_no'] ? $result['review_likes_no'] : 0;
-          $this->date = $result['review_date'];
-          $this->author = $result['review_author'];
-          $this->parent = $result['review_acc_id'];
+          $this->likesArray = $result['post_likes'] ? explode(':', $result['post_likes']) : array();
+          $this->likesNo = $result['post_likes_no'] ? $result['post_likes_no'] : 0;
+          $this->date = $result['post_date'];
+          $this->author = $result['post_author'];
+          $this->parent = $result['post_parent_id'];
           $this->con = $con;
-          $this->text = $result['review_text'];
+          $this->text = $result['post_text'];
         }
         catch (Exception $e)
         {
@@ -110,8 +112,9 @@ class Review extends Comment
     $reviewId = $this->id;
     $accId = $this->parent;
     $replies = array();
+    $type = Reply::TYPE;
     // Get the replies
-    $stmt = $con->prepare("SELECT comment_id FROM rcomments WHERE comment_parent_id = '$reviewId'");
+    $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_parent_id = '$reviewId' AND post_type = " . $type);
     try
     {
       if(!$stmt->execute())
@@ -156,10 +159,10 @@ class Review extends Comment
     try
     {
       // Get the likes array from db
-      $stmt = $con->prepare("SELECT review_likes, review_likes_no FROM rreviews  WHERE review_id = $id");
+      $stmt = $con->prepare("SELECT post_likes, post_likes_no FROM rposts  WHERE post_id = $id AND post_type = " . Review::TYPE . "");
       if(!$stmt->execute())
       {
-        throw new Exception("Error getting likes from table for post type " . TYPE . ", $id", 1);
+        throw new Exception("Error getting likes from table for post type " . Review::TYPE . ", $id", 1);
       }
       $stmt->bindColumn(1, $likesArray);
       $stmt->bindColumn(2, $likesNo);
@@ -193,10 +196,10 @@ class Review extends Comment
       $likesArray= implode(":", $likes);
 
       // Update the table in db
-      $stmt = $con->prepare("UPDATE rreviews SET review_likes = '$likesArray', review_likes_no = review_likes_no+($liked) WHERE review_id = $id");
+      $stmt = $con->prepare("UPDATE rposts SET post_likes = '$likesArray', post_likes_no = post_likes_no+($liked) WHERE post_id = $id AND post_type = " . Review::TYPE);
       if(!$stmt->execute())
       {
-        throw new Exception("Error updating likes for post type " . TYPE . ", $id", 1);
+        throw new Exception("Error updating likes for post type " . Review::TYPE . ", $id", 1);
       }
     }
     catch (Exception $e)

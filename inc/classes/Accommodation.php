@@ -213,7 +213,7 @@ class Accommodation extends Base
     $accId = $this->id;
 
     // Get the review
-    $stmt = $con->prepare("SELECT review_id FROM rreviews WHERE review_acc_id = '$accId'");
+    $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_parent_id = '$accId' AND post_type = " . Review::TYPE);
     try
     {
       if(!$stmt->execute())

@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2+deb7u1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 17, 2015 at 03:49 PM
--- Server version: 5.5.41
--- PHP Version: 5.4.36-0+deb7u3
+-- Generation Time: Mar 17, 2015 at 09:17 PM
+-- Server version: 5.5.41-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.6
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `roomies`
+-- Database: `2014_comp10120_x7`
 --
 
 -- --------------------------------------------------------
@@ -74,23 +74,6 @@ INSERT INTO `ranswers` (`answer_id`, `answer_text`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rcomments`
---
-
-CREATE TABLE IF NOT EXISTS `rcomments` (
-  `comment_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `comment_parent_id` int(10) unsigned NOT NULL,
-  `comment_text` text NOT NULL,
-  `comment_likes` varchar(1000) NOT NULL,
-  `comment_author` int(10) unsigned NOT NULL,
-  `comment_date` date NOT NULL,
-  `comment_likes_no` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`comment_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `rconexions`
 --
 
@@ -100,20 +83,7 @@ CREATE TABLE IF NOT EXISTS `rconexions` (
   `conexion_user_id2` int(11) NOT NULL,
   `conexion_status` int(11) NOT NULL,
   PRIMARY KEY (`conexion_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=39 ;
-
---
--- Dumping data for table `rconexions`
---
-
-INSERT INTO `rconexions` (`conexion_id`, `conexion_user_id1`, `conexion_user_id2`, `conexion_status`) VALUES
-(28, 12, 26, 2),
-(29, 12, 9, 1),
-(31, 21, 26, 1),
-(32, 21, 23, 1),
-(34, 21, 12, 2),
-(35, 21, 22, 2),
-(36, 49, 54, 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -132,16 +102,16 @@ CREATE TABLE IF NOT EXISTS `rdetails` (
   `gender` tinyint(3) unsigned NOT NULL,
   `uni_city` int(11) NOT NULL,
   `ethnicity` tinyint(4) NOT NULL,
-  `tobacco` tinyint(4) NOT NULL,
+  `smokes` tinyint(4) NOT NULL,
   `drinks` tinyint(4) NOT NULL,
   `drugs` tinyint(4) NOT NULL,
   `religion` tinyint(4) NOT NULL,
   `sign` tinyint(4) NOT NULL,
-  `map_degree` tinyint(4) NOT NULL,
-  `map_studies` tinyint(4) NOT NULL,
+  `degree` tinyint(4) NOT NULL,
+  `studies` tinyint(4) NOT NULL,
   `parties` tinyint(4) NOT NULL,
   `offspring` tinyint(4) NOT NULL,
-  `pet` tinyint(4) NOT NULL,
+  `pets` tinyint(4) NOT NULL,
   `orientation` tinyint(4) NOT NULL,
   PRIMARY KEY (`profile_filter_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -150,7 +120,8 @@ CREATE TABLE IF NOT EXISTS `rdetails` (
 -- Dumping data for table `rdetails`
 --
 
-INSERT INTO `rdetails` (`profile_filter_id`, `first_name`, `last_name`, `completed`, `birthday`, `country`, `language`, `gender`, `uni_city`, `ethnicity`, `tobacco`, `drinks`, `drugs`, `religion`, `sign`, `map_degree`, `map_studies`, `parties`, `offspring`, `pet`, `orientation`) VALUES
+INSERT INTO `rdetails` (`profile_filter_id`, `first_name`, `last_name`, `completed`, `birthday`, `country`, `language`, `gender`, `uni_city`, `ethnicity`, `smokes`, `drinks`, `drugs`, `religion`, `sign`, `degree`, `studies`, `parties`, `offspring`, `pets`, `orientation`) VALUES
+(11, 'Guest', 'Account', 0, '1996-01-01', 221, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (12, 'Daniel', 'Hodgson', 0, '1996-08-11', 221, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (21, 'Alex', 'Radu', 0, '0000-00-00', 174, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (22, 'M', 'P', 0, '1995-09-05', 100, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
@@ -174,18 +145,18 @@ CREATE TABLE IF NOT EXISTS `rfiltersmap` (
   `map_language` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `map_gender` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `map_uni_city` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_ethnicity` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `map_tobacco` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_drinks` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_drugs` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_religion` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
-  `map_sign` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `map_degree` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_studies` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_parties` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_offspring` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_pet` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `map_orientation` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `map_ethnicity` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_smokes` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_drinks` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_drugs` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_religion` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_sign` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_degree` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_studies` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_parties` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_offspring` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_pets` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `map_orientation` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`filter_value`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=237 ;
 
@@ -193,47 +164,47 @@ CREATE TABLE IF NOT EXISTS `rfiltersmap` (
 -- Dumping data for table `rfiltersmap`
 --
 
-INSERT INTO `rfiltersmap` (`filter_value`, `map_country`, `map_language`, `map_gender`, `map_uni_city`, `map_ethnicity`, `map_tobacco`, `map_drinks`, `map_drugs`, `map_religion`, `map_sign`, `map_degree`, `map_studies`, `map_parties`, `map_offspring`, `map_pet`, `map_orientation`) VALUES
-(1, 'Afghanistan', 'English', 'man', 'Manchester', '', '', '', '', '', '', '', '', '', '', '', ''),
-(2, 'Albania', 'Afar', 'woman', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(3, 'Algeria', 'Abkhazian', 'trans', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(4, 'American Samoa', 'Afrikaans', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(5, 'Andorra', 'Amharic', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(6, 'Angola', 'Arabic', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(7, 'Anguilla', 'Assamese', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(8, 'Antarctica', 'Aymara', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(9, 'Antigua and Barbuda', 'Azerbaijani', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(10, 'Argentina', 'Bashkir', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(11, 'Armenia', 'Byelorussian', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(12, 'Aruba', 'Bulgarian', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(13, 'Australia', 'Bihari', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(14, 'Austria', 'Bislama', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(15, 'Azerbaijan', 'Bengali/Bangla', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(16, 'Bahamas', 'Tibetan', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(17, 'Bahrain', 'Breton', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(18, 'Bangladesh', 'Catalan', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(19, 'Barbados', 'Corsican', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(20, 'Belarus', 'Czech', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(21, 'Belgium', 'Welsh', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(22, 'Belize', 'Danish', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(23, 'Benin', 'German', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(24, 'Bermuda', 'Bhutani', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(25, 'Bhutan', 'Greek', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(26, 'Bolivia', 'Esperanto', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(27, 'Bosnia and Herzegowi', 'Spanish', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(28, 'Botswana', 'Estonian', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(29, 'Bouvet Island', 'Basque', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(30, 'Brazil', 'Persian', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(31, 'British Indian Ocean', 'Finnish', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(32, 'Brunei Darussalam', 'Fiji', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(33, 'Bulgaria', 'Faeroese', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(34, 'Burkina Faso', 'French', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(35, 'Burundi', 'Frisian', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(36, 'Cambodia', 'Irish', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(37, 'Cameroon', 'Scots/Gaelic', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(38, 'Canada', 'Galician', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(39, 'Cape Verde', 'Guarani', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
-(40, 'Cayman Islands', 'Gujarati', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
+INSERT INTO `rfiltersmap` (`filter_value`, `map_country`, `map_language`, `map_gender`, `map_uni_city`, `map_ethnicity`, `map_smokes`, `map_drinks`, `map_drugs`, `map_religion`, `map_sign`, `map_degree`, `map_studies`, `map_parties`, `map_offspring`, `map_pets`, `map_orientation`) VALUES
+(1, 'Afghanistan', 'English', 'man', 'Manchester', 'Asian', 'Yes', 'Very often', 'Often', '', 'Leo', 'Accounting, Business & Finance', 'Very Often', 'Often', 'Has a kid', 'None', ''),
+(2, 'Albania', 'Afar', 'woman', '', 'Native American', 'Sometimes', 'Often', 'Sometimes', '', 'Aquarius', 'Agriculture and Horticulture', 'Often', 'Sometimes', 'Has kids', 'Dog(s)', ''),
+(3, 'Algeria', 'Abkhazian', 'trans', '', 'Hispanic / Latin', 'When drinking', 'Socially', 'Never', '', 'Cancer', 'Archaeology', 'Sometimes', 'Never', 'Does not have kids', 'Cat(s)', ''),
+(4, 'American Samoa', 'Afrikaans', '', '', 'Middle Eastern', 'Trying to quit', 'Rarely', '', '', 'Taurus', 'Architecture, Building & Planning', 'Rarely', '', 'Eats kids', 'Arachnide(s)', ''),
+(5, 'Andorra', 'Amharic', '', '', 'Indian', 'No', 'Desperately', '', '', 'Scorpio', 'Art and design', 'Never', '', '', 'Snake(s)', ''),
+(6, 'Angola', 'Arabic', '', '', 'White', '', 'Not at all', '', '', 'Virgo', 'Biology', '', '', '', 'Bird(s)', ''),
+(7, 'Anguilla', 'Assamese', '', '', 'Black / African American', '', '', '', '', 'Pisces', 'Chemistry', '', '', '', 'Rodent(s)', ''),
+(8, 'Antarctica', 'Aymara', '', '', 'Pacific Islander (just fucking Pacific)', '', '', '', '', 'Aries', 'Communication and Media', '', '', '', 'Little brother(s)', ''),
+(9, 'Antigua and Barbuda', 'Azerbaijani', '', '', 'Other', '', '', '', '', 'Gemini', 'Computing & IT', '', '', '', '', ''),
+(10, 'Argentina', 'Bashkir', '', '', 'Other2, for those not in Other', '', '', '', '', 'Libra', 'Dentistry', '', '', '', '', ''),
+(11, 'Armenia', 'Byelorussian', '', '', '', '', '', '', '', 'Sagittarius', 'Earth Sciences', '', '', '', '', ''),
+(12, 'Aruba', 'Bulgarian', '', '', '', '', '', '', '', 'Capricorn', 'Economics', '', '', '', '', ''),
+(13, 'Australia', 'Bihari', '', '', '', '', '', '', '', '', 'Education', '', '', '', '', ''),
+(14, 'Austria', 'Bislama', '', '', '', '', '', '', '', '', 'Engineering', '', '', '', '', ''),
+(15, 'Azerbaijan', 'Bengali/Bangla', '', '', '', '', '', '', '', '', 'English Language', '', '', '', '', ''),
+(16, 'Bahamas', 'Tibetan', '', '', '', '', '', '', '', '', 'English Literature', '', '', '', '', ''),
+(17, 'Bahrain', 'Breton', '', '', '', '', '', '', '', '', 'Fashion and textiles', '', '', '', '', ''),
+(18, 'Bangladesh', 'Catalan', '', '', '', '', '', '', '', '', 'Geography', '', '', '', '', ''),
+(19, 'Barbados', 'Corsican', '', '', '', '', '', '', '', '', 'Health and Medicine', '', '', '', '', ''),
+(20, 'Belarus', 'Czech', '', '', '', '', '', '', '', '', 'History', '', '', '', '', ''),
+(21, 'Belgium', 'Welsh', '', '', '', '', '', '', '', '', 'Hospitality & Catering', '', '', '', '', ''),
+(22, 'Belize', 'Danish', '', '', '', '', '', '', '', '', 'Languages', '', '', '', '', ''),
+(23, 'Benin', 'German', '', '', '', '', '', '', '', '', 'Law', '', '', '', '', ''),
+(24, 'Bermuda', 'Bhutani', '', '', '', '', '', '', '', '', 'Management', '', '', '', '', ''),
+(25, 'Bhutan', 'Greek', '', '', '', '', '', '', '', '', 'Marketing', '', '', '', '', ''),
+(26, 'Bolivia', 'Esperanto', '', '', '', '', '', '', '', '', 'Mathematics', '', '', '', '', ''),
+(27, 'Bosnia and Herzegowi', 'Spanish', '', '', '', '', '', '', '', '', 'Music', '', '', '', '', ''),
+(28, 'Botswana', 'Estonian', '', '', '', '', '', '', '', '', 'Nursing', '', '', '', '', ''),
+(29, 'Bouvet Island', 'Basque', '', '', '', '', '', '', '', '', 'Pharmacology', '', '', '', '', ''),
+(30, 'Brazil', 'Persian', '', '', '', '', '', '', '', '', 'Philosophy', '', '', '', '', ''),
+(31, 'British Indian Ocean', 'Finnish', '', '', '', '', '', '', '', '', 'Physics', '', '', '', '', ''),
+(32, 'Brunei Darussalam', 'Fiji', '', '', '', '', '', '', '', '', 'Politics', '', '', '', '', ''),
+(33, 'Bulgaria', 'Faeroese', '', '', '', '', '', '', '', '', 'Psychology and Counselling', '', '', '', '', ''),
+(34, 'Burkina Faso', 'French', '', '', '', '', '', '', '', '', 'Social Work', '', '', '', '', ''),
+(35, 'Burundi', 'Frisian', '', '', '', '', '', '', '', '', 'Sociology', '', '', '', '', ''),
+(36, 'Cambodia', 'Irish', '', '', '', '', '', '', '', '', 'Sports & Leisure', '', '', '', '', ''),
+(37, 'Cameroon', 'Scots/Gaelic', '', '', '', '', '', '', '', '', 'Theatre & Dramatic Arts', '', '', '', '', ''),
+(38, 'Canada', 'Galician', '', '', '', '', '', '', '', '', 'Theology & Religion', '', '', '', '', ''),
+(39, 'Cape Verde', 'Guarani', '', '', '', '', '', '', '', '', 'Travel and Tourism', '', '', '', '', ''),
+(40, 'Cayman Islands', 'Gujarati', '', '', '', '', '', '', '', '', 'Veterinary Medicine', '', '', '', '', ''),
 (41, 'Central African Repu', 'Hausa', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
 (42, 'Chad', 'Hindi', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
 (43, 'Chile', 'Croatian', '', '', '', '', '', '', '', '', '', '', '', '', '', ''),
@@ -464,23 +435,7 @@ CREATE TABLE IF NOT EXISTS `rlog` (
   `log_email` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `log_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='logs when users get the pass wrong. protects against bruteforce attacks' AUTO_INCREMENT=19 ;
-
---
--- Dumping data for table `rlog`
---
-
-INSERT INTO `rlog` (`log_id`, `log_email`, `log_time`) VALUES
-(9, 'dragos.radu@student.manchester.ac.uk', '2015-01-18 01:35:30'),
-(10, 'dragos.radu@student.manchester.ac.uk', '2015-01-18 02:08:46'),
-(11, 'dragos.radu@student.manchester.ac.uk', '2015-01-18 02:08:57'),
-(12, 'dragos.radu@student.manchester.ac.uk', '2015-01-18 02:09:11'),
-(13, 'guest@cs.man.ac.uk', '2015-01-26 14:04:32'),
-(14, 'guest@cs.man.ac.uk', '2015-01-26 14:04:37'),
-(15, 'guest@cs.man.ac.uk', '2015-01-26 14:05:11'),
-(16, 'guest@cs.man.ac.uk', '2015-01-26 14:05:22'),
-(17, 'd_hod@hotmail.com', '2015-01-26 14:07:30'),
-(18, 'guest@cs.man.ac.uk', '2015-01-26 14:13:53');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='logs when users get the pass wrong. protects against bruteforce attacks' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -497,252 +452,7 @@ CREATE TABLE IF NOT EXISTS `rmessages` (
   `messages_read` tinyint(1) NOT NULL DEFAULT '0',
   `message_group` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`message_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=274 ;
-
---
--- Dumping data for table `rmessages`
---
-
-INSERT INTO `rmessages` (`message_id`, `message_user_id1`, `message_user_id2`, `message_text`, `message_timestamp`, `messages_read`, `message_group`) VALUES
-(4, 27, 21, 'wassup?', '2015-02-13 18:22:20', 1, '0'),
-(5, 21, 27, 'fine, u?', '2015-02-13 21:28:16', 1, '0'),
-(6, 27, 21, 'nuthing suck balls', '2015-02-13 18:22:24', 1, '0'),
-(7, 27, 21, 'fuck you too!\n<br>\nshitfuck', '2015-02-13 21:28:16', 1, '0'),
-(8, 12, 21, 'how are you?', '2015-02-13 18:22:41', 1, '0'),
-(9, 21, 12, 'Fine, dear Sir. How are you?', '2015-02-13 18:22:35', 1, '0'),
-(11, 21, 12, 'do you like mayonaise?', '2015-02-13 19:27:39', 1, '0'),
-(12, 21, 12, 'heyyy, answer!!!', '2015-02-13 19:27:39', 1, '0'),
-(13, 21, 12, '''''''''''''''''''''''', '2015-02-13 19:27:39', 1, '0'),
-(14, 21, 12, '&lt;div&gt;', '2015-02-13 19:27:39', 1, '0'),
-(15, 21, 12, '''', '2015-02-13 19:27:39', 1, '0'),
-(16, 12, 21, 'shit?', '2015-02-13 19:27:39', 1, '0'),
-(17, 12, 21, '&lt;div&gt;Test&lt;/div&gt;', '2015-02-13 19:29:53', 1, '0'),
-(18, 12, 21, '&lt;div&gt;Test&lt;/div&gt;&lt;br&gt;&lt;p&gt;No&lt;/p&gt;\nYes.', '2015-02-13 19:30:18', 1, '0'),
-(19, 21, 27, 'asdasd', '2015-02-13 21:28:16', 1, '0'),
-(20, 21, 12, 'shit biatch', '2015-02-13 21:47:01', 1, '0'),
-(26, 12, 21, 'blob', '2015-02-13 22:06:38', 1, '0'),
-(34, 12, 21, 'LOL', '2015-02-13 22:42:04', 1, '0'),
-(35, 21, 12, 'shit', '2015-02-13 22:45:33', 1, '0'),
-(36, 12, 21, 'bleh', '2015-02-13 22:45:51', 1, '0'),
-(37, 21, 12, 'shit', '2015-02-13 22:48:02', 1, '0'),
-(38, 21, 12, 'shit2', '2015-02-13 22:48:02', 1, '0'),
-(39, 21, 12, 'asdasd', '2015-02-13 22:49:20', 1, '0'),
-(40, 21, 12, 'asdasd2', '2015-02-13 22:49:23', 1, '0'),
-(41, 12, 21, 'test', '2015-02-13 22:51:18', 1, '0'),
-(42, 21, 12, 'shit', '2015-02-13 22:51:31', 1, '0'),
-(43, 12, 21, 'test', '2015-02-13 22:54:00', 1, '0'),
-(44, 21, 12, 'fuck you', '2015-02-13 23:05:29', 1, '0'),
-(45, 21, 12, 'heyyy :3\n', '2015-02-13 23:07:02', 1, '0'),
-(46, 12, 21, 'Wahey!', '2015-02-13 23:07:13', 1, '0'),
-(47, 12, 21, 'Wahey!hhghgfh', '2015-02-13 23:07:51', 1, '0'),
-(48, 21, 12, 'stuff', '2015-02-14 01:23:05', 1, '0'),
-(49, 21, 12, 'okay, aparently single quotation mark doesnt work\n', '2015-02-14 01:23:33', 1, '0'),
-(50, 21, 12, 'also, textarea is too large for phone. i think its bc i set it to 60 cols', '2015-02-14 01:24:32', 1, '0'),
-(51, 12, 21, 'I think I remember that single quotation mark only displayed 1 mark when 2 were used... something for you to work on while I work in style.css :P\nJust installing apache and shit on an Ubuntu VM', '2015-02-14 01:27:55', 1, '0'),
-(52, 21, 12, 'okay. why not work on laptop? :o', '2015-02-14 01:29:12', 1, '0'),
-(53, 21, 12, 'I also need to fix the stuff that shows how many unread messages are', '2015-02-14 01:30:45', 1, '0'),
-(54, 21, 12, 'and the thing thay clears the textarea when sent', '2015-02-14 01:31:17', 1, '0'),
-(55, 12, 21, 'This screen is clean, and this PC is faster, even on VM xD', '2015-02-14 01:40:26', 1, '0'),
-(56, 12, 21, 'Will work on the styling, and having a message appear in the title upon a new message', '2015-02-14 01:40:51', 1, '0'),
-(57, 12, 21, 'Also considering having the recursive function only retrieve the unread messages... then spamming every 1 or 2 seconds would not be that bad (ignore le weird sentences... avoiding apostrophes for now).', '2015-02-14 01:42:14', 1, '0'),
-(58, 12, 21, 'Just figuring out what to install, to get PDO and shit all working fast', '2015-02-14 01:42:49', 1, '0'),
-(59, 12, 21, 'Got it configured and shit. Shall begin styling.', '2015-02-14 02:05:30', 1, '0'),
-(60, 21, 12, 'okay. ill fix the things now', '2015-02-14 02:05:58', 1, '0'),
-(61, 12, 21, 'Can you add detection of empty strings, please? I will remove the empty string messages from the db for now... because the styling will look glitchy unless I specifically cater to the idea of allowing empty strings', '2015-02-14 02:42:45', 1, '0'),
-(64, 12, 21, 'test?', '2015-02-14 02:44:25', 1, '0'),
-(65, 12, 21, 'something broke ._.', '2015-02-14 02:44:32', 1, '0'),
-(66, 12, 21, 'Strange. Maybe it was being slow?', '2015-02-14 02:46:39', 1, '0'),
-(68, 21, 12, 'I think your message got sent two times. Ill add detection', '2015-02-14 02:49:44', 1, '0'),
-(69, 12, 21, 'Yeah, some weird shit happened. Not sure what...', '2015-02-14 02:51:00', 1, '0'),
-(70, 12, 21, 'Same weird shit happening again... hmmm', '2015-02-14 02:53:42', 1, '0'),
-(71, 12, 21, 'Can you make it so that, if $_GET[unread] is set, it only retrieves unread messages?', '2015-02-14 02:59:10', 1, '0'),
-(72, 12, 21, 'Also, seems to go buggy whenever I use single quotes, I think', '2015-02-14 02:59:32', 1, '0'),
-(73, 12, 21, 'Some basic styling pushed. Nothing on the textarea yet, but it should almost feel instant-chat-like.', '2015-02-14 03:24:42', 1, '0'),
-(74, 12, 21, 'Well, hopefully.', '2015-02-14 03:27:59', 1, '0'),
-(75, 12, 21, 'Im currently trying to get the auto-scrolling fixed, so I might send some random messages. :P', '2015-02-14 03:38:58', 1, '0'),
-(91, 21, 12, 'shit fuck 1', '2015-02-14 14:29:29', 1, '0'),
-(92, 21, 12, 'shit fuck 2', '2015-02-14 14:29:34', 1, '0'),
-(93, 21, 12, 'blob', '2015-02-14 14:33:52', 1, '0'),
-(94, 21, 12, 'shti', '2015-02-14 14:34:56', 1, '0'),
-(95, 21, 12, 'works', '2015-02-14 14:36:01', 1, '0'),
-(96, 21, 12, 'works?', '2015-02-14 15:07:34', 1, '0'),
-(97, 21, 12, 'blub', '2015-02-14 15:08:04', 1, '0'),
-(98, 21, 12, 'blub', '2015-02-14 15:08:11', 1, '0'),
-(99, 21, 12, 'asdasd', '2015-02-14 15:10:51', 1, '0'),
-(100, 21, 12, 'asdasd', '2015-02-14 15:12:15', 1, '0'),
-(101, 21, 12, 'asdasd', '2015-02-14 15:12:16', 1, '0'),
-(102, 21, 12, 'asdasd', '2015-02-14 15:12:16', 1, '0'),
-(103, 21, 12, 'asdasd', '2015-02-14 15:12:16', 1, '0'),
-(104, 21, 12, 'asdasd', '2015-02-14 15:12:17', 1, '0'),
-(105, 21, 12, 'asdasd', '2015-02-14 15:12:17', 1, '0'),
-(106, 21, 12, 'asdasd', '2015-02-14 15:12:17', 1, '0'),
-(107, 21, 12, 'Testing shit...', '2015-02-14 15:23:08', 1, '0'),
-(108, 21, 12, 'test2', '2015-02-14 15:23:31', 1, '0'),
-(109, 21, 12, 'test again', '2015-02-14 15:30:55', 1, '0'),
-(110, 21, 12, 'hooray, works', '2015-02-14 15:31:01', 1, '0'),
-(111, 21, 12, 'test?', '2015-02-14 15:43:53', 1, '0'),
-(112, 21, 12, '''', '2015-02-14 16:06:05', 1, '0'),
-(113, 21, 12, '''''', '2015-02-14 16:06:12', 1, '0'),
-(114, 21, 12, '&quot;', '2015-02-14 16:06:18', 1, '0'),
-(115, 21, 12, '''', '2015-02-14 16:12:58', 1, '0'),
-(116, 21, 12, '&amp; ', '2015-02-14 16:13:23', 1, '0'),
-(117, 21, 12, '&lt;div&gt; ', '2015-02-14 16:13:29', 1, '0'),
-(118, 21, 12, '? : &quot;', '2015-02-14 16:13:34', 1, '0'),
-(119, 21, 12, '!@#$%^&amp;*()', '2015-02-14 16:13:41', 1, '0'),
-(120, 21, 12, '''', '2015-02-14 16:13:44', 1, '0'),
-(121, 21, 12, 'it works now, doesn''t it?', '2015-02-14 16:13:53', 1, '0'),
-(122, 21, 12, '''; DROP rmessages;', '2015-02-14 16:15:43', 1, '0'),
-(123, 21, 12, 'it looks awesome on mobile btw', '2015-02-14 17:15:08', 1, '0'),
-(124, 12, 12, 'Here''s a test:\n&lt;div class=&quot;test&quot;&gt;&lt;br&gt;&lt;/div&gt;\n&lt;div class=''test''&gt;&lt;/div&gt;', '2015-02-14 17:15:09', 1, '0'),
-(125, 21, 12, 'testing focus', '2015-02-14 17:15:32', 1, '0'),
-(126, 12, 12, 'I haven''t even started on the mobile version yet ._.', '2015-02-14 17:16:03', 1, '0'),
-(127, 21, 12, 'test focus again', '2015-02-14 17:16:16', 1, '0'),
-(128, 12, 12, 'Gonna fix the chat replacing issue', '2015-02-14 17:17:45', 1, '0'),
-(129, 21, 12, 'testing again', '2015-02-14 17:19:23', 1, '0'),
-(130, 21, 12, 'yeah.. the problem is that when I send, it should focus again on the message. instead it doesn''t do that\n', '2015-02-14 17:19:50', 1, '0'),
-(131, 21, 12, 'commencing stress test', '2015-02-14 17:20:08', 1, '0'),
-(132, 21, 12, 'a', '2015-02-14 17:20:08', 1, '0'),
-(133, 21, 12, 'a', '2015-02-14 17:20:09', 1, '0'),
-(134, 21, 12, 'a', '2015-02-14 17:20:12', 1, '0'),
-(135, 21, 12, 'a', '2015-02-14 17:20:12', 1, '0'),
-(136, 21, 12, 'a', '2015-02-14 17:20:12', 1, '0'),
-(137, 21, 12, 'a', '2015-02-14 17:20:13', 1, '0'),
-(138, 21, 12, 'a', '2015-02-14 17:20:14', 1, '0'),
-(139, 21, 12, 'a', '2015-02-14 17:20:14', 1, '0'),
-(140, 21, 12, 'okay, this works.', '2015-02-14 17:20:24', 1, '0'),
-(141, 21, 12, 'looks nice btw', '2015-02-14 17:20:39', 1, '0'),
-(142, 12, 12, 'I''m not seeing my messages when I refresh though o.o', '2015-02-14 17:27:20', 1, '0'),
-(143, 12, 12, 'Well, only when I send a new message, all of the recent ones I sent get displayed', '2015-02-14 17:27:46', 1, '0'),
-(144, 12, 12, 'Ah... I''m so confused right now.\nWe need the longpolling thing to only check for the unread messages sent by the other user, and the send button to only get the unread messages sent by the other user along with the single most recent message sent by the current user (i.e. th message they just sent)', '2015-02-14 17:38:47', 1, '0'),
-(145, 12, 21, 'I''m thinking that we need 3 different types of output from message process php:\n1) The update that happens after the user sends a message (to return the last message sent by the current user).\n2) The longpolling: Only retrieve messages sent by the other person, that are unread.\n3) The scrolling up: Retrieve all messages, given an offset.', '2015-02-14 17:50:46', 1, '0'),
-(146, 21, 12, 'message.process does not give any output', '2015-02-14 17:51:27', 1, '0'),
-(147, 21, 12, 'the output is given by update_mesage', '2015-02-14 17:51:43', 1, '0'),
-(148, 12, 21, 'I meant update_message process', '2015-02-14 17:51:52', 1, '0'),
-(149, 21, 12, 'oh, the new messages will be appended by js?', '2015-02-14 17:52:28', 1, '0'),
-(150, 12, 21, 'So I''ll have JS send a variable _GET[''type''] = ''new'' or ''old'' or ''sent''\n(New =&gt; get the new messages sent by other user, and mark them as read)\n(Old =&gt; get the old messages sent by either user, given an offset)\n(Sent =&gt; get the &quot;New&quot; messages AND the most recent message sent by the current user)', '2015-02-14 17:55:02', 1, '0'),
-(151, 12, 21, 'Yeah, rather than replaced', '2015-02-14 17:55:31', 1, '0'),
-(152, 12, 21, 'Then we can scrap the _GET[''unread''] stuff.', '2015-02-14 17:55:55', 1, '0'),
-(153, 21, 12, 'yes', '2015-02-14 18:09:01', 1, '0'),
-(154, 12, 21, 'AH!', '2015-02-14 18:33:56', 1, '0'),
-(155, 12, 21, 'I got it. Maybe.', '2015-02-14 18:34:01', 1, '0'),
-(156, 12, 21, 'Little change up in ideas (I know, annoying).', '2015-02-14 18:34:15', 1, '0'),
-(157, 12, 21, 'Once we get the proper long-polling in place (not just the current consta-repeat thing), we can send the timestamp in _GET, and the server gets all messages from either user that were sent &gt;= the timestamp. (This is for type=new btw).', '2015-02-14 18:35:41', 1, '0'),
-(158, 12, 21, 'What time do you think you''ll be up tomorrow?\nI''m thinking of coming in, because I don''t want to work on this and fuck shit up w/ merge errors, unless you got Skype?', '2015-02-14 18:44:22', 1, '0'),
-(159, 12, 21, 'Oh, and remember when I mentioned that there''s OFFSET in SQL?\nhttp://www.petefreitag.com/item/451.cfm\ne.g. LIMIT 50 OFFSET $offset', '2015-02-14 19:05:17', 1, '0'),
-(160, 12, 12, 'Test?', '2015-02-14 19:09:48', 1, '0'),
-(161, 12, 12, 'Test', '2015-02-14 19:28:06', 1, '0'),
-(162, 12, 12, 'newtest', '2015-02-15 03:18:57', 1, '0'),
-(163, 12, 12, 'newtest2', '2015-02-15 03:20:34', 1, '0'),
-(164, 12, 12, 'newtest3', '2015-02-15 03:36:38', 1, '0'),
-(165, 12, 12, 'newtest4', '2015-02-15 03:37:55', 1, '0'),
-(166, 12, 12, 'newtest5', '2015-02-15 03:40:47', 1, '0'),
-(167, 12, 12, 'newtest6', '2015-02-15 03:50:56', 1, '0'),
-(168, 21, 12, 'biatch', '2015-02-19 15:35:42', 1, '0'),
-(169, 21, 12, 'see dis', '2015-02-19 15:35:47', 1, '0'),
-(170, 21, 12, 'muthafucka', '2015-02-19 15:35:55', 1, '0'),
-(171, 21, 12, 'hey, see this?', '2015-02-20 18:58:25', 1, '0'),
-(172, 21, 12, 'see?', '2015-02-20 19:07:25', 1, '0'),
-(173, 21, 12, 'asdasd', '2015-02-20 19:07:34', 1, '0'),
-(174, 21, 12, 'asdasd', '2015-02-20 19:07:36', 1, '0'),
-(175, 21, 27, 'asdasd', '2015-02-20 19:14:08', 1, '0'),
-(176, 49, 12, 'shit fuck', '2015-02-27 21:41:48', 0, '0'),
-(177, 49, 12, 'fuck', '2015-02-27 21:41:53', 0, '0'),
-(178, 49, 12, 'shit', '2015-02-27 21:41:55', 0, '0'),
-(179, 49, 12, 'piss', '2015-02-27 21:41:57', 0, '0'),
-(180, 49, 12, 'arse', '2015-02-27 21:41:59', 0, '0'),
-(181, 49, 12, 'asdasd', '2015-02-27 21:42:03', 0, '0'),
-(182, 49, 12, 'fuck\n\n\nshit piss', '2015-02-27 21:42:20', 0, '0'),
-(183, 49, 54, 'hey shitfuck', '2015-03-13 17:39:46', 1, '0'),
-(184, 54, 49, 'heyshit', '2015-03-13 17:42:33', 1, '0'),
-(185, 54, 49, 'sheeet', '2015-03-13 17:51:01', 1, '0'),
-(186, 49, 54, 'wasap biatch', '2015-03-13 17:51:07', 1, '0'),
-(187, 54, 0, 'heyyy', '2015-03-13 19:05:17', 0, '1'),
-(188, 12, 0, 'wassup', '2015-03-13 19:05:17', 0, '1'),
-(189, 22, 0, 'bitches', '2015-03-13 19:05:17', 0, '1'),
-(190, 54, 0, 'sheet', '2015-03-13 19:53:55', 0, '1'),
-(191, 54, 0, 'fuck', '2015-03-13 19:56:58', 0, '1'),
-(192, 54, 0, 'fuck piss', '2015-03-13 20:53:27', 0, '1'),
-(193, 49, 0, 'sheeeeet guysss', '2015-03-13 21:01:30', 0, '1'),
-(194, 49, 0, 'fuck', '2015-03-13 21:01:59', 0, '1'),
-(195, 54, 49, 'fuck', '2015-03-13 21:03:25', 1, '0'),
-(196, 54, 0, 'shit', '2015-03-13 21:04:58', 0, '1'),
-(197, 54, 0, 'piss', '2015-03-13 21:04:59', 0, '1'),
-(198, 54, 0, 'ass', '2015-03-13 21:05:00', 0, '1'),
-(199, 54, 0, 'fuck', '2015-03-13 21:05:07', 0, '1'),
-(200, 54, 0, 'seeeeet', '2015-03-13 21:05:10', 0, '1'),
-(201, 54, 0, 'pissfuck', '2015-03-13 21:05:13', 0, '1'),
-(202, 54, 0, 'cunt', '2015-03-13 21:05:13', 0, '1'),
-(203, 54, 0, 'arse', '2015-03-13 21:05:16', 0, '1'),
-(204, 54, 0, 'a', '2015-03-13 21:05:19', 0, '1'),
-(205, 54, 0, 'a', '2015-03-13 21:05:19', 0, '1'),
-(206, 54, 0, 'a', '2015-03-13 21:05:19', 0, '1'),
-(207, 54, 0, 'a', '2015-03-13 21:05:19', 0, '1'),
-(208, 54, 0, 'a', '2015-03-13 21:05:20', 0, '1'),
-(209, 54, 0, 'a', '2015-03-13 21:05:20', 0, '1'),
-(210, 54, 0, 'a', '2015-03-13 21:05:20', 0, '1'),
-(211, 54, 0, 'a', '2015-03-13 21:05:20', 0, '1'),
-(212, 54, 0, 'a', '2015-03-13 21:05:21', 0, '1'),
-(213, 54, 0, 'a', '2015-03-13 21:05:21', 0, '1'),
-(214, 54, 0, 'a', '2015-03-13 21:05:25', 0, '1'),
-(215, 54, 0, 'a', '2015-03-13 21:05:25', 0, '1'),
-(216, 54, 0, 'a', '2015-03-13 21:05:25', 0, '1'),
-(217, 54, 0, 'a', '2015-03-13 21:05:25', 0, '1'),
-(218, 54, 0, 'a', '2015-03-13 21:05:26', 0, '1'),
-(219, 54, 0, 'a', '2015-03-13 21:05:26', 0, '1'),
-(220, 54, 0, 'a', '2015-03-13 21:05:26', 0, '1'),
-(221, 54, 0, 'a', '2015-03-13 21:05:26', 0, '1'),
-(222, 54, 0, 'a', '2015-03-13 21:05:26', 0, '1'),
-(223, 54, 0, 'a', '2015-03-13 21:05:27', 0, '1'),
-(224, 54, 0, 'a', '2015-03-13 21:05:27', 0, '1'),
-(225, 54, 0, 'a', '2015-03-13 21:05:27', 0, '1'),
-(226, 54, 0, 'a', '2015-03-13 21:05:27', 0, '1'),
-(227, 54, 0, 'a', '2015-03-13 21:05:27', 0, '1'),
-(228, 54, 0, 'a', '2015-03-13 21:05:28', 0, '1'),
-(229, 54, 0, 'a', '2015-03-13 21:05:28', 0, '1'),
-(230, 54, 0, 'a', '2015-03-13 21:05:28', 0, '1'),
-(231, 54, 0, 'a', '2015-03-13 21:05:28', 0, '1'),
-(232, 54, 0, 'a', '2015-03-13 21:05:29', 0, '1'),
-(233, 54, 0, 'a', '2015-03-13 21:05:29', 0, '1'),
-(234, 54, 0, 'a', '2015-03-13 21:05:29', 0, '1'),
-(235, 54, 0, 'a', '2015-03-13 21:05:29', 0, '1'),
-(236, 54, 0, 'a', '2015-03-13 21:05:42', 0, '1'),
-(237, 54, 0, 'a', '2015-03-13 21:05:42', 0, '1'),
-(238, 54, 0, 'a', '2015-03-13 21:05:42', 0, '1'),
-(239, 54, 0, 'a', '2015-03-13 21:05:42', 0, '1'),
-(240, 54, 0, 'a', '2015-03-13 21:05:42', 0, '1'),
-(241, 54, 0, 'a', '2015-03-13 21:05:43', 0, '1'),
-(242, 54, 0, 'a', '2015-03-13 21:05:43', 0, '1'),
-(243, 54, 0, 'a', '2015-03-13 21:05:43', 0, '1'),
-(244, 54, 0, 'a', '2015-03-13 21:05:43', 0, '1'),
-(245, 54, 0, 'a', '2015-03-13 21:05:44', 0, '1'),
-(246, 54, 0, 'a', '2015-03-13 21:05:44', 0, '1'),
-(247, 54, 0, 'a', '2015-03-13 21:05:44', 0, '1'),
-(248, 54, 0, 'a', '2015-03-13 21:05:44', 0, '1'),
-(249, 54, 0, 'a', '2015-03-13 21:05:44', 0, '1'),
-(250, 54, 0, 'a', '2015-03-13 21:05:45', 0, '1'),
-(251, 54, 0, 'a', '2015-03-13 21:05:45', 0, '1'),
-(252, 54, 0, 'a', '2015-03-13 21:05:45', 0, '1'),
-(253, 54, 0, 'a', '2015-03-13 21:05:45', 0, '1'),
-(254, 54, 0, 'a', '2015-03-13 21:05:46', 0, '1'),
-(255, 54, 0, 'a', '2015-03-13 21:05:46', 0, '1'),
-(256, 54, 0, 'a', '2015-03-13 21:05:46', 0, '1'),
-(257, 54, 0, 'a', '2015-03-13 21:05:46', 0, '1'),
-(258, 54, 0, 'a', '2015-03-13 21:05:46', 0, '1'),
-(259, 54, 0, 'a', '2015-03-13 21:05:47', 0, '1'),
-(260, 54, 0, 'a', '2015-03-13 21:05:47', 0, '1'),
-(261, 54, 0, 'a', '2015-03-13 21:05:47', 0, '1'),
-(262, 54, 0, 'a', '2015-03-13 21:05:47', 0, '1'),
-(263, 54, 0, 'a', '2015-03-13 21:05:48', 0, '1'),
-(264, 54, 0, 'a', '2015-03-13 21:05:48', 0, '1'),
-(265, 54, 0, 'a', '2015-03-13 21:05:48', 0, '1'),
-(266, 54, 0, 'a', '2015-03-13 21:05:48', 0, '1'),
-(267, 54, 0, 'a', '2015-03-13 21:05:48', 0, '1'),
-(268, 54, 0, 'a', '2015-03-13 21:05:49', 0, '1'),
-(269, 54, 0, 'a', '2015-03-13 21:05:49', 0, '1'),
-(270, 54, 0, 'a', '2015-03-13 21:05:49', 0, '1'),
-(271, 54, 49, 'fuck', '2015-03-14 06:08:12', 1, '0'),
-(272, 49, 54, 'sheeet', '2015-03-14 06:10:18', 1, '0'),
-(273, 54, 49, 'fuck', '2015-03-16 23:37:10', 0, '0');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -811,6 +521,33 @@ INSERT INTO `rpercentages` (`percentage_user_id1`, `percentage_user_id2`, `perce
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rposts`
+--
+
+CREATE TABLE IF NOT EXISTS `rposts` (
+  `post_id` int(11) NOT NULL AUTO_INCREMENT,
+  `post_parent_id` int(11) NOT NULL,
+  `post_text` text NOT NULL,
+  `post_likes` varchar(1000) NOT NULL,
+  `post_likes_no` int(11) NOT NULL DEFAULT '0',
+  `post_date` date NOT NULL,
+  `post_type` tinyint(4) NOT NULL,
+  `post_author` int(11) NOT NULL,
+  UNIQUE KEY `post_id` (`post_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `rposts`
+--
+
+INSERT INTO `rposts` (`post_id`, `post_parent_id`, `post_text`, `post_likes`, `post_likes_no`, `post_date`, `post_type`, `post_author`) VALUES
+(1, 2, 'shet reply 1', '', 0, '2015-03-17', 1, 54),
+(2, 1, 'noww...', '', 0, '2015-03-17', 0, 54),
+(3, 2, 'well fuck you, dear sir', '', 0, '2015-03-18', 1, 23);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rquestionsmap`
 --
 
@@ -829,30 +566,6 @@ INSERT INTO `rquestionsmap` (`question_id`, `question_text`, `question_answers`)
 (1, 'Are you a loud person?', '1:2:3'),
 (2, 'How often do you play musical instruments?', '8:7:6:5:4'),
 (3, 'Would you live with someone of other religion than yours?', '1:3:9');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `rreviews`
---
-
-CREATE TABLE IF NOT EXISTS `rreviews` (
-  `review_id` int(11) NOT NULL AUTO_INCREMENT,
-  `review_acc_id` int(11) NOT NULL,
-  `review_text` text COLLATE utf8_unicode_ci,
-  `review_likes` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `review_author` int(11) DEFAULT NULL,
-  `review_date` date NOT NULL,
-  `review_likes_no` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`review_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
-
---
--- Dumping data for table `rreviews`
---
-
-INSERT INTO `rreviews` (`review_id`, `review_acc_id`, `review_text`, `review_likes`, `review_author`, `review_date`, `review_likes_no`) VALUES
-(6, 1, 'shitfuck', NULL, 54, '2015-03-17', 0);
 
 -- --------------------------------------------------------
 
@@ -955,7 +668,18 @@ CREATE TABLE IF NOT EXISTS `rusersettings` (
 --
 
 INSERT INTO `rusersettings` (`setting_user_id`, `is_private`, `is_invisible`, `notif_request`, `notif_accept`, `notif_message`, `notif_over90`, `notif_fbfriend`) VALUES
+(11, 1, 0, 1, 1, 1, 1, 1),
 (12, 1, 0, 1, 1, 1, 1, 1),
+(22, 1, 0, 1, 1, 1, 1, 1),
+(23, 1, 0, 1, 1, 1, 1, 1),
+(24, 1, 0, 1, 1, 1, 1, 1),
+(26, 1, 0, 1, 1, 1, 1, 1),
+(27, 1, 0, 1, 1, 1, 1, 1),
+(28, 1, 0, 1, 1, 1, 1, 1),
+(29, 1, 0, 1, 1, 1, 1, 1),
+(49, 1, 0, 1, 1, 1, 1, 1),
+(50, 1, 0, 1, 1, 1, 1, 1),
+(53, 1, 0, 1, 1, 1, 1, 1),
 (54, 1, 1, 1, 0, 1, 1, 1);
 
 -- --------------------------------------------------------

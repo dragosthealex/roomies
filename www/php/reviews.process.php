@@ -110,7 +110,7 @@ try
       // Edit a post
       $postId = htmlentities($_GET['pid']);
       $postType = htmlentities($_GET['ptype']);
-      $if(!$postId || !is_numeric($postId))
+      if(!$postId || !is_numeric($postId))
       {
         throw new Exception("The program got scared. Id is invalid", 1);
       }
