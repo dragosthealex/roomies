@@ -147,6 +147,11 @@ class Accommodation extends Base
     {
       $this->setReviews();
     }
+    if($this->getError())
+    {
+      throw new Exception("Problem setting reviews for accom " . $this->id . ": " . $this->getError(), 1);
+    }
+
     // Localise stuff
     $id = $this->id;
     $description = $this->description;
@@ -158,29 +163,41 @@ class Accommodation extends Base
     $noOfPhotos = $this->noOfPhotos;
     $con = $this->con;
 
-    // Get the name of the author
-    $author = new User($con, $authorId);
-    $authorName = $author->getName();
-
-    // Create the JSON
-    $reviewsJson = array();
-    foreach ($reviews as $review)
+    try
     {
-      $review = $review->toJson();
-      array_push($reviewsJson, $review);
+      // Get the name of the author
+      $author = new User($con, $authorId);
+      $authorName = $author->getName();
+
+      // Create the JSON
+      $reviewsJson = array();
+      foreach ($reviews as $review)
+      {
+        $reviewString = $review->toJson();
+        if($review->getError())
+        {
+          $this->errorMsg .= "Erorr with reveiws: " . $reveiw->getError();
+          continue;
+        }
+        array_push($reviewsJson, $reviewString);
+      }
+
+      $jsonArray = array(
+                "id"          => "$id",
+                "authorName"  => "$authorName",
+                "authorId"    => "$authorId",
+                "description" => "$description",
+                "rating"      => "$rating",
+                "noOfPhotos"  => "$noOfPhotos",
+                "name"        => "$name",
+                "reviews"     => $reviewsJson);
+
+      return json_encode($jsonArray);
     }
-
-    $jsonArray = array(
-              "id"          => "$id",
-              "authorName"  => "$authorName",
-              "authorId"    => "$authorId",
-              "description" => "$description",
-              "rating"      => "$rating",
-              "noOfPhotos"  => "$noOfPhotos",
-              "name"        => "$name",
-              "reviews"     => $reviewsJson);
-
-    return json_encode($jsonArray);
+    catch (Exception $e)
+    {
+      $this->errorMsg = "Error with the accommodation $id: " . $e->getMessage;
+    }
   }
 
   /**

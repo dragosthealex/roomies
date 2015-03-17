@@ -93,14 +93,31 @@ try
       }
       break;
     case 6:
-      // Delete a reply/review
+      // Delete a post
       $postId = htmlentities($_GET['pid']);
       $postType = htmlentities($_GET['ptype']);
       if(!$postId || !is_numeric($postId))
       {
         throw new Exception("A WHALE will eat you. The post id is invalid", 1);
       }
-      
+      if(!$user2->deletePost($postId))
+      {
+        throw new Exception("May the force be with you. Post $postId too stubborn to be deleted: " . $user2->getError(), 1); 
+      }
+      $response['success'] = "Post deleted";
+      break;
+    case 7:
+      // Edit a post
+      $postId = htmlentities($_GET['pid']);
+      $postType = htmlentities($_GET['ptype']);
+      $if(!$postId || !is_numeric($postId))
+      {
+        throw new Exception("The program got scared. Id is invalid", 1);
+      }
+      if(!$user2->updatePost($postId, $text))
+      {
+        throw new Exception("Your fetishes are too weird for the post to be updated: " . $user2->getError(), 1);
+      }
     default:
       throw new Exception("You tried to do an invalid action", 1);
       break;

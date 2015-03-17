@@ -4,7 +4,9 @@
 // Takes $login which can be id, username, 
 function loginUser($con, $login, $password='', $remember=false)
 {
-
+  
+  //TODO : MAKE DB CON OBJ 
+    
   // Check the pass against the one in db. If incorrect, will be logged
   $stmt = $con->prepare("SELECT user_id, user_pass, username, user_email, user_salt FROM rusers
                           WHERE user_email = '$login' OR username = '$login' OR user_id = '$login'");

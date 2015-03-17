@@ -856,6 +856,14 @@ private function getConv($offset)
       $this->errorMsg = $e->getMessage();
     }
   }// function like
+
+  /**
+  * Function 
+  *
+  *
+  *
+  */
+
 }// class CurrentUser
 
 

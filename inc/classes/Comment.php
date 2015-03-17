@@ -36,27 +36,41 @@ abstract class Comment extends Post
     $likesArray = isset($this->likesArray[0])?$this->likesArray:array();
     $con = $this->con;
 
-    // Get author name
-    $author = new OtherUser($con, $authorId);
-    $authorName = $author->getName();
+    try
+    {
+      // Get author name
+      $author = new OtherUser($con, $authorId);
+      $authorName = $author->getName();
+      if($author->getError())
+      {
+        throw new Exception("Error getting author with id $authorId. Strange sh*t goin' on", 1); 
+      }
 
-    // Get the replies
-    $replies = $this->getReplies();
-
-    // Construct the json
-    $jsonArray = array(
-              "id"          => "$id",
-              "authorName"  => "$authorName",
-              "authorId"    => "$authorId",
-              "text"        => "$text",
-              "likesNo"     => "$likesNo",
-              "likesArray"  => $likesArray,
-              "date"        => "$date",
-              "parentId"    => "$parentId",
-              "replies"     => "$replies");
-    
-    // Return it;
-    return json_encode($jsonArray);
+      // Get the replies
+      $replies = $this->getReplies();
+      if($this->getError())
+      {
+        throw new Exception("nyanyanyanyanayanyanyan. Error getting replies for post $id " . $this->getError(), 1);
+      }
+      // Construct the json
+      $jsonArray = array(
+                "id"          => "$id",
+                "authorName"  => "$authorName",
+                "authorId"    => "$authorId",
+                "text"        => "$text",
+                "likesNo"     => "$likesNo",
+                "likesArray"  => $likesArray,
+                "date"        => "$date",
+                "parentId"    => "$parentId",
+                "replies"     => "$replies");
+      
+      // Return it;
+      return json_encode($jsonArray);
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
   }
 
   // Gets the replies of this comment as an array string

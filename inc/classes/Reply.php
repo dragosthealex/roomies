@@ -73,8 +73,11 @@ class Reply extends Comment
         // Get the details from db
         try
         {
-          $stmt = $con->prepare("SELECT * FROM rreplies WHERE reply_id = $id");
-          $stmt->execute();
+          $stmt = $con->prepare("SELECT * FROM rcomments WHERE comment_id = $id");
+          if(!$stmt->execute())
+          {
+            throw new Exception("Error getting replies. fuck", 1);
+          }
 
           // Something wrong if no accommodation with given id
           if(!$stmt->rowCount())
@@ -85,13 +88,14 @@ class Reply extends Comment
           $result = $stmt->fetch(PDO::FETCH_ASSOC);
           // Set the instance vars
           $this->id = $id;
-          $this->likesNo = $result['reply_likesNo'];
-          $this->likesArray = $result['reply_likes'] ? explode(':', $result['reply_likes']) : array();
-          $this->date = $result['reply_date'];
-          $this->author = $result['reply_author'];
-          $this->parent = $result['reply_review_id'];
+          $this->likesNo = $result['comment_likes_no'];
+          $this->likesArray = $result['comment_likes'] ? explode(':', $result['comment_likes']) : array();
+          $this->date = $result['comment_date'];
+          $this->author = $result['comment_author'];
+          $this->parent = $result['comment_parent_id'];
           $this->con = $con;
-          $this->text = $result['review_text'];
+          $this->text = $result['comment_text'];
+
         }
         catch (Exception $e)
         {
