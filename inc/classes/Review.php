@@ -110,9 +110,8 @@ class Review extends Comment
     $reviewId = $this->id;
     $accId = $this->parent;
     $replies = array();
-
     // Get the replies
-    $stmt = $con->prepare("SELECT reply_id FROM rreplies WHERE parent_id = '$reviewId'");
+    $stmt = $con->prepare("SELECT comment_id FROM rcomments WHERE comment_parent_id = '$reviewId'");
     try
     {
       if(!$stmt->execute())
@@ -131,6 +130,7 @@ class Review extends Comment
         // Skip if we have any error with a reply
         if($reply->getError())
         {
+          $this->errorMsg .= "Error with reply $replyId: " . $reply->getError();
           continue;
         }
         array_push($replies, $reply->toJson());
@@ -141,7 +141,7 @@ class Review extends Comment
     }
     catch (Exception $e)
     {
-      $this->setError($e->getMessage());
+      $this->errorMsg = "Error with review $reviewId: " . $e->getMessage();
     }
   }// function getReplies()
 

@@ -7,8 +7,9 @@ include_once __ROOT__.'/inc/classes/Review.php';
 
 $output = ' <div class="review-header">Reviews</div>';
 // Loop through reviews
+
 foreach ($reviews as $review) 
-{
+{ 
   $review = json_decode($review, true);
   // Localise stuff
   $authorId = $review['authorId'];
@@ -29,6 +30,7 @@ foreach ($reviews as $review)
 
   if($author->getError())
   {
+    echo $author->getError();
     continue;
   } 
 
@@ -82,8 +84,9 @@ foreach ($reviews as $review)
   foreach ($postReplies as $reply)
   {
     $reply = json_decode($reply, true);
+    //var_dump($reply);
     $replyId = $reply['id'];
-    $replyAuthorId = $reply['author'];
+    $replyAuthorId = $reply['authorId'];
     $replyAuthor = new OtherUser($con, $replyAuthorId);
     $replyAuthorImage = $replyAuthor->getCredential('image');
     $replyAuthorName = $replyAuthor->getName();
@@ -114,7 +117,7 @@ foreach ($reviews as $review)
   $output .= "</div>";
 
   $output .="</div>";
-}
+}// foreach
 echo $output;
 ?>
 
