@@ -48,7 +48,15 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
           <h2 class="h2">Conversations</h2>
             <ul class='ul'>
               <div id="allConversations">
-                <?=$allConversations?>
+              <?php
+              if ($allConversations == '')
+              {
+              ?>
+                <li class='ph ph-last ph-message' data-placeholder="No conversations."></li>
+              <?php
+              }
+              else echo $allConversations;
+              ?>
               </div>
             </ul>
           <p class="text">
@@ -67,6 +75,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
           <div class="scroll-area" id="main_conversation_scroll"><?=($err)?$err:$conv?></div>
           <script>setTimeout(function(){var p=document.getElementById("main_conversation_scroll");p.scrollTop=p.scrollHeight},100)</script>
         </div>
+        <?php if (!isset($noMessages)) { ?>
         <div class="box-padding">
           <!--TODO: CHANGE METHOD TO POST-->
           <div class="textarea-holder"
@@ -88,6 +97,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
                   data-ajax-callback-2="focusById message">
           <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange()}())</script>
         </div>
+        <?php } ?>
       </div>
     </div>
   </div>
