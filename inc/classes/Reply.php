@@ -11,9 +11,9 @@ class Reply extends Comment
   // The type of the post
   const TYPE = 1;
   // Overriding Post vars
-  private $idColumn = 'comment_id';
-  private $tableName = 'rcomments';
-  private $likesColumn = 'comment_likes';
+  // private $idColumn = 'comment_id';
+  // private $tableName = 'rcomments';
+  // private $likesColumn = 'comment_likes';
 
   /**
   * Constructor
@@ -108,6 +108,68 @@ class Reply extends Comment
   {
     return "[\"\"]";   
   }
+
+  protected function getLikes()
+  {
+    // Localise stuff
+    $con = $this->con;
+    $likesColumn = $this->likesColumn;
+    $table = $this->tableName;
+    $id = $this->id;
+
+    try
+    {
+      // Get the likes array from db
+      $stmt = $con->prepare("SELECT comment_likes, comment_likes_no FROM rcomments  WHERE comment_id = $id");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting likes from table for post type " . TYPE . ", $id", 1);
+      }
+      $stmt->bindColumn(1, $likesArray);
+      $stmt->bindColumn(2, $likesNo);
+      $stmt->fetch();
+
+      // Turn string in array
+      $likesArray= $likesArray? explode(":", $likesArray) : array();
+
+      // Return likes array and set the class var
+      $this->likesArray = $likesArray;
+      $this->likesNo = $likesNo;
+      return $likes;
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function getLikes
+
+  protected function setLikes($likes, $liked)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $likesColumn = $this->likesColumn;
+    $table = $this->tableName;
+    $id = $this->id;
+
+    try
+    {
+      // Update the likes array in class
+      $this->likesArray = $likes;
+      // Turn likes in string
+      $likesArray= implode(":", $likes);
+
+      // Update the table in db
+      $stmt = $con->prepare("UPDATE rcomments SET comment_likes = '$likesArray', comment_likes_no = comment_likes_no+$liked WHERE comment_id = $id");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error updating likes for post type " . TYPE . ", $id", 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function setLikes
 }// class Reply
 
 

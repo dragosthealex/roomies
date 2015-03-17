@@ -5,7 +5,7 @@ $userId = $user2->getCredential('id');
 include_once __ROOT__.'/inc/classes/Reply.php';
 include_once __ROOT__.'/inc/classes/Review.php';
 
-$output = '';
+$output = ' <div class="review-header">Reviews</div>';
 // Loop through reviews
 foreach ($reviews as $review) 
 {
@@ -18,12 +18,14 @@ foreach ($reviews as $review)
   $postDate = $review['date'];
   $postText = $review['text'];
   $postLikesNo = $review['likesNo'];
-  $postLikes = isset($review['likes'][0]) ? json_decode($review['likes'],true) : array();
+  $postLikes = isset($review['likesArray'][0]) ? json_decode($review['likesArray'],true) : array();
   $postReplies = isset($review['replies'][1]) ? json_decode($review['replies'],true) : array();
   $postRepliesNo = count($postReplies);
   $postId = $review['id'];
 
-  $likeDislike = in_array($userId, $postLikes) ? 'Dislike' : 'Like';
+  $likeHide = in_array($userId, $postLikes) ? "style='display:none;'" : '';
+  $dislikeHide = !in_array($userId, $postLikes) ? "style='display:none;'" : '';
+
 
   if($author->getError())
   {
@@ -49,7 +51,20 @@ foreach ($reviews as $review)
       $postText
     </div>
     <div class='like-reply'>
-      $postLikesNo $likeDislike - $postRepliesNo Reply
+      $postLikesNo 
+      <span class='minidrop-container like-button' id='likeReview$postId' $likeHide>
+        <a data-ajax-url='../php/reviews.process.php?a=4&pid=$postId&ptype=0'
+           data-ajax-text='Liking...'
+           data-ajax-hide='like-button dislikeReview$postId'
+           class=''>Like</a>
+      </span>
+      <span class='minidrop-container like-button' id='dislikeReview$postId' $dislikeHide>
+        <a data-ajax-url='../php/friends.process.php?a=3&pid=$postId&ptype=0'
+           data-ajax-text='Dislinking...'
+           data-ajax-hide='like-button likeReview$postId'
+           class=''>Dislike</a>
+      </span>
+      - $postRepliesNo Reply
     </div>
   ";
   if($postRepliesNo)

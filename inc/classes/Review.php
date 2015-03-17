@@ -11,9 +11,9 @@ class Review extends Comment
   // The type of the post
   const TYPE = 0;
   // Overriding Post vars
-  private $idColumn = 'review_id';
-  private $tableName = 'rrevies';
-  private $likesColumn = 'review_likes';
+  // private $idColumn = 'review_id';
+  // private $tableName = 'rrevies';
+  // private $likesColumn = 'review_likes';
   /**
   * Constructor
   *
@@ -143,6 +143,66 @@ class Review extends Comment
       $this->setError($e->getMessage());
     }
   }// function getReplies()
+
+  protected function getLikes()
+  {
+    // Localise stuff
+    $con = $this->con;
+    $likesColumn = $this->likesColumn;
+    $table = $this->tableName;
+    $id = $this->id;
+
+    try
+    {
+      // Get the likes array from db
+      $stmt = $con->prepare("SELECT review_likes, review_likes_no FROM rreviews  WHERE review_id = $id");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting likes from table for post type " . TYPE . ", $id", 1);
+      }
+      $stmt->bindColumn(1, $likesArray);
+      $stmt->bindColumn(2, $likesNo);
+      $stmt->fetch();
+
+      // Turn string in array
+      $likesArray= $likesArray? explode(":", $likesArray) : array();
+
+      // Return likes array and set the class var
+      $this->likesArray = $likesArray;
+      $this->likesNo = $likesNo;
+      return $likesArray;
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function getLikes
+
+  protected function setLikes($likes, $liked)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $id = $this->id;
+
+    try
+    {
+      // Update the likes array in class
+      $this->likesArray = $likes;
+      // Turn likes in string
+      $likesArray= implode(":", $likes);
+
+      // Update the table in db
+      $stmt = $con->prepare("UPDATE rreviews SET review_likes = '$likesArray', review_likes_no = review_likes_no+($liked) WHERE review_id = $id");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error updating likes for post type " . TYPE . ", $id", 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function setLikes
 }// class Review
 
 ?>

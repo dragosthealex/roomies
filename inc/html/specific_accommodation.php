@@ -77,6 +77,6 @@ else
   <span class="cr-text">Press Enter to send</span>
 </label
 ><input type="submit" class="input-button block " value="Send"
-        data-ajax-url="../php/reviews.process.php?action=review&pid=<?=$accomId?>&ptype=acc"
+        data-ajax-url="../php/reviews.process.php?a=1&pid=<?=$accomId?>&ptype=acc"
         data-ajax-post="text">
 </div>

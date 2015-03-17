@@ -822,7 +822,7 @@ private function getConv($offset)
     {
       switch ($postType) {
         case Review::TYPE:
-          $params['review_id'] = $postId;
+          $params['id'] = $postId;
           $review = new Review($con, 'get', $params);
           if($review->getError())
           {

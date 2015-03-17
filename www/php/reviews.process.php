@@ -9,7 +9,7 @@ text = (reviewText/replyText/rating)
 */
 require_once '../../inc/init.php';
 
-if(!LOGGED_IN || !isset($_GET['action'], $_GET['pid'], $_POST['text'], $_GET['ptype'], $_SERVER['HTTP_ROOMIES'])
+if(!LOGGED_IN || !isset($_GET['a'], $_GET['pid'], $_GET['ptype'], $_SERVER['HTTP_ROOMIES'])
               || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__."/inc/html/notfound.php";
@@ -19,11 +19,15 @@ if(!LOGGED_IN || !isset($_GET['action'], $_GET['pid'], $_POST['text'], $_GET['pt
 try
 {
   $response = array();
-  switch ($_GET['action']) 
+  switch ($_GET['a']) 
   {
-    case 'review':
+    case 1:
       // Send a review
       $accId = htmlentities($_GET['pid']);
+      if(!isset($_POST['text']))
+      {
+        throw new Exception("Review must not be empty", 1);
+      }
       $text = htmlentities($_POST['text']);
       if(!$accId || !is_numeric($accId))
       {
@@ -40,7 +44,7 @@ try
       }
       $response['success'] = "Review sent";
       break;
-    case 'reply':
+    case 2:
       // Send a reply to a review
       $reviewId = htmlentities($_GET['pid']);
       $text = htmlentities($_POST['text']);
@@ -58,13 +62,13 @@ try
         throw new Exception("Error with sending reply: " . $user2->getError(), 1);
       }
       break;
-    case 'dislike':
-    case 'like':
+    case 3:
+    case 4:
       // Like a review or reply
-      $like = $action == 'like';
+      $like = $_GET['a'] == 4;
       $postId = htmlentities($_GET['pid']);
       $postType = htmlentities($_GET['ptype']);
-      if(!$postId || !is_numeric($postId) || !$postType)
+      if(!$postId || !is_numeric($postId))
       {
         throw new Exception("The id of the post you want to like is invalid", 1);
       }

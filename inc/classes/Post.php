@@ -8,14 +8,12 @@
 require_once __ROOT__.'/inc/classes/Base.php';
 abstract class Post extends Base
 {
-  // The type of the post
-  const TYPE = -1;
   // The name of the table
-  private $tableName;
+  protected $tableName;
   // The name of the likes column
-  private $likesColumn;
+  protected $likesColumn;
   // The name of the id column
-  private $idColumn;
+  protected $idColumn;
   // The array containing user that liked this post
   protected $likesArray;
   // The number of likes
@@ -49,14 +47,15 @@ abstract class Post extends Base
       }
       else
       {
-        if(!isset($likes[$userId]))
+        if(!isset($likesArray[$userId]))
         {
           throw new Exception("Apparently you have already disliked this post. Good luck with this attitude, fgt", 1);
         }
-        unset($likes[$userId]);
+        unset($likesArray[$userId]);
       }
+      $liked = $value ? 1 : -1;
       // Update the database with new array
-      $this->updateLikes();
+      $this->setLikes($likesArray, $liked);
     }// try
     catch (Exception $e)
     {
@@ -65,66 +64,11 @@ abstract class Post extends Base
   }// function like
 
   // private function to get likes
-  private function getLikes()
-  {
-    // Localise stuff
-    $con = $this->con;
-    $likesColumn = $this->likesColumn;
-    $table = $this->tableName;
-    $id = $this->id;
-
-    try
-    {
-      // Get the likes array from db
-      $stmt = $con->prepare("SELECT $likesColumn FROM $tableName  WHERE $idColumn = $id");
-      if(!$stmt->execute())
-      {
-        throw new Exception("Error getting likes from table for post type " . TYPE . ", $id", 1);
-      }
-      $stmt->bindColumn(1, $likesArray);
-      $stmt->fetch();
-
-      // Turn string in array
-      $likesArray= $likesArray? explode(":", $likesArray) : array();
-
-      // Return likes array and set the class var
-      $this->likes = $likes;
-      return $likes;
-    }
-    catch (Exception $e)
-    {
-      $this->errorMsg = $e->getMessage();
-    }
-  }// function getLikes
+  abstract protected function getLikes();
 
   // private function to set likes
-  protected function setLikes($likesArray)
-  {
-    // Localise stuff
-    $con = $this->con;
-    $likesColumn = $this->likesColumn;
-    $table = $this->tableName;
-    $id = $this->id;
-
-    try
-    {
-      // Update the likes array in class
-      $this->likes = $likes;
-      // Turn likes in string
-      $likesArray= implode(":", $likes);
-
-      // Update the table in db
-      $stmt = $con->prepare("UPDATE $tableName SET $likesColumn = '$likesArray' WHERE $idColumn = $id");
-      if(!$stmt->execute())
-      {
-        throw new Exception("Error updating likes for post type " . TYPE . ", $id", 1);
-      }
-    }
-    catch (Exception $e)
-    {
-      $this->errorMsg = $e->getMessage();
-    }
-  }// function setLikes
+  abstract protected function setLikes($likesArray, $liked);
+  
 }// class Post
 
 
