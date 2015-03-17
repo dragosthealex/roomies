@@ -27,11 +27,20 @@ include __ROOT__.'/inc/html/head.php';
 include __ROOT__.'/inc/html/header.in.php';
 
 // TODO: Output the top of the search page, with the ignore form
+function printOption($array, $index, $checkAgainst)
+{
+  echo "<option value=$index";
+  if ($index == $checkAgainst)
+  {
+    echo ' selected';
+  }
+  echo ">{$array[$index]}</option>";
+}
 ?>
 <div class="box">
-  <form method="GET" class="box-padding">
+  <form method="GET" class="box-padding" id="blobfish">
     <script>
-function checkForm(element, targetStr) {
+function cF(element, targetStr) {
   var target = element;
   Array.prototype.forEach.call(targetStr, function (chr) {
     if (target) {
@@ -48,63 +57,169 @@ function checkForm(element, targetStr) {
   });
   target && (target.innerHTML=element.value);
 }
-function reCheckForm(element, targetStr) {
+function rCF(element) {
   switch (element.name) {
-    case "age1":
-    case "age2":
+    case "lowerAge":
+    case "upperAge":
       element.value=element.value.replace(/[^0-9]/, "");
       !(element.value>=18)&&(element.value=18);
   }
-  checkForm(element, targetStr);
+  element.oninput();
 }
     </script>
     <h2 class="h2">Show me</h2>
     <div class="input-wrapper" style="z-index:2">
-      <select class="select" name="gender">
-        <option value="1">Men</option>
-        <option value="2">Women</option>
-        <option value="3">Trans</option>
-        <option value="0">All genders</option>
+      <?php
+      $genderChosen = isset($_GET['gender']) ? $_GET['gender'] : $user2->getCredential('gender');
+      ?>
+      <select class="select" name="gender" data-default="<?=$user2->getCredential('gender')?>">
+        <?php
+        $gender_options = array(
+          'All genders'
+        );
+        $stmt = $con->prepare("SELECT map_gender FROM rfiltersmap");
+        $stmt->execute();
+        while ($genderBender = $stmt->fetch(PDO::FETCH_ASSOC))
+        {
+          if (!$genderBender['map_gender']) break;
+          array_push($gender_options, ucwords($genderBender['map_gender']));
+        }
+        for ($i=1;$i<count($gender_options);$i++)
+        {
+          printOption($gender_options, $i, $genderChosen);
+        }
+        printOption($gender_options, 0, $genderChosen);
+        ?>
       </select>
       <span id="age-toggler" class="selector-toggler"></span>
+      <?php
+      $age = date_diff(date_create($user2->getCredential('birthday')), date_create('today'))->y;
+      $lowerAge = $age - 2;
+      if ($lowerAge < 18) $lowerAge = 18;
+      $upperAge = $age + 2;
+      ?>
       <div class="selector">
         <div class="selector-text" data-toggle="age-toggler">Ages
-          <span data-toggle="age-toggler">18</span> to
-          <span data-toggle="age-toggler">30</span>
+          <span data-toggle="age-toggler"><?=isset($_GET['lowerAge'])?$_GET['lowerAge']:$lowerAge?></span> to
+          <span data-toggle="age-toggler"><?=isset($_GET['upperAge'])?$_GET['upperAge']:$upperAge?></span>
         </div>
-        <div class="selector-content center">
-          <input class="input" style="width:50px" name="age1" value="18" oninput="checkForm(this, '^<1')" onblur="reCheckForm(this, '^<1')"> -
-          <input class="input" style="width:50px" name="age2" value="30" oninput="checkForm(this, '^<2')" onblur="reCheckForm(this, '^<2')">
+        <div class="selector-content center"
+          ><ul class="selector-padding">
+            <li class="selector-item">
+              <input class="input" style="width:50px" name="lowerAge" data-default="<?=$lowerAge?>" value="<?=isset($_GET['lowerAge'])?$_GET['lowerAge']:$lowerAge?>" oninput="cF(this,'^^^<1')" onblur="rCF(this)"> -
+              <input class="input" style="width:50px" name="upperAge" data-default="<?=$upperAge?>" value="<?=isset($_GET['upperAge'])?$_GET['upperAge']:$upperAge?>" oninput="cF(this,'^^^<2')" onblur="rCF(this)">
+            </li>
+          </ul>
         </div>
       </div>
-      <select class="select" name="uni_city">
-        <option value="1">In Manchester</option>
+      <?php
+      $selectedCity = isset($_GET['uni_city']) ? $_GET['uni_city'] : $user2->getCredential('uni_city');
+      ?>
+      <select class="select" name="uni_city" data-default="<?=$user2->getCredential('uni_city')?>">
+        <?php
+        $uni_cities = array(
+        );
+        $stmt = $con->prepare("SELECT map_uni_city FROM rfiltersmap");
+        $stmt->execute();
+        while ($blobfish = $stmt->fetch(PDO::FETCH_ASSOC))
+        {
+          if (!$blobfish['map_uni_city']) break;
+          array_push($uni_cities, ucwords($blobfish['map_uni_city']));
+        }
+        for ($i=0;$i<count($uni_cities);$i++)
+        {
+          printOption($uni_cities, $i, $selectedCity);
+        }
+        ?>
       </select>
-      <select class="select" name="online_last">
-        <option value="1">Online now!</option>
-        <option value="2">Online in the last day</option>
-        <option value="3">Online in the last week</option>
+      <?php
+      $online_last = isset($_GET['online_last']) ? $_GET['online_last'] : 3;
+      ?>
+      <select class="select" name="online_last" data-default="3">
+        <?php
+        $online_options = array(
+          'Online now!',
+          'Online in the last day',
+          'Online in the last week',
+          'Online in the last month',
+          'Online in the last year'
+        );
+        for ($i=0;$i<count($online_options);$i++)
+        {
+          printOption($online_options, $i, $online_last);
+        }
+        ?>
       </select>
-      <div class="select hidden" name="country" id="filter_country">Cactus</div>
+<?php
+$selected = array();
+function printHiddenSelect($name, &$number, &$selected, &$con)
+{
+  $selected[$name] = isset($_GET[$name]) ? $_GET[$name] : 0;
+  $hiddenClass = $selected[$name] == 0 ? ' hidden' : '';
+  echo "<label class='select-label _s _s$number $hiddenClass'>"
+        ."<select class='select' name='$name'>";
+  $names = array(
+    ucwords($name)
+  );
+  $stmt = $con->prepare("SELECT map_$name FROM rfiltersmap");
+  $stmt->execute();
+  while ($blobfish = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    if (!$blobfish["map_$name"]) break;
+    array_push($names, ucwords($blobfish["map_$name"]));
+  }
+  for ($i=0;$i<count($names);$i++)
+  {
+    printOption($names, $i, $selected[$name]);
+  }
+  echo "</select><div class='select-label-text' data-close data-hide='_s$number' data-show='_ss$number'
+        onclick='previousSibling.value=0'></div></label> ";
+  $number++;
+} // printHiddenSelect
+
+$leNumber = 1;
+printHiddenSelect('country',     $leNumber, $selected, $con);
+printHiddenSelect('language',    $leNumber, $selected, $con);
+printHiddenSelect('degree',      $leNumber, $selected, $con);
+printHiddenSelect('studies',     $leNumber, $selected, $con);
+printHiddenSelect('smokes',      $leNumber, $selected, $con);
+printHiddenSelect('drinks',      $leNumber, $selected, $con);
+printHiddenSelect('parties',     $leNumber, $selected, $con);
+printHiddenSelect('drugs',       $leNumber, $selected, $con);
+printHiddenSelect('pets',        $leNumber, $selected, $con);
+printHiddenSelect('orientation', $leNumber, $selected, $con);
+printHiddenSelect('religion',    $leNumber, $selected, $con);
+printHiddenSelect('offspring',   $leNumber, $selected, $con);
+printHiddenSelect('sign',        $leNumber, $selected, $con);
+printHiddenSelect('ethnicity',   $leNumber, $selected, $con);
+?>
       <span id="advanced-toggler" class="selector-toggler"></span>
       <div class="selector">
-        <div class="selector-text" data-toggle="advanced-toggler">Advanced</div>
-        <div class="selector-content">
-          <a href="#" class="link text block">Country</a>
-          <a href="#" class="link text block">Language</a>
-          <a href="#" class="link text block">Degree</a>
-          <a href="#" class="link text block">Parties</a>
-          <a href="#" class="link text block">Smokes</a>
-          <a href="#" class="link text block">Drinks</a>
-          <a href="#" class="link text block">Drugs</a>
-          <a href="#" class="link text block">and</a>
-          <a href="#" class="link text block">Shit</a>
+        <div class="selector-text" data-toggle="advanced-toggler" data-title="Advanced"></div>
+        <div class="selector-content"
+          ><ul class="selector-padding">
+          <?php
+          $count = 1;
+          foreach ($selected as $key => $value)
+          {
+            $hiddenClass = $value == 0 ? '' : 'hidden';
+            echo "<li class='selector-item link _ss _ss$count $hiddenClass' data-hide='_ss$count' data-show='_s$count'>"
+                 .ucwords($key).'</li>';
+            $count++;
+          }
+          ?>
+          </ul>
         </div>
       </div>
     </div>
     <div class="input-wrapper">
-      <input class="input-button" type="submit" value="Search" data-hide="Options">
-      <input class="input-button cancel-button" type="button" value="Clear">
+      <input class="input-button" type="submit" value="Search">
+      <input class="input-button cancel-button" type="button" value="Clear" data-hide="_s" data-show="_ss"
+             onclick="Array.prototype.forEach.call(document.getElementById('blobfish').elements, function (element){
+             if (element.className.indexOf('input-button')+1)return;
+             element.value=((element.parentNode||{}).className||'').indexOf('_s')>-1?0:element.getAttribute('data-default');
+             element.oninput&&element.oninput();
+           })">
     </div>
   </form>
 </div>
