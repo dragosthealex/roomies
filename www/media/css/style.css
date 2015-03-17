@@ -744,6 +744,23 @@
 	color: #888;
 }
 /* CSS for reviews */
+.ratings-box {
+	/*border: 1px solid #d5d1d0;*/
+	height: 15px;
+	left: 0;
+	margin-bottom: 10px;
+}
+
+.rating {
+	border: 1px solid #d5d1d0;
+	height: 15px;
+	width: 15px;
+	float: left;
+	margin-left: 2px;
+	margin-right: 2px;
+
+}
+
 .review-box {
 	overflow: hidden;
 	margin: 0px;

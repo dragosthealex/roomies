@@ -56,9 +56,22 @@ else
     </div>
   </div>
 </div>
-<div class="box-padding">
-  Here da details, i.e. rating etc
-</div>  
+
+  <div class="ratings-box">
+    <!-- 10 stars -->
+    <div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+    ><div class="rating" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div>
+  </div>
+<!--   Here da details, i.e. rating etc -->
+
 <div class='acc-long-desc'>
   <?=$accomInfo['description'];?>
 </div>
@@ -80,3 +93,27 @@ else
         data-ajax-url="../php/reviews.process.php?a=1&pid=<?=$accomId?>&ptype=acc"
         data-ajax-post="text">
 </div>
+<script type="text/javascript">
+  function fillPrevRating(el) {
+    // window.alert(el.previousSibling.className);
+    if(el)
+    {
+      el.style.background = '#e37314';
+      fillPrevRating(el.previousSibling);
+
+    }
+      // div.style.background = '#e37314';
+      // div = div.previousSibling;
+    }
+
+
+  function undoPrevRating(el) {
+    if(el)
+    {
+      el.style.background = 'none';
+      undoPrevRating(el.previousSibling);
+
+    }
+  }
+
+</script>
