@@ -60,6 +60,14 @@
     </ul>
   </div>
 </div>
+<!-- Le chat friends list -->
+<div class="slim">
+  <div class="slim-tag" data-toggle="slim-toggler"></div>
+  <div id="slim-toggler"></div>
+  <ul class="slim-main">
+    <li class="selector-item selector-button">shmoyoho</li>
+  </ul>
+</div>
 <!-- Space for the header -->
 <div class="header-space header-space-extra"></div>
 <!-- Main content -->

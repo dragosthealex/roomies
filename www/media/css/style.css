@@ -383,6 +383,60 @@
 
 /*End CSS for drop menu*/
 
+/* Slim */
+
+.slim {
+	position: fixed;
+	top: 60px;
+	right: 0;
+	bottom: 0;
+	z-index: 98;
+}
+
+.slim-tag {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	margin-top: -54px;
+	border-width: 16px 12px;
+	border-style: solid;
+	border-color: #c7c7c7;
+	background: #dfdfdf;
+	height: 60px;
+	width: 3px;
+	cursor: pointer;
+}
+
+.slim-tag:hover {
+	border-color: #cfcfcf;
+	background: #e7e7e7;
+}
+
+.slim-main {
+	position: absolute;
+	top: 0;
+	right: -250px;
+	bottom: 0;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0);
+	margin: 0;
+	border-top: 1px solid #d5d1d0;
+	border-left: 1px solid #d5d1d0;
+	background: #ffffff;
+	padding: 0;
+	width: 249px;
+	list-style: none;
+	overflow-x: hidden;
+	overflow-y: auto;
+	transition: right 0.2s;
+}
+
+#slim-toggler.hidden + .slim-main {
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.24);
+	right: 0;
+}
+
+/* End slim */
+
 /* Placeholders */
 
 .ph:after {
@@ -730,8 +784,8 @@
 }
 
 .selector-item {
-	padding: 8px;
-	line-height: 1;
+	padding: 0 8px;
+	line-height: 2;
 }
 
 .selector-button {

@@ -735,6 +735,9 @@ void function (window, document, undefined) {
         exceptions.indexOf(element) === -1 && roomies[action]([element]);
       });
     };
+    // Hide the slim
+    !roomies.getParentsByClassName(element, "slim").length
+    && roomies.show([document.getElementById('slim-toggler')]);
     // Hide all drops, except those in the elements to keep open
     optDo("drop", "hide");
     optDo("selector-toggler", "show");
