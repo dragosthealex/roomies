@@ -63,6 +63,7 @@ class Review extends Comment
         }
         break;
       case 'get':
+        
         // Validate the id
         $id = isset($params['id'])?htmlentities($params['id']):'';
 
@@ -82,8 +83,8 @@ class Review extends Comment
           $result = $stmt->fetch(PDO::FETCH_ASSOC);
           // Set the instance vars
           $this->id = $id;
-          $this->likesArray = $result['review_likes'];
-          $this->likesNo = $result['review_likes_no'];
+          $this->likesArray = $result['review_likes'] ? explode(':', $result['review_likes']) : array();
+          $this->likesNo = $result['review_likes_no'] ? $result['review_likes_no'] : 0;
           $this->date = $result['review_date'];
           $this->author = $result['review_author'];
           $this->parent = $result['review_acc_id'];
@@ -165,7 +166,7 @@ class Review extends Comment
       $stmt->fetch();
 
       // Turn string in array
-      $likesArray= $likesArray? explode(":", $likesArray) : array();
+      $likesArray= isset($likesArray[0])? explode(":", $likesArray) : array();
 
       // Return likes array and set the class var
       $this->likesArray = $likesArray;

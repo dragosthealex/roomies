@@ -33,7 +33,7 @@ abstract class Comment extends Post
     $date = $this->date;
     $text = $this->text;
     $likesNo = $this->likesNo;
-    $likesArray = isset($this->likesArray[0])?$this->likesArray:'';
+    $likesArray = isset($this->likesArray[0])?$this->likesArray:array();
     $con = $this->con;
 
     // Get author name

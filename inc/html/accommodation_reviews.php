@@ -18,7 +18,7 @@ foreach ($reviews as $review)
   $postDate = $review['date'];
   $postText = $review['text'];
   $postLikesNo = $review['likesNo'];
-  $postLikes = isset($review['likesArray'][0]) ? json_decode($review['likesArray'],true) : array();
+  $postLikes = isset($review['likesArray'][0]) ? $review['likesArray'] : array();
   $postReplies = isset($review['replies'][1]) ? json_decode($review['replies'],true) : array();
   $postRepliesNo = count($postReplies);
   $postId = $review['id'];
@@ -52,16 +52,16 @@ foreach ($reviews as $review)
     </div>
     <div class='like-reply'>
       $postLikesNo 
-      <span class='minidrop-container like-button' id='likeReview$postId' $likeHide>
+      <span class='minidrop-container like-button like-button-review$postId' id='likeReview$postId' $likeHide>
         <a data-ajax-url='../php/reviews.process.php?a=4&pid=$postId&ptype=0'
            data-ajax-text='Liking...'
-           data-ajax-hide='like-button dislikeReview$postId'
+           data-ajax-hide='like-button-review$postId dislikeReview$postId'
            class=''>Like</a>
       </span>
-      <span class='minidrop-container like-button' id='dislikeReview$postId' $dislikeHide>
-        <a data-ajax-url='../php/friends.process.php?a=3&pid=$postId&ptype=0'
+      <span class='minidrop-container like-button like-button-review$postId' id='dislikeReview$postId' $dislikeHide>
+        <a data-ajax-url='../php/reviews.process.php?a=3&pid=$postId&ptype=0'
            data-ajax-text='Dislinking...'
-           data-ajax-hide='like-button likeReview$postId'
+           data-ajax-hide='like-button-review$postId likeReview$postId'
            class=''>Dislike</a>
       </span>
       - $postRepliesNo Reply
@@ -111,7 +111,9 @@ foreach ($reviews as $review)
     </div>
     ";
   }// foreach
-  $output .= "</div></div>";
+  $output .= "</div>";
+
+  $output .="</div>";
 }
 echo $output;
 ?>

@@ -47,11 +47,17 @@ abstract class Post extends Base
       }
       else
       {
-        if(!isset($likesArray[$userId]))
+        if(!in_array($userId, $likesArray))
         {
           throw new Exception("Apparently you have already disliked this post. Good luck with this attitude, fgt", 1);
         }
-        unset($likesArray[$userId]);
+        foreach ($likesArray as $key => $userId)
+        {
+          if($likesArray[$key] == $userId)
+          {
+            unset($likesArray[$key]);
+          }
+        }
       }
       $liked = $value ? 1 : -1;
       // Update the database with new array

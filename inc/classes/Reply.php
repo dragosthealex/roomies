@@ -86,7 +86,7 @@ class Reply extends Comment
           // Set the instance vars
           $this->id = $id;
           $this->likesNo = $result['reply_likesNo'];
-          $this->likesArray = explode(':', $result['reply_likes']);
+          $this->likesArray = $result['reply_likes'] ? explode(':', $result['reply_likes']) : array();
           $this->date = $result['reply_date'];
           $this->author = $result['reply_author'];
           $this->parent = $result['reply_review_id'];
@@ -130,8 +130,7 @@ class Reply extends Comment
       $stmt->fetch();
 
       // Turn string in array
-      $likesArray= $likesArray? explode(":", $likesArray) : array();
-
+      $likesArray= isset($likesArray[0])? explode(":", $likesArray) : array();
       // Return likes array and set the class var
       $this->likesArray = $likesArray;
       $this->likesNo = $likesNo;

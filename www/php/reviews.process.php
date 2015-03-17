@@ -64,7 +64,7 @@ try
       break;
     case 3:
     case 4:
-      // Like a review or reply
+      // Like/dislike a review or reply
       $like = $_GET['a'] == 4;
       $postId = htmlentities($_GET['pid']);
       $postType = htmlentities($_GET['ptype']);
@@ -78,7 +78,8 @@ try
         throw new Exception("Error liking post: " . $user2->getError(), 1);
       }
       break;
-    case 'rate':
+    case 5:
+      // Rate accom
       $accomId = htmlentities($_GET['pid']);
       $rating = htmlentities($_POST['text']);
       if(!$accomId || !$rating || !is_numeric($rating))
@@ -91,6 +92,15 @@ try
         throw new Exception("Error rating accommodation: " . $user2->getError(), 1);
       }
       break;
+    case 6:
+      // Delete a reply/review
+      $postId = htmlentities($_GET['pid']);
+      $postType = htmlentities($_GET['ptype']);
+      if(!$postId || !is_numeric($postId))
+      {
+        throw new Exception("A WHALE will eat you. The post id is invalid", 1);
+      }
+      
     default:
       throw new Exception("You tried to do an invalid action", 1);
       break;
