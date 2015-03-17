@@ -4,10 +4,16 @@
 *
 * Represents a kind of comment, specifically a direct review to an accommodation
 */
-require_once __ROOT__."/inc/classes/comment.php";
+require_once __ROOT__."/inc/classes/Comment.php";
 
 class Review extends Comment
 {
+  // The type of the post
+  const TYPE = 0;
+  // Overriding Post vars
+  private $idColumn = 'review_id';
+  private $tableName = 'rrevies';
+  private $likesColumn = 'review_likes';
   /**
   * Constructor
   *
@@ -23,7 +29,7 @@ class Review extends Comment
         $author = isset($params['author'])?htmlentities($params['author']):'';
         $accId = isset($params['accId'])?htmlentities($params['accId']):'';
         $text = isset($params['text'])?htmlentities($params['text']):'';
-        $date = date('d-m-Y');
+        $date = date('Y-m-d');
 
         try
         {
@@ -35,7 +41,7 @@ class Review extends Comment
 
           // Insert into database
           $stmt = $con->prepare("INSERT INTO rreviews (review_author, review_acc_id, review_text, review_date)
-                                 VALUES ('$author', '$review_acc_id', '$text', '$date')");
+                                 VALUES ('$author', '$accId', '$text', '$date')");
           if(!$stmt->execute())
           {
             throw new Exception("Error while inserting new review in database", 1);
@@ -76,7 +82,8 @@ class Review extends Comment
           $result = $stmt->fetch(PDO::FETCH_ASSOC);
           // Set the instance vars
           $this->id = $id;
-          $this->likes = $result['review_rating'];
+          $this->likesArray = $result['review_likes'];
+          $this->likesNo = $result['review_likes_no'];
           $this->date = $result['review_date'];
           $this->author = $result['review_author'];
           $this->parent = $result['review_acc_id'];
@@ -101,7 +108,7 @@ class Review extends Comment
     $con = $this->con;
     $reviewId = $this->id;
     $accId = $this->parent;
-    $replies = "[\"\"";
+    $replies = array();
 
     // Get the replies
     $stmt = $con->prepare("SELECT reply_id FROM rreplies WHERE parent_id = '$reviewId'");
@@ -113,7 +120,7 @@ class Review extends Comment
       }
 
       // Go through every reply
-      $stmt->bindColumn(1 $replyId);
+      $stmt->bindColumn(1, $replyId);
       while($reply = $stmt->fetch())
       {
         // Prepare the params
@@ -125,12 +132,11 @@ class Review extends Comment
         {
           continue;
         }
-        $replies .= $reply->toJson();
+        array_push($replies, $reply->toJson());
       }
 
       // Close and Return the replies
-      $replies .= "]";
-      return $replies;
+      return json_encode($replies);
     }
     catch (Exception $e)
     {

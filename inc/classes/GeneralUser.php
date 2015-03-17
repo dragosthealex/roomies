@@ -6,6 +6,9 @@
 *
 */
 require_once __ROOT__.'/inc/classes/Base.php';
+require_once __ROOT__.'/inc/classes/Review.php';
+require_once __ROOT__.'/inc/classes/Reply.php';
+
 abstract class GeneralUser extends Base
 {
   // The username

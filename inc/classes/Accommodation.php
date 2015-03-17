@@ -163,12 +163,13 @@ class Accommodation extends Base
     $authorName = $author->getName();
 
     // Create the JSON
-    $reviewsJson = '';
-    foreach ($reviews as $key => $review)
+    $reviewsJson = array();
+    foreach ($reviews as $review)
     {
       $review = $review->toJson();
-      $reviewsJson .= ",\"$review\"";
+      array_push($reviewsJson, $review);
     }
+
     $jsonArray = array(
               "id"          => "$id",
               "authorName"  => "$authorName",
@@ -177,7 +178,7 @@ class Accommodation extends Base
               "rating"      => "$rating",
               "noOfPhotos"  => "$noOfPhotos",
               "name"        => "$name",
-              "reviews"     => "$reviewsJson");
+              "reviews"     => $reviewsJson);
 
     return json_encode($jsonArray);
   }

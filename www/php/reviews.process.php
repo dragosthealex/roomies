@@ -9,7 +9,7 @@ text = (reviewText/replyText/rating)
 */
 require_once '../../inc/init.php';
 
-if(!LOGGED_IN || !isset($_GET['action'], $_POST['pid'], $_POST['text'], $_POST['ptype'] $_SERVER['HTTP_ROOMIES'])
+if(!LOGGED_IN || !isset($_GET['action'], $_GET['pid'], $_POST['text'], $_GET['ptype'], $_SERVER['HTTP_ROOMIES'])
               || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__."/inc/html/notfound.php";
@@ -23,7 +23,7 @@ try
   {
     case 'review':
       // Send a review
-      $accId = htmlentities($_POST['pid']);
+      $accId = htmlentities($_GET['pid']);
       $text = htmlentities($_POST['text']);
       if(!$accId || !is_numeric($accId))
       {
@@ -36,13 +36,13 @@ try
       $user2->sendReview($accId, $text);
       if($user2->getError())
       {
-        throw new Exception("Error with sending review:" . $user2->getError(), 1);
+        throw new Exception("Error with sending review: " . $user2->getError(), 1);
       }
       $response['success'] = "Review sent";
       break;
     case 'reply':
       // Send a reply to a review
-      $reviewId = htmlentities($_POST['pid']);
+      $reviewId = htmlentities($_GET['pid']);
       $text = htmlentities($_POST['text']);
       if(!$reviewId || !is_numeric($reviewId))
       {
@@ -62,8 +62,8 @@ try
     case 'like':
       // Like a review or reply
       $like = $action == 'like';
-      $postId = htmlentities($_POST['pid']);
-      $postType = htmlentities($_POST['ptype']);
+      $postId = htmlentities($_GET['pid']);
+      $postType = htmlentities($_GET['ptype']);
       if(!$postId || !is_numeric($postId) || !$postType)
       {
         throw new Exception("The id of the post you want to like is invalid", 1);
@@ -75,7 +75,7 @@ try
       }
       break;
     case 'rate':
-      $accomId = htmlentities($_POST['pid']);
+      $accomId = htmlentities($_GET['pid']);
       $rating = htmlentities($_POST['text']);
       if(!$accomId || !$rating || !is_numeric($rating))
       {
@@ -94,7 +94,7 @@ try
 }
 catch (Exception $e)
 {
-  $response['error'] = "Error processing your request: " + $e->getMessage();
+  $response['error'] = "Error processing your request: " . $e->getMessage();
 }
 echo json_encode($response);
 ?>

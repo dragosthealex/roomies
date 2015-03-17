@@ -731,6 +731,10 @@ private function getConv($offset)
 
     try
     {
+      if($this->hasReviewed($accId))
+      {
+        throw new Exception("You already gave a review", 1);
+      }
       $review = new Review($con, 'insert', $params);
       if($review->getError())
       {
@@ -741,6 +745,29 @@ private function getConv($offset)
     {
       $this->errorMsg .= $e->getMessage();
     }
+  }
+
+  /**
+  * Function hasReviewed($accId)
+  *
+  * Returns true if user has reviewed this accommodation, false else
+  *
+  * @param - $accId(int), the id of the accom
+  * @return - $value, true if this user has reviewed
+  */
+  public function hasReviewed($accId)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // Check if user has reviewed
+    $stmt = $con->prepare("SELECT review_id FROM rreviews WHERE review_acc_id = $accId AND review_author = $userId");
+    if(!$stmt->execute())
+    {
+      throw new Exception("Error in database query when trying to get reviews for $accId", 1);
+    }
+    return ($stmt->rowCount()) ? true : false;
   }
 
   /**
@@ -785,8 +812,51 @@ private function getConv($offset)
   * @param - $postType(String), the post type (currently review/reply)
   * @param - $likeValue(Boolean), if true like, if false dislike
   */
-  public function like($postId, $)
-}
+  public function like($postId, $postType, $likeValue)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    try
+    {
+      switch ($postType) {
+        case Review::TYPE:
+          $params['review_id'] = $postId;
+          $review = new Review($con, 'get', $params);
+          if($review->getError())
+          {
+            throw new Exception("Chthulu is coming. Error getting the review with id $postId when trying to like: " . $review->getError(), 1);
+          }
+          $review->like($userId, $likeValue);
+          if($review->getError())
+          {
+            throw new Exception("OMFG. Error liking post $postId: " . $review->getError(), 1);
+          }
+          break;
+        case Reply::TYPE:
+          $params['reply_id'] = $postId;
+          $reply = new Reply($con, 'get', $params);
+          if($review->getError())
+          {
+            throw new Exception("Mneeah. Error getting the reply with id $postId when trying to like: " . $review->getError(), 1);
+          }
+          $reply->like($userId, $likeValue);
+          if($review->getError())
+          {
+            throw new Exception("meh. Error liking post $postId: " . $review->getError(), 1);
+          }
+        default:
+          throw new Exception("You dun sumting wrung", 1);
+          break;
+      }// switch
+    }// try
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function like
+}// class CurrentUser
 
 
 ?>

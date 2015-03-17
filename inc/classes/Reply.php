@@ -4,10 +4,17 @@
 *
 * Represents a reply, to a user. Extends the comment, because it hase the same things, the parent being a review (possbile extension for this)
 */
-require_once __ROOT__.'/inc/classes/comment.php';
+require_once __ROOT__.'/inc/classes/Comment.php';
 
 class Reply extends Comment
 {
+  // The type of the post
+  const TYPE = 1;
+  // Overriding Post vars
+  private $idColumn = 'comment_id';
+  private $tableName = 'rcomments';
+  private $likesColumn = 'comment_likes';
+
   /**
   * Constructor
   *
@@ -17,6 +24,7 @@ class Reply extends Comment
   */
   public function __construct($con, $action, $params)
   {
+    // Set table, likes column
     switch ($action)
     {
       case 'insert':
@@ -77,7 +85,8 @@ class Reply extends Comment
           $result = $stmt->fetch(PDO::FETCH_ASSOC);
           // Set the instance vars
           $this->id = $id;
-          $this->likes = $result['reply_rating'];
+          $this->likesNo = $result['reply_likesNo'];
+          $this->likesArray = explode(':', $result['reply_likes']);
           $this->date = $result['reply_date'];
           $this->author = $result['reply_author'];
           $this->parent = $result['reply_review_id'];
@@ -93,14 +102,12 @@ class Reply extends Comment
         $this->setError("Weird input");
       break;
     }
-
-    // Gets the replies for this reply. To be implemented
-    protected function getReplies()
-    {
-      return "[\"\"]";   
-    }
   }
-
+  // Gets the replies for this reply. To be implemented
+  protected function getReplies()
+  {
+    return "[\"\"]";   
+  }
 }// class Reply
 
 
