@@ -10,7 +10,16 @@ class Owner extends GenericUser
 {
   // The array of accommodations owned
   protected $accommodations;
-  
+  // The db thingies
+  const TABLE_NAME = 'rowners';
+  const ID_COLUMN = 'owner_id';
+  const USERNAME_COLUMN = 'owner_username';
+  const EMAIL_COLUMN = 'owner_email';
+  const PASSWORD_COLUMN = 'owner_password';
+  const SALT_COLUMN = 'owner_salt';
+  const SESSION_VAR = 'owner';
+
+
   /**
   * Constructor 
   *
@@ -117,7 +126,7 @@ class Owner extends GenericUser
           $this->rank = 'owner';
           $this->image = isset($details['owner_img_url']) ? $details['owner_img_url'] : '';
           $this->con = $con;
-          
+
           // Validate
           if(!$this->id || !$this->username || !$this->email || !$this->name)
           {

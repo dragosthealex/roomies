@@ -92,8 +92,46 @@ function loginUser($con, $login, $password='', $remember=false)
       }
       else
       {
-        $stmt = null;
-        header("Location: ../?err=incorrect2");
+        // Check if owner
+        $stmt = $con->prepare("SELECT owner_id FROM rowners WHERE owner_id = '$login' OR owner_email = '$login' OR owner_username = '$login'");
+        $stmt->execute();
+        if(!$stmt->rowCount())
+        {
+          // Check if temp owner
+          $stmt = $con->prepare("SELECT temp_id FROM rtempowners WHERE temp_id = '$login' OR temp_username = '$login' OR temp_email = '$login'");
+          $stmt->execute();
+          if(!$stmt->rowCount())
+          {
+
+            // The user does not exist at all
+            $stmt = null;
+            header("Location: ../?err=incorrect2");
+            exit();
+          }
+          $stmt->bindColumn(1, $tempId);
+          $stmt->fetch();
+          $tempOwner = new TempOwner ($con, 'get', array('id' => $tempId));
+          // Try to login. If false, pass incorrect
+          if($tempOwner->getError() || !$tempOwner->login($password) || $tempOwner->getError())
+          {
+            header("Location: ../?err=incorrect1" . $tempOwner->getError());
+            exit();
+          }
+          // Logged in
+          header('Location: ../register-owner');
+          exit();
+        }
+        // Else check if valid owner
+        $stmt->bindColumn(1, $ownerId);
+        $stmt->fetch();
+        $owner = new Owner($con, 'get', array('id' => $tempId));
+        if($tempOwner->getError() || !$tempOwner->login($password) || $tempOwner->getError())
+        {
+          header("Location: ../?err=incorrect1" . $tempOwner->getError());
+          exit();
+        }
+        // Logged in
+        header('Location: ../');
         exit();
       }
     }

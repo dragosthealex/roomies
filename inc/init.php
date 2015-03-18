@@ -77,6 +77,17 @@ if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 // to be specifically logged in or out.
 $ioStatus = (LOGGED_IN ? "in" : "out");
 
+// If $_SESSION['tempOwner'] is set, send to owner-register
+// If $_SESSION['tempUser'] is set, send to confirm
+if(isset($_SESSION['tempOwner']) && (!in_array('register-owner', explode('/', $_SERVER['REQUEST_URI']))))
+{
+  header('Location: $webRoot/register-owner');
+}
+if(isset($_SESSION['tempUser']) && (!in_array('confirm', explode('/', $_SERVER['REQUEST_URI']))))
+{
+  header('Location: $webRoot/confirm');
+}
+
 // Inclusion of the db config file
 require_once __ROOT__.'/config.inc.php';
 

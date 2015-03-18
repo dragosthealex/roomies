@@ -10,10 +10,18 @@ class TempOwner extends GenericUser
 {
   // The password
   private $password;
-  // The salt
-  private $salt;
   // The conf
   private $conf;
+  // The salt
+  private $salt;
+
+  const TABLE_NAME = 'rtempowners';
+  const ID_COLUMN = 'temp_owner_id';
+  const USERNAME_COLUMN = 'temp_owner_username';
+  const EMAIL_COLUMN = 'temp_owner_email';
+  const PASSWORD_COLUMN = 'temp_owner_password';
+  const SALT_COLUMN = 'temp_owner_salt';
+  const SESSION_VAR = 'temp_owner';
   /**
   * Constructor
   *
@@ -96,6 +104,7 @@ class TempOwner extends GenericUser
           $this->password = $password;
           $this->email = $email;
           $this->conf = $conf;
+          $this->salt = $salt;
           // Make details array
           $detailsString = explode(':', $details);
           $detailsString[0] = $detailsString[0] ? explode(',', $detailsString[0]) : array();
