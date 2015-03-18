@@ -12,7 +12,7 @@ include '../../inc/init.php';
 include __ROOT__.'/inc/classes/conversation.php';
 include __ROOT__.'/inc/classes/Request.php';
 
-if (!isset($_POST['unread'], $_POST['friendRequests'], $_POST['lastMessageId'], $_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
+if (!isset($_POST['unread'], $_POST['friends'], $_POST['friendRequests'], $_POST['lastMessageId'], $_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
   include __ROOT__.'/inc/html/notfound.php';
 }
@@ -28,6 +28,7 @@ try
   $friendRequestIds = strlen($friendRequestIds) ? explode(',', $friendRequestIds) : array();
   $noOfRequests = count($friendRequestIds);
   $lastMessageId = htmlentities($_POST['lastMessageId']);
+  $friendsText = explode(';', $_POST['friends']);
 
   $userId = $user->getIdentifier('id');
   $userName = $user->getName();

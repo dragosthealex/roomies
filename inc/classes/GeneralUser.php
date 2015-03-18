@@ -226,7 +226,7 @@ abstract class GeneralUser extends GenericUser
     $now = new DateTime('now');
     $diff = $now->getTimestamp() - $lastOnline->getTimestamp();
     if ($diff <= 180) return GeneralUser::ONLINE;
-    if ($diff <= 300) return GeneralUser::AWAY;
+    if ($diff <= 600) return GeneralUser::AWAY;
     return GeneralUser::OFFLINE;
   }
 }
