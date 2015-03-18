@@ -81,7 +81,7 @@ try
     case 5:
       // Rate accom
       $accomId = htmlentities($_GET['pid']);
-      $rating = htmlentities($_POST['text']);
+      $rating = htmlentities($_GET['text']);
       if(!$accomId || !$rating || !is_numeric($rating))
       {
         throw new Exception("The accommodation Id or rate value is invalid", 1);

@@ -24,7 +24,8 @@ class Accommodation extends Base
   private $reviews;
   // The description, text
   private $description;
-  // The db connection handler
+  // Array containing ratings, of the form [[$id1, $id2, $id3], [$rat1, $rat2, $rat3]]. String version $id1,$id2,$id3:$rat1,$rat2,$rat3
+  private $ratingsArray;
 
   /**
   * Constructor
@@ -121,7 +122,11 @@ class Accommodation extends Base
           $this->name = isset($result['accommodation_name'])?$result['accommodation_name']:'';
           $this->con = $con;
           $this->description = isset($result['accommodation_description'])?preg_replace('/\r\n|\r|\n/', '<br>',$result['accommodation_description']):'';
-          $this->rating = isset($result['accommodation_rating'])?$result['accommodation_rating']:'N/A';
+          $this->rating = isset($result['accommodation_rating'])?$result['accommodation_rating']:'0';
+          $this->ratingsArray = isset($result['accommodation_rating_array'])?$result['accommodation_rating_array']:'';
+          $this->ratingsArray = $this->ratingsArray ? explode(':', $this->ratingsArray) : array("", "");
+          $this->ratingsArray[0] = $this->ratingsArray ? explode(',', $this->ratingsArray[0]) : array();
+          $this->ratingsArray[1] = $this->ratingsArray ? explode(',', $this->ratingsArray[1]) : array();
         }
         catch (Exception $e)
         {
@@ -131,6 +136,56 @@ class Accommodation extends Base
       default:
         $this->errorMsg = "Weird input";
         break;
+    }
+  }
+
+  /**
+  * Function getRatingsArray()
+  *
+  * Returns this accommodation's ratings array
+  *
+  * @return - $ratingsArray(mixed array), the ratingsArray
+  */
+  public function getRatingsArray()
+  {
+    return $this->ratingsArray;
+  }
+
+  /**
+  * Function setRatings($ratingsArray, $rating)
+  *
+  * Set new ratings array, and update the current rating
+  *
+  * @param - $ratingsArray(mixed array), the new ratings array
+  * @param - $rating(double), the rating used to update
+  */
+  public function setRatings($ratingsArray, $rating)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $accId = $this->id;
+
+    // Update class vars
+    $this->ratingsArray = $ratingsArray;
+    $this->rating = $rating;
+
+    // Make ratings string array
+    $ratingsArray[1] = implode(',', $ratingsArray[1]);
+    $ratingsArray[0] = implode(',', $ratingsArray[0]);
+    $ratingsArray = implode(':',  $ratingsArray);
+
+    try
+    {
+      // Update table
+      $stmt = $con->prepare("UPDATE raccommodations SET accommodation_rating_array='$ratingsArray', accommodation_rating='$rating'");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error updating rating in database", 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
     }
   }
 
@@ -162,6 +217,7 @@ class Accommodation extends Base
     $authorId = $this->author;
     $noOfPhotos = $this->noOfPhotos;
     $con = $this->con;
+    $ratingsArray = $this->ratingsArray;
 
     try
     {
@@ -169,7 +225,7 @@ class Accommodation extends Base
       $author = new OtherUser($con, $authorId);
       $authorName = $author->getName();
 
-      // Create the JSON
+      // get the reviews
       $reviewsJson = array();
       foreach ($reviews as $review)
       {
@@ -189,6 +245,7 @@ class Accommodation extends Base
                 "authorId"    => "$authorId",
                 "description" => "$description",
                 "rating"      => "$rating",
+                "ratingsArray"=> $ratingsArray,
                 "noOfPhotos"  => "$noOfPhotos",
                 "name"        => "$name",
                 "reviews"     => $reviewsJson);
