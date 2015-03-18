@@ -687,10 +687,13 @@
 	box-sizing: border-box;
 	border: 1px solid #d9d6d5;
 	background: #fff;
-	padding: 0 .6em;
 	height: 2.3em;
 	line-height: 2.3em;
 	vertical-align: top;
+}
+
+.input, .selector, .select-label-text {
+	padding: 0 .6em;
 }
 
 .input {
@@ -1091,21 +1094,19 @@
 	left: -9999em;
 }
 
-.star {
+.star-label {
+	position: relative;
+	float: right;
 	width: 20px;
 	height: 20px;
-	float:right;
-	background-image: url(../img/star.png);
-	position: relative;
 	cursor: pointer;
 }
 
-.star:after {
-	content: "";
-}
-
-.star-cr:checked ~ .star {
-	background-image: url(../img/star-checked.png);
+.star {
+	display: block;
+	background-image: url(../img/star.png);
+	width: 20px;
+	height: 20px;
 }
 
 .star-background {
@@ -1118,8 +1119,17 @@
 	/*z-index: -10;*/
 }
 
-.star-cr:hover ~ .star {
+.star-cr:checked ~ .star-label .star {
 	background-image: url(../img/star-checked.png);
+}
+
+.ratings-box:hover .star {
+	background-image: url(../img/star.png) !important;
+}
+
+.star-label:hover .star,
+.star-label:hover ~ .star-label .star {
+	background-image: url(../img/star-checked.png) !important;
 }
 
 /*

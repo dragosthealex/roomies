@@ -33,12 +33,12 @@ while($stmt->fetch())
   
 
   $status = $user->friendshipStatus($otherUser);
-  $addFriendHide       = $status == 0 ? '' : 'style="display: none"';
-  $alreadyFriendsHide  = $status == 1 ? '' : 'style="display: none"';
-  $requestSentHide     = $status == 2 ? '' : 'style="display: none"';
-  $requestReceivedHide = $status == 3 ? '' : 'style="display: none"';
-  $blockButtonHide     = $status != 4 ? '' : 'style="display: none"';
-  $unblockButtonHide   = $status == 4 ? '' : 'style="display: none"';
+  $addFriendHide       = $status == 0 ? '' : 'hidden';
+  $alreadyFriendsHide  = $status == 1 ? '' : 'hidden';
+  $requestSentHide     = $status == 2 ? '' : 'hidden';
+  $requestReceivedHide = $status == 3 ? '' : 'hidden';
+  $blockButtonHide     = $status != 4 ? '' : 'hidden';
+  $unblockButtonHide   = $status == 4 ? '' : 'hidden';
 
   $otherUserId = $otherUser->getIdentifier('id');
   $otherUsername = $otherUser->getIdentifier('username');
@@ -47,56 +47,6 @@ while($stmt->fetch())
   $userImagePath = $otherUser->getIdentifier('image');
   $userImagePath = ($userImagePath == '/media/img/default.gif')?$webRoot.$userImagePath:$userImagePath;
 
-  // $friendsButtons = "<button class='input-button button2'>
-  //                       Add
-  //                     </button>
-  //                   ";
-
-  // $status = $user->friendshipStatus($otherUser);
-  // if($status == 1)
-  // {
-  //   $otherUserName = $otherUser->getName();
-  //   $friendsButtons = "<button class='input-button button2'>
-  //                       Friends!
-  //                     </button>
-  //                     ";
-  // }
-  // else if($status == 2)
-  // {
-  //   $friendsButtons = "<button class='input-button button2'>
-  //                       Request sent
-  //                     </button>
-  //                     ";
-  // }
-  // else if($status == 3)
-  // {
-  //   $friendsButtons = "<button class='input-button button2'>
-  //                       Accept
-  //                     </button>
-  //                     <button class='input-button button2'>
-  //                       Reject
-  //                     </button>
-  //                     ";
-  // }
-  // // Echo the li element
-  // echo 
-  // "
-  //   <li class='box'>
-  //     <div class='box-padding'>
-  //       <p class='text'>
-  //         <a href='profile/$otherUsername' class='link'>
-  //           <img src='media/img/anonymous.jpg' class='profile-picture' alt=''>
-  //           $otherUserName
-  //         </a>
-  //         $friendsButtons
-  //       </p>
-  //       <p class='text'>
-  //         <span style='font-size:1.5em;line-height:0;color:rgba(0,160,0,1)'>
-  //           $percentage%
-  //         </span>
-  //     </div>
-  //   </li>
-  // ";
   echo "<li class='profile-box-item'>
       <div class='profile-box'>
         <a href='profile/$otherUsername' style='background-image: url(\"$userImagePath\"), url($webRoot/media/img/default.gif)' class='profile-picture'></a>
@@ -107,24 +57,24 @@ while($stmt->fetch())
 
             <a data-ajax-url='../php/friends.process.php?a=1&amp;id=$otherUserId'
                data-ajax-text='Sending...'
-               data-ajax-hide='frequest-rm-$otherUserId requestSent-rm-$otherUserId' $addFriendHide
-               class='link-button frequest-rm-$otherUserId' id='addFriend-rm-$otherUserId'>Add Friend</a>
+               data-ajax-hide='frequest-rm-$otherUserId requestSent-rm-$otherUserId'
+               class='link-button frequest-rm-$otherUserId $addFriendHide' id='addFriend-rm-$otherUserId'>Add Friend</a>
 
-            <span class='minidrop-container frequest-rm-$otherUserId' id='alreadyFriends-rm-$otherUserId' $alreadyFriendsHide>
+            <span class='minidrop-container frequest-rm-$otherUserId $alreadyFriendsHide' id='alreadyFriends-rm-$otherUserId'>
             <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Pending...'
                data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Unfriend</a>
             </span>
 
-            <span class='minidrop-container frequest-rm-$otherUserId' id='requestSent-rm-$otherUserId' $requestSentHide>
+            <span class='minidrop-container frequest-rm-$otherUserId $requestSentHide' id='requestSent-rm-$otherUserId'>
             <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Canceling...'
                data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Cancel</a>
             </span>
 
-            <span class='minidrop-container frequest-rm-$otherUserId' id='requestReceived-rm-$otherUserId' $requestReceivedHide>
+            <span class='minidrop-container frequest-rm-$otherUserId $requestReceivedHide' id='requestReceived-rm-$otherUserId'>
             <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
                data-ajax-text='Accepting...'
                data-ajax-hide='frequest-rm-$otherUserId alreadyFriends-rm-$otherUserId'
@@ -137,11 +87,11 @@ while($stmt->fetch())
 
             <a data-ajax-url='../php/friends.process.php?a=4&amp;id=$otherUserId'
                data-ajax-text='Blocking...'
-               data-ajax-hide='blockUnblock-rm-$otherUserId unblockButton-rm-$otherUserId' $blockButtonHide
+               data-ajax-hide='blockUnblock-rm-$otherUserId unblockButton-rm-$otherUserId $blockButtonHide'
                class='link-button blockUnblock-rm-$otherUserId' id='blockButton-rm-$otherUserId'>Block</a>
             <a data-ajax-url='../php/friends.process.php?a=5&amp;id=$otherUserId'
                data-ajax-text='Unblocking...'
-               data-ajax-hide='blockUnblock-rm-$otherUserId blockButton-rm-$otherUserId' $unblockButtonHide
+               data-ajax-hide='blockUnblock-rm-$otherUserId blockButton-rm-$otherUserId $unblockButtonHide'
                class='link-button blockUnblock-rm-$otherUserId' id='unblockButton-rm-$otherUserId'>Unblock</a>
           </div>
         </div>
