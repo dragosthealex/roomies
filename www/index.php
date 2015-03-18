@@ -32,7 +32,7 @@ if (!LOGGED_IN)
 	$title = "Welcome to " . $title;
 }
 
-if(!LOGGED_IN)
+if(!LOGGED_IN && !OWNER_LOGGED_IN)
 {
 	require_once __ROOT__."/inc/html/head.php";
 	echo "<script src='$webRoot/media/js/facebook_login.js'></script>";
@@ -111,7 +111,7 @@ if(!LOGGED_IN)
 <?php
 } // if (!LOGGED_IN)
 // Else, we show the homepage for logged in users
-else
+else if(LOGGED_IN)
 {
 
 	//Check if the user completed their profile
@@ -225,6 +225,12 @@ else
 		</div>
 	</div>
 <?php
-} // else
+} else if(OWNER_LOGGED_IN)
+{
+?>
+buttsecs
+<a href="./?logout=yes">logout</a>
+<?
+}
 require_once __ROOT__."/inc/html/footer.php";
 ?>

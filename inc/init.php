@@ -117,6 +117,9 @@ $stmt->execute();
 // If called from the root directory, set $webRoot to "", otherwise to "../"
 $webRoot = isset($rootDirectory) ? "." : "..";
 
+// TODO: MAKE REMEMBERME FOR OWNER
+if(isset($_GET['logout']))session_destroy();
+
 if(LOGGED_IN)
 {
   if(isset($_GET['logout']))

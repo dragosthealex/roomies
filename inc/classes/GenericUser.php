@@ -91,14 +91,13 @@ abstract class GenericUser extends Base
       {
         return false;
       }
-      if(hash('256', $password . $dbSalt) == $dbPass)
+      if(hash('sha256', $password . $dbSalt) == $dbPass)
       {
         $_SESSION[$this::SESSION_VAR]['id'] = $id;
         $_SESSION[$this::SESSION_VAR]['email'] = $email;
         $_SESSION[$this::SESSION_VAR]['username'] = $username;
-
-      }
-      return hash('256', $password . $dbSalt) == $dbPass;
+      }        
+      return hash('sha256', $password . $dbSalt) == $dbPass;
     }
     catch(Exception $e)
     {

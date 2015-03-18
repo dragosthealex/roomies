@@ -50,7 +50,7 @@ class Owner extends GenericUser
       {
         case 'get':
           // Check the params
-          $key = isset($params['id'])?htmlentities($params['id']):isset($params['email'])?htmlentities($params['email']):isset($params['username'])?htmlentities($params['username']):'';
+          $key = isset($params['id'])?htmlentities($params['id']):(isset($params['email'])?htmlentities($params['email']):(isset($params['username'])?htmlentities($params['username']):''));
           if(!$key)
           {
             throw new Exception("Error getting owner. Invalid key", 1);
@@ -74,7 +74,7 @@ class Owner extends GenericUser
           $this->con = $con;
 
           // Validate
-          if(!$this->$id || !$this->username || !$this->email || !$this->name)
+          if(!$this->id || !$this->username || !$this->email || !$this->name)
           {
             throw new Exception("Problem with owner in database. Have no idea", 1);
             

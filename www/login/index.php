@@ -49,7 +49,7 @@ if(isset($_POST['login'], $_POST['password']))
 
   $user = new User($con, $login);
 
-  $remember = $_POST['remember_me'];
+  $remember = isset($_POST['remember_me'])?$_POST['remember_me']:'';
   
   loginUser($con, $login, $password);
 }

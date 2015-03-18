@@ -1,6 +1,7 @@
 <?php
 
-
+require_once __ROOT__.'/inc/classes/Owner.php';
+require_once __ROOT__.'/inc/classes/TempOwner.php';
 // Takes $login which can be id, username, 
 function loginUser($con, $login, $password='', $remember=false)
 {
@@ -124,10 +125,10 @@ function loginUser($con, $login, $password='', $remember=false)
         // Else check if valid owner
         $stmt->bindColumn(1, $ownerId);
         $stmt->fetch();
-        $owner = new Owner($con, 'get', array('id' => $tempId));
-        if($tempOwner->getError() || !$tempOwner->login($password) || $tempOwner->getError())
+        $owner = new Owner($con, 'get', array('id' => $ownerId));
+        if($owner->getError() || !$owner->login($password) || $owner->getError())
         {
-          header("Location: ../?err=incorrect1" . $tempOwner->getError());
+          header("Location: ../?err=incorrect1" . $owner->getError());
           exit();
         }
         // Logged in
