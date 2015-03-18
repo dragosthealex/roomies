@@ -61,6 +61,16 @@ abstract class GenericUser extends Base
   }
 
   /**
+  * Abstract function getName(optional $friendshipStatus)
+  *
+  * Gets the name or the username of this user, depending on their privacy settings, and on the friendship status
+  *
+  * @param - $friendshipStatus(int), the friendship status
+  * @return - $name(String), the username or name
+  */
+  public abstract function getName($friendshipStatus = 0);
+
+  /**
   * Function login($password)
   *
   * Tries to login with this password. Sets the session Returns true if successful, false else
@@ -96,6 +106,7 @@ abstract class GenericUser extends Base
         $_SESSION[$this::SESSION_VAR]['id'] = $id;
         $_SESSION[$this::SESSION_VAR]['email'] = $email;
         $_SESSION[$this::SESSION_VAR]['username'] = $username;
+        $_SESSION['justLoggedIn'] = 1;
       }        
       return hash('sha256', $password . $dbSalt) == $dbPass;
     }

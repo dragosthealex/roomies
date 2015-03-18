@@ -227,9 +227,25 @@ else if(LOGGED_IN)
 <?php
 } else if(OWNER_LOGGED_IN)
 {
+require_once __ROOT__.'/inc/html/head.php';
+require_once __ROOT__.'/inc/html/header.owner.php';
 ?>
-buttsecs
-<a href="./?logout=yes">logout</a>
+<div class="column-wrapper">
+	<div class="column-2">
+		<div class="column-box">
+			<div class="box-padding">
+				fuck		
+			</div>
+		</div>
+	</div>
+	<div class="column-2">
+		<div class="column-box">
+			<div class="box-padding">
+				shit
+			</div>
+		</div>
+	</div>
+</div>
 <?
 }
 require_once __ROOT__."/inc/html/footer.php";

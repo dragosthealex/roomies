@@ -148,5 +148,45 @@ class Owner extends GenericUser
       $this->errorMsg = $e->getMessage();
     }// catch
   }// function __construct
+
+  /**
+  * Function getCredential($key)
+  *
+  * Returns id, email, username, rank, and any detail
+  *
+  * @return - $credential(String), the credential returned
+  */
+  public function getCredential($key)
+  {
+    switch ($key)
+    {
+      case 'id':
+        return $this->id;
+        break;
+      case 'username':
+        return $this->username;
+        break;
+      case 'email':
+        return $this->email;
+        break;
+      case 'image':
+        return $this->image;
+        break;
+      default:
+        return isset($this->details[$key])?$this->details[$key]:'Wrong key';
+        break;
+    }
+  }// function getCredential
+
+  /**
+  * Function getName
+  *
+  * Returns this owner's name
+  * @return - $name(String), the name
+  */
+  public function getName($friendshipStatus=0)
+  {
+    return $this->firstName . ' ' . $this->lastName;
+  }
 }
 ?>

@@ -22,7 +22,7 @@ function __autoload($class) {
 include_once __ROOT__.'/inc/classes/user.php';
 include_once __ROOT__.'/inc/classes/CurrentUser.php';
 include_once __ROOT__.'/inc/classes/OtherUser.php';
-
+include_once __ROOT__.'/inc/classes/Owner.php';
 // Setting session name
 $session_name = 'some_name';
 
@@ -118,7 +118,6 @@ $stmt->execute();
 $webRoot = isset($rootDirectory) ? "." : "..";
 
 // TODO: MAKE REMEMBERME FOR OWNER
-if(isset($_GET['logout']))session_destroy();
 
 if(LOGGED_IN)
 {
@@ -167,6 +166,10 @@ if(LOGGED_IN)
     $stmt = $con->prepare("UPDATE rusers SET last_online = '$now' WHERE user_id = '$userId'");
     $stmt->execute();
   }
+} else if(OWNER_LOGGED_IN)
+{
+  if(isset($_GET['logout']))session_destroy();
+  $owner = new Owner($con, 'get', array('id'=>$_SESSION['owner']['id']));
 }
 else
 {
