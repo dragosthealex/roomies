@@ -60,7 +60,7 @@ if(isset($_POST['id'], $_POST['acc']))
       if(!$dbFbId)
       {
         $fbImage = "https://graph.facebook.com/$fbId/picture?type=large";
-        $stmt = $con->prepare("UPDATE rusers SET facebook_id = $fbId, image_url = '$fbImage' WHERE user_email = $fbEmail"););
+        $stmt = $con->prepare("UPDATE rusers SET facebook_id = $fbId, image_url = '$fbImage' WHERE user_email = $fbEmail");
         $stmt->execute();
       }
       $response = $dbUserId;

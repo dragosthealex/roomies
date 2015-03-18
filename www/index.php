@@ -103,7 +103,7 @@ if(!LOGGED_IN)
 						<option class="option" value="1">University of Manchester</option>
 					</select
 					><input type="submit" value="Filter" class="input-button">
-					<a href="#" class="link-button float-right">View All</a>
+					<a href="./accommodation" class="link-button float-right">View All</a>
 				</form>
 			</div>
 		</div>

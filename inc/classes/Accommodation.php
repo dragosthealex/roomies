@@ -192,7 +192,6 @@ class Accommodation extends Base
                 "noOfPhotos"  => "$noOfPhotos",
                 "name"        => "$name",
                 "reviews"     => $reviewsJson);
-
       return json_encode($jsonArray);
     }
     catch (Exception $e)
