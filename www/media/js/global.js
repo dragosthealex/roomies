@@ -177,8 +177,8 @@ void function (window, document, undefined) {
   },
 
   // Function for getting message elements by their message id
-  getElementsByConvId = function (convId) {
-    validate(arguments, "stringable");
+  getElementsByConvId = function (convId, groupId) {
+    validate(arguments, "stringable", "stringable");
 
     // Preset the array of elements
     var elements = [];
@@ -186,15 +186,17 @@ void function (window, document, undefined) {
     convId += '';
     // Loop through all the messages, and find the ones with the message id
     forEach.call(body.getElementsByClassName('conversation'), function (element) {
-      element.getAttribute('data-conv-id') === convId && elements.push(element);
+      element.getAttribute('data-conv-id') === convId
+      && element.getAttribute("data-group-id") === groupId
+      && elements.push(element);
     });
     // Return the list of elements
     return elements;
   },
 
   // Function for getting message drop items by their conv id
-  getMessageDropItemByConvId = function (convId, dontCreateNew) {
-    validate(arguments, "stringable", ["boolean"]);
+  getMessageDropItemByConvId = function (convId, groupId, dontCreateNew) {
+    validate(arguments, "stringable", "stringable", ["boolean"]);
 
     // Preset the messageDropItem
     var messageDropItem = null;
@@ -202,7 +204,9 @@ void function (window, document, undefined) {
     convId += "";
     // Loop through all the message drop items, and find the one with the convid
     forEach.call(body.getElementsByClassName("message-drop-item"), function (element) {
-      element.getAttribute("data-conv-id") === convId && (messageDropItem = element);
+      element.getAttribute("data-conv-id") === convId
+      && element.getAttribute("data-group-id") === groupId
+      && (messageDropItem = element);
     });
     // If the messageDropItem is still null, create a new one
     dontCreateNew || (
@@ -212,7 +216,8 @@ void function (window, document, undefined) {
         // class="drop-item message-drop-item"
         messageDropItem.className = " drop-item message-drop-item ",
         // data-conv-id=convId>
-        messageDropItem.setAttribute("data-conv-id", convId)
+        messageDropItem.setAttribute("data-conv-id", convId),
+        messageDropItem.setAttribute("data-group-id", groupId)
       ),
     
       // Insert after the placeholder
@@ -336,7 +341,7 @@ void function (window, document, undefined) {
       });
     }
 
-    if (convstn && (convBox = conv.box[convId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
+    if (convstn && (convBox = conv.box[convId+":"+grpId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
       convBox.fetchingPrevious = true;
       roomies.ajax({
         url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0&gid=" + grpId,
@@ -519,8 +524,8 @@ void function (window, document, undefined) {
       }
     },
 
-    'markAsRead': function (convId) {
-      validate(arguments, "numeric");
+    'markAsRead': function (convId, groupId) {
+      validate(arguments, "numeric", "numeric");
 
       var exampleConv = getElementsByConvId(convId)[0];
       exampleConv && exampleConv.getElementsByClassName("unread received").length && roomies.ajax({
@@ -533,7 +538,7 @@ void function (window, document, undefined) {
             });
           });
 
-          var messageDropLink = getMessageDropItemByConvId(convId, true);
+          var messageDropLink = getMessageDropItemByConvId(convId, groupId, true);
           if (messageDropLink && (messageDropLink = messageDropLink.firstChild) && / received /.test(messageDropLink.className)) {
             messageDropLink.className = messageDropLink.className.replace(" unread ", " read ");
           }
@@ -935,7 +940,7 @@ void function (window, document, undefined) {
   });
 
   forEach.call(body.getElementsByClassName("conversation"), function (conversation) {
-    conv.box[conversation.getAttribute("data-conv-id")] = {
+    conv.box[conversation.getAttribute("data-conv-id")+":"+conversation.getAttribute("data-group-id")] = {
       fetchingPrevious: false,
       focused: false
     };
@@ -949,16 +954,18 @@ void function (window, document, undefined) {
   };
 
   forEach.call(body.getElementsByClassName("textarea"), function (textarea) {
-    var convId;
-    if (convId = textarea.getAttribute('data-conv-id')) {
+    var convId, groupId;
+    if (textarea.hasAttribute('data-conv-id')) {
+      convId = textarea.getAttribute('data-conv-id');
+      groupId = textarea.getAttribute('data-group-id');
       textarea.onfocus = function () {
-        conv.box[convId].focused = true;
+        conv.box[convId+":"+groupId].focused = true;
         setTimeout(function () {
-          conv.box[convId].focused && roomies.markAsRead(convId);
+          conv.box[convId+":"+groupId].focused && roomies.markAsRead(convId, groupId);
         }, 100);
       };
       textarea.onblur = function () {
-        conv.box[convId].focused = false;
+        conv.box[convId+":"+groupId].focused = false;
       };
     }
   });
@@ -987,7 +994,7 @@ void function (window, document, undefined) {
       offlineFriends = response.friends.offline;
 
       newMessages.content.length &&
-        (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
+        (info.lastMessageId = newMessages.content[newMessages.content.length-1].id);
 
       readMessage.forEach(function (messageId) {
         getElementsByMessageId(messageId).forEach(function (element) {
@@ -1001,15 +1008,17 @@ void function (window, document, undefined) {
       var toRead = [];
 
       newMessages.content.forEach(function (message) {
-        var sent = info.userId == message[6];
-        var otherId = sent ? message[7] : message[6];
-        var messageHTML = "";
+        var sent = info.userId == message.senderId;
+        var otherId = sent ? message.receiverId : message.senderId;
+        var messageHTML = newMessages.template;
+        var leRegex = /%\{([a-zA-Z]+)\}/;
+        while (leRegex.test(messageHTML)) {
+          messageHTML = messageHTML.replace(leRegex, function (a, b) {
+            return message[b]
+          });
+        }
 
-        newMessages.template.forEach(function (templatePart, i, template) {
-          messageHTML += templatePart + (i < template.length - 1 ? message[i] : "");
-        });
-
-        getElementsByConvId(otherId).forEach(function (element) {
+        getElementsByConvId(otherId, message.groupId).forEach(function (element) {
           var
           parent = element.parentNode,
           wasAtBottom = parent.scrollHeight - parent.scrollTop - parent.offsetHeight < 50;
@@ -1020,12 +1029,12 @@ void function (window, document, undefined) {
         var activeElement = document.activeElement;
         document.hasFocus() && activeElement && activeElement.getAttribute("data-conv-id") == otherId && toRead.indexOf(otherId) === -1 && toRead.push(otherId);
 
-        getMessageDropItemByConvId(otherId).innerHTML =
-          "<a href='/messages/" + message[8] + "' class=' drop-item-link " + message[0] + " '>"
-        + "<span class=' drop-item-pic ' style='background-image: url(" + message[12] + ")'></span>"
-        + "<h3 class=' drop-item-header ' data-unread-count='" + conv.unread.received[otherId] + "'>" + message[9] + "</h3>"
-        + "<p class=' drop-item-text" + (sent?" drop-item-text-sent":"") + " '>" + message[5].split("<br>")[0].substring(0, 200) + "</p>"
-        + "<p class=' drop-item-footer ' title='" + message[10] + "'>" + message[11] + "</p>"
+        getMessageDropItemByConvId(otherId, message.groupId).innerHTML =
+          "<a href='/messages/" + message.senderUsername + "' class=' drop-item-link " + message.classes + " '>"
+        + "<span class=' drop-item-pic ' style='background-image: url(" + message.otherPic + ")'></span>"
+        + "<h3 class=' drop-item-header ' data-unread-count='" + conv.unread.received[otherId] + "'>" + message.senderName + "</h3>"
+        + "<p class=' drop-item-text" + (sent?" drop-item-text-sent":"") + " '>" + message.text.split("<br>")[0].substring(0, 200) + "</p>"
+        + "<p class=' drop-item-footer ' title='" + message.dateTimeTitle + "'>" + message.dateTimeText + "</p>"
         + "</a>";
       });
 

@@ -19,6 +19,7 @@ class OtherUser extends GeneralUser
   public function __construct($con, $key)
   {
     // Validate the input
+    $this->con = $con;
     $id = ($key)?$key:"";
 
     try
@@ -54,7 +55,6 @@ class OtherUser extends GeneralUser
       $this->id = $id;
       $this->username = $username;
       $this->email = $email;
-      $this->con = $con;
       $this->image = $imageUrl;
       $this->lastOnline = $lastOnline;
 

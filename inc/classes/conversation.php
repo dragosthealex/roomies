@@ -54,7 +54,7 @@ class Conversation extends Base
   * @param - $group(int), the id of the group. Default 0
   * @param - $usersInConversation(int array) the users in this conv
   */
-  public function __construct($con, $id1, $id2, $offset=0, $group=-1)
+  public function __construct($con, $id1, $id2, $offset=0, $group=0)
   {
     // Initialise messages array
     $messages = array();
@@ -62,12 +62,13 @@ class Conversation extends Base
     try
     {
       $stmt = $con->prepare("SELECT * FROM rmessages
-                                     WHERE ((message_user_id1 = $id1
-                                       AND  message_user_id2 = $id2)
-                                        OR (message_user_id1 = $id2
-                                       AND  message_user_id2 = $id1)
-                                       AND message_group = 0)
-                                        OR message_group = $group
+
+                                     WHERE (   (message_user_id1 = $id1 AND message_user_id2 = $id2)
+                                            OR (message_user_id1 = $id2 AND message_user_id2 = $id1)
+                                            OR (message_user_id2 = 0))
+
+                                       AND message_group = $group
+
                                   ORDER BY message_id DESC
                                      LIMIT 50 OFFSET $offset");
 
@@ -141,12 +142,14 @@ class Conversation extends Base
         throw new Exception("Error with current user's initialisation in conversation", 1);
       }
       $userOfId1Name = $userOfId1->getName();
-
+      $previousAuthorId = 0;
       foreach ($messages as $message)
       {
         // Replace '\n' with '<br>'
         $message['message_text'] = preg_replace('/\r\n|\r|\n/', '<br>', $message['message_text']);
         $read = ($message['messages_read'])?'read':'unread';
+        $sameAuthor = $previousAuthorId == $message['message_user_id1'] ? 'sameAuthor' : '';
+        $previousAuthorId = $message['message_user_id1'];
 
         // Get the name and whether it was sent or received
         if ($message['message_user_id1'] == $id1)
@@ -173,7 +176,7 @@ class Conversation extends Base
         // Add the message into the JSON object
         // TODO: Get proper image. Not just jpg.
         $conv .= ",\"$key\":[
-          \"$read $sentOrReceived\",
+          \"$read $sentOrReceived $sameAuthor\",
             $message[message_id],
           \"$message[message_timestamp]\",
           \"$image\",
@@ -213,7 +216,7 @@ class Conversation extends Base
     
     try
     {
-      $groupClass = ($group != -1)?'group':'';
+      $groupClass = ($group != 0)?'group':'';
       // The conversation as text
       $conv = "<ul class='ul $groupClass conversation' id='main_conversation' data-conv-id='$id2' data-group-id='$group'>";
 
@@ -224,13 +227,14 @@ class Conversation extends Base
         throw new Exception("Error with current user's initialisation in conversation", 1);
       }
       $userOfId1Name = $userOfId1->getName();
-      
+      $previousAuthorId = 0;
       foreach ($messages as $message)
       {
-        
         // Replace '\n' with '<br>'
         $message['message_text'] = nl2br($message['message_text'], false);
         $read = ($message['messages_read'])?'read':'unread';
+        $sameAuthor = $previousAuthorId == $message['message_user_id1'] ? 'sameAuthor' : '';
+        $previousAuthorId = $message['message_user_id1'];
 
         // Get the name and whether it was sent or received
         if ($message['message_user_id1'] == $id1)
@@ -252,12 +256,10 @@ class Conversation extends Base
           $image = $otherUser->getCredential('image');
           $name = $otherUser->getName(1);
           $sentOrReceived = '';
-
-          
         }
         // Add the message into the string
         // TODO: Get proper image. Not just jpg.
-        $conv .= $template[0].$read.' '.$sentOrReceived
+        $conv .= $template[0].$read.' '.$sentOrReceived.' '.$sameAuthor
                 .$template[1].$message['message_id']
                 .$template[2].$message['message_timestamp']
                 .$template[3].$image

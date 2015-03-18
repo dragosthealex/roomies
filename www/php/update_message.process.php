@@ -28,7 +28,7 @@ else
     $otherUser = new OtherUser($con, $otherUserId);
     $errorMsg .= $otherUser->getError();
     $otherUserId = $otherUser->getCredential('id');
-    $groupId = -1;
+    $groupId = 0;
   }
   else
   {

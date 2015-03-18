@@ -39,9 +39,7 @@ if(!isset($_GET['conv']))
     // Else, it's a group conversation
     if(!$groupId)
     {
-      $otherUserId = $userId == $id1 ? $id2 : $id1;
-      $otherUser = new OtherUser($con, $otherUserId);
-      $otherName = $otherUser->getName();
+      $otherUser = new OtherUser($con, $userId == $id1 ? $id2 : $id1);
       $convToRedirect = $otherUser->getCredential('username');
     }
     else
@@ -56,15 +54,13 @@ if(!isset($_GET['conv']))
 }
 else
 {
-
   if(!isset(explode('-',$_GET['conv'])[1]))
   {
     // It means we have a normal conv
-    $otherUserId = htmlentities($_GET['conv']);
-    $otherUser = new OtherUser($con, $otherUserId);
+    $otherUser = new OtherUser($con, htmlentities($_GET['conv']));
     $otherUserId = $otherUser->getCredential('id');
-    $otherName = $otherUser->getName();
-    $conversation = new Conversation ($con, $userId, $otherUserId);
+    $otherName = $otherUser->getName($user2->friendShipStatus($otherUser));
+    $conversation = new Conversation($con, $userId, $otherUserId);
     $conv = $conversation->toString();
     $title = "$otherName - Messages";
   }
@@ -90,6 +86,7 @@ else
     $title = $thisGroup->getDetail('name');
     $otherName = $title;
   }
+  $conversation->readMessages();
 }
 
 // Get 10 conversations from the user, starting from offset, ordered desc by time

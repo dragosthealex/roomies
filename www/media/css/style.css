@@ -1489,12 +1489,12 @@
 	padding: 16px 16px 0 60px;
 }
 
-.sent + .sent, .received + .received {
+.sameAuthor {
 	padding-top: 0;
 	padding-bottom: 0;
 }
 
-.sent + .sent:before, .received + .received:before {
+.sameAuthor:before {
 	display: none;
 }
 
@@ -1511,10 +1511,6 @@
 	height: 33px;
 }
 
-.sent + .sent .message-pic, .received + .received .message-pic {
-	display: none;
-}
-
 .message-name {
 	display: block;
 	margin: 0 0 4px;
@@ -1522,7 +1518,8 @@
 	font-size: .9em;
 }
 
-.sent + .sent .message-name, .received + .received .message-name {
+.sameAuthor .message-pic,
+.sameAuthor .message-name {
 	display: none;
 }
 
@@ -1530,6 +1527,10 @@
 	position: relative;
 	margin: 0;
 	font-size: .9em;
+}
+
+.sameAuthor .text {
+	margin: 8px 0 0;
 }
 
 .message.read.sent:last-child .text:after {
@@ -1544,21 +1545,8 @@
 	font-size: .8em;
 }
 
-.sent + .sent .text, .received + .received .text {
-	margin: 8px 0 0;
-}
-
-./*sent {
-}
-
-.received {
-}
-
-.read {
-}*/
-
 .received.unread {
-	color: red;
+	color: #800;
 }
 
 .textarea-holder {

@@ -23,13 +23,6 @@ This script provides variables:
 -> $otherName, the other user name
 -> $otherUserId, the other user id
 */
-if(isset($_GET['conv']))
-{
-  $otherUserId = htmlentities($_GET['conv']);
-  $otherUser = new User($con, $otherUserId);
-  $otherUserId = $otherUser->getIdentifier('id');
-  $resOtherUserId = $otherUser->getIdentifier('id');
-}
 include __ROOT__."/inc/html/messages_page.php";
 
 // Include head and header
@@ -82,7 +75,8 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             ><textarea class="textarea" id="message" placeholder="Write a message..."
                        oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"
                        onkeydown="return !this.parentNode.nextSibling.firstChild.checked || (event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.parentNode.nextSibling.nextSibling}), false) : event.keyCode !== 13));"
-                       data-conv-id="<?=$resOtherUserId?>"
+                       data-conv-id="<?=$otherUserId==''?0:$otherUserId?>"
+                       data-group-id="<?=$groupId?>"
                        data-focus></textarea>
           </div
           ><label for="pressEnterToSend" class="cr-label"
@@ -91,7 +85,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             <span class="cr-text cr-text-faded">Press Enter to send</span>
           </label
           ><input type="submit" class="input-button block " value="Send"
-                  data-ajax-url="$webRoot/php/messages.process.php?receiver=<?=$resOtherUserId?>&gid=<?=$groupId?>"
+                  data-ajax-url="../php/messages.process.php?receiver=<?=$otherUserId?>&gid=<?=$groupId?>"
                   data-ajax-post="message"
                   data-ajax-callback-1="scrollToBottom conv 1"
                   data-ajax-callback-2="focusById message">

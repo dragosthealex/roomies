@@ -51,21 +51,25 @@ try
   $now = time();
   $lowestOnlineDate = date('Y-m-d H:i:s', $now-180);
   $lowestAwayDate   = date('Y-m-d H:i:s', $now-600);
-  $userId = $user->getIdentifier('id');
-  $userName = $user->getName();
-
+  $userId = $user2->getCredential('id');
+  $userName = $user2->getName();
+  $userGroups = implode("' OR message_group = '", $user2->getCredential('groups'));
   $stmts = array(
     // First query: Find new messages for this user
     'newMessages' =>
     $con->prepare("SELECT * FROM rmessages
-                           WHERE (message_user_id1 = $userId OR message_user_id2 = $userId)
+                           WHERE (   message_user_id1 = $userId
+                                  OR message_user_id2 = $userId
+                                  OR message_group = '$userGroups')
                              AND message_id > '$lastMessageId'"),
 
     // Second query: Find where messages are now read
     'readMessage' =>
     $con->prepare("SELECT message_id FROM rmessages
                     WHERE messages_read = 1
-                      AND (message_user_id1 = $userId OR message_user_id2 = $userId)
+                      AND (   message_user_id1 = $userId
+                           OR message_user_id2 = $userId
+                           OR message_group = '$userGroups')
                       AND (message_id = '".implode("' OR message_id = '", $unreadIds)."')"),
 
     // Third query: Find new friend requests
@@ -126,40 +130,15 @@ try
   // Longpoll
   for ($i = 0; $i < 30; $i++)
   {
-    if ($stmts['newMessages']->rowCount()) 
-    {
-      $response['error'] = '1';
-      break;
-    }
-    if ($stmts['readMessage']->rowCount()) 
-    {
-      $response['error'] = '2';
-      break;
-    }
-    if ($stmts['newRequests']->rowCount())
-    {
-      $response['error'] = '3';
-      break;
-    }
-    if ($noOfRequests - $stmts['oldRequests']->rowCount()) 
-    {
-      $response['error'] = '4';
-      break;
-    }
-    // if ($stmts['friends']->rowCount()) 
-    // {
-    //   $response['error'] = '5';
-    //   break;
-    // }
-    // if ($noOfRequests - $stmts['oldFriends']->rowCount()) 
-    // {
-    //   $response['error'] = '6';
-    //   break;
-    // }
-    sleep(1);
     execute($stmts);
+    if ($stmts['newMessages']->rowCount()) break;
+    if ($stmts['readMessage']->rowCount()) break;
+    if ($stmts['newRequests']->rowCount()) break;
+    if ($noOfRequests - $stmts['oldRequests']->rowCount()) break;
+    if ($stmts['friends']->rowCount()) break;
+    if ($noOfFriends - $stmts['oldFriends']->rowCount()) break;
+    sleep(1);
   }
-  execute($stmts);
 
   $response = array(
     'newRequests' => array(
@@ -168,7 +147,11 @@ try
     ),
     'oldRequests' => array(),
     'newMessages' => array(
-      'template' => Conversation::$template,
+      'template' => "<li class='li message %{classes}' data-message-id='%{id}' data-message-timestamp='%{timestamp}'>"
+                   ."<span class='message-pic' style='background-image:url(%{senderPic}), url(../media/img/default.gif)'></span>"
+                   ."<a class='message-name'>%{senderName}</a>"
+                   ."<p class='text'>%{text}</p>"
+                   ."</li>",
       'content'  => array()
     ),
     'readMessage' => array(),
@@ -184,6 +167,22 @@ try
   $todayDateTime = new DateTime();
 
   // New messages
+  $stmt = $con->prepare("SELECT message_user_id1
+                           FROM rmessages
+                          WHERE (   (    (message_user_id1 = ? AND message_user_id2 = ?)
+                                     OR  (message_user_id1 = ? AND message_user_id2 = ?)
+                                     AND (message_group = 0))
+                                 OR message_group = ?)
+                            AND (message_id < ?)
+                       ORDER BY message_id DESC
+                          LIMIT 1");
+  $stmt->bindParam(1, $senderId);
+  $stmt->bindParam(2, $receiverId);
+  $stmt->bindParam(3, $receiverId);
+  $stmt->bindParam(4, $senderId);
+  $stmt->bindParam(5, $groupId);
+  $stmt->bindParam(6, $messageId);
+  $stmt->bindColumn(1, $previousAuthorId);
   while ($message = $stmts['newMessages']->fetch(PDO::FETCH_ASSOC))
   {
 
@@ -191,19 +190,23 @@ try
     // Replace '\n' with '<br>'
     $message['message_text'] = nl2br($message['message_text'], false);
     $read = ($message['messages_read'])?'read':'unread';
-
+    $groupId = $message['message_group'];
+    $messageId = $message['message_id'];
     $senderId = $message['message_user_id1'];
     $receiverId = $message['message_user_id2'];
+    $sameAuthor = $stmt->execute() && $stmt->rowCount() && $stmt->fetch()
+                  && $previousAuthorId == $message['message_user_id1']
+                  ? 'sameAuthor' : '';
 
     // Get the name and whether it was sent or received
     $sent = $senderId == $userId;
-    $otherUser = new User($con, $sent ? $receiverId : $senderId);
-    $otherUserId = $otherUser->getIdentifier('id');
-    $otherUserName = $otherUser->getName();
-    $otherUserUsername = $otherUser->getIdentifier('username');
+    $otherUser = new OtherUser($con, !($message['message_group'] && $sent) ? $receiverId : $senderId);
+    $otherUserId = $otherUser->getCredential('id');
+    $otherUserName = $otherUser->getName($user2->friendShipStatus($otherUser));
+    $otherUserUsername = $otherUser->getCredential('username');
     $senderName = $sent ? $userName : $otherUserName;
+    $senderImage = $sent ? $user2->getCredential('image') : $otherUser->getCredential('image');
     $sentOrReceived = $sent ? 'sent' : 'received';
-    $senderImage = $sent ? $user->getIdentifier('image') : $otherUser->getIdentifier('image');
 
     $msgDateTime = date_create_from_format('Y-m-d H:i:s', $message['message_timestamp']);
     $diff = $todayDateTime->diff($msgDateTime);
@@ -242,19 +245,20 @@ try
     array_push(
       $response['newMessages']['content'], 
       array(
-        $read.' '.$sentOrReceived,
-        $message['message_id'],
-        $message['message_timestamp'],
-        $senderImage,
-        $senderName,
-        $message['message_text'],
-        $senderId,
-        $receiverId,
-        $otherUserUsername,
-        $otherUserName,
-        $msgDateTimeTitle,
-        $msgDateTimeText,
-        $otherUser->getIdentifier('image')
+        'classes' => $read.' '.$sentOrReceived.' '.$sameAuthor,
+        'id' => $message['message_id'],
+        'timestamp' => $message['message_timestamp'],
+        'senderPic' => $senderImage,
+        'senderName' => $senderName,
+        'text' => $message['message_text'],
+        'senderId' => $senderId,
+        'receiverId' => $receiverId,
+        'otherUsername' => $otherUserUsername,
+        'otherName' => $otherUserName,
+        'dateTimeTitle' => $msgDateTimeTitle,
+        'dateTimeText' => $msgDateTimeText,
+        'otherPic' => $otherUser->getCredential('image'),
+        'groupId' => $message['message_group']
       )
     );
   }
@@ -310,77 +314,77 @@ try
   }
 
   // Friends
-  // while ($row = $stmts['friends']->fetch(PDO::FETCH_ASSOC))
-  // {
-  //   $otherUserId = $row['user_id'];
-  //   $otherUser = new OtherUser($con, $otherUserId);
-  //   if ($otherUser->getError()) continue;
-  //   $nothingChanged = FALSE;
-  //   $otherUserName = $otherUser->getName(1);
-  //   $otherUserUsername = $otherUser->getCredential('username');
-  //   array_push($response['friends'][$otherUser->getOnlineStatus()],
-  //     array(
-  //       'id' => $otherUserId,
-  //       'name' => $otherUserName,
-  //       'username' => $otherUserUsername
-  //     )
-  //   );
-  // }
+  while ($row = $stmts['friends']->fetch(PDO::FETCH_ASSOC))
+  {
+    $otherUserId = $row['user_id'];
+    $otherUser = new OtherUser($con, $otherUserId);
+    if ($otherUser->getError()) continue;
+    $nothingChanged = FALSE;
+    $otherUserName = $otherUser->getName(1);
+    $otherUserUsername = $otherUser->getCredential('username');
+    array_push($response['friends'][$otherUser->getOnlineStatus()],
+      array(
+        'id' => $otherUserId,
+        'name' => $otherUserName,
+        'username' => $otherUserUsername
+      )
+    );
+  }
   // Push all the old ids into the array again
-  // function not_in_arrays(&$friends, $id)
-  // {
-  //   foreach ($friends as $friendList)
-  //     foreach ($friendList as $friend)
-  //       if ($friend['id'] == $id)
-  //         return FALSE;
-  //   return TRUE;
-  // }
-  // $usersFriendsArray = $user2->getFriends('id');
-  // foreach ($friends as $onlineStatus => $friendIds)
-  // {
-  //   foreach (explode(',', $friendIds) as $friendId)
-  //   {
-  //     $friend = new OtherUser($con, $friendId);
-  //     if (   !$friend->getError()
-  //         && not_in_arrays($response['friends'], $friendId)
-  //         && in_array($friendId, $usersFriendsArray))
-  //     {
-  //       $friendName = $friend->getName(1);
-  //       $friendUsername = $friend->getCredential('username');
-  //       array_push($response['friends'][$onlineStatus],
-  //         array(
-  //           'id' => $friendId,
-  //           'name' => $friendName,
-  //           'username' => $friendUsername
-  //         )
-  //       );
-  //     }
-  //   }
-  // }
+  function not_in_arrays(&$friends, $id)
+  {
+    foreach ($friends as $friendList)
+      foreach ($friendList as $friend)
+        if ($friend['id'] == $id)
+          return FALSE;
+    return TRUE;
+  }
+  $usersFriendsArray = $user2->getFriends('id');
+  foreach ($friends as $onlineStatus => $friendIds)
+  {
+    foreach (explode(',', $friendIds) as $friendId)
+    {
+      $friend = new OtherUser($con, $friendId);
+      if (   !$friend->getError()
+          && not_in_arrays($response['friends'], $friendId)
+          && in_array($friendId, $usersFriendsArray))
+      {
+        $friendName = $friend->getName(1);
+        $friendUsername = $friend->getCredential('username');
+        array_push($response['friends'][$onlineStatus],
+          array(
+            'id' => $friendId,
+            'name' => $friendName,
+            'username' => $friendUsername
+          )
+        );
+      }
+    }
+  }
 
-  // function quickSortFriendList($array)
-  // {
-  //   if (count($array) < 2) return $array;
-  //   $left = $right = array();
-  //   reset($array);
-  //   $pivot_key = key($array);
-  //   $pivot = array_shift($array);
-  //   foreach($array as $k => $v)
-  //     if(strcmp($v['name'], $pivot['name']) < 0)
-  //       $left[$k] = $v;
-  //     else
-  //       $right[$k] = $v;
-  //   return array_merge(quickSortFriendList($left), array($pivot_key => $pivot), quickSortFriendList($right));
-  // }
-  // foreach ($response['friends'] as $onlineStatus => $friendIds)
-  // {
-  //   $response['friends'][$onlineStatus] = quickSortFriendList($friendIds);
-  // }
+  function quickSortFriendList($array)
+  {
+    if (count($array) < 2) return $array;
+    $left = $right = array();
+    reset($array);
+    $pivot_key = key($array);
+    $pivot = array_shift($array);
+    foreach($array as $k => $v)
+      if(strcmp($v['name'], $pivot['name']) < 0)
+        $left[$k] = $v;
+      else
+        $right[$k] = $v;
+    return array_merge(quickSortFriendList($left), array($pivot_key => $pivot), quickSortFriendList($right));
+  }
+  foreach ($response['friends'] as $onlineStatus => $friendIds)
+  {
+    $response['friends'][$onlineStatus] = quickSortFriendList($friendIds);
+  }
 
-  // if ($noOfFriends - $stmts['oldFriends']->rowCount())
-  // {
-  //   $nothingChanged = FALSE;
-  // }
+  if ($noOfFriends - $stmts['oldFriends']->rowCount())
+  {
+    $nothingChanged = FALSE;
+  }
   
   if ($nothingChanged)
   {

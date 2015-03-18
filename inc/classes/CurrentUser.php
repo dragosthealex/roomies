@@ -278,21 +278,19 @@ class CurrentUser extends GeneralUser
   // Helper method to get the notif messages template
   private function getNotifMessagesTemplate()
   {
-    $template = array("<li class='drop-item'><a href='/messages/",
-                      "' class='drop-item-link ",
-                      "'><span class='drop-item-pic' style='background-image: url(",
-                      ")'></span><h3 class='drop-item-header'>",
-                      " ",
-                      "</h3><p class='drop-item-text ",
-                      "'>",
-                      "</p><p class='drop-item-footer' title='",
-                      "'>",
-                      "</p></a></li>"
-                      );
+    return array(
+      "<li class='drop-item'><a href='/messages/",
+      "' class='drop-item-link ",
+      "'><span class='drop-item-pic' style='background-image: url(",
+      ")'></span><h3 class='drop-item-header'>",
+      " ",
+      "</h3><p class='drop-item-text ",
+      "'>",
+      "</p><p class='drop-item-footer' title='",
+      "'>",
+      "</p></a></li>"
+    );
   }
-
-
-
 
   // Helper method to get notif messages content
   private function getNotifMessagesContent($offset)
@@ -320,7 +318,8 @@ class CurrentUser extends GeneralUser
     for($index=0; $index<count($messagePartners) && $index<10; $index++)
     {
       $id2 = $messagePartners[$index];
-      $stmt = $con->prepare("SELECT message_user_id1, message_text, message_timestamp FROM rmessages
+      $stmt = $con->prepare("SELECT message_user_id1, message_text, message_timestamp
+                                    message_group FROM rmessages
                               WHERE (message_user_id1 = $id2 AND message_user_id2 = $userId)
                                 OR (message_user_id1 = $userId AND message_user_id2 = $id2)
                               ORDER BY message_id DESC
@@ -329,6 +328,7 @@ class CurrentUser extends GeneralUser
       $stmt->bindColumn(1, $senderId);
       $stmt->bindColumn(2, $text);
       $stmt->bindColumn(3, $timestamp);
+      $stmt->bindColumn(4, $group);
       $stmt->fetch();
 
       if(!$stmt->rowCount())
@@ -345,9 +345,10 @@ class CurrentUser extends GeneralUser
       $sentClass = $userId == $senderId ? ' drop-item-text-sent ' : '';
 
       // Get name
-      $otherUser = new OtherUser($con, $id2);
-      $otherUserName = $otherUser->getName();
+      $otherUser = new OtherUser($con, $group ? $senderId : $id2);
+      $otherUserName = $otherUser->getName($this->friendshipStatus($otherUser));
       $otherUserUsername = $otherUser->getCredential('username');
+      $otherUserImagePath = $otherUser->getCredential('image');
 
       $firstLine = explode("<br>", $text)[0];
 
@@ -525,7 +526,8 @@ private function getConv($offset)
                        $otherUserId,
                        $otherUserUsername,
                        $otherUserName,
-                       $percentage
+                       160-$percentage*160,
+                       160*$percentage
                       );
 
       // Push in the array
@@ -571,7 +573,9 @@ private function getConv($offset)
                               "' data-ajax-text='Ignoring...' data-ajax-callback-1='deleteById drop-item-fr-",
                               "' class='link-button button2'>Ignore</a></div><a href='/profile/",
                               "' class='link'>",
-                              "</a></h3><p class='drop-item-footer'></p><p class='drop-item-text' style='color:rgba(".(255-255*$percentage/100).",".(255*$percentage/100).",0,1)'>",
+                              "</a></h3><p class='drop-item-footer'></p><p class='drop-item-text' style='color:rgba(",
+                              ",",
+                              ",0,1)'>",
                               "%</p></div></li>"
                               );
   }
@@ -585,26 +589,18 @@ private function getConv($offset)
   * @param - $offset(int), the offset, used for ajax loading multiple
   * @return - $notifications(JSON), the json with notifications
   */
-  public function getNotifications($offset)
+  public function getNotifications($offset=0)
   {
-    $notifMessagesTemplate = $this->getNotifMessagesTemplate();
-    $notifMessagesContent = $this->getNotifMessagesContent($offset);
-    $notifRequestsTemplate = $this->getNotifRequestsTemplate();
-    $notifRequestsContent = $this->getNotifRequestsContent($offset);
-
-    // Construct the sepparate notifications arrays
-    $notifMessages = array('template' => $notifMessagesTemplate,
-                           'content'  => $notifMessagesContent
-                            );
-    $notifRequests = array('template' => $notifRequestsTemplate,
-                           'content'  => $notifRequestsContent
-                           );
-    // Construct the notifications array
-    $notifications = array('messages' => $notifMessages,
-                      'friend_requests' => $notifRequests
-                      );
-
-    return json_encode($notifications);
+    return json_encode(array(
+      'messages' => array(
+        'template' => $this->getNotifMessagesTemplate(),
+        'content'  => $this->getNotifMessagesContent($offset)
+      ),
+      'friend_requests' => array(
+        'template' => $this->getNotifRequestsTemplate(),
+        'content'  => $this->getNotifRequestsContent($offset)
+      )
+    ));
   }
 
   /**
@@ -1106,6 +1102,35 @@ private function getConv($offset)
 
     return $friends;
   }
+
+
+  /**
+  * Function getUnreadCount()
+  *
+  * Gets the number of unread conversations
+  *
+  * @return - $count(int), the number of unread conversations
+  */
+  public function getUnreadCount()
+  {
+    $count = 0;
+
+    $conv = $this->getConv(0);
+    if ($conv != ''  && isset($conv['unreadArray']))
+    {
+      $unreadArray = $this->getConv(0)['unreadArray'];
+      foreach ($unreadArray as $unread)
+      {
+        if ($unread > 0)
+        {
+          $count++;
+        }
+      }
+    }
+
+    return $count;
+  }
+
 }// class CurrentUser
 
 
