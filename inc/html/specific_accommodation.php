@@ -41,6 +41,26 @@ else
 {
   echo $accom->getError();
 }
+
+$ratingsArray = $accomInfo['ratingsArray'];
+// Check if I have rated this
+if (LOGGED_IN && in_array($user2->getCredential('id'), $ratingsArray[0]))
+{
+  foreach ($ratingsArray[0] as $key => $id)
+  {
+    // If this is my rating
+    if($ratingsArray[0][$key] == $user2->getCredential('id'))
+    {
+      $myRating = ($ratingsArray[1][$key]/100.0)*5.0;
+      break;
+    }
+  }
+}
+else
+{
+  $myRating = '';
+}
+$rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
 ?>
 <h2 class='h2'>
   <?=$accomInfo['name'];?>
@@ -56,28 +76,30 @@ else
     </div>
   </div>
 </div>
-  <div style="margin-bottom: 5px;">Rating: </div>
+  <div style="margin-bottom: 5px;">Rating: <a class="rating-text"><?=$rating?></a>
+    <?php if($myRating){?>My rating:<a class="rating-text"><?=$myRating?></a><?php }?>
+  </div>
   <div class="ratings-box">
         <div onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
 
         <input type="radio" class="star-cr" name="rating" id="rating1">
-          <label for="rating1" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-hide="star-b0" on>
+          <label for="rating1" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-hide="star-b0" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=5'>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating2">
-          <label for="rating2" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-hide="star-b0">
+          <label for="rating2" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-hide="star-b0" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=4'>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating3">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating3" data-hide="star-b0">
+          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating3" data-hide="star-b0" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=3'>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating4">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating4" data-hide="star-b0">
+          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating4" data-hide="star-b0" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=2'>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating5">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating5" data-hide="star-b0">
+          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating5" data-hide="star-b0" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=1'>
            
           </label>
 

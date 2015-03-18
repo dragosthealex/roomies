@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 3.4.11.1deb2+deb7u1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 17, 2015 at 09:17 PM
--- Server version: 5.5.41-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.6
+-- Generation Time: Mar 18, 2015 at 03:18 AM
+-- Server version: 5.5.41
+-- PHP Version: 5.4.36-0+deb7u3
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `2014_comp10120_x7`
+-- Database: `roomies`
 --
 
 -- --------------------------------------------------------
@@ -31,9 +31,10 @@ CREATE TABLE IF NOT EXISTS `raccommodations` (
   `accommodation_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `accommodation_no_photos` int(11) NOT NULL,
   `accommodation_date` date NOT NULL,
-  `accommodation_rating` char(4) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'N/A',
+  `accommodation_rating` char(4) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   `accommodation_description` varchar(10000) COLLATE utf8_unicode_ci NOT NULL,
   `accommodation_author` int(11) NOT NULL,
+  `accommodation_rating_array` varchar(10000) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`accommodation_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
@@ -41,8 +42,8 @@ CREATE TABLE IF NOT EXISTS `raccommodations` (
 -- Dumping data for table `raccommodations`
 --
 
-INSERT INTO `raccommodations` (`accommodation_id`, `accommodation_name`, `accommodation_no_photos`, `accommodation_date`, `accommodation_rating`, `accommodation_description`, `accommodation_author`) VALUES
-(1, 'Whitworth Park', 0, '2015-02-25', 'N/A', 'Bedding Packs: To assist you and limit what you have to transport to the hall you can order a bedding pack online. The price for a single bedding pack is  	&pound;20.00 and the pack includes a hollow fibre pillow, a 13.5tog duvet, a sheet, a pillowcase and a duvet cover. Double bedding packs are available at a price of  	&pound;36.00.\n\nWhitworth Park is centrally located on the University of Manchester campus, close to sports centre, libraries and Students Union.\n\nIt comprises of eight low-rise houses containing one to three storey flats for groups of seven, eight or nine students. Accommodation is in single study bedrooms, with shared kitchen, lounge and bathroom in each flat.\n\nGrove House houses the administrative and social centre of the community. Facilities include two squash courts, launderette, bar, gym and large dance hall.\n\nActive Residents Association. Visit the Whitworth Park RA Website...*.\n\nPostgraduate students are housed in parts of Thorncliffe and Aberdeen.', 21);
+INSERT INTO `raccommodations` (`accommodation_id`, `accommodation_name`, `accommodation_no_photos`, `accommodation_date`, `accommodation_rating`, `accommodation_description`, `accommodation_author`, `accommodation_rating_array`) VALUES
+(1, 'Whitworth Park', 0, '2015-02-25', '40', 'Bedding Packs: To assist you and limit what you have to transport to the hall you can order a bedding pack online. The price for a single bedding pack is  	&pound;20.00 and the pack includes a hollow fibre pillow, a 13.5tog duvet, a sheet, a pillowcase and a duvet cover. Double bedding packs are available at a price of  	&pound;36.00.\n\nWhitworth Park is centrally located on the University of Manchester campus, close to sports centre, libraries and Students Union.\n\nIt comprises of eight low-rise houses containing one to three storey flats for groups of seven, eight or nine students. Accommodation is in single study bedrooms, with shared kitchen, lounge and bathroom in each flat.\n\nGrove House houses the administrative and social centre of the community. Facilities include two squash courts, launderette, bar, gym and large dance hall.\n\nActive Residents Association. Visit the Whitworth Park RA Website...*.\n\nPostgraduate students are housed in parts of Thorncliffe and Aberdeen.', 54, ',49:,40');
 
 -- --------------------------------------------------------
 

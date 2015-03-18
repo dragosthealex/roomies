@@ -5,6 +5,7 @@
 * Represents the current user that is logged in and uses the website
 */
 require_once __ROOT__.'/inc/classes/GeneralUser.php';
+require_once __ROOT__.'/inc/classes/Accommodation.php';
 class CurrentUser extends GeneralUser
 {
   /**
@@ -1017,10 +1018,61 @@ private function getConv($offset)
   * @param -$accomId 'This represents the accommodation the user is rating'
   * @param -$starRating 'This is the value (1-5) that the user is giving to this accommodation'
   */
-  public function rateAccommodation($accomId, $starRating)
+  public function rateAccommodation($accId, $starRating)
   {
-    
-  }
+    // Localise stuff
+    $con = $this->con;
+    $userId = $this->id;
+
+    // Create the accom
+    $accom = new Accommodation($con, 'get', array('id'=>$accId));
+    try
+    {
+      // Get and update ratings array
+      $ratingsArray = $accom->getRatingsArray();
+      if($accom->getError())
+      {
+        throw new Exception("Sumthing wrung wid accommodation $accId: " . $accom->getError(), 1);
+      }
+      // Calculate the rating of this user
+      $rating = ((double)$starRating * 100.0) / 5.0;
+      if(!in_array($userId, $ratingsArray[0]))
+      {
+        array_push($ratingsArray[0], $userId);
+        array_push($ratingsArray[1], $rating);
+      }
+      else
+      {
+        foreach ($ratingsArray[0] as $key => $value)
+        {
+          if($ratingsArray[0][$key] == $userId)
+          {
+            $ratingsArray[1][$key] = $rating;
+            break;
+          }
+        }
+      }// else
+
+      // Calculate the new average rating
+      $sum = 0.0;
+      foreach ($ratingsArray[1] as $rat)
+      {
+        $sum += $rat;
+      }
+      $newRating = $sum ? $sum / ((double)count($ratingsArray[1])-1) : 0;
+      // Update ratings
+      $accom->setRatings($ratingsArray, $newRating);
+      // Check for errors
+      if($accom->getError())
+      {
+        throw new Exception("Error updating array of ratings: " . $accom->getError(), 1);
+      }
+    }// try
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function rateAccommodation
 }// class CurrentUser
 
 
