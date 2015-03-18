@@ -5,31 +5,17 @@
 * Abstract class representing a general user, extends Base, has the public credentials
 *
 */
-require_once __ROOT__.'/inc/classes/Base.php';
+require_once __ROOT__.'/inc/classes/GenericUser.php';
 require_once __ROOT__.'/inc/classes/Review.php';
 require_once __ROOT__.'/inc/classes/Reply.php';
 
-abstract class GeneralUser extends Base
+abstract class GeneralUser extends GenericUser
 {
-  // The username
-  protected $username;
-  // The email
-  protected $email;
-  // The rank
-  protected $rank;
-  // The details, an array containing mapped INT values
-  protected $details;
   // Array containing all the question objects. Each question has the answers.
   // Also, has the answers answered by user
   protected $questions;
   // The birthday
   protected $birthday;
-  // The image path
-  protected $image;
-  // The name
-  protected $name;
-  // The settings for this user, assoc array
-  protected $settings;
   // The array of groups IDs the user is in
   protected $groups = array();
   /**
