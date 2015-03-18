@@ -189,6 +189,7 @@ class TempOwner extends GenericUser
         $details = $this->details;
         $details['username'] = $this->username;
         $details['password'] = $this->password;
+        $details['email'] = $this->email;
         $details['salt'] = $this->salt;
         $details['birthday'] = $details['b_year'] . '-' . $details['b_month'] . '-' . $details['b_day'];
 

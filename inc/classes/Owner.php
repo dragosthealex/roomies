@@ -86,7 +86,6 @@ class Owner extends GenericUser
           $gender = isset($params['gender']) ? htmlentities($params['gender']) : '';
           $birthday = isset($params['birthday']) ? htmlentities($params['birthday']) : '';
 
-          var_dump($params);
           // Validate
           if(!$password || !$username || !$email || !$firstName || !$lastName || !$phone || !$country || !$city || !$postCode || !$gender || !$birthday)
           {
@@ -98,7 +97,8 @@ class Owner extends GenericUser
                                  VALUES ('$email', '$username', '$password', '$lastName', '$firstName', '$salt', '$postCode', '$gender', '$birthday', '$country', '$phone')");
           if(!$stmt->execute())
           {
-            throw new Exception("Error inserting new owner into database", 1);
+            throw new Exception("INSERT INTO rowners (owner_email, owner_username, owner_password, owner_last_name, owner_first_name, owner_salt, owner_post_code, owner_gender, owner_birthday, owner_country, owner_phone)
+                                 VALUES ('$email', '$username', '$password', '$lastName', '$firstName', '$salt', '$postCode', '$gender', '$birthday', '$country', '$phone')", 1);
           }
 
           // Get from db
@@ -117,11 +117,11 @@ class Owner extends GenericUser
           $this->rank = 'owner';
           $this->image = isset($details['owner_img_url']) ? $details['owner_img_url'] : '';
           $this->con = $con;
-
+          
           // Validate
-          if(!$this->$id || !$this->username || !$this->email || !$this->name)
+          if(!$this->id || !$this->username || !$this->email || !$this->name)
           {
-            throw new Exception("Problem with owner in database. Have no idea", 1);
+            throw new Exception($this->id . ' ' . $this->username . ' ' . $this->email . ' ' . $this->name .'shit', 1);
           }
           unset($_SESSION['tempOwner']);
           $_SESSION['owner']['id'] = $this->id;

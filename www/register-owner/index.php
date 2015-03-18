@@ -208,25 +208,28 @@ else
   }
 
   // Try to confirm the temp owner
-  $errMsg .= " $tempUsername ";
-  $tempOwner = new TempOwner($con, 'get', array('username' => $tempUsername));
-  if($tempOwner->getError())
+  if($conf)
   {
-    $errMsg .= "Error initialising owner: " . $tempOwner->GetError();
-  }
-  else
-  {
-    if($tempOwner->confirm($conf))
+    $errMsg .= " $tempUsername ";
+    $tempOwner = new TempOwner($con, 'get', array('username' => $tempUsername));
+    if($tempOwner->getError())
     {
-      header('Location: ../');
-      exit();
+      $errMsg .= "Error initialising owner: " . $tempOwner->GetError();
     }
     else
     {
-      $errMsg .= "The confirmation code is wrong. Please try again: " . $tempOwner->getError();
+      if($tempOwner->confirm($conf))
+      {
+        header('Location: ../');
+        exit();
+      }
+      else
+      {
+        $errMsg .= "The confirmation code is wrong. Please try again: " . $tempOwner->getError();
+      }
     }
+    $title='Confirm';
   }
-  $title='Confirm'
 ?>
 <?php require_once __ROOT__."/inc/html/head.php";?>
     <?php require_once __ROOT__."/inc/html/header.$ioStatus.php";?>
