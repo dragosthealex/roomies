@@ -12,7 +12,13 @@ include '../../inc/init.php';
 include __ROOT__.'/inc/classes/conversation.php';
 include __ROOT__.'/inc/classes/Request.php';
 
-if (!isset($_POST['unread'], $_POST['friends'], $_POST['friendRequests'], $_POST['lastMessageId'], $_SERVER['HTTP_ROOMIES']) || $_SERVER['HTTP_ROOMIES'] != 'cactus')
+if (!isset($_POST['unread'],
+           $_POST['friends'],
+           $_POST['friendRequests'],
+           $_POST['lastMessageId'],
+           $_SERVER['HTTP_ROOMIES'])
+    || $_SERVER['HTTP_ROOMIES'] != 'cactus'
+    || !preg_match('/^([a-z]+:([0-9]+(,|))*(;|$))+$/', $_POST['friends']))
 {
   include __ROOT__.'/inc/html/notfound.php';
 }
@@ -28,8 +34,16 @@ try
   $friendRequestIds = strlen($friendRequestIds) ? explode(',', $friendRequestIds) : array();
   $noOfRequests = count($friendRequestIds);
   $lastMessageId = htmlentities($_POST['lastMessageId']);
-  $friendsText = explode(';', $_POST['friends']);
-
+  $friendsTexts = explode(';', $_POST['friends']);
+  $friends = array();
+  foreach ($friendsTexts as $friendsText)
+  {
+    $array = explode(':', $friendsText);
+    $friends[$array[0]] = strlen($array[1]) ? $array[1] : '0';
+  }
+  $now = time();
+  $lowestOnlineDate = date('Y-m-d H:i:s', $now-180);
+  $lowestAwayDate   = date('Y-m-d H:i:s', $now-600);
   $userId = $user->getIdentifier('id');
   $userName = $user->getName();
 
@@ -61,17 +75,37 @@ try
                      FROM rconexions
                     WHERE conexion_user_id2 = $userId
                       AND conexion_status = 2
-                      AND (conexion_user_id1 = '".implode("' OR conexion_user_id1 = '", $friendRequestIds)."')")
+                      AND (conexion_user_id1 = '".implode("' OR conexion_user_id1 = '", $friendRequestIds)."')"),
+
+    // Fifth query: Find where there are friends which have changed status
+    'friends' =>
+    $con->prepare("SELECT user_id
+                     FROM rusers
+                    WHERE (   (last_online >= '$lowestOnlineDate'
+                               AND user_id NOT IN ({$friends['online']}))
+
+                           OR (last_online < '$lowestOnlineDate'
+                               AND last_online >= '$lowestAwayDate'
+                               AND user_id NOT IN ({$friends['away']}))
+
+                           OR (last_online < '$lowestAwayDate'
+                               AND user_id NOT IN ({$friends['offline']}))    )
+
+                      AND (    user_id IN (SELECT conexion_user_id1
+                                             FROM rconexions
+                                            WHERE conexion_user_id2 = '$userId'
+                                              AND conexion_status = 1)
+                           OR  user_id IN (SELECT conexion_user_id2
+                                             FROM rconexions
+                                            WHERE conexion_user_id1 = '$userId'
+                                              AND conexion_status = 1))")
   );
 
   function execute(&$stmts)
   {
-    foreach ($stmts as $stmt) {
+    foreach ($stmts as $stmt)
       if (!$stmt->execute())
-      {
         return false;
-      }
-    }
     return true;
   }
 
@@ -92,6 +126,9 @@ try
     // Add the number of requests which are no longer in the database
     $rowCount += $noOfRequests;
     $rowCount -= $stmts['oldRequests']->rowCount();
+
+    // Add the number of users who changed status
+    $rowCount += $stmts['friends']->rowCount();
 
     // Return the row count
     return $rowCount;
@@ -126,7 +163,12 @@ try
       'template' => Conversation::$template,
       'content'  => array()
     ),
-    'readMessage' => array()
+    'readMessage' => array(),
+    'friends' => array(
+      'online' => array(),
+      'away' => array(),
+      'offline' => array()
+    )
   );
 
   $nothingChanged = TRUE;
@@ -254,6 +296,52 @@ try
     {
       $nothingChanged = FALSE;
       array_push($response['oldRequests'], $friendRequestId);
+    }
+  }
+
+  // Friends
+  while ($row = $stmts['friends']->fetch(PDO::FETCH_ASSOC))
+  {
+    $otherUserId = $row['user_id'];
+    $otherUser = new OtherUser($con, $otherUserId);
+    if ($otherUser->getError()) continue;
+    $nothingChanged = FALSE;
+    $otherUserName = $otherUser->getName(1);
+    $otherUserUsername = $otherUser->getCredential('username');
+    array_push($response['friends'][$otherUser->getOnlineStatus()],
+      array(
+        'id' => $otherUserId,
+        'name' => $otherUserName,
+        'username' => $otherUserUsername
+      )
+    );
+  }
+  // Push all the old ids into the array again
+  function not_in_arrays(&$friends, $id)
+  {
+    foreach ($friends as $friendList)
+      foreach ($friendList as $friend)
+        if ($friend['id'] == $id)
+          return FALSE;
+    return TRUE;
+  }
+  foreach ($friends as $onlineStatus => $friendIds)
+  {
+    foreach (explode(',', $friendIds) as $friendId)
+    {
+      $friend = new OtherUser($con, $friendId);
+      if (!$friend->getError() && not_in_arrays($response['friends'], $friendId))
+      {
+        $friendName = $friend->getName(1);
+        $friendUsername = $friend->getCredential('username');
+        array_push($response['friends'][$onlineStatus],
+          array(
+            'id' => $friendId,
+            'name' => $friendName,
+            'username' => $friendUsername
+          )
+        );
+      }
     }
   }
 

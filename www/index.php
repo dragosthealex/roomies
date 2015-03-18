@@ -246,7 +246,7 @@ require_once __ROOT__.'/inc/html/header.owner.php';
 		</div>
 	</div>
 </div>
-<?
+<?php
 }
 require_once __ROOT__."/inc/html/footer.php";
 ?>

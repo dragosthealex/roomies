@@ -138,7 +138,7 @@ void function (window, document, undefined) {
   main = body.getElementsByClassName('main')[0],
   originalTitle = document.title,
   header = body.getElementsByClassName('header')[0],
-  slim = body.getElementsByClassName('slim')[0],
+  slim = body.getElementsByClassName('slim-main')[0],
   friends = {
     online: [],
     away: [],
@@ -638,7 +638,7 @@ void function (window, document, undefined) {
       xmlhttp.onreadystatechange = function () {
         var response;
         if (xmlhttp.readyState === 4 && xmlhttp.status) {
-          if (xmlhttp.status === 503) {
+          if (xmlhttp.status === 503 || xmlhttp.status === 404) {
             // If 503, then the server is being a cunt.
           } else if (xmlhttp.status !== 200) {
             newError(xmlhttp.responseText);
@@ -981,7 +981,10 @@ void function (window, document, undefined) {
       newMessages = response.newMessages,
       readMessage = response.readMessage,
       newRequests = response.newRequests,
-      oldRequests = response.oldRequests;
+      oldRequests = response.oldRequests,
+      onlineFriends  = response.friends.online,
+      awayFriends    = response.friends.away,
+      offlineFriends = response.friends.offline;
 
       newMessages.content.length &&
         (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
@@ -1057,6 +1060,43 @@ void function (window, document, undefined) {
       forEach.call(body.getElementsByClassName('unread sent message'), function (message) {
         var messageId = message.getAttribute('data-message-id');
         conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
+      });
+
+      // Reset the slim and friends lists
+      slim.innerHTML = "";
+      friends.online = [];
+      friends.away = [];
+      friends.offline = [];
+
+      // For each grouping add the friends to the list
+      onlineFriends.forEach(function (friend) {
+        slim.innerHTML +=
+          "<li class=' online ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.online.push(friend.id);
+      });
+      awayFriends.forEach(function (friend) {
+        slim.innerHTML +=
+          "<li class=' away ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.away.push(friend.id);
+      });
+      offlineFriends.forEach(function (friend) {
+        slim.innerHTML +=
+          "<li class=' offline ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.offline.push(friend.id);
+      });
+
+      forEach.call(slim.getElementsByClassName("slim-link"), function (element) {
+        element = element.parentNode;
+        var onlineStatus = element.className.trim();
+        var id = +element.getAttribute('data-slim-user-id');
+        if (onlineStatus in friends && !isNaN(id) && friends[onlineStatus].indexOf(id)===-1)
+          friends[onlineStatus].push(id);
       });
     };
     var longpoll = function () {
