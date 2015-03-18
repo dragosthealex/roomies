@@ -41,7 +41,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 				<div class="profile-box-inner">
 					<h2 class="h2 profile-name"><?=$user2->getName()?></h2>
 					<div class="profile-links">
-						<a class='link-button'>Edit Profile</a>
+						<a class='link-button' onclick="editProfile()">Edit Profile</a>
 					</div>
 				</div>
 			</div>
@@ -77,12 +77,40 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 				<div class="box-padding">
 					<h2 class="h2">My Details</h2>
 					<?php
-          // retrieve list from database
-          $details = $user2->getDetails();
-					foreach ($details as $detail)
-					{
-						echo "$detail <br>";
-					}
+          				// retrieve list from database
+          				$details = $user2->getDetails();
+          				// echo $details['country'];
+          				$x = array_keys($details);
+          				foreach ($x as $y) {
+          					$z = ucwords($y);
+          					if($z == "Uni_city")
+          					{
+          						$z = "City of University";
+          					}
+
+          					echo "
+
+          						<div class='details-wrapper'>
+          							<div class='details-key'>
+                                        $z      
+          							</div>
+          							<div class='details-value'>
+                                        $details[$y]
+          							</div>
+                                    <div class='hidden' id='wrapper'>
+                                        $y$z
+                                    </div>
+          						</div>
+                                
+
+          					";
+          					# code...
+          				}
+						// foreach ($details as $detail)
+						// {
+						// 	echo key($detail);
+						// 	echo "$detail <br>";
+						// }
 					?>
 				</div>
 			</div>
@@ -197,8 +225,12 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 			</div>
 		</div>
 	</div>
+
 	<div id="error">
 	</div>
 	<input id="userId" type="hidden" value="<?=$userId?>"></input>
 	<input id="otherUserId" type="hidden" value="<?=$otherUserId?>"></input>
+    <script type="text/javascript">
+        window.alert("Hello");
+    </script>
 <?php require_once __ROOT__."/inc/html/footer.php";?>

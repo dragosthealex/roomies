@@ -1019,7 +1019,7 @@ private function getConv($offset)
   */
   public function rateAccommodation($accomId, $starRating)
   {
-
+    
   }
 }// class CurrentUser
 

@@ -803,7 +803,9 @@ void function (window, document, undefined) {
     } // if
   }; // onclick
 
+
   /**
+
    * A function to detect if the mouse has been pressed
    */
   window.onmousedown = function (e) {

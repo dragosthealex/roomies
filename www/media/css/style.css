@@ -1129,7 +1129,33 @@
 }*/
 
 /* End checkbox/radio styles */
+.details-wrapper {
+	border-bottom: 1px solid #D5D1D0;
+	position: relative;
+	overflow: hidden;
+	padding: 6px;
+	border-left: 1px solid  #D5D1D0;
+	border-right: 1px solid  #D5D1D0;
+	line-height: 2.3em;
+}
+ .details-wrapper:first-of-type {
+ 	border-top: 1px solid  #D5D1D0;
+ }
 
+.details-key {
+	position: relative;
+	display: inline-block;
+	float: left;
+	width: 40%;
+	font-size: 0.9em;
+	color: #808080;
+}
+
+.details-value {
+	position: relative;
+	display: inline-block;
+	float: left;
+}
 /* Questionnaire-specific */
 
 .question .input-button {

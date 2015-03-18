@@ -80,7 +80,12 @@ abstract class GeneralUser extends GenericUser
         $stmt->execute();
         $stmt->bindColumn(1,$filter);
         $stmt->fetch();
-        array_push($trueDetails, ucwords($filter));
+        // array_push($trueDetails, ucwords($filter));
+        $trueDetails[$key] = ucwords($filter);
+      }
+      else if($key != 'birthday' && $key != 'profile_filter_id' && $key != 'last_name' && $key != 'completed' && $key != 'first_name')
+      {
+        $trueDetails[$key] = ucwords("-");
       }
     }
 
