@@ -80,26 +80,24 @@ $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
     <?php if($myRating){?>My rating:<a class="rating-text"><?=$myRating?></a><?php }?>
   </div>
   <div class="ratings-box">
-        <div onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
-
-        <input type="radio" class="star-cr" name="rating" id="rating1">
-          <label for="rating1" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=5'>
+        <div <?=LOGGED_IN ? 'onmouseover="barHover(this);" onmouseout="barUnHover(this);"':''?> class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
+          <label for="rating1" <?=LOGGED_IN ? 'onmouseover="barHover(this);" onmouseout="barUnHover(this);"':''?> class="star" data-hide="star-b0" <?=LOGGED_IN ? "data-ajax-url='../php/reviews.process.php?a=5&pid=$accomId&ptype=&text=5'":''?>>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating2">
-          <label for="rating2" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=4'>
+          <label for="rating2" <?=LOGGED_IN ? 'onmouseover="barHover(this);" onmouseout="barUnHover(this);"':''?> class="star" data-hide="star-b0" <?=LOGGED_IN ? "data-ajax-url='../php/reviews.process.php?a=5&pid=$accomId&ptype=&text=4'":''?>>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating3">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating3" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=3'>
+          <label class="star" <?=LOGGED_IN ? 'onmouseover="barHover(this);" onmouseout="barUnHover(this);"':''?> for="rating3" data-hide="star-b0" <?=LOGGED_IN ? "data-ajax-url='../php/reviews.process.php?a=5&pid=$accomId&ptype=&text=3'":''?>>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating4">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating4" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=2'>
+          <label class="star" <?=LOGGED_IN ? 'onmouseover="barHover(this);" onmouseout="barUnHover(this);"':''?> for="rating4" data-hide="star-b0" <?=LOGGED_IN ? "data-ajax-url='../php/reviews.process.php?a=5&pid=$accomId&ptype=&text=2'":''?>>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating5">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating5" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=1'>
+          <label class="star" <?=LOGGED_IN ? 'onmouseover="barHover(this);" onmouseout="barUnHover(this);"':''?> for="rating5" data-hide="star-b0" <?=LOGGED_IN ? "data-ajax-url='../php/reviews.process.php?a=5&pid=$accomId&ptype=&text=1'":''?>>
            
           </label>
 

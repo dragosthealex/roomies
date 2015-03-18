@@ -77,6 +77,7 @@ if(!LOGGED_IN)
 				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2" id="Register">Register</h2>
+						<p class="small-text"> Or register as <a class="link" href="./register-owner">accommodation owner</a> to advertise your properties.
 						<form method="POST" name="register" action="./confirm/" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),newError('Passwords must match!'),false):(this.registerPassword.focus(),newError('A password is required.'),false):(this.registerEmail.focus(),newError('An email is required.'),false)">
 							<input type="email" name="registerEmail" placeholder="Email" class="input block" required>
 							<input type="password" name="registerPassword" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">

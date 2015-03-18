@@ -22,6 +22,36 @@ abstract class GenericUser extends Base
   protected $image;
   // The details of this user
   protected $details;
+
+  /**
+  * Function getCredential($key)
+  *
+  * Returns id, email, username, rank, and any detail
+  *
+  * @return - $credential(String), the credential returned
+  */
+  public function getCredential($key)
+  {
+    switch ($key)
+    {
+      case 'id':
+        return $this->id;
+        break;
+      case 'username':
+        return $this->username;
+        break;
+      case 'email':
+        return $this->email;
+        break;
+      case 'image':
+        return $this->image;
+        break;
+      default:
+        return isset($this->details[$key])?$this->details[$key]:'Wrong key';
+        break;
+    }
+  }
+
 }
 
 

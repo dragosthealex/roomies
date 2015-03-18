@@ -3,7 +3,7 @@
 This is the accommodation index page
 */
 
-include '../../inc/init.php';
+include_once '../../inc/init.php';
 
 // The title of the page
 $title = "Accommodation";

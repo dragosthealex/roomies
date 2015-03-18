@@ -43,6 +43,7 @@ session_regenerate_id();
 
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
+define("OWNER_LOGGED_IN", isset($_SESSION['owner']));
 
 // Define whether or not the user has just logged in, for later use.
 define("JUST_LOGGED_IN", isset($_SESSION['justLoggedIn']));

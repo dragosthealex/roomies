@@ -18,6 +18,7 @@ abstract class GeneralUser extends GenericUser
   protected $birthday;
   // The array of groups IDs the user is in
   protected $groups = array();
+  
   /**
   * Function getCredential($key)
   *
