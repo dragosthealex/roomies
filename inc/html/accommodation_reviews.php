@@ -1,6 +1,6 @@
 <?php
 $reviews = $accomInfo['reviews'];
-$userId = $user2->getCredential('id');
+$userId = LOGGED_IN ? $user2->getCredential('id') : '';
 
 include_once __ROOT__.'/inc/classes/Reply.php';
 include_once __ROOT__.'/inc/classes/Review.php';
@@ -52,6 +52,11 @@ foreach ($reviews as $review)
     <div class='review-text'>
       $postText
     </div>
+    ";
+    if(LOGGED_IN)
+    {
+      $output .=
+    "
     <div class='like-reply'>
       $postLikesNo 
       <span class='minidrop-container like-button like-button-review$postId' id='likeReview$postId' $likeHide>
@@ -68,7 +73,8 @@ foreach ($reviews as $review)
       </span>
       - $postRepliesNo Reply
     </div>
-  ";
+    ";
+    }
   if($postRepliesNo)
   {
     $output .= 

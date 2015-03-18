@@ -88,7 +88,7 @@ else
 <div class='acc-long-comments' style="margin-top:1em;">
   <?php include_once __ROOT__.'/inc/html/accommodation_reviews.php'; ?>
 </div>
-<div style="<?=($user2->hasReviewed($accomId))?'display:none;':''?>">
+<div style="<?=(!LOGGED_IN || $user2->hasReviewed($accomId))?'display:none;':''?>">
 <div class="textarea-holder" style="margin-top:1em;)"
   ><textarea class="textarea" id="text" placeholder="Write a review..."
              oninput="this.style.height=((this.value.match(/\n/g)||[]).length+2)*1.3+'em';return false"
