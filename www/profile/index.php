@@ -127,17 +127,6 @@ if ($_GET['u'] == $_SESSION['user']['username'])
           				} ?>
 
 				    </div>
-                    <?php
-                        function printOption($array, $index, $checkAgainst)
-                        {
-                          echo "<option value=$index";
-                          if ($index == $checkAgainst)
-                          {
-                            echo ' selected';
-                          }
-                          echo ">{$array[$index]}</option>";
-                        }
-                    ?>
                 <script type="text/javascript">
                     var detailsVal = document.getElementsByClassName('details-value');
                     var detailsNewVal = document.getElementsByClassName('new-val');
