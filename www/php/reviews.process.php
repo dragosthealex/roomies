@@ -12,7 +12,7 @@ require_once '../../inc/init.php';
 if(!LOGGED_IN || !isset($_GET['a'], $_GET['pid'], $_GET['ptype'], $_SERVER['HTTP_ROOMIES'])
               || $_SERVER['HTTP_ROOMIES'] != 'cactus')
 {
-  include __ROOT__."/inc/html/notfound.php";
+  include_once __ROOT__."/inc/html/notfound.php";
   exit();
 }
 

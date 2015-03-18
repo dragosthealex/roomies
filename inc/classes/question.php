@@ -55,7 +55,7 @@ class Question extends Base
       $this->text = $text;
       $answers = array();
       $answerIds = explode(":", $answerIds);
-      
+
       foreach($answerIds as $answerId)
       {
         $answer = new Answer($con, $answerId);
@@ -96,9 +96,7 @@ class Question extends Base
         $questionInfo = explode(":", $questionInfo);
         $this->answerForMe = $questionInfo[0];
         // Explode the accepted answers for them into an array;
-        $answersForThem = $questionInfo[1];
-        $answersForThem = explode(",", $answersForThem);
-        $this->answersForThem = $answersForThem;
+        $this->answersForThem = explode(",", $questionInfo[1]);
         $this->importance = $questionInfo[2];
       }
       $this->questionInfo = $questionInfo;
@@ -124,36 +122,36 @@ class Question extends Base
   }
 
   /**
-  * Function setAnswers($forMe, $forThem, $importance)
+  * Function setAnswers($answerForMe, $answersForThem, $importance)
   *
   * Sets the answers and updates the database accordingly.
   *
-  * @param - $forMe, the answer appliable for the user
-  * @param - $forThem, the answer appliable to others, array
+  * @param - $answerForMe, the answer appliable for the user
+  * @param - $answersForThem, the answer appliable to others, array
   * @param - $importance, the importance of the question
   */
-  function setAnswers($forMe, $forThem, $importance)
+  function setAnswers($answerForMe, $answersForThem, $importance)
   {
     $userId = $this->userId;
     $con = $this->con;
     $id = $this->id;
 
-    // $forMe and $forThem are the int values. We get the text values and
+    // $answerForMe and $answersForThem are the int values. We get the text values and
     // assign them to the variables
-    $this->answerForMe = $forMe;
-    $this->answersForThem = $forThem;
+    $this->answerForMe = $answerForMe;
+    $this->answersForThem = $answersForThem;
     $this->importance = $importance;
 
     // Construct the string
-    if(isset($forThem[1]))
+    if(isset($answersForThem[1]))
     {
-      $forThem = implode(",", $forThem);
+      $answersForThem = implode(",", $answersForThem);
     }
     else
     {
-      $forThem = $forThem['0'];
+      $answersForThem = $answersForThem['0'];
     }
-    $questionInfo = "$forMe:$forThem:$importance";
+    $questionInfo = "$answerForMe:$answersForThem:$importance";
 
     // Update the database
     $stmt = $con->prepare("UPDATE ruser_qa SET question".$id."='$questionInfo'");
@@ -176,322 +174,127 @@ class Question extends Base
     $text = $this->text;
     $id = $this->id;
 
-    if(isset($this->answerForMe) && $this->answerForMe)
+    $question =
+    "
+      <div class='question'>
+        <script>window.checkForm=function(e,i,c,p,q,r,j,z,y){
+          p=q=r=!1;e=e.parentNode.parentNode.parentNode;
+          for(j=1;j<=c;j++)p=p||document.getElementById('q_'+i+'_ans_'+j).checked;
+          y=document.getElementById('q_'+i+'_acc');y.value='';
+          for(j=0;j<=c;j++)(z=document.getElementById('q_'+i+'_acc_'+j),j&&z.checked&&(y.value=y.value?y.value.split(',').concat(z.value).join(','):z.value),q=q||z.checked);
+          for(j=0;j<=3;j++)r=r||document.getElementById('q_'+i+'_imp_'+j).checked;
+          e.children[e.children.length-2].disabled=!(p&&q&&r);
+        }</script>
+        <div class='box-padding'>
+          <h3 class='h3' data-toggle='q_$id'>$text</h3>
+          <form id='q_$id' class='hidden'>
+            <div class='indented-section'>
+    ";
+
+    $answered = isset($this->answerForMe) && $this->answerForMe;
+    $disabled = $answered ? 'disabled' : '';
+    $answerForMe = $this->answerForMe;
+    $answersForThem = $this->answersForThem;
+    $importance = $this->importance;
+
+    $count = 1;
+    $totalCount = count($answers);
+    foreach ($answers as $answer)
     {
-      // Get the text of the answer for me
-      $forMe = new Answer($con, $this->answerForMe);
-      $forMe = $forMe->getText();
-
-      $forThem = $this->answersForThem;
-      $forThem = isset($forThem[0])?$forThem:explode(",", $forThem);
-
-      // Get the text of the answers for them
-      $forThemText = array();
-      foreach ($forThem as $answerId)
-      {
-        $acceptedAnswer = new Answer($con, $answerId);
-        array_push($forThemText, $acceptedAnswer->getText());
-      }
-      $disabled = 'disabled';
-
-      $importance = $this->importance;
-      $question = 
-      "
-        <div class='question question-unanswered'>
-          <script>window.checkForm=function(e,i,c,p,q,r,j,z,y){
-            p=q=r=!1;e=e.parentNode.parentNode.parentNode;
-            for(j=1;j<=c;j++)p=p||document.getElementById('q_'+i+'_ans_'+j).checked;
-            y=document.getElementById('q_'+i+'_acc');y.value='';
-            for(j=0;j<=c;j++)(z=document.getElementById('q_'+i+'_acc_'+j),j&&z.checked&&(y.value=y.value?y.value.split(',').concat(z.value).join(','):z.value),q=q||z.checked);
-            for(j=0;j<=3;j++)r=r||document.getElementById('q_'+i+'_imp_'+j).checked;
-            e.children[e.children.length-2].disabled=!(p&&q&&r);
-          }</script>
-          <div class='box-padding'>
-            <h3 class='h3' data-toggle='q_$id'>$text</h3>
-            <form id='q_$id' class='hidden'>
-              <div class='indented-section'>
-      ";
-      $count = 1;
-      $totalCount = count($answers);
-      foreach ($answers as $answer)
-      {
-        /*
-        The answers to different q can have the same id i.e. the answer 'yes' has the id 1 everywhere.
-        So we need to set the answers id attribute with a unique count.
-        We set the name for the radio buttons to be "q_{$questionId}_ans"
-        */
-        $answerText = $answer->getText();
-        $answerId = $answer->getId();
-        if($answerText == $forMe)
-        {
-          $question .=
-          "
-                  <label for='q_{$id}_ans_{$count}' class='cr-label'>
-                    <input disabled checked type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr answered-input' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
-                    <span class='cr-button r-button'></span>
-                    <span class='cr-text'>{$answerText}</span>
-                  </label>
-          "; 
-          $count ++;
-        } else {
-          $question .=
-          "
-                  <label for='q_{$id}_ans_{$count}' class='cr-label'>
-                    <input disabled type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr answered-input' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
-                    <span class='cr-button r-button'></span>
-                    <span class='cr-text'>{$answerText}</span>
-                  </label>
-          ";      
-          $count ++;
-        }
-
-      }
+      /*
+      The answers to different q can have the same id i.e. the answer 'yes' has the id 1 everywhere.
+      So we need to set the answers id attribute with a unique count.
+      We set the name for the radio buttons to be "q_{$questionId}_ans"
+      */
+      $answerText = $answer->getText();
+      $answerId = $answer->getId();
+      $checked = $answerId == $answerForMe ? 'checked' : '';
       $question .=
       "
-              </div>
-              <h4 class='h4'>Answer(s) you&rsquo;ll accept</h4>
-              <div class='indented-section'>
+              <label for='q_{$id}_ans_{$count}' class='cr-label'>
+                <input $disabled $checked type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
+                <span class='cr-button r-button'></span>
+                <span class='cr-text'>{$answerText}</span>
+              </label>
       ";
-      $count = 1;
-      foreach ($answers as $answerId => $answer)
-      {
-        /*
-        We set the name for the radio buttons to be unique "accepting_for_q_$questionId_$answerId"
-        */
-        $answerText = $answer->getText();
-        $answerId = $answer->getId();
+      $count ++;
+    }
+    $question .=
+    "
+            </div>
+            <h4 class='h4'>Answer(s) you&rsquo;ll accept</h4>
+            <div class='indented-section'>
+    ";
 
-        if(in_array("$answerText", $forThemText)) {
-          $question .=
-          "
-                  <label for='q_{$id}_acc_{$count}' class='cr-label'>
-                  <input disabled checked type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>{$answerText}</span>
-                </label>
-          ";
-          $count ++;
-        } else {
-          $question .=
-           "
-                  <label for='q_{$id}_acc_{$count}' class='cr-label'>
-                  <input disabled type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>{$answerText}</span>
-                </label>
-           ";
-          $count ++;
-        }
-      }
-
-      $question .= 
+    $count = 1;
+    $allAnswersAccepted = $answered;
+    foreach ($answers as $answerId => $answer)
+    {
+      /*
+      We set the name for the radio buttons to be unique "accepting_for_q_$questionId_$answerId"
+      */
+      $answerText = $answer->getText();
+      $answerId = $answer->getId();
+      $checked = in_array($answerId, $answersForThem);
+      $allAnswersAccepted = $allAnswersAccepted && $checked;
+      $checked = $checked ? 'checked' : '';
+      $question .=
       "
-                <label for='q_{$id}_acc_0' class='cr-label'>
-                  <input disabled type='checkbox' id='q_{$id}_acc_0' class='cr' onchange='var i,e;for(i=1;i<{$count};i++)(((e=document.getElementById(\"q_{$id}_acc_\"+i)).checked=this.checked),(e.disabled=this.checked));document.getElementById(\"q_{$id}_imp_0\").checked=this.checked;checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>Any of the above</span>
-                </label>
-
-
-                  </div>
+              <label for='q_{$id}_acc_{$count}' class='cr-label'>
+                <input $disabled $checked type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
+                <span class='cr-button'></span>
+                <span class='cr-text'>{$answerText}</span>
+              </label>
       ";
+      $count ++;
+    }
 
-      if($importance != 0)
-      {
-        if($importance == 1) {
-          $question .=
-          "   
-                <div class='indented-section'>
-                <h4 class='h4'>Importance</h4>
-                  <label for='q_{$id}_imp_1' class='cr-label cp-label cp-left'>
-                    <input disabled checked type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr answered-input' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
-                    <span class='cr-button'></span>
-                    <span class='cr-text'>A little</span>
-                  </label
-          ";  
-        } else {
-          $question .=
-          "   
-                <div class='indented-section'>
-                <h4 class='h4'>Importance</h4>
-                  <label for='q_{$id}_imp_1' class='cr-label cp-label cp-left'>
-                    <input disabled type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr answered-input' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
-                    <span class='cr-button'></span>
-                    <span class='cr-text'>A little</span>
-                  </label
-          "; 
-        }
+    $allChecked  = $answered && $allAnswersAccepted ? 'checked' : '';
+    $imp0Checked = $answered && $importance == 0    ? 'checked' : '';
+    $imp1Checked = $answered && $importance == 1    ? 'checked' : '';
+    $imp2Checked = $answered && $importance == 10   ? 'checked' : '';
+    $imp3Checked = $answered && $importance == 50   ? 'checked' : '';
 
-        if($importance == 10)
-        {
-          $question .=
-          "
-                  ><label for='q_{$id}_imp_2' class='cr-label cp-label'>
-                    <input checked disabled type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr answered-input' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
-                    <span class='cr-button'></span>
-                    <span class='cr-text'>Somewhat</span>
-                  </label
-          ";
-        } else {
-        $question .=
-        "
-                ><label for='q_{$id}_imp_2' class='cr-label cp-label'>
-                  <input disabled type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr answered-input' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>Somewhat</span>
-                </label
-        ";
-        }
-
-        if($importance == 50){
-          $question .=
-          "
-                  ><label for='q_{$id}_imp_3' class='cr-label cp-label cp-right'>
-                    <input checked disabled type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr answered-input' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
-                    <span class='cr-button'></span>
-                    <span class='cr-text'>Very</span>
-                  </label>
-          ";
-        } else {
-        $question .=
-        "
-                ><label for='q_{$id}_imp_3' class='cr-label cp-label cp-right'>
-                  <input disabled type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr answered-input' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>Very</span>
-                </label>
-        ";
-        }
-
-        
-
-        $question .= 
-        "
-              </div>
-            </form>
-          </div>
-          </div>
-      ";
-      } else {
-        $question .=
-        "
-          <div class='indented-section'>
-                <h4 class='h4'>Importance</h4>
-                <p class='text'>Irrelevant</p>
-                <p class='text cr-text-faded'>(Because you&rsquo;ll accept any answer, this question is marked as irrelevant)</p>
-              </div>
+    $question .=
+    "
+              <label for='q_{$id}_acc_0' class='cr-label'>
+                <input $disabled $allChecked type='checkbox' id='q_{$id}_acc_0' class='cr' onchange='var i,e;for(i=1;i<{$count};i++)(((e=document.getElementById(\"q_{$id}_acc_\"+i)).checked=this.checked),(e.disabled=this.checked));document.getElementById(\"q_{$id}_imp_0\").checked=this.checked;checkForm(this,{$id},{$totalCount})'>
+                <span class='cr-button'></span>
+                <span class='cr-text'>Any of the above</span>
+              </label>
+            </div>
+            <input type='hidden' name='q_acc' id='q_{$id}_acc'>
+            <h4 class='h4'>Importance</h4>
+            <input $disabled $imp0Checked type='radio' name='q_imp' id='q_{$id}_imp_0' class='cp-0' value='0'>
+            <div class='indented-section'>
+              <p class='text'>Irrelevant</p>
+              <p class='text cr-text-faded'>(Because you&rsquo;ll accept any answer, this question is marked irrelevant)</p>
+            </div>
+            <div class='indented-section'>
+              <label for='q_{$id}_imp_1' class='cr-label cp-label cp-left'>
+                <input $disabled $imp1Checked type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
+                <span class='cr-button'></span>
+                <span class='cr-text'>A little</span>
+              </label
+              ><label for='q_{$id}_imp_2' class='cr-label cp-label'>
+                <input $disabled $imp2Checked type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
+                <span class='cr-button'></span>
+                <span class='cr-text'>Somewhat</span>
+              </label
+              ><label for='q_{$id}_imp_3' class='cr-label cp-label cp-right'>
+                <input $disabled $imp3Checked type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
+                <span class='cr-button'></span>
+                <span class='cr-text'>Very</span>
+              </label>
+            </div>
+            <input $disabled type='button' class='input-button' data-ajax-url='../php/match.process.php?q_no={$id}' data-ajax-post='q_{$id} q_ans q_acc q_imp' data-ajax-hide='q_$id' value='Answer'>
+            <input type='button' class='input-button cancel-button' data-toggle='q_$id' value='Cancel'>
           </form>
-          </div>
-          </div>
-        ";
-      }
-    
-      return $question;
-    }
-    else
-    {
-      $question = 
-      "
-        <div class='question question-unanswered'>
-          <script>window.checkForm=function(e,i,c,p,q,r,j,z,y){
-            p=q=r=!1;e=e.parentNode.parentNode.parentNode;
-            for(j=1;j<=c;j++)p=p||document.getElementById('q_'+i+'_ans_'+j).checked;
-            y=document.getElementById('q_'+i+'_acc');y.value='';
-            for(j=0;j<=c;j++)(z=document.getElementById('q_'+i+'_acc_'+j),j&&z.checked&&(y.value=y.value?y.value.split(',').concat(z.value).join(','):z.value),q=q||z.checked);
-            for(j=0;j<=3;j++)r=r||document.getElementById('q_'+i+'_imp_'+j).checked;
-            e.children[e.children.length-2].disabled=!(p&&q&&r);
-          }</script>
-          <div class='box-padding'>
-            <h3 class='h3' data-toggle='q_$id'>$text</h3>
-            <form id='q_$id' class='hidden'>
-              <div class='indented-section'>
-      ";
-      $count = 1;
-      $totalCount = count($answers);
-      foreach ($answers as $answer)
-      {
-        /*
-        The answers to different q can have the same id i.e. the answer 'yes' has the id 1 everywhere.
-        So we need to set the answers id attribute with a unique count.
-        We set the name for the radio buttons to be "q_{$questionId}_ans"
-        */
-        $answerText = $answer->getText();
-        $answerId = $answer->getId();
-        $question .=
-        "
-                <label for='q_{$id}_ans_{$count}' class='cr-label'>
-                  <input type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button r-button'></span>
-                  <span class='cr-text'>{$answerText}</span>
-                </label>
-        ";      
-        $count ++;
-      }
-      $question .=
-      "
-              </div>
-              <h4 class='h4'>Answer(s) you&rsquo;ll accept</h4>
-              <div class='indented-section'>
-      ";
-      $count = 1;
-      foreach ($answers as $answerId => $answer)
-      {
-        /*
-        We set the name for the radio buttons to be unique "accepting_for_q_$questionId_$answerId"
-        */
-        $answerText = $answer->getText();
-        $answerId = $answer->getId();
-        $question .=
-         "
-                <label for='q_{$id}_acc_{$count}' class='cr-label'>
-                  <input type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>{$answerText}</span>
-                </label>
-         ";
-        $count ++;
-      }
-      $question .=
-      "
-                <label for='q_{$id}_acc_0' class='cr-label'>
-                  <input type='checkbox' id='q_{$id}_acc_0' class='cr' onchange='var i,e;for(i=1;i<{$count};i++)(((e=document.getElementById(\"q_{$id}_acc_\"+i)).checked=this.checked),(e.disabled=this.checked));document.getElementById(\"q_{$id}_imp_0\").checked=this.checked;checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>Any of the above</span>
-                </label>
-              </div>
-              <input type='hidden' name='q_acc' id='q_{$id}_acc'>
-              <h4 class='h4'>Importance</h4>
-              <input type='radio' name='q_imp' id='q_{$id}_imp_0' class='cp-0' value='0'>
-              <div class='indented-section'>
-                <p class='text'>Irrelevant</p>
-                <p class='text cr-text-faded'>(Because you&rsquo;ll accept any answer, this question is marked irrelevant)</p>
-              </div>
-              <div class='indented-section'>
-                <label for='q_{$id}_imp_1' class='cr-label cp-label cp-left'>
-                  <input type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>A little</span>
-                </label
-                ><label for='q_{$id}_imp_2' class='cr-label cp-label'>
-                  <input type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>Somewhat</span>
-                </label
-                ><label for='q_{$id}_imp_3' class='cr-label cp-label cp-right'>
-                  <input type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
-                  <span class='cr-button'></span>
-                  <span class='cr-text'>Very</span>
-                </label>
-              </div>
-              <input disabled type='button' class='input-button' data-ajax-url='../php/match.process.php?q_no={$id}' data-ajax-post='q_{$id} q_ans q_acc q_imp' value='Answer'>
-              <input type='button' class='input-button cancel-button' data-toggle='q_$id' value='Cancel'>
-            </form>
-          </div>
         </div>
-      ";
-      //Add a submit button after changing into a form
-      return $question;
-    }
+      </div>
+    ";
+
+    return $question;
   }
 
   /**
@@ -506,10 +309,10 @@ class Question extends Base
   {
     if(isset($this->answersForThem, $this->answerForMe, $this->importance))
     {
-      $forThem = $this->answersForThem;
-      $forMe = $this->answerForMe;
+      $answersForThem = $this->answersForThem;
+      $answerForMe = $this->answerForMe;
       $importance = $this->importance;
-      return array("$forMe", $forThem, "$importance");
+      return array("$answerForMe", $answersForThem, "$importance");
     }
     else
     {

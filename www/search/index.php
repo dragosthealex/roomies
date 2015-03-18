@@ -68,7 +68,7 @@ function rCF(element) {
 }
     </script>
     <h2 class="h2">Show me</h2>
-    <div class="input-wrapper" style="z-index:2">
+    <div class="input-wrapper filter-wrapper">
       <?php
       $genderChosen = isset($_GET['gender']) ? $_GET['gender'] : $user2->getCredential('gender');
       ?>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 18, 2015 at 03:18 AM
+-- Generation Time: Mar 18, 2015 at 03:00 PM
 -- Server version: 5.5.41
 -- PHP Version: 5.4.36-0+deb7u3
 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `raccommodations` (
 --
 
 INSERT INTO `raccommodations` (`accommodation_id`, `accommodation_name`, `accommodation_no_photos`, `accommodation_date`, `accommodation_rating`, `accommodation_description`, `accommodation_author`, `accommodation_rating_array`) VALUES
-(1, 'Whitworth Park', 0, '2015-02-25', '40', 'Bedding Packs: To assist you and limit what you have to transport to the hall you can order a bedding pack online. The price for a single bedding pack is  	&pound;20.00 and the pack includes a hollow fibre pillow, a 13.5tog duvet, a sheet, a pillowcase and a duvet cover. Double bedding packs are available at a price of  	&pound;36.00.\n\nWhitworth Park is centrally located on the University of Manchester campus, close to sports centre, libraries and Students Union.\n\nIt comprises of eight low-rise houses containing one to three storey flats for groups of seven, eight or nine students. Accommodation is in single study bedrooms, with shared kitchen, lounge and bathroom in each flat.\n\nGrove House houses the administrative and social centre of the community. Facilities include two squash courts, launderette, bar, gym and large dance hall.\n\nActive Residents Association. Visit the Whitworth Park RA Website...*.\n\nPostgraduate students are housed in parts of Thorncliffe and Aberdeen.', 54, ',49:,40');
+(1, 'Whitworth Park', 0, '2015-02-25', '80', 'Bedding Packs: To assist you and limit what you have to transport to the hall you can order a bedding pack online. The price for a single bedding pack is  	&pound;20.00 and the pack includes a hollow fibre pillow, a 13.5tog duvet, a sheet, a pillowcase and a duvet cover. Double bedding packs are available at a price of  	&pound;36.00.\n\nWhitworth Park is centrally located on the University of Manchester campus, close to sports centre, libraries and Students Union.\n\nIt comprises of eight low-rise houses containing one to three storey flats for groups of seven, eight or nine students. Accommodation is in single study bedrooms, with shared kitchen, lounge and bathroom in each flat.\n\nGrove House houses the administrative and social centre of the community. Facilities include two squash courts, launderette, bar, gym and large dance hall.\n\nActive Residents Association. Visit the Whitworth Park RA Website...*.\n\nPostgraduate students are housed in parts of Thorncliffe and Aberdeen.', 54, ',49:,80');
 
 -- --------------------------------------------------------
 
@@ -458,6 +458,38 @@ CREATE TABLE IF NOT EXISTS `rmessages` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rowners`
+--
+
+CREATE TABLE IF NOT EXISTS `rowners` (
+  `owner_id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner_email` varchar(50) NOT NULL,
+  `owner_username` varchar(20) NOT NULL,
+  `owner_first_name` varchar(20) NOT NULL,
+  `owner_last_name` varchar(20) NOT NULL,
+  `owner_password` varchar(200) NOT NULL,
+  `owner_salt` int(11) NOT NULL,
+  `owner_country` int(11) NOT NULL,
+  `owner_city` int(11) NOT NULL,
+  `owner_post_code` varchar(10) NOT NULL,
+  `owner_gender` int(11) NOT NULL,
+  `owner_phone` varchar(15) NOT NULL,
+  `owner_img_url` varchar(100) NOT NULL,
+  `owner_birthday` date NOT NULL,
+  PRIMARY KEY (`owner_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `rowners`
+--
+
+INSERT INTO `rowners` (`owner_id`, `owner_email`, `owner_username`, `owner_first_name`, `owner_last_name`, `owner_password`, `owner_salt`, `owner_country`, `owner_city`, `owner_post_code`, `owner_gender`, `owner_phone`, `owner_img_url`, `owner_birthday`) VALUES
+(9, 'owner1@gmail.com', 'owner1', 'owner', 'first', '6d10617994cca2e9ec7efb14e3bd8947563444a6af56e9185c975a57d767287a', 1402851473, 0, 0, 'M9 13WJ', 0, '121412123123', '', '2003-09-12'),
+(10, 'owner2@gmail.com', 'owner2', 'owner', '2', '8846ed52d8b5d3470409e86ec189c296e53780b0174e094495629f624b4efe33', 10902441, 0, 0, 'M9 13WJ', 0, '123234123312', '', '2013-02-04');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rpercentages`
 --
 
@@ -509,14 +541,14 @@ INSERT INTO `rpercentages` (`percentage_user_id1`, `percentage_user_id2`, `perce
 (26, 50, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (26, 54, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (27, 28, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(27, 49, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(27, 49, 100, 0, 1, 0, 0, 0, 1, 10, 50, 1),
 (27, 50, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (27, 54, 10, 0, 0, 0, 0, 0, 1, 10, 50, 1),
 (28, 49, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (28, 50, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (28, 54, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (49, 50, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(49, 54, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(49, 54, 7, 0, 1, 0, 0, 1, 0, 20, 20, 1),
 (50, 54, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
@@ -535,16 +567,14 @@ CREATE TABLE IF NOT EXISTS `rposts` (
   `post_type` tinyint(4) NOT NULL,
   `post_author` int(11) NOT NULL,
   UNIQUE KEY `post_id` (`post_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `rposts`
 --
 
 INSERT INTO `rposts` (`post_id`, `post_parent_id`, `post_text`, `post_likes`, `post_likes_no`, `post_date`, `post_type`, `post_author`) VALUES
-(1, 2, 'shet reply 1', '', 0, '2015-03-17', 1, 54),
-(2, 1, 'noww...', '', 0, '2015-03-17', 0, 54),
-(3, 2, 'well fuck you, dear sir', '', 0, '2015-03-18', 1, 23);
+(4, 1, 'heyyyyaa', '49', 1, '2015-03-18', 0, 49);
 
 -- --------------------------------------------------------
 
@@ -591,6 +621,23 @@ INSERT INTO `rsiteinfo` (`info_id`, `info`, `value`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rtempowners`
+--
+
+CREATE TABLE IF NOT EXISTS `rtempowners` (
+  `temp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `temp_username` varchar(50) NOT NULL,
+  `temp_email` varchar(100) NOT NULL,
+  `temp_pass` varchar(200) NOT NULL,
+  `temp_salt` int(11) NOT NULL,
+  `conf` int(11) NOT NULL,
+  `temp_details` varchar(1000) NOT NULL,
+  PRIMARY KEY (`temp_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rtempusers`
 --
 
@@ -601,6 +648,7 @@ CREATE TABLE IF NOT EXISTS `rtempusers` (
   `temp_salt` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `temp_pass` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `conf` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `temp_details` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`temp_id`),
   UNIQUE KEY `temp_username` (`temp_username`,`temp_email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
@@ -678,7 +726,7 @@ INSERT INTO `rusersettings` (`setting_user_id`, `is_private`, `is_invisible`, `n
 (27, 1, 0, 1, 1, 1, 1, 1),
 (28, 1, 0, 1, 1, 1, 1, 1),
 (29, 1, 0, 1, 1, 1, 1, 1),
-(49, 1, 0, 1, 1, 1, 1, 1),
+(49, 1, 0, 1, 1, 0, 1, 1),
 (50, 1, 0, 1, 1, 1, 1, 1),
 (53, 1, 0, 1, 1, 1, 1, 1),
 (54, 1, 1, 1, 0, 1, 1, 1);
@@ -729,6 +777,7 @@ CREATE TABLE IF NOT EXISTS `ruser_qa` (
 
 INSERT INTO `ruser_qa` (`answer_user_id`, `question1`, `question2`, `question3`) VALUES
 (27, '2:1,2:50', '', NULL),
+(49, '2:2:10', '5:5:10', NULL),
 (54, '2:1:10', '7:7,6,5:10', NULL);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

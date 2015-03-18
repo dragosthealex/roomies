@@ -76,36 +76,28 @@ $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
     </div>
   </div>
 </div>
-  <div style="margin-bottom: 5px;">Rating: <a class="rating-text"><?=$rating?></a>
-    <?php if($myRating){?>My rating:<a class="rating-text"><?=$myRating?></a><?php }?>
-  </div>
-  <div class="ratings-box">
-        <div onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
-
-        <input type="radio" class="star-cr" name="rating" id="rating1">
-          <label for="rating1" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=5'>
-           
-          </label>
-        <input type="radio" class="star-cr" name="rating" id="rating2">
-          <label for="rating2" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=4'>
-           
-          </label>
-        <input type="radio" class="star-cr" name="rating" id="rating3">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating3" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=3'>
-           
-          </label>
-        <input type="radio" class="star-cr" name="rating" id="rating4">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating4" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=2'>
-           
-          </label>
-        <input type="radio" class="star-cr" name="rating" id="rating5">
-          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating5" data-ajax-url='../php/reviews.process.php?a=5&pid=<?=$accomId?>&ptype=&text=1'>
-           
-          </label>
-
-        
-  </div>
-
+<div style="margin-bottom: 5px;">Rating: <a class="rating-text"><?=$rating?></a>
+  <?php if($myRating){?>My rating:<a class="rating-text"><?=$myRating?></a><?php }?>
+</div>
+<div class="ratings-box"
+  onmouseover="firstChild.style.background='none'"
+  onmouseout="firstChild.style.background='#e37314'"
+  ><div class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
+  <?php
+  $ajaxText = LOGGED_IN ? "star-b0'
+                           data-ajax-url='../php/reviews.process.php?a=5&pid=$accomId&ptype=&text=" : "data-null='";
+  ?>
+  <input class="star-cr" type="radio" name="rating" id="rating5" value="5">
+  <label class="star-label" for="rating5"><span class="star" data-hide='<?=$ajaxText?>5'></span></label>
+  <input class="star-cr" type="radio" name="rating" id="rating4" value="4">
+  <label class="star-label" for="rating4"><span class="star" data-hide='<?=$ajaxText?>4'></span></label>
+  <input class="star-cr" type="radio" name="rating" id="rating3" value="3">
+  <label class="star-label" for="rating3"><span class="star" data-hide='<?=$ajaxText?>3'></span></label>
+  <input class="star-cr" type="radio" name="rating" id="rating2" value="2">
+  <label class="star-label" for="rating2"><span class="star" data-hide='<?=$ajaxText?>2'></span></label>
+  <input class="star-cr" type="radio" name="rating" id="rating1" value="1">
+  <label class="star-label" for="rating5"><span class="star" data-hide='<?=$ajaxText?>1'></span></label>
+</div>
 <div class='acc-long-desc'>
   <?=$accomInfo['description'];?>
 </div>
@@ -127,15 +119,3 @@ $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
         data-ajax-url="../php/reviews.process.php?a=1&pid=<?=$accomId?>&ptype=acc"
         data-ajax-post="text">
 </div>
-
-<script type="text/javascript">
-  var bar = document.getElementsByClassName('star-background');
-
-  function barHover(el) {
-    bar[0].style.background ='none';
-  }
-
-  function barUnHover(el) {
-    bar[0].style.background ='#e37314';
-  }
-</script>

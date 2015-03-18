@@ -43,6 +43,7 @@ session_regenerate_id();
 
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
+define("OWNER_LOGGED_IN", isset($_SESSION['owner']));
 
 // Define whether or not the user has just logged in, for later use.
 define("JUST_LOGGED_IN", isset($_SESSION['justLoggedIn']));
@@ -76,6 +77,17 @@ if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 // to be specifically logged in or out.
 $ioStatus = (LOGGED_IN ? "in" : "out");
 
+// If $_SESSION['tempOwner'] is set, send to owner-register
+// If $_SESSION['tempUser'] is set, send to confirm
+if(isset($_SESSION['tempOwner']) && (!in_array('register-owner', explode('/', $_SERVER['REQUEST_URI']))))
+{
+  header('Location: $webRoot/register-owner');
+}
+if(isset($_SESSION['tempUser']) && (!in_array('confirm', explode('/', $_SERVER['REQUEST_URI']))))
+{
+  header('Location: $webRoot/confirm');
+}
+
 // Inclusion of the db config file
 require_once __ROOT__.'/config.inc.php';
 
@@ -104,6 +116,9 @@ $stmt->execute();
 
 // If called from the root directory, set $webRoot to "", otherwise to "../"
 $webRoot = isset($rootDirectory) ? "." : "..";
+
+// TODO: MAKE REMEMBERME FOR OWNER
+if(isset($_GET['logout']))session_destroy();
 
 if(LOGGED_IN)
 {
@@ -142,6 +157,15 @@ if(LOGGED_IN)
   {
     echo $user2->getError();
     exit();
+  }
+
+  if (!isset($justLongPolling))
+  {
+    // Le user is online
+    $userId = $user2->getCredential('id');
+    $now = date('Y-m-d H:i:s');
+    $stmt = $con->prepare("UPDATE rusers SET last_online = '$now' WHERE user_id = '$userId'");
+    $stmt->execute();
   }
 }
 else

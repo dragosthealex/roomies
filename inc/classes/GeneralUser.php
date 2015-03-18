@@ -18,6 +18,12 @@ abstract class GeneralUser extends GenericUser
   protected $birthday;
   // The array of groups IDs the user is in
   protected $groups = array();
+  // The last online date (string)
+  protected $lastOnline;
+  const ONLINE = 'online';
+  const AWAY = 'away';
+  const OFFLINE = 'offline';
+  
   /**
   * Function getCredential($key)
   *
@@ -220,10 +226,18 @@ abstract class GeneralUser extends GenericUser
     }
     $this->settings = $settings;
   }
+
+  /**
+   * Function to get online status
+   */
+  public function getOnlineStatus()
+  {
+    $lastOnline = new DateTime($this->lastOnline);
+    $now = new DateTime('now');
+    $diff = $now->getTimestamp() - $lastOnline->getTimestamp();
+    if ($diff <= 180) return GeneralUser::ONLINE;
+    if ($diff <= 300) return GeneralUser::AWAY;
+    return GeneralUser::OFFLINE;
+  }
 }
-
-
-
-
-
 ?>

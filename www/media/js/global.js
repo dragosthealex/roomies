@@ -445,11 +445,11 @@ void function (window, document, undefined) {
 
     // A function to hide a list of elements
     'hide': function (elements) {
-      validate(arguments, "HTMLCollection");
-
       forEach.call(elements, function (element) {
-        element.disabled === false && (element.disabled = true);
-        !hiddenRegex.test(element.className) && (element.className += "hidden ");
+        validate.bool([element], "element") && (
+          element.disabled === false && (element.disabled = true),
+          !hiddenRegex.test(element.className) && (element.className += "hidden ")
+        );
       });
     },
 
@@ -666,14 +666,15 @@ void function (window, document, undefined) {
           /*
           If you have a form, you need to supply its ID and the name of its inputs in a string, sepparated by ' ', in 'data-ajax-post'
           */
-          var form = document.getElementById(obj.post.split(" ")[0]) || {};
+          var posts = obj.post.split(" ");
+          var form = document.getElementById(posts[0]) || {};
           // if the "form" is actually a form:
           if (form.nodeName === "FORM") {
-            obj.post.split(" ").slice(1).forEach(function (elementName) {
+            posts.slice(1).forEach(function (elementName) {
               addValueToPostValues(elementName, form.elements[elementName]);
             });
           } else {
-            obj.post.split(" ").forEach(function (id) {
+            posts.forEach(function (id) {
               addValueToPostValues(id, document.getElementById(id));
             });
           }
@@ -768,16 +769,19 @@ void function (window, document, undefined) {
           successFunctionName && successFunctions[successFunctionName]
                               && successFunctions[successFunctionName](response);
 
-          var hideText = element.getAttribute("data-ajax-hide");
-          if (hideText) {
-            hideText = hideText.split(" ");
-
-            forEach.call(body.getElementsByClassName(hideText[0]), function (element) {
-              element.style.display = "none";
-            });
-
-            document.getElementById(hideText[1]).removeAttribute("style");
+          var hideText = (element.getAttribute("data-ajax-hide")||"").split(" ");
+          if (hideText.length >= 2) {
+            roomies.hide(body.getElementsByClassName(hideText[0]));
+            roomies.show([document.getElementById(hideText[1])]);
+          } else if (hideText.length == 1) {
+            roomies.hide([document.getElementById(hideText[0])]);
           }
+
+          var elToDisable = document.getElementById(element.getAttribute("data-ajax-disable"));
+          elToDisable && (elToDisable.disabled = true);
+
+          var elToEnable = document.getElementById(element.getAttribute("data-ajax-enable"));
+          elToEnable && (elToEnable.disabled = true);
         },
         complete: function () {
           element.innerHTML = originalText;
@@ -799,6 +803,17 @@ void function (window, document, undefined) {
         },
         post: element.getAttribute("data-ajax-post")
       });
+      var focusElement;
+      if (focusElement = element.getAttribute('for') || element.parentNode.getAttribute('for')) {
+        focusElement = document.getElementById(focusElement)||element;
+        if (focusElement.nodeName === 'INPUT') {
+          if (focusElement.type in {'checkbox':1,'radio':1}) {
+            focusElement.checked = true;
+          } else {
+            focusElement.focus();
+          }
+        }
+      }
       return false;
     } // if
   }; // onclick

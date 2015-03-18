@@ -65,7 +65,27 @@
   <div class="slim-tag" data-toggle="slim-toggler"></div>
   <div id="slim-toggler"></div>
   <ul class="slim-main">
-    <li class="selector-item selector-button">shmoyoho</li>
+    <li class='ph ph-last ph-drop' data-placeholder='No friends.'></li>
+    <?php
+    $userId = $user2->getCredential('id');
+    $stmt = $con->prepare("SELECT * FROM rconexions WHERE (conexion_user_id1 = '$userId' OR conexion_user_id2 = '$userId') AND conexion_status = 1");
+    $stmt->execute();
+    if ($stmt->rowCount())
+    {
+      while ($conexion = $stmt->fetch(PDO::FETCH_ASSOC))
+      {
+        $leOtherUser = new OtherUser($con, $conexion['conexion_user_id'.($conexion['conexion_user_id1']==$userId?'2':'1')]);
+        if (!$leOtherUser->getError())
+        {
+          $leOtherUserId = $leOtherUser->getCredential('id');
+          $leOtherUserUsername = $leOtherUser->getCredential('username');
+          $leOtherUserName = $leOtherUser->getName();
+          $onlineStatus = $leOtherUser->getOnlineStatus();
+          echo "<li class='$onlineStatus' data-slim-user-id='$leOtherUserId'><a href='$webRoot/messages/$leOtherUserUsername' class='slim-link'>$leOtherUserName</a></li>";
+        }
+      }
+    }
+    ?>
   </ul>
 </div>
 <!-- Space for the header -->
