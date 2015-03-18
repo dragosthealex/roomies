@@ -130,6 +130,8 @@ if ($_GET['u'] == $_SESSION['user']['username'])
                 <script type="text/javascript">
                     var detailsVal = document.getElementsByClassName('details-value');
                     var detailsNewVal = document.getElementsByClassName('new-val');
+                    var answeredInput = document.getElementsByClassName('answered-input');
+
                     for(var count = 0; count < detailsNewVal.length; count ++)
                         detailsNewVal[count].style.display = 'none';
 
@@ -148,6 +150,12 @@ if ($_GET['u'] == $_SESSION['user']['username'])
                             }
                                 
                         }
+
+                        for(var count = 0; count < answeredInput.length; count ++)
+                            if(answeredInput[count].disabled == true)
+                                answeredInput[count].disabled = false;
+                            else
+                                answeredInput[count].disabled = true;
                     }
                 </script>
 			</div>

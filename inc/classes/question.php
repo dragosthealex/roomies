@@ -192,11 +192,20 @@ class Question extends Base
         $acceptedAnswer = new Answer($con, $answerId);
         array_push($forThemText, $acceptedAnswer->getText());
       }
+      $disabled = 'disabled';
 
       $importance = $this->importance;
       $question = 
       "
-        <div class='question question-answered'>
+        <div class='question question-unanswered'>
+          <script>window.checkForm=function(e,i,c,p,q,r,j,z,y){
+            p=q=r=!1;e=e.parentNode.parentNode.parentNode;
+            for(j=1;j<=c;j++)p=p||document.getElementById('q_'+i+'_ans_'+j).checked;
+            y=document.getElementById('q_'+i+'_acc');y.value='';
+            for(j=0;j<=c;j++)(z=document.getElementById('q_'+i+'_acc_'+j),j&&z.checked&&(y.value=y.value?y.value.split(',').concat(z.value).join(','):z.value),q=q||z.checked);
+            for(j=0;j<=3;j++)r=r||document.getElementById('q_'+i+'_imp_'+j).checked;
+            e.children[e.children.length-2].disabled=!(p&&q&&r);
+          }</script>
           <div class='box-padding'>
             <h3 class='h3' data-toggle='q_$id'>$text</h3>
             <form id='q_$id' class='hidden'>
@@ -218,7 +227,7 @@ class Question extends Base
           $question .=
           "
                   <label for='q_{$id}_ans_{$count}' class='cr-label'>
-                    <input disabled checked type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
+                    <input disabled checked type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr answered-input' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
                     <span class='cr-button r-button'></span>
                     <span class='cr-text'>{$answerText}</span>
                   </label>
@@ -228,7 +237,7 @@ class Question extends Base
           $question .=
           "
                   <label for='q_{$id}_ans_{$count}' class='cr-label'>
-                    <input disabled type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
+                    <input disabled type='radio' id='q_{$id}_ans_{$count}' name='q_ans' class='cr answered-input' value='{$answerId}' onchange='checkForm(this,{$id},{$totalCount})'>
                     <span class='cr-button r-button'></span>
                     <span class='cr-text'>{$answerText}</span>
                   </label>
@@ -255,7 +264,7 @@ class Question extends Base
         if(in_array("$answerText", $forThemText)) {
           $question .=
           "
-                <label for='q_{$id}_acc_{$count}' class='cr-label'>
+                  <label for='q_{$id}_acc_{$count}' class='cr-label'>
                   <input disabled checked type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
                   <span class='cr-button'></span>
                   <span class='cr-text'>{$answerText}</span>
@@ -266,10 +275,10 @@ class Question extends Base
           $question .=
            "
                   <label for='q_{$id}_acc_{$count}' class='cr-label'>
-                    <input disabled type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
-                    <span class='cr-button'></span>
-                    <span class='cr-text'>{$answerText}</span>
-                  </label>
+                  <input disabled type='checkbox' id='q_{$id}_acc_{$count}' name='q_acc_{$count}' class='cr' value='{$answerId}' onchange='var i,b=true;for(i=1;i<={$totalCount};i++)b=b&&document.getElementById(\"q_{$id}_acc_\"+i).checked;document.getElementById(\"q_{$id}_imp_0\").checked=(i=document.getElementById(\"q_{$id}_acc_0\")).checked=b;b&&i.onchange();checkForm(this,{$id},{$totalCount})'>
+                  <span class='cr-button'></span>
+                  <span class='cr-text'>{$answerText}</span>
+                </label>
            ";
           $count ++;
         }
@@ -277,6 +286,13 @@ class Question extends Base
 
       $question .= 
       "
+                <label for='q_{$id}_acc_0' class='cr-label'>
+                  <input disabled type='checkbox' id='q_{$id}_acc_0' class='cr' onchange='var i,e;for(i=1;i<{$count};i++)(((e=document.getElementById(\"q_{$id}_acc_\"+i)).checked=this.checked),(e.disabled=this.checked));document.getElementById(\"q_{$id}_imp_0\").checked=this.checked;checkForm(this,{$id},{$totalCount})'>
+                  <span class='cr-button'></span>
+                  <span class='cr-text'>Any of the above</span>
+                </label>
+
+
                   </div>
       ";
 
@@ -288,7 +304,7 @@ class Question extends Base
                 <div class='indented-section'>
                 <h4 class='h4'>Importance</h4>
                   <label for='q_{$id}_imp_1' class='cr-label cp-label cp-left'>
-                    <input disabled checked type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
+                    <input disabled checked type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr answered-input' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
                     <span class='cr-button'></span>
                     <span class='cr-text'>A little</span>
                   </label
@@ -299,7 +315,7 @@ class Question extends Base
                 <div class='indented-section'>
                 <h4 class='h4'>Importance</h4>
                   <label for='q_{$id}_imp_1' class='cr-label cp-label cp-left'>
-                    <input disabled type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
+                    <input disabled type='radio' name='q_imp' id='q_{$id}_imp_1' class='cr answered-input' value='1' onchange='checkForm(this,{$id},{$totalCount})'>
                     <span class='cr-button'></span>
                     <span class='cr-text'>A little</span>
                   </label
@@ -311,7 +327,7 @@ class Question extends Base
           $question .=
           "
                   ><label for='q_{$id}_imp_2' class='cr-label cp-label'>
-                    <input checked disabled type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
+                    <input checked disabled type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr answered-input' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
                     <span class='cr-button'></span>
                     <span class='cr-text'>Somewhat</span>
                   </label
@@ -320,7 +336,7 @@ class Question extends Base
         $question .=
         "
                 ><label for='q_{$id}_imp_2' class='cr-label cp-label'>
-                  <input disabled type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
+                  <input disabled type='radio' name='q_imp' id='q_{$id}_imp_2' class='cr answered-input' value='10' onchange='checkForm(this,{$id},{$totalCount})'>
                   <span class='cr-button'></span>
                   <span class='cr-text'>Somewhat</span>
                 </label
@@ -331,7 +347,7 @@ class Question extends Base
           $question .=
           "
                   ><label for='q_{$id}_imp_3' class='cr-label cp-label cp-right'>
-                    <input checked disabled type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
+                    <input checked disabled type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr answered-input' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
                     <span class='cr-button'></span>
                     <span class='cr-text'>Very</span>
                   </label>
@@ -340,7 +356,7 @@ class Question extends Base
         $question .=
         "
                 ><label for='q_{$id}_imp_3' class='cr-label cp-label cp-right'>
-                  <input disabled type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
+                  <input disabled type='radio' name='q_imp' id='q_{$id}_imp_3' class='cr answered-input' value='50' onchange='checkForm(this,{$id},{$totalCount})'>
                   <span class='cr-button'></span>
                   <span class='cr-text'>Very</span>
                 </label>

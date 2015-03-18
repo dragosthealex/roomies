@@ -32,10 +32,30 @@ if(isset($_POST['question_text']))
   {
     $errMsg .= 'Invalid question ';
   }
-
+  $answerIds = array();
   if(!$errMsg)
   {
-    $stmt = $con->prepare("INSERT INTO rquestionsmap (question_text) VALUES ('$question_text')");
+    foreach ($answers as $answer) {
+      $stmt =$con->prepare("SELECT answer_id FROM ranswers WHERE answer_text = '$answer'");
+      $stmt -> execute();
+      if(!$stmt->rowCount())
+      {
+        $stmt = $con->prepare("INSERT INTO ranswers (answer_text) VALUES ('$answer')");
+        $stmt -> execute();
+        $stmt =$con->prepare("SELECT answer_id FROM ranswers WHERE answer_text = '$answer'");
+        $stmt -> execute();
+        $stmt->bindColumn(1, $answerId);
+        $stmt->fetch();
+
+      } else {
+        $stmt->bindColumn(1, $answerId);
+        $stmt->fetch();
+      }
+      array_push($answerIds, $answerId);
+    }
+
+    $answerIds = implode(':', $answerIds);
+    $stmt = $con->prepare("INSERT INTO rquestionsmap (question_text, question_answers) VALUES ('$question_text', '$answerIds')");
     $stmt->execute();
     
     $stmt =$con->prepare("SELECT question_id FROM rquestionsmap ORDER BY question_id DESC");
@@ -48,11 +68,6 @@ if(isset($_POST['question_text']))
     $stmt = $con->prepare("ALTER TABLE ruser_qa ADD $question_to_add VARCHAR(50)");
     $stmt->execute();
 
-    foreach ($answers as $value => $answer)
-    {
-      $stmt = $con->prepare("INSERT INTO ranswers (answer_question_id, answer_text) VALUES ($question_id, '$answer')");
-      $stmt->execute();
-    }
   }
 
   $stmt = null;
