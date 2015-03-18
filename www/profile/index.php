@@ -85,7 +85,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
           					$z = ucwords($y);
           					if($z == "Uni_city")
           					{
-          						$z = "City of University";
+          						$z = "University City";
           					}
 
           					echo "
@@ -97,22 +97,70 @@ if ($_GET['u'] == $_SESSION['user']['username'])
           							<div class='details-value'>
                                         $details[$y]
           							</div>
-                                    <div class='hidden' id='wrapper'>
-                                        $y$z
+                                    <div class='new-val'>   
+                                        <select class='select-details' data-default='$details[$y]'>";
+
+                            $thisKeyArr = array(
+                                    '-'
+                                );
+                            $stmt = $con->prepare("SELECT map_$y FROM rfiltersmap");
+                            $stmt->execute();
+                            while($result = $stmt->fetch(PDO::FETCH_ASSOC))
+                            {
+                                if (!$result['map_'.$y]) break;
+                                array_push($thisKeyArr, ucwords($result['map_'.$y]));
+                            }
+                            for ($i=0;$i<count($thisKeyArr);$i ++)
+                            {   
+                                if($details[$y] == $thisKeyArr[$i])
+                                    echo "<option value='$i' selected>$thisKeyArr[$i]</option>";
+                                else
+                                    echo "<option value='$i'>$thisKeyArr[$i]</option>";
+                            }
+
+                            echo       "</select>
                                     </div>
-          						</div>
+          						</div>";
                                 
 
-          					";
-          					# code...
-          				}
-						// foreach ($details as $detail)
-						// {
-						// 	echo key($detail);
-						// 	echo "$detail <br>";
-						// }
-					?>
-				</div>
+          					
+          				} ?>
+
+				    </div>
+                    <?php
+                        function printOption($array, $index, $checkAgainst)
+                        {
+                          echo "<option value=$index";
+                          if ($index == $checkAgainst)
+                          {
+                            echo ' selected';
+                          }
+                          echo ">{$array[$index]}</option>";
+                        }
+                    ?>
+                <script type="text/javascript">
+                    var detailsVal = document.getElementsByClassName('details-value');
+                    var detailsNewVal = document.getElementsByClassName('new-val');
+                    for(var count = 0; count < detailsNewVal.length; count ++)
+                        detailsNewVal[count].style.display = 'none';
+
+                    function editProfile(el) {
+                        for(var i = 0; i < detailsVal.length; i ++)
+                        {
+                            if(detailsVal[i].style.display == '')
+                            {
+                                detailsVal[i].style.display = 'none';
+                                detailsNewVal[i].style.display = '';
+                            }
+                            else
+                            {
+                                detailsVal[i].style.display = '';
+                                detailsNewVal[i].style.display = 'none';
+                            }
+                                
+                        }
+                    }
+                </script>
 			</div>
 		</div>
 	</div>
@@ -230,7 +278,5 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 	</div>
 	<input id="userId" type="hidden" value="<?=$userId?>"></input>
 	<input id="otherUserId" type="hidden" value="<?=$otherUserId?>"></input>
-    <script type="text/javascript">
-        window.alert("Hello");
-    </script>
+
 <?php require_once __ROOT__."/inc/html/footer.php";?>

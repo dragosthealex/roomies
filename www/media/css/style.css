@@ -1133,7 +1133,8 @@
 	border-bottom: 1px solid #D5D1D0;
 	position: relative;
 	overflow: hidden;
-	padding: 6px;
+	height: 50px;
+	/*padding: 6px;*/
 	border-left: 1px solid  #D5D1D0;
 	border-right: 1px solid  #D5D1D0;
 	line-height: 2.3em;
@@ -1142,11 +1143,16 @@
  	border-top: 1px solid  #D5D1D0;
  }
 
+ .new-val {
+ }
+
 .details-key {
+	margin-top: 6px;
 	position: relative;
 	display: inline-block;
+	margin-left: 6px;
 	float: left;
-	width: 40%;
+	width: 25%;
 	font-size: 0.9em;
 	color: #808080;
 }
@@ -1154,7 +1160,21 @@
 .details-value {
 	position: relative;
 	display: inline-block;
+	margin-top: 6px;
+	margin-left: 16px;
+	font-size: 0.9em;
 	float: left;
+}
+
+.select-details {
+	width: 70%;
+	background: transparent;
+	height: 50px;
+	border:0;
+	margin-left: 15px;
+	/*line-height: 2.3em;*/
+	font-size: 0.9em;
+	font-family: 'Open Sans';
 }
 /* Questionnaire-specific */
 
