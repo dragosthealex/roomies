@@ -58,28 +58,30 @@ else
 </div>
   <div style="margin-bottom: 5px;">Rating: </div>
   <div class="ratings-box">
-        <div class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
+        <div onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
+
         <input type="radio" class="star-cr" name="rating" id="rating1">
-          <label for="rating1" class="star" data-hide="star-b0">
+          <label for="rating1" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-hide="star-b0" on>
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating2">
-          <label for="rating2" class="star" data-hide="star-b0">
+          <label for="rating2" onmouseover="barHover(this)" onmouseout="barUnHover(this)" class="star" data-hide="star-b0">
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating3">
-          <label class="star" for="rating3" data-hide="star-b0">
+          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating3" data-hide="star-b0">
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating4">
-          <label class="star" for="rating4" data-hide="star-b0">
+          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating4" data-hide="star-b0">
            
           </label>
         <input type="radio" class="star-cr" name="rating" id="rating5">
-          <label class="star" for="rating5" data-hide="star-b0">
+          <label class="star" onmouseover="barHover(this)" onmouseout="barUnHover(this)" for="rating5" data-hide="star-b0">
            
           </label>
 
+        
   </div>
 
 <div class='acc-long-desc'>
@@ -103,3 +105,15 @@ else
         data-ajax-url="../php/reviews.process.php?a=1&pid=<?=$accomId?>&ptype=acc"
         data-ajax-post="text">
 </div>
+
+<script type="text/javascript">
+  var bar = document.getElementsByClassName('star-background');
+
+  function barHover(el) {
+    bar[0].style.background ='none';
+  }
+
+  function barUnHover(el) {
+    bar[0].style.background ='#e37314';
+  }
+</script>

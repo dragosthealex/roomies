@@ -1115,6 +1115,11 @@
 	width: 0;
 	height: 20px;
 	background: #e37314;
+	/*z-index: -10;*/
+}
+
+.star-cr:hover ~ .star {
+	background-image: url(../img/star-checked.png);
 }
 
 /*

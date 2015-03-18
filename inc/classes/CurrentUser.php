@@ -1012,6 +1012,14 @@ private function getConv($offset)
     {
       $this->errorMsg = $e->getMessage();
     }
+  }// fnction disonnect
+  /**
+  * @param -$accomId 'This represents the accommodation the user is rating'
+  * @param -$starRating 'This is the value (1-5) that the user is giving to this accommodation'
+  */
+  public function rateAccommodation($accomId, $starRating)
+  {
+
   }
 }// class CurrentUser
 
