@@ -20,6 +20,7 @@ class CurrentUser extends GeneralUser
     $id = isset($_SESSION['user']['id'])?$_SESSION['user']['id']:'';
     $username = isset($_SESSION['user']['username'])?$_SESSION['user']['username']:'';
     $email = isset($_SESSION['user']['email'])?$_SESSION['user']['email']:'';
+    $lastOnline = isset($_SESSION['user']['lastOnline'])?$_SESSION['user']['lastOnline']:'0000-00-00';
 
     try
     {
@@ -80,6 +81,7 @@ class CurrentUser extends GeneralUser
       $this->con = $con;
       $this->image = $imageUrl;
       $this->groups = $groups;
+      $this->lastOnline = $lastOnline;
     }// try
     catch (Exception $e)
     {

@@ -435,6 +435,39 @@
 	right: 0;
 }
 
+.slim-link {
+	position: relative;
+	display: block;
+	line-height: 1;
+	padding: .5em .5em .5em 2em;
+	text-decoration: none;
+	color: #00adaa;
+}
+
+.slim-link:hover {
+	background-color: #e37314;
+	color: #fff;
+}
+
+.slim-link:before {
+	position: absolute;
+	top: .6em;
+	left: .6em;
+	border-radius: 1em;
+	background: #d5d1d0;
+	width: .8em;
+	height: .8em;
+	content: "";
+}
+
+.slim-link:hover:before {
+	background: #fff;
+}
+
+.online .slim-link:before {
+	background: green;
+}
+
 /* End slim */
 
 /* Placeholders */
@@ -737,7 +770,12 @@
 
 .input-wrapper {
 	position: relative;
-	margin: -1em 0 2em;
+	margin: 1em 0;
+}
+
+.filter-wrapper {
+	margin-top: -1em;
+	z-index: 2;
 }
 
 .input-wrapper .link-button, .input-wrapper .input-button, .input-wrapper .input {

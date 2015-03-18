@@ -155,6 +155,15 @@ if(LOGGED_IN)
     echo $user2->getError();
     exit();
   }
+
+  if (!isset($justLongPolling))
+  {
+    // Le user is online
+    $userId = $user2->getCredential('id');
+    $now = date('Y-m-d H:i:s');
+    $stmt = $con->prepare("UPDATE rusers SET last_online = '$now' WHERE user_id = '$userId'");
+    $stmt->execute();
+  }
 }
 else
 {

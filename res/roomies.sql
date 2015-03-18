@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2+deb7u1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 18, 2015 at 03:18 AM
--- Server version: 5.5.41
--- PHP Version: 5.4.36-0+deb7u3
+-- Generation Time: Mar 18, 2015 at 02:34 PM
+-- Server version: 5.5.41-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.6
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `roomies`
+-- Database: `2014_comp10120_x7`
 --
 
 -- --------------------------------------------------------
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `raccommodations` (
 --
 
 INSERT INTO `raccommodations` (`accommodation_id`, `accommodation_name`, `accommodation_no_photos`, `accommodation_date`, `accommodation_rating`, `accommodation_description`, `accommodation_author`, `accommodation_rating_array`) VALUES
-(1, 'Whitworth Park', 0, '2015-02-25', '40', 'Bedding Packs: To assist you and limit what you have to transport to the hall you can order a bedding pack online. The price for a single bedding pack is  	&pound;20.00 and the pack includes a hollow fibre pillow, a 13.5tog duvet, a sheet, a pillowcase and a duvet cover. Double bedding packs are available at a price of  	&pound;36.00.\n\nWhitworth Park is centrally located on the University of Manchester campus, close to sports centre, libraries and Students Union.\n\nIt comprises of eight low-rise houses containing one to three storey flats for groups of seven, eight or nine students. Accommodation is in single study bedrooms, with shared kitchen, lounge and bathroom in each flat.\n\nGrove House houses the administrative and social centre of the community. Facilities include two squash courts, launderette, bar, gym and large dance hall.\n\nActive Residents Association. Visit the Whitworth Park RA Website...*.\n\nPostgraduate students are housed in parts of Thorncliffe and Aberdeen.', 54, ',49:,40');
+(1, 'Whitworth Park', 0, '2015-02-25', '50', 'Bedding Packs: To assist you and limit what you have to transport to the hall you can order a bedding pack online. The price for a single bedding pack is  	&pound;20.00 and the pack includes a hollow fibre pillow, a 13.5tog duvet, a sheet, a pillowcase and a duvet cover. Double bedding packs are available at a price of  	&pound;36.00.\n\nWhitworth Park is centrally located on the University of Manchester campus, close to sports centre, libraries and Students Union.\n\nIt comprises of eight low-rise houses containing one to three storey flats for groups of seven, eight or nine students. Accommodation is in single study bedrooms, with shared kitchen, lounge and bathroom in each flat.\n\nGrove House houses the administrative and social centre of the community. Facilities include two squash courts, launderette, bar, gym and large dance hall.\n\nActive Residents Association. Visit the Whitworth Park RA Website...*.\n\nPostgraduate students are housed in parts of Thorncliffe and Aberdeen.', 54, ',49,12:,40,60');
 
 -- --------------------------------------------------------
 
@@ -84,7 +84,14 @@ CREATE TABLE IF NOT EXISTS `rconexions` (
   `conexion_user_id2` int(11) NOT NULL,
   `conexion_status` int(11) NOT NULL,
   PRIMARY KEY (`conexion_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `rconexions`
+--
+
+INSERT INTO `rconexions` (`conexion_id`, `conexion_user_id1`, `conexion_user_id2`, `conexion_status`) VALUES
+(1, 26, 12, 1);
 
 -- --------------------------------------------------------
 
@@ -453,7 +460,14 @@ CREATE TABLE IF NOT EXISTS `rmessages` (
   `messages_read` tinyint(1) NOT NULL DEFAULT '0',
   `message_group` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`message_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `rmessages`
+--
+
+INSERT INTO `rmessages` (`message_id`, `message_user_id1`, `message_user_id2`, `message_text`, `message_timestamp`, `messages_read`, `message_group`) VALUES
+(1, 12, 26, 'dsadas', '2015-03-18 13:09:32', 0, '0');
 
 -- --------------------------------------------------------
 
@@ -485,11 +499,11 @@ INSERT INTO `rpercentages` (`percentage_user_id1`, `percentage_user_id2`, `perce
 (12, 22, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 23, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 26, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(12, 27, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(12, 27, 1, 0, 0, 1, 0, 0, 0, 50, 10, 1),
 (12, 28, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 49, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (12, 50, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(12, 54, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(12, 54, 1, 0, 2, 0, 0, 0, 0, 20, 10, 1),
 (22, 23, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 26, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
 (22, 27, 20, 0, 0, 0, 0, 0, 0, 0, 0, 1),
@@ -623,6 +637,7 @@ CREATE TABLE IF NOT EXISTS `rusers` (
   `user_cookie` mediumtext COLLATE utf8_unicode_ci NOT NULL,
   `facebook_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `image_url` varchar(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT '/media/img/default.gif',
+  `last_online` datetime NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`,`user_email`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=55 ;
@@ -631,20 +646,20 @@ CREATE TABLE IF NOT EXISTS `rusers` (
 -- Dumping data for table `rusers`
 --
 
-INSERT INTO `rusers` (`user_id`, `username`, `user_email`, `user_salt`, `user_pass`, `user_rank`, `matches`, `has_updated`, `user_cookie`, `facebook_id`, `image_url`) VALUES
-(11, 'guest', 'guest@cs.man.ac.uk', '1012506342', 'bbbfb2a1528fb0fad3f7309b5c3b1df750ff5bc3e9c89d0c66d36a48715a902c', 'user', '', '', '', '', '/media/img/default.gif'),
-(12, 'Kanoshi', 'd_hod@hotmail.com', '1495115196', 'b560713298b7bd5df68e6532448f65395c8363ee4f880b319d8560ea355957c1', 'user', '', '', '', '', '/media/img/default.gif'),
-(22, 'mitalip', 'mitalipalsikar@gmail.com', '1960714236', '9aa6cf1b193d65a96e3d4685ac4c98f8a61fc25b73cf3a65f9b67a30382a3c8c', 'user', '', '', '', '', '/media/img/default.gif'),
-(23, 'PakChoi', 'liam.higgins3@googlemail.com', '217625186', 'b65cfaac7014fc5b83d53e5e965a5b88316e623feb26e3c9c336e937a7e2cd3b', 'user', '', '', '', '', '/media/img/default.gif'),
-(24, 'Elnur', 'ebaku2015@gmail.com', '1791532909', 'b9c5389873c5389c47ec68e88777309aea840a4c1bcf41e06b016c9c4c1ec1da', 'user', '', '', '', '', '/media/img/default.gif'),
-(26, 'dragosthealex2', 'dragosthealex2@gmail.com', '296003121', 'f7963866ff4ca304ce8f96f8882ab3b40a3cbb14994690e73891409651a76cd7', 'user', '', '', '', '', '/media/img/default.gif'),
-(27, 'SirKiwiTheGreat', 'kiwis@gmail.com', '835198187', '09cfc5f0c89cc125c2508e7095bd4add6ec1c39e8cd6f51780227906e2209ac8', 'user', '', '', '', '', '/media/img/default.gif'),
-(28, 'test_init_perc', 'test_init_perc@yahoo.com', '1841271249', '0a6079d6de193e2db8be8ab090e7ed6c81b96ff719a9bb0c7a393fd1f2a87b63', 'user', '', '', '', '', '/media/img/default.gif'),
-(29, 'johnTheRapist', 'john@gmail.com', '260991738', '2a213ad966944aa148f0a5871aa765f15155b87adb8f2e1b3ec61f3cfc31338e', 'user', '', '', '', '', '/media/img/default.gif'),
-(49, 'alexFacebook', 'dragosthealx@gmail.com', '1922294828', 'e456b4f45a512087dc7d99254244bcaf333422db11f56e301e9f88a20e20eee8', 'user', '', '', '', '797073513702931', 'https://graph.facebook.com/797073513702931/picture?type=large'),
-(50, 'asdasd', 'asdsd@asasd.cim', '1852453316', 'a9619e99a93fe4c05aaeb01fc2ad88b1bdfd4aea6508edca4a6044f185df2591', 'user', '', '', '', '', '/media/img/default.gif'),
-(53, 'Bob-facebook', 'kerplll_rosenthalsky_1424621506@tfbnw.ne', '1710536754', '9b1cb646b471ad5143df808dd6dac5e870dccdbcbe55c101acf1218cb84745be', 'user', '', '', '', '1377925132525015', 'https://graph.facebook.com/1377925132525015/picture?type=large'),
-(54, 'dragosthealx', 'shit@gmail.com', '2076150000', 'a3dff4881dfc8105fa360cf8f1da33d2255579dcc5f3ef676bf299ced84e1f06', 'user', '', '', '', '', '/media/img/default.gif');
+INSERT INTO `rusers` (`user_id`, `username`, `user_email`, `user_salt`, `user_pass`, `user_rank`, `matches`, `has_updated`, `user_cookie`, `facebook_id`, `image_url`, `last_online`) VALUES
+(11, 'guest', 'guest@cs.man.ac.uk', '1012506342', 'bbbfb2a1528fb0fad3f7309b5c3b1df750ff5bc3e9c89d0c66d36a48715a902c', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(12, 'Kanoshi', 'd_hod@hotmail.com', '1495115196', 'b560713298b7bd5df68e6532448f65395c8363ee4f880b319d8560ea355957c1', 'user', '', '', '', '', '/media/img/default.gif', '2015-03-18 14:34:18'),
+(22, 'mitalip', 'mitalipalsikar@gmail.com', '1960714236', '9aa6cf1b193d65a96e3d4685ac4c98f8a61fc25b73cf3a65f9b67a30382a3c8c', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(23, 'PakChoi', 'liam.higgins3@googlemail.com', '217625186', 'b65cfaac7014fc5b83d53e5e965a5b88316e623feb26e3c9c336e937a7e2cd3b', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(24, 'Elnur', 'ebaku2015@gmail.com', '1791532909', 'b9c5389873c5389c47ec68e88777309aea840a4c1bcf41e06b016c9c4c1ec1da', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(26, 'dragosthealex2', 'dragosthealex2@gmail.com', '296003121', 'f7963866ff4ca304ce8f96f8882ab3b40a3cbb14994690e73891409651a76cd7', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(27, 'SirKiwiTheGreat', 'kiwis@gmail.com', '835198187', '09cfc5f0c89cc125c2508e7095bd4add6ec1c39e8cd6f51780227906e2209ac8', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(28, 'test_init_perc', 'test_init_perc@yahoo.com', '1841271249', '0a6079d6de193e2db8be8ab090e7ed6c81b96ff719a9bb0c7a393fd1f2a87b63', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(29, 'johnTheRapist', 'john@gmail.com', '260991738', '2a213ad966944aa148f0a5871aa765f15155b87adb8f2e1b3ec61f3cfc31338e', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(49, 'alexFacebook', 'dragosthealx@gmail.com', '1922294828', 'e456b4f45a512087dc7d99254244bcaf333422db11f56e301e9f88a20e20eee8', 'user', '', '', '', '797073513702931', 'https://graph.facebook.com/797073513702931/picture?type=large', '0000-00-00 00:00:00'),
+(50, 'asdasd', 'asdsd@asasd.cim', '1852453316', 'a9619e99a93fe4c05aaeb01fc2ad88b1bdfd4aea6508edca4a6044f185df2591', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00'),
+(53, 'Bob-facebook', 'kerplll_rosenthalsky_1424621506@tfbnw.ne', '1710536754', '9b1cb646b471ad5143df808dd6dac5e870dccdbcbe55c101acf1218cb84745be', 'user', '', '', '', '1377925132525015', 'https://graph.facebook.com/1377925132525015/picture?type=large', '0000-00-00 00:00:00'),
+(54, 'dragosthealx', 'shit@gmail.com', '2076150000', 'a3dff4881dfc8105fa360cf8f1da33d2255579dcc5f3ef676bf299ced84e1f06', 'user', '', '', '', '', '/media/img/default.gif', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -728,6 +743,7 @@ CREATE TABLE IF NOT EXISTS `ruser_qa` (
 --
 
 INSERT INTO `ruser_qa` (`answer_user_id`, `question1`, `question2`, `question3`) VALUES
+(12, '1:3:10', '5:8,7,6,5,4:0', '9:1,9:50'),
 (27, '2:1,2:50', '', NULL),
 (54, '2:1:10', '7:7,6,5:10', NULL);
 

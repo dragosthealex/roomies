@@ -7,6 +7,7 @@
  * $_POST['timestamp'] - The datetime (Y-m-d H:i:s) of the latest message sent to the user
  */
 
+$justLongPolling = TRUE;
 include '../../inc/init.php';
 include __ROOT__.'/inc/classes/conversation.php';
 include __ROOT__.'/inc/classes/Request.php';

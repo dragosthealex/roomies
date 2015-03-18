@@ -87,12 +87,12 @@ while($stmt->fetch())
 
             <a data-ajax-url='../php/friends.process.php?a=4&amp;id=$otherUserId'
                data-ajax-text='Blocking...'
-               data-ajax-hide='blockUnblock-rm-$otherUserId unblockButton-rm-$otherUserId $blockButtonHide'
-               class='link-button blockUnblock-rm-$otherUserId' id='blockButton-rm-$otherUserId'>Block</a>
+               data-ajax-hide='blockUnblock-rm-$otherUserId unblockButton-rm-$otherUserId'
+               class='link-button blockUnblock-rm-$otherUserId $blockButtonHide' id='blockButton-rm-$otherUserId'>Block</a>
             <a data-ajax-url='../php/friends.process.php?a=5&amp;id=$otherUserId'
                data-ajax-text='Unblocking...'
-               data-ajax-hide='blockUnblock-rm-$otherUserId blockButton-rm-$otherUserId $unblockButtonHide'
-               class='link-button blockUnblock-rm-$otherUserId' id='unblockButton-rm-$otherUserId'>Unblock</a>
+               data-ajax-hide='blockUnblock-rm-$otherUserId blockButton-rm-$otherUserId'
+               class='link-button blockUnblock-rm-$otherUserId $unblockButtonHide' id='unblockButton-rm-$otherUserId'>Unblock</a>
           </div>
         </div>
       </div>
