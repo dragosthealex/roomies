@@ -123,9 +123,10 @@ if(LOGGED_IN)
 {
   if(isset($_GET['logout']))
   {
+    $userId = $_SESSION['user']['id'];
+
     if(isset($_COOKIE['login']))
     {
-      $userId = $_SESSION['user']['id'];
       $currentCookie = $_COOKIE['login'];
       $stmt = $con->prepare("SELECT user_cookie FROM rusers WHERE user_id = $userId");
       $stmt->execute();
@@ -143,6 +144,10 @@ if(LOGGED_IN)
       // Delete cookie from user
       setcookie('login', '', time()-3600);
     }
+
+    // TEMP. Reset last_online to some time ago (no longer online)
+    $stmt = $con->prepare("UPDATE rusers SET last_online = '1970-01-01 00:00:00' WHERE user_id = '$userId'");
+    $stmt->execute();
 
     session_destroy();
     header("Location: $webRoot");

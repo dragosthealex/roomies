@@ -34,12 +34,19 @@ try
   $friendRequestIds = strlen($friendRequestIds) ? explode(',', $friendRequestIds) : array();
   $noOfRequests = count($friendRequestIds);
   $lastMessageId = htmlentities($_POST['lastMessageId']);
+  $usersFriendsArray = $user2->getFriends('id');
+  $usersFriends = count($usersFriendsArray) > 0 ? implode(',', $usersFriendsArray) : 0;
   $friendsTexts = explode(';', $_POST['friends']);
   $friends = array();
   foreach ($friendsTexts as $friendsText)
   {
     $array = explode(':', $friendsText);
     $friends[$array[0]] = strlen($array[1]) ? $array[1] : '0';
+  }
+  $noOfFriends = 0;
+  foreach ($friends as $list)
+  {
+    $noOfFriends += $list == '0' ? 0 : (substr_count($list, ',') + 1);
   }
   $now = time();
   $lowestOnlineDate = date('Y-m-d H:i:s', $now-180);
@@ -91,14 +98,15 @@ try
                            OR (last_online < '$lowestAwayDate'
                                AND user_id NOT IN ({$friends['offline']}))    )
 
-                      AND (    user_id IN (SELECT conexion_user_id1
-                                             FROM rconexions
-                                            WHERE conexion_user_id2 = '$userId'
-                                              AND conexion_status = 1)
-                           OR  user_id IN (SELECT conexion_user_id2
-                                             FROM rconexions
-                                            WHERE conexion_user_id1 = '$userId'
-                                              AND conexion_status = 1))")
+                      AND user_id IN ($usersFriends)"),
+
+    // Sixth query: Find where friends are no longer friends
+    'oldFriends' =>
+    $con->prepare("SELECT 0
+                     FROM rconexions
+                    WHERE (conexion_user_id1 = '$userId'
+                           OR conexion_user_id2 = '$userId')
+                      AND conexion_status = 1")
   );
 
   function execute(&$stmts)
@@ -109,44 +117,21 @@ try
     return true;
   }
 
-  function rowCount(&$stmts, &$noOfRequests)
-  {
-    // Initialise the row count to 0
-    $rowCount = 0;
-
-    // Add the number of new messages
-    $rowCount += $stmts['newMessages']->rowCount();
-
-    // Add the number of messages which are now read
-    $rowCount += $stmts['readMessage']->rowCount();
-
-    // Add the number of new requests
-    $rowCount += $stmts['newRequests']->rowCount();
-
-    // Add the number of requests which are no longer in the database
-    $rowCount += $noOfRequests;
-    $rowCount -= $stmts['oldRequests']->rowCount();
-
-    // Add the number of users who changed status
-    $rowCount += $stmts['friends']->rowCount();
-
-    // Return the row count
-    return $rowCount;
-  }
-
   // Try executing. If this fails, something went wrong.
   if (!execute($stmts))
   {
-    throw new Exception('Query error!', 1);
+    throw new Exception("Query error!", 1);
   }
 
   // Longpoll
   for ($i = 0; $i < 30; $i++)
   {
-    if (rowCount($stmts, $noOfRequests))
-    {
-      break;
-    }
+    if ($stmts['newMessages']->rowCount()) break;
+    if ($stmts['readMessage']->rowCount()) break;
+    if ($stmts['newRequests']->rowCount()) break;
+    if ($noOfRequests - $stmts['oldRequests']->rowCount()) break;
+    if ($stmts['friends']->rowCount()) break;
+    if ($noOfRequests - $stmts['oldFriends']->rowCount()) break;
     sleep(1);
     execute($stmts);
   }
@@ -325,12 +310,15 @@ try
           return FALSE;
     return TRUE;
   }
+  $usersFriendsArray = $user2->getFriends('id');
   foreach ($friends as $onlineStatus => $friendIds)
   {
     foreach (explode(',', $friendIds) as $friendId)
     {
       $friend = new OtherUser($con, $friendId);
-      if (!$friend->getError() && not_in_arrays($response['friends'], $friendId))
+      if (   !$friend->getError()
+          && not_in_arrays($response['friends'], $friendId)
+          && in_array($friendId, $usersFriendsArray))
       {
         $friendName = $friend->getName(1);
         $friendUsername = $friend->getCredential('username');
@@ -343,6 +331,29 @@ try
         );
       }
     }
+  }
+  function quickSortFriendList($array)
+  {
+    if (count($array) < 2) return $array;
+    $left = $right = array();
+    reset($array);
+    $pivot_key = key($array);
+    $pivot = array_shift($array);
+    foreach($array as $k => $v)
+      if(strcmp($v['name'], $pivot['name']) < 0)
+        $left[$k] = $v;
+      else
+        $right[$k] = $v;
+    return array_merge(quickSortFriendList($left), array($pivot_key => $pivot), quickSortFriendList($right));
+  }
+  foreach ($response['friends'] as $onlineStatus => $friendIds)
+  {
+    $response['friends'][$onlineStatus] = quickSortFriendList($friendIds);
+  }
+
+  if ($noOfFriends - $stmts['oldFriends']->rowCount())
+  {
+    $nothingChanged = FALSE;
   }
 
   if ($nothingChanged)

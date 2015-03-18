@@ -963,7 +963,7 @@ void function (window, document, undefined) {
     }
   });
 
-  forEach.call(slim.getElementsByClassName("slim-link"), function (element) {
+  slim && forEach.call(slim.getElementsByClassName("slim-link"), function (element) {
     element = element.parentNode;
     var onlineStatus = element.className.trim();
     var id = +element.getAttribute('data-slim-user-id');
@@ -1063,41 +1063,32 @@ void function (window, document, undefined) {
       });
 
       // Reset the slim and friends lists
-      slim.innerHTML = "";
+      var slimHTML = "<li class='ph ph-last ph-drop' data-placeholder='No friends.'></li>";
       friends.online = [];
       friends.away = [];
       friends.offline = [];
-
-      // For each grouping add the friends to the list
       onlineFriends.forEach(function (friend) {
-        slim.innerHTML +=
+        slimHTML +=
           "<li class=' online ' data-slim-user-id='"+friend.id+"'>"
         + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
         + "</li>";
         friends.online.push(friend.id);
       });
       awayFriends.forEach(function (friend) {
-        slim.innerHTML +=
+        slimHTML +=
           "<li class=' away ' data-slim-user-id='"+friend.id+"'>"
         + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
         + "</li>";
         friends.away.push(friend.id);
       });
       offlineFriends.forEach(function (friend) {
-        slim.innerHTML +=
+        slimHTML +=
           "<li class=' offline ' data-slim-user-id='"+friend.id+"'>"
         + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
         + "</li>";
         friends.offline.push(friend.id);
       });
-
-      forEach.call(slim.getElementsByClassName("slim-link"), function (element) {
-        element = element.parentNode;
-        var onlineStatus = element.className.trim();
-        var id = +element.getAttribute('data-slim-user-id');
-        if (onlineStatus in friends && !isNaN(id) && friends[onlineStatus].indexOf(id)===-1)
-          friends[onlineStatus].push(id);
-      });
+      slim.innerHTML = slimHTML;
     };
     var longpoll = function () {
       var frIds = [];

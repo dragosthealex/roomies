@@ -1075,6 +1075,37 @@ private function getConv($offset)
       $this->errorMsg = $e->getMessage();
     }
   }// function rateAccommodation
+
+  /**
+   * Function to return an array of the user's friends (or return an array of credentials)
+   */
+  public function getFriends($credential = FALSE)
+  {
+    $con = $this->con;
+    $userId = $this->id;
+
+    $stmt = $con->prepare("SELECT conexion_user_id1, conexion_user_id2
+                                   FROM rconexions
+                                  WHERE (   conexion_user_id1 = '$userId'
+                                         OR conexion_user_id2 = '$userId')
+                                    AND conexion_status = 1");
+    $stmt->execute();
+    $stmt->bindColumn(1, $id1);
+    $stmt->bindColumn(2, $id2);
+
+    $friends = array();
+    while ($conexion = $stmt->fetch())
+    {
+      $friend = new OtherUser($con, $id1 == $userId ? $id2 : $id1);
+      if (!$friend->getError())
+        if ($credential && $friend->getCredential($credential) !== 'Wrong key')
+          array_push($friends, $friend->getCredential($credential));
+        else
+          array_push($friends, $friend);
+    }
+
+    return $friends;
+  }
 }// class CurrentUser
 
 
