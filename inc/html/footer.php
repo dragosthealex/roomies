@@ -7,14 +7,15 @@ For the sake of layout, let the body/html be closed on every page
 */
 ?>
 <!-- Footer -->
+
 <div class="box">
 	<ul class="box-padding footer">
 		<li class="footer-item">Roomies &copy; 2014</li>
-		<li class="footer-item"><a href="about.php" class="footer-link">About</a></li>
-		<li class="footer-item"><a href="terms.php" class="footer-link">Terms</a></li>
-		<li class="footer-item"><a href="privacy.php" class="footer-link">Privacy</a></li>
-        <li class="footer-item"><a href="disclaimer.php" class="footer-link">Disclaimer</a></li>
-		<li class="footer-item"><a href="#" class="footer-link">Cookies</a></li>
+		<li class="footer-item"><a href="<?=$webRoot?>/about" class="footer-link">About</a></li>
+		<li class="footer-item"><a href="<?=$webRoot?>/terms" class="footer-link">Terms</a></li>	
+        	<li class="footer-item"><a href="<?=$webRoot?>/privacy" class="footer-link">Privacy</a></li>
+        	<li class="footer-item"><a href="<?=$webRoot?>/privacy#Use_of_Cookies" class="footer-link">Cookies</a></li>
+        	<li class="footer-item"><a href="<?=$webRoot?>/disclaimer" class="footer-link">Disclaimer</a></li>
 	</ul>
 </div>
 

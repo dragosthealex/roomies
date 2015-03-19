@@ -17,7 +17,7 @@
           current university and private accommodation all of which is provided by our users.
 
           As part of our duty to find the most accurate and customized search results we do 
-          require information about our userssuch as gender, age,  hobbies etc. However, this 
+          require information about our users such as gender, age,  hobbies etc. However, this 
           information will be used for matching purposes only and we will
           try our best to ensure that it remains private and safe unless asked for by government 
           or legal authorities. We will try our best to ensure that no human rights are invaded 
