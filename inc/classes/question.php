@@ -173,10 +173,14 @@ class Question extends Base
     $answers = $this->answers;
     $text = $this->text;
     $id = $this->id;
+    $answered = isset($this->answerForMe) && $this->answerForMe;
+
+    $answerClass = $answered ? 'answered hidden' : 'unanswered';
+
 
     $question =
     "
-      <div class='question'>
+      <div class='question $answerClass'>
         <script>window.checkForm=function(e,i,c,p,q,r,j,z,y){
           p=q=r=!1;e=e.parentNode.parentNode.parentNode;
           for(j=1;j<=c;j++)p=p||document.getElementById('q_'+i+'_ans_'+j).checked;
@@ -191,7 +195,7 @@ class Question extends Base
             <div class='indented-section'>
     ";
 
-    $answered = isset($this->answerForMe) && $this->answerForMe;
+    
     $disabled = $answered ? 'disabled' : '';
     $answerForMe = $this->answerForMe;
     $answersForThem = $this->answersForThem;

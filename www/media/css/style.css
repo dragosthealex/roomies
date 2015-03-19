@@ -690,6 +690,14 @@
 	text-decoration: none;
 }
 
+.edit-button + .link-button {
+	display: none;
+}
+
+.edit-button.hidden + .link-button{
+	display: inline-block;
+}
+
 .input-button:disabled {
 	opacity: 0.5;
 	cursor: default;

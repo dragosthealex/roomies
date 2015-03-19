@@ -41,7 +41,8 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 				<div class="profile-box-inner">
 					<h2 class="h2 profile-name"><?=$user2->getName()?></h2>
 					<div class="profile-links">
-						<a class='link-button' onclick="editProfile()">Edit Profile</a>
+						<a class='link-button edit-button' data-show='answered' data-hide='unanswered' id='edit-profile' data-toggle='edit-profile' onclick="editProfile()">Edit Profile</a>
+                        <a class='link-button' data-toggle='edit-profile' data-show='unanswered' data-hide='answered' onclick="editProfile()">Cancel</a>
 					</div>
 				</div>
 			</div>
@@ -130,7 +131,10 @@ if ($_GET['u'] == $_SESSION['user']['username'])
                 <script type="text/javascript">
                     var detailsVal = document.getElementsByClassName('details-value');
                     var detailsNewVal = document.getElementsByClassName('new-val');
-                    var answeredInput = document.getElementsByClassName('answered-input');
+                    var questionsAnswered = document.getElementsByClassName('question');
+
+                    // for(var count = 0; count < questionsAnswered.length; count ++)
+                    //     if
 
                     for(var count = 0; count < detailsNewVal.length; count ++)
                         detailsNewVal[count].style.display = 'none';
@@ -147,17 +151,13 @@ if ($_GET['u'] == $_SESSION['user']['username'])
                             {
                                 detailsVal[i].style.display = '';
                                 detailsNewVal[i].style.display = 'none';
-                            }
-                                
+                            }                     
                         }
-
-                        for(var count = 0; count < answeredInput.length; count ++)
-                            if(answeredInput[count].disabled == true)
-                                answeredInput[count].disabled = false;
-                            else
-                                answeredInput[count].disabled = true;
                     }
                 </script>
+                <div class="">
+                    
+                </div>
 			</div>
 		</div>
 	</div>
