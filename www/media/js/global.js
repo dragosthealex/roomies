@@ -144,7 +144,8 @@ void function (window, document, undefined) {
     away: [],
     offline: []
   },
-  newError = window.newError,
+  // newError = window.newError,
+  newError = function(){},
   frequestsDrop = document.getElementById('frequests-drop'),
   frequestsDropList = document.getElementById('frequests-drop-list'),
   messageDrop = document.getElementById('message-drop'),

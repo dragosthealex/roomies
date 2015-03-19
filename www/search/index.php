@@ -105,7 +105,7 @@ function rCF(element) {
         </div>
         <div class="selector-content center"
           ><ul class="selector-padding">
-            <li class="selector-item">
+            <li class="selector-item selector-inputs">
               <input class="input" style="width:50px" name="lowerAge" data-default="<?=$lowerAge?>" value="<?=isset($_GET['lowerAge'])?$_GET['lowerAge']:$lowerAge?>" oninput="cF(this,'^^^<1')" onblur="rCF(this)"> -
               <input class="input" style="width:50px" name="upperAge" data-default="<?=$upperAge?>" value="<?=isset($_GET['upperAge'])?$_GET['upperAge']:$upperAge?>" oninput="cF(this,'^^^<2')" onblur="rCF(this)">
             </li>
@@ -118,6 +118,7 @@ function rCF(element) {
       <select class="select" name="uni_city" data-default="<?=$user2->getCredential('uni_city')?>">
         <?php
         $uni_cities = array(
+          'All cities'
         );
         $stmt = $con->prepare("SELECT map_uni_city FROM rfiltersmap");
         $stmt->execute();
@@ -126,7 +127,7 @@ function rCF(element) {
           if (!$blobfish['map_uni_city']) break;
           array_push($uni_cities, ucwords($blobfish['map_uni_city']));
         }
-        for ($i=0;$i<count($uni_cities);$i++)
+        for ($i=1;$i<count($uni_cities);$i++)
         {
           printOption($uni_cities, $i, $selectedCity);
         }
