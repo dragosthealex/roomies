@@ -528,10 +528,10 @@ void function (window, document, undefined) {
     'markAsRead': function (convId, groupId) {
       validate(arguments, "numeric", "numeric");
 
-      var exampleConv = getElementsByConvId(convId)[0];
+      var exampleConv = getElementsByConvId(convId, groupId)[0];
       exampleConv && exampleConv.getElementsByClassName("unread received").length && roomies.ajax({
         url: info.webRoot + "/php/read_conversation.process.php",
-        post: [{name: "convId", value: convId}],
+        post: [{name: "convId", value: convId},{name: "groupId", value: groupId}],
         success: function (response) {
           response.forEach(function (messageId) {
             getElementsByMessageId(messageId).forEach(function (element) {
@@ -567,12 +567,13 @@ void function (window, document, undefined) {
       messageDrop.nextSibling.setAttribute('data-icon-number', messageDrop.getElementsByClassName('drop-item-link unread received').length);
       slice.call(messageDropList.childNodes, 1).forEach(function (childNode) {
         var convId = childNode.getAttribute('data-conv-id');
-        childNode.firstChild.childNodes[1].setAttribute("data-unread-count", conv.unread.received[convId] || 0);
+        var groupId = childNode.getAttribute('data-group-id');
+        childNode.firstChild.childNodes[1].setAttribute("data-unread-count", conv.unread.received[convId+":"+groupId] || 0);
       });
     },
 
-    "resetUnreadReceived": function (prevNo, convId) {
-      conv.unread.received[convId] = 0;
+    "resetUnreadReceived": function (prevNo, id) {
+      conv.unread.received[id] = 0;
     },
 
     "updateUnreadReceived": function () {
@@ -581,8 +582,9 @@ void function (window, document, undefined) {
       // Loop through all unread received messages and add the user id (uniquely) to the unread received ids
       forEach.call(body.getElementsByClassName('unread received message'), function (message) {
         var convId = roomies.getParentsByClassName(message, 'conversation')[0];
-        (convId = convId && convId.getAttribute('data-conv-id'))
-        && (conv.unread.received[convId] = (conv.unread.received[convId] || 0) + 1);
+        (groupId = convId && convId.getAttribute("data-group-id"))
+        && (convId = convId.getAttribute('data-conv-id'))
+        && (conv.unread.received[convId+":"+groupId] = (conv.unread.received[convId+":"+groupId] || 0) + 1);
       });
     },
 
@@ -891,7 +893,10 @@ void function (window, document, undefined) {
    * A function to detect keydown
    */
   window.onkeydown = function (e) {
-    e.keyCode===27&&((document.getElementById("errorList")||{}).innerHTML="");
+    if (e.keyCode===27) {
+      (document.getElementById("errorList") || {}).innerHTML = "";
+      window.onclick({button:1,target:body});
+    }
     return true;
   };
 
@@ -955,18 +960,19 @@ void function (window, document, undefined) {
   };
 
   forEach.call(body.getElementsByClassName("textarea"), function (textarea) {
-    var convId, groupId;
+    var id, convId, groupId;
     if (textarea.hasAttribute('data-conv-id')) {
       convId = textarea.getAttribute('data-conv-id');
       groupId = textarea.getAttribute('data-group-id');
+      id = convId + ":" + groupId;
       textarea.onfocus = function () {
-        conv.box[convId+":"+groupId].focused = true;
+        conv.box[id].focused = true;
         setTimeout(function () {
-          conv.box[convId+":"+groupId].focused && roomies.markAsRead(convId, groupId);
+          conv.box[id].focused && roomies.markAsRead(convId, groupId);
         }, 100);
       };
       textarea.onblur = function () {
-        conv.box[convId+":"+groupId].focused = false;
+        conv.box[id].focused = false;
       };
     }
   });
@@ -995,7 +1001,7 @@ void function (window, document, undefined) {
       offlineFriends = response.friends.offline;
 
       newMessages.content.length &&
-        (info.lastMessageId = newMessages.content[newMessages.content.length-1].id);
+        (info.lastMessageId = newMessages.content[newMessages.content.length-1]['message.id']);
 
       readMessage.forEach(function (messageId) {
         getElementsByMessageId(messageId).forEach(function (element) {
@@ -1006,41 +1012,56 @@ void function (window, document, undefined) {
         });
       });
 
-      var toRead = [];
+      var toRead = {
+        contains: function (convId, groupId) {
+          var i,temp;
+          for (i=0;i<toRead.array.length;i++) {
+            temp=toRead.array[i];
+            if (temp.convId == convId && temp.groupId == groupId) {
+              return true;
+            }
+          }
+          return false;
+        },
+        array: []
+      };
 
       newMessages.content.forEach(function (message) {
-        var sent = info.userId == message.senderId;
-        var otherId = sent ? message.receiverId : message.senderId;
-        var messageHTML = newMessages.template;
-        var leRegex = /%\{([a-zA-Z]+)\}/;
-        while (leRegex.test(messageHTML)) {
-          messageHTML = messageHTML.replace(leRegex, function (a, b) {
-            return message[b]
-          });
-        }
+        console.log(message);
 
-        getElementsByConvId(otherId, message.groupId).forEach(function (element) {
+        var sent = info.userId == message["sender.id"];
+        var groupId = message['message.group']
+        var convId = ((sent && !groupId) || !!groupId) ? message["receiver.id"] : message["sender.id"];
+
+        var stdout = newMessages.template;
+        var leRegex = /%\{([^\}]+)\}/;
+        while(leRegex.test(stdout))stdout=stdout.replace(leRegex,function(a,b){return message[b]});
+
+        getElementsByConvId(convId, groupId).forEach(function (element) {
           var
           parent = element.parentNode,
           wasAtBottom = parent.scrollHeight - parent.scrollTop - parent.offsetHeight < 50;
-          element.innerHTML += messageHTML;
+          element.innerHTML += stdout;
           wasAtBottom && (parent.scrollTop = parent.scrollHeight);
         });
 
         var activeElement = document.activeElement;
-        document.hasFocus() && activeElement && activeElement.getAttribute("data-conv-id") == otherId && toRead.indexOf(otherId) === -1 && toRead.push(otherId);
+        document.hasFocus() && activeElement
+        && activeElement.getAttribute("data-conv-id") == convId
+        && activeElement.getAttribute("data-group-id") == groupId
+        && !toRead.contains(convId, groupId) && toRead.array.push({convId:convId,groupId:groupId});
 
-        getMessageDropItemByConvId(otherId, message.groupId).innerHTML =
-          "<a href='/messages/" + message.senderUsername + "' class=' drop-item-link " + message.classes + " '>"
-        + "<span class=' drop-item-pic ' style='background-image: url(" + message.otherPic + ")'></span>"
-        + "<h3 class=' drop-item-header ' data-unread-count='" + conv.unread.received[otherId] + "'>" + message.senderName + "</h3>"
-        + "<p class=' drop-item-text" + (sent?" drop-item-text-sent":"") + " '>" + message.text.split("<br>")[0].substring(0, 200) + "</p>"
-        + "<p class=' drop-item-footer ' title='" + message.dateTimeTitle + "'>" + message.dateTimeText + "</p>"
+        getMessageDropItemByConvId(convId, groupId).innerHTML =
+          "<a href='/messages/" + message['notif.username'] + "' class=' drop-item-link " + message['notif.class'] + " '>"
+        + "<span class=' drop-item-pic ' style='background-image: url(" + message['notif.image'] + ")'></span>"
+        + "<h3 class=' drop-item-header ' data-unread-count='" + conv.unread.received[convId+":"+groupId] + "'>" + message['notif.name'] + "</h3>"
+        + "<p class=' drop-item-text '>" + message['message.text'].split("<br>")[0].substring(0, 200) + "</p>"
+        + "<p class=' drop-item-footer ' title='" + message['notif.timestamp.title'] + "'>" + message['notif.timestamp.text'] + "</p>"
         + "</a>";
       });
 
-      toRead.forEach(function (convId) {
-        roomies.markAsRead(convId);
+      toRead.array.forEach(function (temp) {
+        roomies.markAsRead(temp.convId, temp.groupId);
       });
 
       roomies.updateUnreadReceived();
@@ -1137,6 +1158,10 @@ void function (window, document, undefined) {
     };
     longpoll();
   }
+
+  window.onblur = function () {
+    window.onclick({button:1,target:body});
+  };
 
   elementToFocus&&(elementToFocus.focus&&elementToFocus.focus(),elementToFocus.onfocus&&elementToFocus.onfocus());
 

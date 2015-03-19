@@ -53,6 +53,8 @@ try
   $lowestAwayDate   = date('Y-m-d H:i:s', $now-600);
   $userId = $user2->getCredential('id');
   $userName = $user2->getName();
+  $userUsername = $user2->getCredential('username');
+  $userImage = $user2->getCredential('image');
   $userGroups = implode("' OR message_group = '", $user2->getCredential('groups'));
   $stmts = array(
     // First query: Find new messages for this user
@@ -147,11 +149,12 @@ try
     ),
     'oldRequests' => array(),
     'newMessages' => array(
-      'template' => "<li class='li message %{classes}' data-message-id='%{id}' data-message-timestamp='%{timestamp}'>"
-                   ."<span class='message-pic' style='background-image:url(%{senderPic}), url(../media/img/default.gif)'></span>"
-                   ."<a class='message-name'>%{senderName}</a>"
-                   ."<p class='text'>%{text}</p>"
+      'template' => "<li class='li message %{message.class}' data-message-id='%{message.id}' data-message-timestamp='%{message.timestamp}'>"
+                   ."<a class='message-pic' href='/profile/%{sender.username}' style='background-image:url(%{sender.image}),url(../media/img/default.gif)'></a>"
+                   ."<a class='message-name' href='/profile/%{sender.username}'>%{sender.name}</a>"
+                   ."<p class='text'>%{message.text}</p>"
                    ."</li>",
+      'notifTemplate' => '',
       'content'  => array()
     ),
     'readMessage' => array(),
@@ -180,85 +183,126 @@ try
   $stmt->bindParam(2, $receiverId);
   $stmt->bindParam(3, $receiverId);
   $stmt->bindParam(4, $senderId);
-  $stmt->bindParam(5, $groupId);
+  $stmt->bindParam(5, $messageGroup);
   $stmt->bindParam(6, $messageId);
   $stmt->bindColumn(1, $previousAuthorId);
   while ($message = $stmts['newMessages']->fetch(PDO::FETCH_ASSOC))
   {
 
     $nothingChanged = FALSE;
-    // Replace '\n' with '<br>'
-    $message['message_text'] = nl2br($message['message_text'], false);
-    $read = ($message['messages_read'])?'read':'unread';
-    $groupId = $message['message_group'];
+
     $messageId = $message['message_id'];
+    $messageText = nl2br($message['message_text'], false);
+    $messageTimestamp = $message['message_timestamp'];
+    $messageGroup = $message['message_group'];
+
     $senderId = $message['message_user_id1'];
     $receiverId = $message['message_user_id2'];
-    $sameAuthor = $stmt->execute() && $stmt->rowCount() && $stmt->fetch()
-                  && $previousAuthorId == $message['message_user_id1']
-                  ? 'sameAuthor' : '';
-
-    // Get the name and whether it was sent or received
+    // Get read or unread
+    $read = ($message['messages_read']) ? 'read' : 'unread';
+    // Get sent or received
     $sent = $senderId == $userId;
-    $otherUser = new OtherUser($con, !($message['message_group'] && $sent) ? $receiverId : $senderId);
-    $otherUserId = $otherUser->getCredential('id');
-    $otherUserName = $otherUser->getName($user2->friendShipStatus($otherUser));
-    $otherUserUsername = $otherUser->getCredential('username');
-    $senderName = $sent ? $userName : $otherUserName;
-    $senderImage = $sent ? $user2->getCredential('image') : $otherUser->getCredential('image');
     $sentOrReceived = $sent ? 'sent' : 'received';
+    // Get sameAuthor or not
+    $sameAuthor = $stmt->execute() && $stmt->rowCount() && $stmt->fetch()
+                  && $previousAuthorId == $senderId ? 'sameAuthor' : '';
+    $messageClass = $read.' '.$sentOrReceived.' '.$sameAuthor;
 
-    $msgDateTime = date_create_from_format('Y-m-d H:i:s', $message['message_timestamp']);
+    if ($sent)
+    {
+      if (!$messageGroup)
+      {
+        $other = new OtherUser($con, $receiverId);
+        $otherName = $other->getName($user2->friendShipStatus($other));
+        $otherUsername = $other->getCredential('username');
+        $otherImage = $other->getCredential('image');
+      }
+      $senderName = $userName;
+      $senderUsername = $userUsername;
+      $senderImage = $userImage;
+    }
+    else
+    {
+      $other = new OtherUser($con, $senderId);
+      $otherName = $other->getName($user2->friendShipStatus($other));
+      $otherUsername = $other->getCredential('username');
+      $otherImage = $other->getCredential('image');
+      $senderName = $otherName;
+      $senderUsername = $otherUsername;
+      $senderImage = $otherImage;
+    }
+
+    if ($messageGroup)
+    {
+      $stmt2 = $con->prepare("SELECT group_name FROM rgroups WHERE group_id = '$messageGroup'");
+      $stmt2->bindColumn(1, $notifName);
+      $stmt2->execute();
+      $stmt2->fetch();
+      $notifUsername = 'group-'.$messageGroup;
+      $notifImage = $senderImage;
+    }
+    else
+    {
+      $notifName = $otherName;
+      $notifUsername = $otherUsername;
+      $notifImage = $otherImage;
+    }
+
+    $notifClass = $read.' '.$sentOrReceived;
+
+    $msgDateTime = date_create_from_format('Y-m-d H:i:s', $messageTimestamp);
     $diff = $todayDateTime->diff($msgDateTime);
     $diff = (int) $diff->format('%a');
     // If today, output the time and "Today"
     if ($diff == 0)
     {
-      $msgDateTimeTitle = 'Today';
-      $msgDateTimeText = $msgDateTime->format('H:i');
+      $notifTimestampTitle = 'Today';
+      $notifTimestampText = $msgDateTime->format('H:i');
     }
     // Else, if yesterday, output "yesterday"
     else if ($diff == 1)
     {
-      $msgDateTimeTitle = 'Yesterday';
-      $msgDateTimeText = 'Yesterday';
+      $notifTimestampTitle = 'Yesterday';
+      $notifTimestampText = 'Yesterday';
     }
     // Else, if within the last 6 days, output the day name
     else if ($diff < 6)
     {
-      $msgDateTimeTitle = $msgDateTime->format('l');
-      $msgDateTimeText = $msgDateTime->format('D');
+      $notifTimestampTitle = $msgDateTime->format('l');
+      $notifTimestampText = $msgDateTime->format('D');
     }
     // Else, if the year is still the same, output the date (e.g. 12 February)
     else if ($msgDateTime->format('Y') == $todayDateTime->format('Y'))
     {
-      $msgDateTimeTitle = $msgDateTime->format('j F');
-      $msgDateTimeText = $msgDateTimeTitle;
+      $notifTimestampTitle = $msgDateTime->format('j F');
+      $notifTimestampText = $notifTimestampTitle;
     }
     // Else output the date as DD/MM/YYYY
     else
     {
-      $msgDateTimeTitle = $msgDateTime->format('d/m/Y');
-      $msgDateTimeText = $msgDateTimeTitle;
+      $notifTimestampTitle = $msgDateTime->format('d/m/Y');
+      $notifTimestampText = $notifTimestampTitle;
     }
 
     array_push(
       $response['newMessages']['content'], 
       array(
-        'classes' => $read.' '.$sentOrReceived.' '.$sameAuthor,
-        'id' => $message['message_id'],
-        'timestamp' => $message['message_timestamp'],
-        'senderPic' => $senderImage,
-        'senderName' => $senderName,
-        'text' => $message['message_text'],
-        'senderId' => $senderId,
-        'receiverId' => $receiverId,
-        'otherUsername' => $otherUserUsername,
-        'otherName' => $otherUserName,
-        'dateTimeTitle' => $msgDateTimeTitle,
-        'dateTimeText' => $msgDateTimeText,
-        'otherPic' => $otherUser->getCredential('image'),
-        'groupId' => $message['message_group']
+        'message.id'            => $messageId,
+        'message.text'          => $messageText,
+        'message.timestamp'     => $messageTimestamp,
+        'message.group'         => $messageGroup,
+        'message.class'         => $messageClass,
+        'receiver.id'           => $receiverId,
+        'sender.id'             => $senderId,
+        'sender.name'           => $senderName,
+        'sender.username'       => $senderUsername,
+        'sender.image'          => $senderImage,
+        'notif.name'            => $notifName,
+        'notif.username'        => $notifUsername,
+        'notif.image'           => $notifImage,
+        'notif.class'           => $notifClass,
+        'notif.timestamp.title' => $notifTimestampTitle,
+        'notif.timestamp.text'  => $notifTimestampText
       )
     );
   }

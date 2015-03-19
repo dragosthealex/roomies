@@ -365,7 +365,7 @@
 	color: #666;
 }
 
-.drop-item-text-sent:before {
+.drop-item-link.sent .drop-item-text:before {
 	content: "Sent: ";
 }
 
@@ -1486,27 +1486,28 @@
 }
 
 .conversation {
-	padding: 0 8px 16px 0;
+	padding: 8px 0;
 }
 
 .message {
 	position: relative;
-	padding: 16px 16px 0 60px;
+	padding: 8px 16px 8px 60px;
+	transition: background 0.5s;
 }
 
-.sameAuthor {
-	padding-top: 0;
-	padding-bottom: 0;
+.message.unread.received {
+	background-color: #e3dac9;
+	z-index: 2;
 }
 
-.sameAuthor:before {
-	display: none;
+.message + .message.sameAuthor {
+	margin: -8px 0 0;
 }
 
 .message-pic {
 	display: block;
 	position: absolute;
-	top: 18px;
+	top: 10px;
 	left: 16px;
 	background-position: center;
 	background-color: #EFEFEF;
@@ -1519,8 +1520,14 @@
 .message-name {
 	display: block;
 	margin: 0 0 4px;
+	text-decoration: none;
+	color: #000;
 	font-weight: bold;
 	font-size: .9em;
+}
+
+.message-name:hover {
+	text-decoration: underline;
 }
 
 .sameAuthor .message-pic,
@@ -1534,11 +1541,7 @@
 	font-size: .9em;
 }
 
-.sameAuthor .text {
-	margin: 8px 0 0;
-}
-
-.message.read.sent:last-child .text:after {
+.conversation[data-group-id='0'] .message.read.sent:last-child .text:after {
 	display: block;
 	background-position: 0 center;
 	background-repeat: no-repeat;
@@ -1548,10 +1551,6 @@
 	content: "Read";
 	opacity: .5;
 	font-size: .8em;
-}
-
-.received.unread {
-	color: #800;
 }
 
 .textarea-holder {

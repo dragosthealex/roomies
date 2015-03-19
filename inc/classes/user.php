@@ -30,6 +30,8 @@ class User
   // Variable containing any errors
   private $errorMsg = '';
 
+  private $groups = array();
+
   /**
   * Constructor
   *
@@ -75,7 +77,14 @@ class User
 
       $this->details = $details;
 
-      $stmt = null;
+      $stmt = $con->prepare("SELECT group_group_id FROM ruser_groups WHERE group_user_id = ".$this->id);
+      $stmt->bindColumn(1, $groupId);
+      $stmt->execute();
+      while ($stmt->fetch(PDO::FETCH_ASSOC))
+      {
+        array_push($this->groups, $groupId);
+      }
+      $this->groups = count($this->groups) ? implode(',', $this->groups) : '0';
     }
     catch (Exception $e)
     {
@@ -447,6 +456,7 @@ class User
     $return = $this->getConv($offset);
     $apparitionArray = isset($return['apparitionArray'])?$return['apparitionArray']:array();
     $messagePartners = (isset($return['messagePartners']))?$return['messagePartners']:array();
+    $messageGroups = (isset($return['messageGroups']))?$return['messageGroups']:array();
     $unreadArray = isset($return['unreadArray'])?$return['unreadArray']:array();
 
 
@@ -458,12 +468,16 @@ class User
     preg_match($regexTime, date('Y-m-d H:i:s'), $todaysDateMatches);
     preg_match($regexTime, date('Y-m-d H:i:s', time() - 3600*24), $yesterdaysDateMatches);
 
-    for($index=0; $index<count($messagePartners) && $index<10; $index++)
+    for($index=0; $index < count($messagePartners) && $index<10; $index++)
     {
       $id2 = $messagePartners[$index];
-      $stmt = $con->prepare("SELECT message_user_id1, message_text, message_timestamp FROM rmessages
+      $groupId = $messageGroups[$index];
+      $stmt = $con->prepare("SELECT message_user_id1, message_text, message_timestamp
+                               FROM rmessages
                               WHERE (message_user_id1 = $id2 AND message_user_id2 = $userId)
-                                OR (message_user_id1 = $userId AND message_user_id2 = $id2)
+                                 OR (message_user_id1 = $userId AND message_user_id2 = $id2)
+                                 OR (message_user_id2 = 0)
+                                AND message_group = $groupId
                               ORDER BY message_id DESC
                               LIMIT 1");
       $stmt->execute();
@@ -481,15 +495,29 @@ class User
       $unreadCount = isset($unreadArray[$id2]) ? $unreadArray[$id2] : 0;
       $addReadClass = ($userId == $senderId ? 'sent' : 'received') . ' ' . ($unreadCount ? 'unread' : 'read');
 
-      // If the message was sent, add "sent" to the message class
-      $sentClass = $userId == $senderId ? ' drop-item-text-sent ' : '';
-
-      // Get name
-      $otherUser = new User($con, $id2);
-      $otherUserName = $otherUser->getName();
-      $otherUserUsername = $otherUser->getIdentifier('username');
-
       $firstLine = substr(explode("<br>", nl2br($text, false))[0], 0, 200);
+
+      if ($groupId)
+      {
+        $stmt = $con->prepare("SELECT group_name FROM rgroups WHERE group_id = '$groupId'");
+        $stmt->bindColumn(1, $otherUserName);
+        $stmt->execute();
+        $stmt->fetch();
+        if ($userId != $senderId)
+        {
+          $sender = new OtherUser($con, $senderId);
+          $firstLine = explode(' ', $sender->getName(1))[0].': '.$firstLine;
+        }
+        $otherUserUsername = 'group-'.$groupId;
+        $otherUserImage = '';
+      }
+      else
+      {
+        $otherUser = new User($con, $id2);
+        $otherUserName = $otherUser->getName();
+        $otherUserUsername = $otherUser->getIdentifier('username');
+        $otherUserImage = $otherUser->getIdentifier('image');
+      }
 
       $msgDateTime = date_create_from_format('Y-m-d H:i:s', $timestamp);
       $diff = $todayDateTime->diff($msgDateTime);
@@ -526,11 +554,11 @@ class User
       }
 
       $messages .=
-        "<li class='drop-item message-drop-item' data-conv-id='$id2'>"
+        "<li class='drop-item message-drop-item' data-conv-id='$id2' data-group-id='$groupId'>"
       .   "<a href='/messages/$otherUserUsername' class='drop-item-link $addReadClass'>"
-      .     "<span class='drop-item-pic' style='background-image: url(".$otherUser->getIdentifier('image')."), url(../media/img/default.gif)'></span>"
+      .     "<span class='drop-item-pic' style='background-image: url($otherUserImage), url(../media/img/default.gif)'></span>"
       .     "<h3 class='drop-item-header' data-unread-count='$unreadCount'>$otherUserName</h3>"
-      .     "<p class='drop-item-text $sentClass'>$firstLine</p>"
+      .     "<p class='drop-item-text'>$firstLine</p>"
       .     "<p class='drop-item-footer' title='$msgDateTimeTitle'>$msgDateTimeText</p>"
       .   "</a>"
       . "</li>";
@@ -628,21 +656,26 @@ private function getConv($offset=0)
 
     // The users that this user has a conversation with
     $messagePartners = array();
+    $messageGroups = array();
+    $groupsDone = array();
     // The array that remembers how many messages we have from a user
     // aka the number of apparitions of a certain user id in our select
     $apparitionArray = array();
     // The array that remembers how many unread messages we have from a user
     $unreadArray = array();
+    $groups = $this->groups;
 
-
-    $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read FROM rmessages
+    $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read, message_group
+                             FROM rmessages
                             WHERE message_user_id2 = $userId
-                              OR message_user_id1 = $userId
+                               OR message_user_id1 = $userId
+                               OR message_group IN ($groups)
                             ORDER BY message_id DESC");
     $stmt->execute();
     $stmt->bindColumn(1, $id1);
     $stmt->bindColumn(2, $id2);
     $stmt->bindColumn(3, $read);
+    $stmt->bindColumn(4, $group);
 
     // Check if we have any message at all
     if(!$stmt->rowCount())
@@ -652,45 +685,40 @@ private function getConv($offset=0)
 
     while ($stmt->fetch())
     {
-      if($id1 == $userId)
+      if($group)
       {
-        if(!in_array($id2, $messagePartners))
+        $otherId = $group;
+        if (!in_array($otherId, $groupsDone))
         {
-          array_push($messagePartners, $id2);
-          $apparitionArray[$id2] = 1;        }
-        else
-        {
-          $apparitionArray[$id2] ++;
+          array_push($messagePartners, 0);
+          array_push($groupsDone, $otherId);
+          array_push($messageGroups, $group);
+          $apparitionArray[$otherId] = 1;
         }
-        // Wait 'till we reach 10 conversations
-        if(count($messagePartners) == $limit)
-        {
-          break;
-        }
+        else $apparitionArray[$otherId]++;
       }
       else
       {
-        if(!in_array($id1, $messagePartners))
+        $otherId = $id1 == $userId ? $id2 : $id1;
+        if (!in_array($otherId, $messagePartners))
         {
-          array_push($messagePartners, $id1);
-          $apparitionArray[$id1] = 1;
-          $unreadArray[$id1] = 0;
+          array_push($messagePartners, $otherId);
+          array_push($messageGroups, $group);
+          $apparitionArray[$otherId] = 1;
         }
-        else
-        {
-          $apparitionArray[$id1] ++;
-        }
-        // Count if the message is unread
-        ($read)?:$unreadArray[$id1]++;
-        // Wait 'till we reach 10 conversations
-        if(count($messagePartners) == $limit)
-        {
-          break;
-        }
+        else $apparitionArray[$otherId]++;
       }
+      if ($id1 != $userId && !$read)
+        if (isset($unreadArray[$otherId]))
+          $unreadArray[$otherId]++;
+        else
+          $unreadArray[$otherId] = 1;
+      // Wait 'till we reach 10 conversations
+      if(count($messagePartners) == $limit) break;
     }
 
     $return['messagePartners'] = $messagePartners;
+    $return['messageGroups'] = $messageGroups;
     $return['unreadArray'] = $unreadArray;
     $return['apparitionArray'] = $apparitionArray;
 

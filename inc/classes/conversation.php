@@ -26,9 +26,13 @@ class Conversation extends Base
     // The message id
     "' data-message-timestamp='",
     // The message timestamp
-    "'><span class='message-pic' style='background-image:url(",
+    "'><a href='/profile/",
+    // The username of the sender
+    "' class='message-pic' style='background-image:url(",
     // The name of the user's picture
-    "), url(../media/img/default.gif)'></span><a class='message-name'>",
+    "), url(../media/img/default.gif)'></a><a class='message-name' href='/profile/",
+    // The username of the sender
+    "'>",
     // The name of the sender
     "</a><p class='text'>",
     // The message itself
@@ -156,6 +160,7 @@ class Conversation extends Base
         {
           $id = $id1;
           $image = $userOfId1->getCredential('image');
+          $username = $userOfId1->getCredential('username');
           $name = $userOfId1Name;
           $sentOrReceived = 'sent';
         }
@@ -169,6 +174,7 @@ class Conversation extends Base
               continue;
             }
           $image = $otherUser->getCredential('image');
+          $username = $otherUser->getCredential('username');
           $name = $otherUser->getName(1);
           $sentOrReceived = 'received';
         }
@@ -179,7 +185,9 @@ class Conversation extends Base
           \"$read $sentOrReceived $sameAuthor\",
             $message[message_id],
           \"$message[message_timestamp]\",
+          \"$username\",
           \"$image\",
+          \"$username\",
           \"$name\",
           \"$message[message_text]\"
         ]";
@@ -241,6 +249,7 @@ class Conversation extends Base
         {
           $id = $id1;
           $image = $userOfId1->getCredential('image');
+          $username = $userOfId1->getCredential('username');
           $name = $userOfId1Name;
           $sentOrReceived = 'sent';
         }
@@ -254,18 +263,21 @@ class Conversation extends Base
             continue;
           }
           $image = $otherUser->getCredential('image');
+          $username = $otherUser->getCredential('username');
           $name = $otherUser->getName(1);
-          $sentOrReceived = '';
+          $sentOrReceived = 'received';
         }
         // Add the message into the string
         // TODO: Get proper image. Not just jpg.
         $conv .= $template[0].$read.' '.$sentOrReceived.' '.$sameAuthor
                 .$template[1].$message['message_id']
                 .$template[2].$message['message_timestamp']
-                .$template[3].$image
-                .$template[4].$name
-                .$template[5].$message['message_text']
-                .$template[6];
+                .$template[3].$username
+                .$template[4].$image
+                .$template[5].$username
+                .$template[6].$name
+                .$template[7].$message['message_text']
+                .$template[8];
       }
       $conv .= "</ul>";
 

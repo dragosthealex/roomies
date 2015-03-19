@@ -54,10 +54,11 @@ class Message extends Base
         $message_user_id1 = $values[0];
         $message_user_id2 = $values[1];
         $groupId = $values[3];
+        $messages_read = $groupId == '0' ? '0' : '1';
 
         // Insert new message in db
-        $stmt = $con->prepare("INSERT INTO rmessages (message_text, message_user_id1, message_user_id2, message_group)
-                                VALUES (\"$message_text\", $message_user_id1, $message_user_id2, $groupId)");
+        $stmt = $con->prepare("INSERT INTO rmessages (message_text, message_user_id1, message_user_id2, message_group, messages_read)
+                                VALUES (\"$message_text\", $message_user_id1, $message_user_id2, $groupId, $messages_read)");
         $stmt->execute();
 
         // Assign instance variables

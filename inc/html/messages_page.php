@@ -86,7 +86,7 @@ else
     $title = $thisGroup->getDetail('name');
     $otherName = $title;
   }
-  $conversation->readMessages();
+  // $conversation->readMessages();
 }
 
 // Get 10 conversations from the user, starting from offset, ordered desc by time
