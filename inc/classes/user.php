@@ -113,6 +113,7 @@ class User
         $stmt->bindColumn(1,$filter);
         $stmt->fetch();
         array_push($trueDetails, ucwords($filter));
+        // $trueDetails[$key] = ucwords($filter);
       }
     }
 
@@ -727,7 +728,6 @@ private function getConv($offset=0)
     {
       $this->errorMsg .= $e->getMessage();
     }
-
   }
 
   /**

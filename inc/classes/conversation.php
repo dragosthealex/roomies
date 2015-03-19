@@ -6,16 +6,16 @@
 *
 */
 
-class Conversation
+class Conversation extends Base
 {
-  // Db connection handler
-  private $con;
   // Array containing messages (all details)
   private $messages;
   // id of the first user
   private $id1;
   // id of the second user
   private $id2;
+  // The group id (if existing)
+  private $group = 0;
   // Loaded messages
   private $numberOfLoadedMessages = 50;
   // The HTML template to use when outputting messages as a string
@@ -51,80 +51,53 @@ class Conversation
   * @param - $long[P]oll, whether or not to longpoll. Default false.
   * @param - $lastMessageId, the id for which every successive id is 'new'. Default 0.
   * @param - $maxTime, the maximum length of time (in seconds) to longpoll for. Default 40.
+  * @param - $group(int), the id of the group. Default 0
+  * @param - $usersInConversation(int array) the users in this conv
   */
-  public function __construct($con, $id1, $id2, $offset=0, $longpoll=false, $lastMessageId=0, $maxTime=40)
+  public function __construct($con, $id1, $id2, $offset=0, $group=-1)
   {
     // Initialise messages array
     $messages = array();
 
-    // If we're longpolling, do weird things.
-    if ($longpoll)
-    {
-      // Get the unread messages sent by $otherUser to $user, in the order
-      // in which they were sent
-      $stmt = $con->prepare("SELECT * FROM rmessages
-                                     WHERE ((message_user_id1 = $id2
-                                       AND   message_user_id2 = $id1)
-                                        OR  (message_user_id1 = $id1
-                                       AND   message_user_id2 = $id2))
-                                       AND message_id > '$lastMessageId'
-                                  ORDER BY message_id ASC");
-      $stmt->execute();
-
-      // Begin recording the time spent in polling
-      $timeSpent = 0;
-
-      // Keep doing this until there is a 'new' message 
-      // or until the time reaches the max time.
-      while ($stmt->rowCount() == 0)
-      {
-        // If the time spent so far is the max time, stop checking
-        if ($timeSpent == $maxTime || connection_aborted())
-        {
-          break;
-        }
-
-        // Increment the time spent by 1
-        sleep(1);
-        $timeSpent += 1;
-
-        // Check again
-        $stmt->execute();
-      } // while
-    }
-
-    // Otherwise, just do the usual.
-    else
+    try
     {
       $stmt = $con->prepare("SELECT * FROM rmessages
-                                     WHERE (message_user_id1 = $id1
+                                     WHERE ((message_user_id1 = $id1
                                        AND  message_user_id2 = $id2)
                                         OR (message_user_id1 = $id2
                                        AND  message_user_id2 = $id1)
+                                       AND message_group = 0)
+                                        OR message_group = $group
                                   ORDER BY message_id DESC
                                      LIMIT 50 OFFSET $offset");
 
-      $stmt->execute();
-    }
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting conversation from database", 1);
+      }
 
-    // Add all of the messages to the array
-    while($messageDetails = $stmt->fetch(PDO::FETCH_ASSOC))
-    {
-      array_push($messages, $messageDetails);
-    }
+      // Add all of the messages to the array
+      while($messageDetails = $stmt->fetch(PDO::FETCH_ASSOC))
+      {
+        array_push($messages, $messageDetails);
+      }
 
-    // If we didn't longpoll, reverse the array
-    if (!$longpoll)
-    {
+      // reverse the array cus better with ass in front
       $messages = array_reverse($messages);
-    }
+      
 
-    // Assign instance variables
-    $this->id1 = $id1;
-    $this->id2 = $id2;
-    $this->con = $con;
-    $this->messages = $messages;
-    $stmt = null;
+      // Assign instance variables
+      $this->id1 = $id1;
+      $this->id2 = $id2;
+      $this->con = $con;
+      $this->group = $group;
+      $this->messages = $messages;
+      $stmt = null;
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
   }
 
   /**
@@ -140,68 +113,82 @@ class Conversation
     $id1 = $this->id1;
     $id2 = $this->id2;
     $con = $this->con;
+    $groupId = $this->group;
     $template = Conversation::$template;
 
     // The array of messages
     $messages = $this->messages;
     $numberOfLoadedMessages = count($messages);
 
-    // The conversation as JSON
-    $conv = "{\"template\":[";
-    foreach ($template as $key => $templateText)
+    try
     {
-      if ($key > 0)
+      // The conversation as JSON
+      $conv = "{\"template\":[";
+      foreach ($template as $key => $templateText)
       {
-        $conv .= ",";
+        if ($key > 0)
+        {
+          $conv .= ",";
+        }
+        $conv .= "\"$templateText\"";
       }
-      $conv .= "\"$templateText\"";
+      $conv .= "],\"length\":$numberOfLoadedMessages";
+
+      // Make the users and localise stuff
+      $userOfId1 = new CurrentUser($con);
+      if($userOfId1->getError())
+      {
+        throw new Exception("Error with current user's initialisation in conversation", 1);
+      }
+      $userOfId1Name = $userOfId1->getName();
+
+      foreach ($messages as $message)
+      {
+        // Replace '\n' with '<br>'
+        $message['message_text'] = preg_replace('/\r\n|\r|\n/', '<br>', $message['message_text']);
+        $read = ($message['messages_read'])?'read':'unread';
+
+        // Get the name and whether it was sent or received
+        if ($message['message_user_id1'] == $id1)
+        {
+          $id = $id1;
+          $image = $userOfId1->getCredential('image');
+          $name = $userOfId1Name;
+          $sentOrReceived = 'sent';
+        }
+        else
+        { 
+          $id = $message['message_user_id1'];
+          $otherUser = new OtherUser($con, $id);
+          if($otherUser->getError())
+            {
+              $this->errorMsg = $otherUser->getError();
+              continue;
+            }
+          $image = $otherUser->getCredential('image');
+          $name = $otherUser->getName(1);
+          $sentOrReceived = 'received';
+        }
+
+        // Add the message into the JSON object
+        // TODO: Get proper image. Not just jpg.
+        $conv .= ",\"$key\":[
+          \"$read $sentOrReceived\",
+            $message[message_id],
+          \"$message[message_timestamp]\",
+          \"$image\",
+          \"$name\",
+          \"$message[message_text]\"
+        ]";
+      }
+      $conv .= "}";
+
+      return $conv;
     }
-    $conv .= "],\"length\":$numberOfLoadedMessages";
-
-    // Make the users and localise stuff
-    $userOfId1 = new User($con, $id1);
-    $userOfId2 = new User($con, $id2);
-    $userOfId1Name = $userOfId1->getName();
-    $userOfId2Name = $userOfId2->getName();
-
-    foreach ($messages as $key => $message)
+    catch (Exception $e)
     {
-      // Replace '\n' with '<br>'
-      $message['message_text'] = preg_replace('/\r\n|\r|\n/', '<br>', $message['message_text']);
-
-      // Class for read/unread messages
-      $read = ($message['messages_read'])?'read':'unread';
-
-      // Get the name and whether it was sent or received
-      if ($message['message_user_id1'] == $id1)
-      {
-        $id = $id1;
-        $image = $userOfId1->getIdentifier('image');
-        $name = $userOfId1Name;
-        $sentOrReceived = 'sent';
-      }
-      else
-      {
-        $id = $id2;
-        $image = $userOfId2->getIdentifier('image');
-        $name = $userOfId2Name;
-        $sentOrReceived = 'received';
-      }
-
-      // Add the message into the JSON object
-      // TODO: Get proper image. Not just jpg.
-      $conv .= ",\"$key\":[
-        \"$read $sentOrReceived\",
-          $message[message_id],
-        \"$message[message_timestamp]\",
-        \"$image\",
-        \"$name\",
-        \"$message[message_text]\"
-      ]";
+      $this->errorMsg = $e->getMessage();
     }
-    $conv .= "}";
-
-    return $conv;
   }
 
 
@@ -219,55 +206,74 @@ class Conversation
     $id1 = $this->id1;
     $id2 = $this->id2;
     $con = $this->con;
+    $group = $this->group;
     $template = Conversation::$template;
     // The array of messages
     $messages = $this->messages;
-
-    // The conversation as text
-    $conv = "<ul class='ul conversation' id='main_conversation' data-conv-id='$id2'>";
-
-    // Make the users and localise stuff
-    $userOfId1 = new User($con, $id1);
-    $userOfId2 = new User($con, $id2);
-    $userOfId1Name = $userOfId1->getName();
-    $userOfId2Name = $userOfId2->getName();
-
-    foreach ($messages as $message)
+    
+    try
     {
-      // Replace '\n' with '<br>'
-      $message['message_text'] = nl2br($message['message_text'], false);
-      $read = ($message['messages_read'])?'read':'unread';
+      $groupClass = ($group != -1)?'group':'';
+      // The conversation as text
+      $conv = "<ul class='ul $groupClass conversation' id='main_conversation' data-conv-id='$id2' data-group-id='$group'>";
 
-      // Get the name and whether it was sent or received
-      if ($message['message_user_id1'] == $id1)
+      // Make the users and localise stuff
+      $userOfId1 = new CurrentUser($con);
+      if($userOfId1->getError())
       {
-        $id = $id1;
-        $image = $userOfId1->getIdentifier('image');
-        $name = $userOfId1Name;
-        $sentOrReceived = 'sent';
+        throw new Exception("Error with current user's initialisation in conversation", 1);
       }
-      else
+      $userOfId1Name = $userOfId1->getName();
+      
+      foreach ($messages as $message)
       {
-        $id = $id2;
-        $image = $userOfId2->getIdentifier('image');
-        $name = $userOfId2Name;
-        $sentOrReceived = 'received';
-      }
+        
+        // Replace '\n' with '<br>'
+        $message['message_text'] = nl2br($message['message_text'], false);
+        $read = ($message['messages_read'])?'read':'unread';
 
-      // Add the message into the string
-      // TODO: Get proper image. Not just jpg.
-      $conv .= $template[0].$read.' '.$sentOrReceived
-              .$template[1].$message['message_id']
-              .$template[2].$message['message_timestamp']
-              .$template[3].$image
-              .$template[4].$name
-              .$template[5].$message['message_text']
-              .$template[6];
+        // Get the name and whether it was sent or received
+        if ($message['message_user_id1'] == $id1)
+        {
+          $id = $id1;
+          $image = $userOfId1->getCredential('image');
+          $name = $userOfId1Name;
+          $sentOrReceived = 'sent';
+        }
+        else
+        {
+          $id = $message['message_user_id1'];
+          $otherUser = new OtherUser($con, $id);
+          if($otherUser->getError())
+          {
+            $this->errorMsg = $otherUser->getError();
+            continue;
+          }
+          $image = $otherUser->getCredential('image');
+          $name = $otherUser->getName(1);
+          $sentOrReceived = '';
+
+          
+        }
+        // Add the message into the string
+        // TODO: Get proper image. Not just jpg.
+        $conv .= $template[0].$read.' '.$sentOrReceived
+                .$template[1].$message['message_id']
+                .$template[2].$message['message_timestamp']
+                .$template[3].$image
+                .$template[4].$name
+                .$template[5].$message['message_text']
+                .$template[6];
+      }
+      $conv .= "</ul>";
+
+      $stmt = null;
+      return $conv;
     }
-    $conv .= "</ul>";
-
-    $stmt = null;
-    return $conv;
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
   }
 
   /**

@@ -22,7 +22,7 @@ function __autoload($class) {
 include_once __ROOT__.'/inc/classes/user.php';
 include_once __ROOT__.'/inc/classes/CurrentUser.php';
 include_once __ROOT__.'/inc/classes/OtherUser.php';
-
+include_once __ROOT__.'/inc/classes/Owner.php';
 // Setting session name
 $session_name = 'some_name';
 
@@ -43,6 +43,7 @@ session_regenerate_id();
 
 // Define the LOGGED_IN status of the user. True if logged in, false else
 define("LOGGED_IN", isset($_SESSION['user']));
+define("OWNER_LOGGED_IN", isset($_SESSION['owner']));
 
 // Define whether or not the user has just logged in, for later use.
 define("JUST_LOGGED_IN", isset($_SESSION['justLoggedIn']));
@@ -76,6 +77,17 @@ if (defined('REQUIRE_SESSION') && is_bool(REQUIRE_SESSION))
 // to be specifically logged in or out.
 $ioStatus = (LOGGED_IN ? "in" : "out");
 
+// If $_SESSION['tempOwner'] is set, send to owner-register
+// If $_SESSION['tempUser'] is set, send to confirm
+if(isset($_SESSION['tempOwner']) && (!in_array('register-owner', explode('/', $_SERVER['REQUEST_URI']))))
+{
+  header('Location: $webRoot/register-owner');
+}
+if(isset($_SESSION['tempUser']) && (!in_array('confirm', explode('/', $_SERVER['REQUEST_URI']))))
+{
+  header('Location: $webRoot/confirm');
+}
+
 // Inclusion of the db config file
 require_once __ROOT__.'/config.inc.php';
 
@@ -105,13 +117,16 @@ $stmt->execute();
 // If called from the root directory, set $webRoot to "", otherwise to "../"
 $webRoot = isset($rootDirectory) ? "." : "..";
 
+// TODO: MAKE REMEMBERME FOR OWNER
+
 if(LOGGED_IN)
 {
   if(isset($_GET['logout']))
   {
+    $userId = $_SESSION['user']['id'];
+
     if(isset($_COOKIE['login']))
     {
-      $userId = $_SESSION['user']['id'];
       $currentCookie = $_COOKIE['login'];
       $stmt = $con->prepare("SELECT user_cookie FROM rusers WHERE user_id = $userId");
       $stmt->execute();
@@ -130,6 +145,10 @@ if(LOGGED_IN)
       setcookie('login', '', time()-3600);
     }
 
+    // TEMP. Reset last_online to some time ago (no longer online)
+    $stmt = $con->prepare("UPDATE rusers SET last_online = '1970-01-01 00:00:00' WHERE user_id = '$userId'");
+    $stmt->execute();
+
     session_destroy();
     header("Location: $webRoot");
     exit();
@@ -143,6 +162,19 @@ if(LOGGED_IN)
     echo $user2->getError();
     exit();
   }
+
+  if (!isset($justLongPolling))
+  {
+    // Le user is online
+    $userId = $user2->getCredential('id');
+    $now = date('Y-m-d H:i:s');
+    $stmt = $con->prepare("UPDATE rusers SET last_online = '$now' WHERE user_id = '$userId'");
+    $stmt->execute();
+  }
+} else if(OWNER_LOGGED_IN)
+{
+  if(isset($_GET['logout']))session_destroy();
+  $owner = new Owner($con, 'get', array('id'=>$_SESSION['owner']['id']));
 }
 else
 {

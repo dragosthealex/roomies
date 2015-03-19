@@ -42,6 +42,7 @@ function validate_pass($con, $id, $pass)
 // Title of the page, used in head.php
 $title = "Settings";
 require_once __ROOT__."/inc/html/head.php";
+echo "<script src='$webRoot/media/js/facebook_disconnect.js'></script>";
 require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 <div class="box">
@@ -50,7 +51,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
     <div class="input-wrapper">
       <button class="input-button" data-hide="settings" data-show="account-settings">Account Settings</button>
       <button class="input-button" data-hide="settings" data-show="notif-settings">Notifications</button>
-      <button class="input-button" data-hide="settings" data-show="connect-settings">Connected accounts</button>
+      <button class="input-button" data-hide="settings" data-show="connected-settings">Connected accounts</button>
       <button class="input-button" data-hide="settings" data-show="review-settings">My reviews</button>
       <button class="input-button" data-hide="settings" data-show="SHITFUCK-settings">SHITFUCK</button>
     </div>

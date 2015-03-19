@@ -1,53 +1,196 @@
+<?php
+// $reviews = $accomInfo['reviews'];
+
+// $replyText = $reviews[$y]['replies'][$x]['text'];
+?>
 <!DOCTYPE html>
 <html>
 <head>
   <title></title>
   <link rel="stylesheet" type="text/css" href="media/css/style.css">
 </head>
-<body>
-  <div class="main">
-    <div class="column-2">
-      <div class="column-box">
-        <div class="box-padding">
-          <div class="review-Box">
-            <div class="review-Header">
-              Reviews
-            </div>
-            <div class="author-Details">
-                <div class="profile-review">
-
+<body class="body">
+        <div class="main">
+        <div class="column-box">
+            <div class="column-2">
+              <div class="ratings-box">
+                <div class="wrap">
+                  <div class="rating-below" ></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div
+                  ><div class="rating-below"></div>
                 </div>
-                <div class="author-text">
-                  <div class="author-name">
-                    Liam Higgins
-                  </div>
-                  <div class="date-text">
-                    27 February
-                  </div>
+                <div class="bar"></div>
+                <div class="wrap">
+                  <div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div
+                  ><div class="rating-above" onmouseover="fillPrevRating(this)" onmouseout="undoPrevRating(this)"></div>
+                </div>
+              </div>
+              <div class="review-header">Reviews</div>
+                      <div class="review-box">
+                        <div class="author-details">
+                            <div class="review-pic">
+
+                            </div>
+                            <div class="author-text">
+                              <div class="author-name">
+                                <a class="link">Liam Higgins</a>
+                              </div>
+                              <div class="date-text">
+                                27 February
+                              </div>
+                            </div>
+                        </div>
+                        <div class="review-text">
+                          The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                        </div>
+                        <div class="like-reply">
+                          Like - Reply
+                        </div>
+                        <!-- Add php to check for replies -->
+                          <div class="review-header" style="border-top: 1px solid #d5d1d0; padding-top: 5px; text-align: right; padding-right: 10px;">
+                            <a class="click-me" onclick="toggleReply(this)">Replies</a>
+                          </div>
+                          <div class="reply-box">
+                          <!-- add php to loop through the replies for the review -->
+                            <div class="reply" id="hide">
+                                <div class="author-details">
+                                  <div class="reply-text">
+                                    <div class="reply-pic">
+
+                                    </div>
+                                    <a class="link">Alex Radu</a> - The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="reply" id="hide">
+                                <div class="author-details">
+                                  <div class="reply-text">
+                                    <div class="reply-pic">
+
+                                    </div>
+                                    <a class="link">Alex Radu</a> - The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                                  </div>
+                                </div>
+                            </div>
+                          </div>
+
+                      </div>
+                      <div class="review-box">
+                        <div class="author-details">
+                            <div class="review-pic">
+
+                            </div>
+                            <div class="author-text">
+                              <div class="author-name">
+                                <a class="link">Liam Higgins</a>
+                              </div>
+                              <div class="date-text">
+                                27 February
+                              </div>
+                            </div>
+                        </div>
+                        <div class="review-text">
+                          The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                        </div>
+                        <div class="like-reply">
+                          Like - Reply
+                        </div>
+                        <!-- Add php to check for replies -->
+                          <div class="review-header" style="border-top: 1px solid #d5d1d0; padding-top: 5px; text-align: right; padding-right: 10px;">
+                            <a class="click-me" onclick="toggleReply(this)">Replies</a>
+                          </div>
+                          <div class="reply-box">
+                          <!-- add php to loop through the replies for the review -->
+                            <div class="reply" id="hide">
+                                <div class="author-details">
+                                  <div class="reply-text">
+                                    <div class="reply-pic">
+
+                                    </div>
+                                    <a class="link">Alex Radu</a> - The standard chunk 
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="reply" id="hide">
+                                <div class="author-details">
+                                  <div class="reply-text">
+                                    <div class="reply-pic">
+
+                                    </div>
+                                    <a class="link">Alex Radu</a> - The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                                  </div>
+                                </div>
+                            </div>
+                          </div>
+                          </div>
+                      </div>
                 </div>
             </div>
-            <div class="review-Text">
-              The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
-            </div>
-            <div class="date-text">
-              Like - Reply
-            </div>
-            <div class="like-Reply">
+<script type="text/javascript">
+  var hideAll = document.getElementsByClassName('reply-box');
+  for(i = 0; i < hideAll.length; i ++)
+  {
+    hideAll[i].style.display = 'none';
+  }
 
-            </div>
-            <div class="reply-Box">
-              <div class="review-Header">
-                <!-- Replies -->
-              </div>
-              <div class="reply">
+  var ratingsBelow = document.getElementsByClassName('rating-below');
+  var ratingsAbove = document.getElementsByClassName('rating-above');
 
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  function toggleReply(param) {
+    var parent = param.parentNode;
+    var nextItem = parent.nextElementSibling;
+    if (nextItem.style.display == 'none') {
+      nextItem.style.display = '';
+    } else {
+      nextItem.style.display = 'none';
+    }
+  }
 
+    function fillPrevRating(el) {
+    var index = 0;
+    while ((el = el.previousSibling) != null) {
+      index ++;
+    }
+
+    for (var i = 0; i < index; i ++)
+    {
+      ratingsBelow[i].style.background = '#e37314';
+    }
+   
+
+  function undoPrevRating(el) {
+    var index = 0;
+    while ((el = el.previousSibling) != null) {
+      index ++;
+    }
+
+    for (var i = 0; i < index; i ++)
+    {
+      ratingsBelow[i].style.background = 'none';
+    }
+  }
+
+  function moveBarDown(el2) {
+    el2.style.zIndex = '0';
+  }
+
+
+</script>
 </body>
 </html>
+          

@@ -60,6 +60,61 @@
     </ul>
   </div>
 </div>
+<!-- Le chat friends list -->
+<div class="slim">
+  <div class="slim-tag" data-toggle="slim-toggler"></div>
+  <div id="slim-toggler"></div>
+  <ul class="slim-main">
+    <li class='ph ph-last ph-drop' data-placeholder='No friends.'></li>
+    <?php
+    $userId = $user2->getCredential('id');
+    $stmt = $con->prepare("SELECT * FROM rconexions WHERE (conexion_user_id1 = '$userId' OR conexion_user_id2 = '$userId') AND conexion_status = 1");
+    $stmt->execute();
+    $friendList = array(
+      'online' => array(),
+      'away' => array(),
+      'offline' => array()
+    );
+    while ($conexion = $stmt->fetch(PDO::FETCH_ASSOC))
+    {
+      $leOtherUser = new OtherUser($con, $conexion['conexion_user_id'.($conexion['conexion_user_id1']==$userId?'2':'1')]);
+      if (!$leOtherUser->getError()) array_push($friendList[$leOtherUser->getOnlineStatus()], $leOtherUser);
+    }
+    $sortedFriendList = array(
+      'online' => array(),
+      'away' => array(),
+      'offline' => array()
+    );
+    function quickSortFriendList($array)
+    {
+      if (count($array) < 2) return $array;
+      $left = $right = array();
+      reset($array);
+      $pivot_key = key($array);
+      $pivot = array_shift($array);
+      foreach($array as $k => $v)
+        if(strcmp($v->getName(1), $pivot->getName(1)) < 0)
+          $left[$k] = $v;
+        else
+          $right[$k] = $v;
+      return array_merge(quickSortFriendList($left), array($pivot_key => $pivot), quickSortFriendList($right));
+    }
+    foreach ($friendList as $key => $value) {
+      $sortedFriendList[$key] = quickSortFriendList($value);
+    }
+    foreach ($sortedFriendList as $onlineStatus => $friends)
+    {
+      foreach ($friends as $friend)
+      {
+        $friendName = $friend->getName(1);
+        $friendId = $friend->getCredential('id');
+        $friendUsername = $friend->getCredential('username');
+        echo "<li class='$onlineStatus' data-slim-user-id='$friendId'><a href='$webRoot/messages/$friendUsername' class='slim-link'>$friendName</a></li>";
+      }
+    }
+    ?>
+  </ul>
+</div>
 <!-- Space for the header -->
 <div class="header-space header-space-extra"></div>
 <!-- Main content -->

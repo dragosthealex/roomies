@@ -40,6 +40,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 
 <div class="column-wrapper">
+  <?=$errorMsg?>
     <!--About me-->
     <div class="column-2">
       <div class="column-box">
@@ -47,7 +48,15 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
           <h2 class="h2">Conversations</h2>
             <ul class='ul'>
               <div id="allConversations">
-                <?=$allConversations?>
+              <?php
+              if ($allConversations == '')
+              {
+              ?>
+                <li class='ph ph-last ph-message' data-placeholder="No conversations."></li>
+              <?php
+              }
+              else echo $allConversations;
+              ?>
               </div>
             </ul>
           <p class="text">
@@ -66,6 +75,7 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
           <div class="scroll-area" id="main_conversation_scroll"><?=($err)?$err:$conv?></div>
           <script>setTimeout(function(){var p=document.getElementById("main_conversation_scroll");p.scrollTop=p.scrollHeight},100)</script>
         </div>
+        <?php if (!isset($noMessages)) { ?>
         <div class="box-padding">
           <!--TODO: CHANGE METHOD TO POST-->
           <div class="textarea-holder"
@@ -81,12 +91,13 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             <span class="cr-text cr-text-faded">Press Enter to send</span>
           </label
           ><input type="submit" class="input-button block " value="Send"
-                  data-ajax-url="../php/messages.process.php?receiver=<?=$resOtherUserId?>"
+                  data-ajax-url="../php/messages.process.php?receiver=<?=$resOtherUserId?>&gid=<?=$groupId?>"
                   data-ajax-post="message"
                   data-ajax-callback-1="scrollToBottom conv 1"
                   data-ajax-callback-2="focusById message">
           <script>(function(){var p=document.getElementById('pressEnterToSend');p.checked=rCookie.get('pressEnterToSend')==='true';p.onchange()}())</script>
         </div>
+        <?php } ?>
       </div>
     </div>
   </div>

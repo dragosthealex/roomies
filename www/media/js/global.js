@@ -138,6 +138,12 @@ void function (window, document, undefined) {
   main = body.getElementsByClassName('main')[0],
   originalTitle = document.title,
   header = body.getElementsByClassName('header')[0],
+  slim = body.getElementsByClassName('slim-main')[0],
+  friends = {
+    online: [],
+    away: [],
+    offline: []
+  },
   newError = window.newError,
   frequestsDrop = document.getElementById('frequests-drop'),
   frequestsDropList = document.getElementById('frequests-drop-list'),
@@ -281,11 +287,35 @@ void function (window, document, undefined) {
   // Variable to hold the regex for the hidden classname
   hiddenRegex = /(^| )hidden( |$)/,
 
-  scrollAreaFunc = function (element) {
+  configureSelector = function (element) {
+    var
+    toggler = document.getElementById(element.parentNode.children[0].getAttribute('data-toggle'));
+    hiddenRegex.test(toggler.className)
+    ||  roomies[some.call(element.firstChild.children, function (el) {
+          return !hiddenRegex.test(el.className);
+        })?'show':'hide']([element.parentNode]);
+
+    forEach.call(element.getElementsByClassName('selector-item'), function (item) {
+      item.style.paddingRight = element.offsetWidth - element.clientWidth + 6 + "px";
+    });
+    var boxShadow = "0 -2px 0 -1px #fff,0 3px 6px rgba(0,0,0,.24)";
+    if (element.scrollTop < element.scrollHeight - element.offsetHeight) {
+        boxShadow += ", inset 0 -6px 4px -4px rgba(0,0,0,0.12)";
+        if (element.scrollTop > 0) {
+            boxShadow += ", inset 0 6px 4px -4px rgba(0,0,0,0.12)";
+        }
+    } else if (element.scrollTop > 0) {
+        boxShadow += ", inset 0 6px 4px -4px rgba(0,0,0,0.12)";
+    }
+    element.style.boxShadow = boxShadow;
+  },
+
+  configureScrollArea = function (element) {
     var scrollBars = element.getElementsByClassName('scroll-bar');
     var minusScrollBarWidth = element.clientWidth - element.offsetWidth;
     var convstn = element.getElementsByClassName('conversation')[0];
     var convId = convstn && convstn.getAttribute("data-conv-id"), convBox;
+    var grpId = convstn && convstn.getAttribute("data-group-id");
 
     if (minusScrollBarWidth) {
       forEach.call(element.childNodes, function (child) {
@@ -309,7 +339,7 @@ void function (window, document, undefined) {
     if (convstn && (convBox = conv.box[convId]) && !convBox.fetchingPrevious && element.scrollTop < 200) {
       convBox.fetchingPrevious = true;
       roomies.ajax({
-        url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0",
+        url: '../php/update_message.process.php?type=old&otherId=' + convId + "&offset1=" + convstn.getElementsByClassName("message").length + "&offset2=0&gid=" + grpId,
         success: function (response) {
           response = response[0];
           var newHTML = "";
@@ -421,10 +451,11 @@ void function (window, document, undefined) {
 
     // A function to hide a list of elements
     'hide': function (elements) {
-      validate(arguments, "HTMLCollection");
-
       forEach.call(elements, function (element) {
-        !hiddenRegex.test(element.className) && (element.className += "hidden ");
+        validate.bool([element], "element") && (
+          element.disabled === false && (element.disabled = true),
+          !hiddenRegex.test(element.className) && (element.className += "hidden ")
+        );
       });
     },
 
@@ -432,13 +463,15 @@ void function (window, document, undefined) {
       validate(arguments, "HTMLCollection");
 
       forEach.call(elements, function (element) {
+        element.disabled && (element.disabled = false);
+
         while (hiddenRegex.test(element.className)) {
           element.className = element.className.replace(hiddenRegex, ' ');
         }
 
         // Get any scroll areas and ensure they have a scrollbar
         forEach.call(element.getElementsByClassName('scroll-area'), function (scrollArea) {
-          scrollAreaFunc(scrollArea);
+          configureScrollArea(scrollArea);
         });
       });
     },
@@ -605,7 +638,7 @@ void function (window, document, undefined) {
       xmlhttp.onreadystatechange = function () {
         var response;
         if (xmlhttp.readyState === 4 && xmlhttp.status) {
-          if (xmlhttp.status === 503) {
+          if (xmlhttp.status === 503 || xmlhttp.status === 404) {
             // If 503, then the server is being a cunt.
           } else if (xmlhttp.status !== 200) {
             newError(xmlhttp.responseText);
@@ -639,14 +672,15 @@ void function (window, document, undefined) {
           /*
           If you have a form, you need to supply its ID and the name of its inputs in a string, sepparated by ' ', in 'data-ajax-post'
           */
-          var form = document.getElementById(obj.post.split(" ")[0]) || {};
+          var posts = obj.post.split(" ");
+          var form = document.getElementById(posts[0]) || {};
           // if the "form" is actually a form:
           if (form.nodeName === "FORM") {
-            obj.post.split(" ").slice(1).forEach(function (elementName) {
+            posts.slice(1).forEach(function (elementName) {
               addValueToPostValues(elementName, form.elements[elementName]);
             });
           } else {
-            obj.post.split(" ").forEach(function (id) {
+            posts.forEach(function (id) {
               addValueToPostValues(id, document.getElementById(id));
             });
           }
@@ -682,31 +716,53 @@ void function (window, document, undefined) {
       return true;
     } // if
 
+    var
     // Localise the element that was clicked and its className
-    var element = e.target;
+    element = e.target,
     // Localise the class string of the target
-    var className = element.className;
-
+    className = element.className,
     // Localise variables for later use
-    var target, targets;
-
+    target = document.getElementById(element.getAttribute("data-toggle")),
+    targets,
+    isElement = validate.bool([element], "element") && element !== body && element !== html,
     // Get an array of all the drops that the current element is in
-    var elementsToKeepOpen = validate.bool([element], "element")
-                             ? roomies.getParentsByClassName(element, 'drop')
-                             : [];
-    // Hide all drops, except those in the elements to keep open
-    forEach.call(body.getElementsByClassName("drop"), function (dropElement) {
-      elementsToKeepOpen.indexOf(dropElement) === -1 && roomies.hide([dropElement]);
+    exceptions = isElement
+                 ? roomies.getParentsByClassName(element, 'drop')
+                 : [];
+    // Add any parent selector's togglers
+    isElement && roomies.getParentsByClassName(element, "selector").forEach(function(element){
+      while((element=element.previousSibling)&&element.nodeType!==1);
+      /(^| )selector-toggler( |$)/.test(element.className)&&exceptions.push(element);
+      e
     });
+    // Add the toggle target if it exists
+    target && exceptions.push(target);
+    // Function to optionally hide things
+    var optDo = function (className, action) {
+      roomies[action] && forEach.call(body.getElementsByClassName(className), function (element) {
+        exceptions.indexOf(element) === -1 && roomies[action]([element]);
+      });
+    };
+    // Hide the slim
+    !(isElement && roomies.getParentsByClassName(element, "slim").length)
+    && roomies.show([document.getElementById('slim-toggler')]);
+    // Hide all drops, except those in the elements to keep open
+    optDo("drop", "hide");
+    optDo("selector-toggler", "show");
 
     // If targets needs hiding, hide them
     (targets = document.getElementsByClassName(element.getAttribute("data-hide"))).length && roomies.hide(targets);
     // If targets needs showing, show them
     (targets = document.getElementsByClassName(element.getAttribute("data-show"))).length && roomies.show(targets);
     // If a target needs toggling, toggle it
-    (target = document.getElementById(element.getAttribute("data-toggle"))) && roomies.toggle(target);
+    (target) && roomies.toggle(target);
     // If a target needs deleting, delete it
     (target = document.getElementById(element.getAttribute("data-delete"))) && roomies["delete"](target);
+
+    // Configure selectors
+    forEach.call(body.getElementsByClassName('selector-content'), function (selector) {
+      selector.onscroll && selector.onscroll();
+    });
 
     // If the element employs ajax, do some ajax.
     var ajaxUrl = element.getAttribute("data-ajax-url");
@@ -720,16 +776,19 @@ void function (window, document, undefined) {
           successFunctionName && successFunctions[successFunctionName]
                               && successFunctions[successFunctionName](response);
 
-          var hideText = element.getAttribute("data-ajax-hide");
-          if (hideText) {
-            hideText = hideText.split(" ");
-
-            forEach.call(body.getElementsByClassName(hideText[0]), function (element) {
-              element.style.display = "none";
-            });
-
-            document.getElementById(hideText[1]).removeAttribute("style");
+          var hideText = (element.getAttribute("data-ajax-hide")||"").split(" ");
+          if (hideText.length >= 2) {
+            roomies.hide(body.getElementsByClassName(hideText[0]));
+            roomies.show([document.getElementById(hideText[1])]);
+          } else if (hideText.length == 1) {
+            roomies.hide([document.getElementById(hideText[0])]);
           }
+
+          var elToDisable = document.getElementById(element.getAttribute("data-ajax-disable"));
+          elToDisable && (elToDisable.disabled = true);
+
+          var elToEnable = document.getElementById(element.getAttribute("data-ajax-enable"));
+          elToEnable && (elToEnable.disabled = true);
         },
         complete: function () {
           element.innerHTML = originalText;
@@ -751,11 +810,24 @@ void function (window, document, undefined) {
         },
         post: element.getAttribute("data-ajax-post")
       });
+      var focusElement;
+      if (focusElement = element.getAttribute('for') || element.parentNode.getAttribute('for')) {
+        focusElement = document.getElementById(focusElement)||element;
+        if (focusElement.nodeName === 'INPUT') {
+          if (focusElement.type in {'checkbox':1,'radio':1}) {
+            focusElement.checked = true;
+          } else {
+            focusElement.focus();
+          }
+        }
+      }
       return false;
     } // if
   }; // onclick
 
+
   /**
+
    * A function to detect if the mouse has been pressed
    */
   window.onmousedown = function (e) {
@@ -849,9 +921,17 @@ void function (window, document, undefined) {
       scrollArea.innerHTML += "<div class=' scroll-bar '><div class=' scroll-tracker '></div></div>";
     }
     scrollArea.onscroll = function () {
-      scrollAreaFunc(this);
+      configureScrollArea(this);
     }
-    scrollAreaFunc(scrollArea);
+    configureScrollArea(scrollArea);
+  });
+
+  // Configure any selector contents
+  forEach.call(body.getElementsByClassName('selector-content'), function (element) {
+    element.onscroll = function () {
+      configureSelector(this);
+    };
+    configureSelector(element);
   });
 
   forEach.call(body.getElementsByClassName("conversation"), function (conversation) {
@@ -883,6 +963,14 @@ void function (window, document, undefined) {
     }
   });
 
+  slim && forEach.call(slim.getElementsByClassName("slim-link"), function (element) {
+    element = element.parentNode;
+    var onlineStatus = element.className.trim();
+    var id = +element.getAttribute('data-slim-user-id');
+    if (onlineStatus in friends && !isNaN(id) && friends[onlineStatus].indexOf(id)===-1)
+      friends[onlineStatus].push(id);
+  });
+
   if (info.userId) {
     // Set up longpolling
     var longpollSuccess = function (response) {
@@ -893,7 +981,10 @@ void function (window, document, undefined) {
       newMessages = response.newMessages,
       readMessage = response.readMessage,
       newRequests = response.newRequests,
-      oldRequests = response.oldRequests;
+      oldRequests = response.oldRequests,
+      onlineFriends  = response.friends.online,
+      awayFriends    = response.friends.away,
+      offlineFriends = response.friends.offline;
 
       newMessages.content.length &&
         (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
@@ -970,6 +1061,34 @@ void function (window, document, undefined) {
         var messageId = message.getAttribute('data-message-id');
         conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
       });
+
+      // Reset the slim and friends lists
+      var slimHTML = "<li class='ph ph-last ph-drop' data-placeholder='No friends.'></li>";
+      friends.online = [];
+      friends.away = [];
+      friends.offline = [];
+      onlineFriends.forEach(function (friend) {
+        slimHTML +=
+          "<li class=' online ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.online.push(friend.id);
+      });
+      awayFriends.forEach(function (friend) {
+        slimHTML +=
+          "<li class=' away ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.away.push(friend.id);
+      });
+      offlineFriends.forEach(function (friend) {
+        slimHTML +=
+          "<li class=' offline ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.offline.push(friend.id);
+      });
+      slim.innerHTML = slimHTML;
     };
     var longpoll = function () {
       var frIds = [];
@@ -992,6 +1111,12 @@ void function (window, document, undefined) {
           {
             name: "friendRequests",
             value: frIds.join(",")
+          },
+          {
+            name: "friends",
+            value: "online:" + friends.online.join(",") + ";" +
+                   "away:"   + friends.away.join(",") + ";" +
+                   "offline:" + friends.offline.join(",")
           }
         ],
 
@@ -1006,5 +1131,15 @@ void function (window, document, undefined) {
   elementToFocus&&(elementToFocus.focus&&elementToFocus.focus(),elementToFocus.onfocus&&elementToFocus.onfocus());
 
   if (roomiesInfo)delete roomiesInfo;
+
+  var cookieInfo;
+  if (cookieInfo=rCookie.get('data-hide')) {
+    roomies['hide'](document.getElementsByClassName(cookieInfo));
+    rCookie.remove('data-hide');
+  }
+  if (cookieInfo=rCookie.get('data-show')) {
+    roomies['show'](document.getElementsByClassName(cookieInfo));
+    rCookie.remove('data-show');
+  }
 } (window, document); // Localise variables
 }catch(e){newError("<strong>JavaScript Error</strong><br><br>"+e)}

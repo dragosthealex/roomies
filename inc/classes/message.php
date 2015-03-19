@@ -6,18 +6,16 @@
 *
 */
 
-class Message
+class Message extends Base
 {
   // The text of the message
   private $text;
   // The time and date of the message as dd-mm-yyyy-hh-mm-ss
   private $timeStamp;
   // The unique id of the message
-  private $id;
-  // The id of the user that has written the message
   private $author;
-  // The db connection handler
-  private $con;
+  // The group id
+  private $groupId=0;
 
   /**
   *
@@ -31,39 +29,47 @@ class Message
   */
   public function __construct($con, $key, $values)
   {
-    if($key == 'id')
+    try
     {
-      // Localise the id
-      $message_id = $values;
+      if($key == 'id')
+      {
+        // Localise the id
+        $message_id = $values;
 
-      // Get the message values from db
-      $stmt = $con->prepare("SELECT * FROM rmessages WHERE message_id = $message_id");
-      $stmt->execute();
-      $messageDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Get the message values from db
+        $stmt = $con->prepare("SELECT * FROM rmessages WHERE message_id = $message_id");
+        $stmt->execute();
+        $messageDetails = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      // Assign instance variables
-      $this->text = $messageDetails['message_text'];
-      $this->author = $messageDetails['message_user_id1'];
-      $this->con = $con;
-      $this->timeStamp = $messageDetails['message_timestamp'];
+        // Assign instance variables
+        $this->text = $messageDetails['message_text'];
+        $this->author = $messageDetails['message_user_id1'];
+        $this->con = $con;
+        $this->timeStamp = $messageDetails['message_timestamp'];
+      }
+      else if($key == 'text')
+      {
+        // Localise the text
+        $message_text = $values[2];
+        $message_user_id1 = $values[0];
+        $message_user_id2 = $values[1];
+        $groupId = $values[3];
+
+        // Insert new message in db
+        $stmt = $con->prepare("INSERT INTO rmessages (message_text, message_user_id1, message_user_id2, message_group)
+                                VALUES (\"$message_text\", $message_user_id1, $message_user_id2, $groupId)");
+        $stmt->execute();
+
+        // Assign instance variables
+        $this->text = $message_text;
+        $this->author = $message_user_id1;
+        $this->con = $con;
+        $this->timeStamp = date('Y-m-d H:i:s');
+      }
     }
-    else if($key == 'text')
+    catch (Exception $e)
     {
-      // Localise the text
-      $message_text = $values[2];
-      $message_user_id1 = $values[0];
-      $message_user_id2 = $values[1];
-
-      // Insert new message in db
-      $stmt = $con->prepare("INSERT INTO rmessages (message_text, message_user_id1, message_user_id2)
-                              VALUES (\"$message_text\", $message_user_id1, $message_user_id2)");
-      $stmt->execute();
-
-      // Assign instance variables
-      $this->text = $message_text;
-      $this->author = $message_user_id1;
-      $this->con = $con;
-      $this->timeStamp = date('Y-m-d H:i:s');
+      $this->errorMsg = $e->getMessage();
     }
   }
 

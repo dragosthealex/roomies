@@ -5,11 +5,9 @@
 * Represents any type of comment. has an author, a parent (where it is posted), a date, a text, and a number of "likes"
 *
 */
-require_once __ROOT__.'/inc/classes/base.php';
-abstract class Comment extends Base
+require_once __ROOT__.'/inc/classes/Post.php';
+abstract class Comment extends Post
 {
-  // The id of the comment
-  protected $id;
   // The id of the author
   protected $author;
   // The id of the parent
@@ -18,8 +16,6 @@ abstract class Comment extends Base
   protected $date;
   // The text of the comment
   protected $text;
-  // The number of likes
-  protected $likes;
 
   /**
   * Function toJson()
@@ -36,28 +32,45 @@ abstract class Comment extends Base
     $parentId = $this->parent;
     $date = $this->date;
     $text = $this->text;
-    $likes = $this->likes;
+    $likesNo = $this->likesNo;
+    $likesArray = isset($this->likesArray[0])?$this->likesArray:array();
+    $con = $this->con;
 
-    // Get author name
-    $author = new User($con, $authorId);
-    $authorName = $author->getName();
+    try
+    {
+      // Get author name
+      $author = new OtherUser($con, $authorId);
+      $authorName = $author->getName();
+      if($author->getError())
+      {
+        throw new Exception("Error getting author with id $authorId. Strange sh*t goin' on: " . $author->getError(), 1); 
+      }
 
-    // Get the replies
-    $replies = $this->getReplies();
-
-    // Construct the json
-    $jsonArray = array(
-              "id"          => "$id",
-              "authorName"  => "$authorName",
-              "authorId"    => "$authorId",
-              "text"        => "$text",
-              "likes"       => "$likes",
-              "date"        => "$date",
-              "parentId"    => "$parentId",
-              "replies"     => "$replies");
-    
-    // Return it;
-    return json_encode($jsonArray);
+      // Get the replies
+      $replies = $this->getReplies();
+      if($this->getError())
+      {
+        throw new Exception("nyanyanyanyanayanyanyan. Error getting replies for post $id " . $this->getError(), 1);
+      }
+      // Construct the json
+      $jsonArray = array(
+                "id"          => "$id",
+                "authorName"  => "$authorName",
+                "authorId"    => "$authorId",
+                "text"        => "$text",
+                "likesNo"     => "$likesNo",
+                "likesArray"  => $likesArray,
+                "date"        => "$date",
+                "parentId"    => "$parentId",
+                "replies"     => $replies);
+      
+      // Return it;
+      return json_encode($jsonArray);
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
   }
 
   // Gets the replies of this comment as an array string

@@ -6,6 +6,7 @@
    fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
+
 // This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
   console.log('statusChangeCallback');
@@ -21,8 +22,9 @@ function statusChangeCallback(response) {
     // Get the FB id and access token, send them to php and check if existent
     var fbUserId = response.authResponse.userID,
         fbAccessToken = response.authResponse.accessToken,
-        xmlhttp;
-    // Send them through ajax to verify if logged in
+        xmlhttp,
+        action = document.getElementById("fbAction").value;
+    // Send them through ajax to disconnect the user
 
     if (window.XMLHttpRequest)
     {
@@ -35,28 +37,14 @@ function statusChangeCallback(response) {
       
       if (xmlhttp.readyState==4 && xmlhttp.status==200) {
         if(xmlhttp.responseText) {
-          if(IsJsonString(xmlhttp.responseText))
-          {
-            resp = JSON.parse(xmlhttp.responseText);
-            if(resp.error) {
-              alert (resp.error);
-            }
-            else {
-              if(resp.response == 'notInDb') {
-                window.location.replace("./complete-register/?ref=fb&tok="+fbAccessToken);
-              }
-            }
-          }
-          else
-          {
-            window.location.reload();
-          }
+          var response = JSON.parse(responseText);
+          document.getElementById("status").innerHTML = response['success'];
         }
       }
     }
-    xmlhttp.open("POST","./php/facebook_login.php",true);
+    xmlhttp.open("POST","../php/facebook_connect.php",true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("id="+fbUserId+"&acc="+fbAccessToken);
+    xmlhttp.send("id="+fbUserId+"&acc="+fbAccessToken+"&a="+action);
 
   } else if (response.status === 'not_authorized') {
     // The person is logged into Facebook, but not your app.
@@ -70,15 +58,6 @@ function statusChangeCallback(response) {
   }
 }
 
-// Test if json
-function IsJsonString(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
 
 // This function is called when someone finishes with the Login
 // Button.  See the onlogin handler attached to it in the sample

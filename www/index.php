@@ -32,7 +32,7 @@ if (!LOGGED_IN)
 	$title = "Welcome to " . $title;
 }
 
-if(!LOGGED_IN)
+if(!LOGGED_IN && !OWNER_LOGGED_IN)
 {
 	require_once __ROOT__."/inc/html/head.php";
 	echo "<script src='$webRoot/media/js/facebook_login.js'></script>";
@@ -53,7 +53,7 @@ if(!LOGGED_IN)
 					<div class="box-padding">
 						<h2 class="h2" id="Sign_in">Sign in</h2>
 						<form method="POST" name="signin" action="./login/index.php" onsubmit="return this.login.value?this.password.value?true:(this.password.focus(),false):(this.login.focus(),false)">
-							<input type="text" name="login" placeholder="Email/Username" class="input block" required>
+							<input type="text" name="login" placeholder="Email/Username" class="input block" required data-focus>
 							<input type="password" name="password" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
 							<label for="remember_me" class="cr-label">
 								<input type="checkbox" id="remember_me" name="rememberMe" class="cr">
@@ -77,6 +77,7 @@ if(!LOGGED_IN)
 				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2" id="Register">Register</h2>
+						<p class="small-text"> Or register as <a class="link" href="./register-owner">accommodation owner</a> to advertise your properties.
 						<form method="POST" name="register" action="./confirm/" onsubmit="return this.registerEmail.value?this.registerPassword.value?this.registerPassword.value===this.registerConfirmPassword.value?true:(this.registerConfirmPassword.focus(),newError('Passwords must match!'),false):(this.registerPassword.focus(),newError('A password is required.'),false):(this.registerEmail.focus(),newError('An email is required.'),false)">
 							<input type="email" name="registerEmail" placeholder="Email" class="input block" required>
 							<input type="password" name="registerPassword" placeholder="Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
@@ -103,14 +104,14 @@ if(!LOGGED_IN)
 						<option class="option" value="1">University of Manchester</option>
 					</select
 					><input type="submit" value="Filter" class="input-button">
-					<a href="#" class="link-button float-right">View All</a>
+					<a href="./accommodation" class="link-button float-right">View All</a>
 				</form>
 			</div>
 		</div>
 <?php
 } // if (!LOGGED_IN)
 // Else, we show the homepage for logged in users
-else
+else if(LOGGED_IN)
 {
 
 	//Check if the user completed their profile
@@ -224,6 +225,28 @@ else
 		</div>
 	</div>
 <?php
-} // else
+} else if(OWNER_LOGGED_IN)
+{
+require_once __ROOT__.'/inc/html/head.php';
+require_once __ROOT__.'/inc/html/header.owner.php';
+?>
+<div class="column-wrapper">
+	<div class="column-2">
+		<div class="column-box">
+			<div class="box-padding">
+				fuck		
+			</div>
+		</div>
+	</div>
+	<div class="column-2">
+		<div class="column-box">
+			<div class="box-padding">
+				shit
+			</div>
+		</div>
+	</div>
+</div>
+<?php
+}
 require_once __ROOT__."/inc/html/footer.php";
 ?>

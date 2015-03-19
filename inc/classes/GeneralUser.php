@@ -5,26 +5,25 @@
 * Abstract class representing a general user, extends Base, has the public credentials
 *
 */
-require_once __ROOT__.'/inc/classes/Base.php';
-abstract class GeneralUser extends Base
+require_once __ROOT__.'/inc/classes/GenericUser.php';
+require_once __ROOT__.'/inc/classes/Review.php';
+require_once __ROOT__.'/inc/classes/Reply.php';
+
+abstract class GeneralUser extends GenericUser
 {
-  // The username
-  protected $username;
-  // The email
-  protected $email;
-  // The rank
-  protected $rank;
-  // The details, an array containing mapped INT values
-  protected $details;
   // Array containing all the question objects. Each question has the answers.
   // Also, has the answers answered by user
   protected $questions;
   // The birthday
   protected $birthday;
-  // The name
-  protected $name;
-  // The settings for this user, assoc array
-  protected $settings;
+  // The array of groups IDs the user is in
+  protected $groups = array();
+  // The last online date (string)
+  protected $lastOnline;
+  const ONLINE = 'online';
+  const AWAY = 'away';
+  const OFFLINE = 'offline';
+  
   /**
   * Function getCredential($key)
   *
@@ -47,6 +46,11 @@ abstract class GeneralUser extends Base
         break;
       case 'rank':
         return $this->rank;
+      case 'groups':
+        return $this->groups;
+      case 'image':
+        return $this->image;
+        break;
       default:
         return isset($this->details[$key])?$this->details[$key]:'Wrong key';
         break;
@@ -82,7 +86,12 @@ abstract class GeneralUser extends Base
         $stmt->execute();
         $stmt->bindColumn(1,$filter);
         $stmt->fetch();
-        array_push($trueDetails, ucwords($filter));
+        // array_push($trueDetails, ucwords($filter));
+        $trueDetails[$key] = ucwords($filter);
+      }
+      else if($key != 'birthday' && $key != 'profile_filter_id' && $key != 'last_name' && $key != 'completed' && $key != 'first_name')
+      {
+        $trueDetails[$key] = ucwords("-");
       }
     }
 
@@ -148,16 +157,6 @@ abstract class GeneralUser extends Base
   }
 
   /**
-  * Abstract function getName(optional $friendshipStatus)
-  *
-  * Gets the name or the username of this user, depending on their privacy settings, and on the friendship status
-  *
-  * @param - $friendshipStatus(int), the friendship status
-  * @return - $name(String), the username or name
-  */
-  public abstract function getName($friendshipStatus = 0);
-
-  /**
   * Function getQuestionInfo($questionNo)
   *
   * Returns the question info string from the table, without setting all questions
@@ -217,10 +216,18 @@ abstract class GeneralUser extends Base
     }
     $this->settings = $settings;
   }
+
+  /**
+   * Function to get online status
+   */
+  public function getOnlineStatus()
+  {
+    $lastOnline = new DateTime($this->lastOnline);
+    $now = new DateTime('now');
+    $diff = $now->getTimestamp() - $lastOnline->getTimestamp();
+    if ($diff <= 180) return GeneralUser::ONLINE;
+    if ($diff <= 600) return GeneralUser::AWAY;
+    return GeneralUser::OFFLINE;
+  }
 }
-
-
-
-
-
 ?>
