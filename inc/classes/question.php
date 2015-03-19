@@ -175,7 +175,7 @@ class Question extends Base
     $id = $this->id;
     $answered = isset($this->answerForMe) && $this->answerForMe;
 
-    $answerClass = $answered ? 'answered hidden' : 'unanswered';
+    $answerClass = $answered ? 'answered' : 'unanswered';
 
 
     $question =
