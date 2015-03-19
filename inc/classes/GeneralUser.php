@@ -157,16 +157,6 @@ abstract class GeneralUser extends GenericUser
   }
 
   /**
-  * Abstract function getName(optional $friendshipStatus)
-  *
-  * Gets the name or the username of this user, depending on their privacy settings, and on the friendship status
-  *
-  * @param - $friendshipStatus(int), the friendship status
-  * @return - $name(String), the username or name
-  */
-  public abstract function getName($friendshipStatus = 0);
-
-  /**
   * Function getQuestionInfo($questionNo)
   *
   * Returns the question info string from the table, without setting all questions
@@ -236,7 +226,7 @@ abstract class GeneralUser extends GenericUser
     $now = new DateTime('now');
     $diff = $now->getTimestamp() - $lastOnline->getTimestamp();
     if ($diff <= 180) return GeneralUser::ONLINE;
-    if ($diff <= 300) return GeneralUser::AWAY;
+    if ($diff <= 600) return GeneralUser::AWAY;
     return GeneralUser::OFFLINE;
   }
 }

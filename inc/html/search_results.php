@@ -85,8 +85,9 @@ try
   {
     // The other user id is the id that is not ours
     $leOtherUser = new OtherUser($con, ($id1 == $id) ? $id2 : $id1);
+    if ($leOtherUser->getError()) continue;
     $match['percentage'] = $percentage;
-    echo '<h4 class=h4>'.$leOtherUser->getName().'</h4><p class=text>'.$match['percentage']."%</p>";
+    echo '<h4 class=h4>'.$leOtherUser->getName($user2->friendShipStatus($leOtherUser)).'</h4><p class=text>'.$match['percentage']."%</p>";
     array_push($matches, $match);
   }
 }

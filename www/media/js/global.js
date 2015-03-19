@@ -138,6 +138,12 @@ void function (window, document, undefined) {
   main = body.getElementsByClassName('main')[0],
   originalTitle = document.title,
   header = body.getElementsByClassName('header')[0],
+  slim = body.getElementsByClassName('slim-main')[0],
+  friends = {
+    online: [],
+    away: [],
+    offline: []
+  },
   newError = window.newError,
   frequestsDrop = document.getElementById('frequests-drop'),
   frequestsDropList = document.getElementById('frequests-drop-list'),
@@ -632,7 +638,7 @@ void function (window, document, undefined) {
       xmlhttp.onreadystatechange = function () {
         var response;
         if (xmlhttp.readyState === 4 && xmlhttp.status) {
-          if (xmlhttp.status === 503) {
+          if (xmlhttp.status === 503 || xmlhttp.status === 404) {
             // If 503, then the server is being a cunt.
           } else if (xmlhttp.status !== 200) {
             newError(xmlhttp.responseText);
@@ -718,12 +724,13 @@ void function (window, document, undefined) {
     // Localise variables for later use
     target = document.getElementById(element.getAttribute("data-toggle")),
     targets,
+    isElement = validate.bool([element], "element") && element !== body && element !== html,
     // Get an array of all the drops that the current element is in
-    exceptions = validate.bool([element], "element")
+    exceptions = isElement
                  ? roomies.getParentsByClassName(element, 'drop')
                  : [];
     // Add any parent selector's togglers
-    roomies.getParentsByClassName(element, "selector").forEach(function(element){
+    isElement && roomies.getParentsByClassName(element, "selector").forEach(function(element){
       while((element=element.previousSibling)&&element.nodeType!==1);
       /(^| )selector-toggler( |$)/.test(element.className)&&exceptions.push(element);
       e
@@ -737,7 +744,7 @@ void function (window, document, undefined) {
       });
     };
     // Hide the slim
-    !roomies.getParentsByClassName(element, "slim").length
+    !(isElement && roomies.getParentsByClassName(element, "slim").length)
     && roomies.show([document.getElementById('slim-toggler')]);
     // Hide all drops, except those in the elements to keep open
     optDo("drop", "hide");
@@ -956,6 +963,14 @@ void function (window, document, undefined) {
     }
   });
 
+  slim && forEach.call(slim.getElementsByClassName("slim-link"), function (element) {
+    element = element.parentNode;
+    var onlineStatus = element.className.trim();
+    var id = +element.getAttribute('data-slim-user-id');
+    if (onlineStatus in friends && !isNaN(id) && friends[onlineStatus].indexOf(id)===-1)
+      friends[onlineStatus].push(id);
+  });
+
   if (info.userId) {
     // Set up longpolling
     var longpollSuccess = function (response) {
@@ -966,7 +981,10 @@ void function (window, document, undefined) {
       newMessages = response.newMessages,
       readMessage = response.readMessage,
       newRequests = response.newRequests,
-      oldRequests = response.oldRequests;
+      oldRequests = response.oldRequests,
+      onlineFriends  = response.friends.online,
+      awayFriends    = response.friends.away,
+      offlineFriends = response.friends.offline;
 
       newMessages.content.length &&
         (info.lastMessageId = newMessages.content[newMessages.content.length-1][1]);
@@ -1043,6 +1061,34 @@ void function (window, document, undefined) {
         var messageId = message.getAttribute('data-message-id');
         conv.unread.sent.indexOf(messageId) === -1 && conv.unread.sent.push(messageId);
       });
+
+      // Reset the slim and friends lists
+      var slimHTML = "<li class='ph ph-last ph-drop' data-placeholder='No friends.'></li>";
+      friends.online = [];
+      friends.away = [];
+      friends.offline = [];
+      onlineFriends.forEach(function (friend) {
+        slimHTML +=
+          "<li class=' online ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.online.push(friend.id);
+      });
+      awayFriends.forEach(function (friend) {
+        slimHTML +=
+          "<li class=' away ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.away.push(friend.id);
+      });
+      offlineFriends.forEach(function (friend) {
+        slimHTML +=
+          "<li class=' offline ' data-slim-user-id='"+friend.id+"'>"
+        + "<a class=' slim-link ' href='"+info.webRoot+"/messages/"+friend.username+"'>"+friend.name+"</a>"
+        + "</li>";
+        friends.offline.push(friend.id);
+      });
+      slim.innerHTML = slimHTML;
     };
     var longpoll = function () {
       var frIds = [];
@@ -1065,6 +1111,12 @@ void function (window, document, undefined) {
           {
             name: "friendRequests",
             value: frIds.join(",")
+          },
+          {
+            name: "friends",
+            value: "online:" + friends.online.join(",") + ";" +
+                   "away:"   + friends.away.join(",") + ";" +
+                   "offline:" + friends.offline.join(",")
           }
         ],
 

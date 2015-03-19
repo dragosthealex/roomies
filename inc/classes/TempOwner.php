@@ -239,6 +239,8 @@ class TempOwner extends GenericUser
       $this->errorMsg = $e->getMessage();
     }
   }// function delete
+
+  public function getName($friendshipStatus = 0) {}
 }
 
 ?>
