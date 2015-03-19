@@ -173,7 +173,12 @@ if(LOGGED_IN)
   }
 } else if(OWNER_LOGGED_IN)
 {
-  if(isset($_GET['logout']))session_destroy();
+  if(isset($_GET['logout']))
+  {
+    session_destroy();
+    header("Location: $webRoot");
+    exit();
+  }
   $owner = new Owner($con, 'get', array('id'=>$_SESSION['owner']['id']));
   $ioStatus = "owner";
 }
