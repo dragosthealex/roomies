@@ -564,6 +564,17 @@
 	overflow: hidden;
 }
 
+.accom-box-title {
+	overflow: hidden;
+	margin-bottom: 1em;
+}
+
+.accom-box-rating {
+	float:right;
+	margin-bottom: 0px;
+	margin-left: 1em;
+}
+
 .acc-short-desc {
 	height: 2em;
 	overflow: hidden;

@@ -175,6 +175,7 @@ if(LOGGED_IN)
 {
   if(isset($_GET['logout']))session_destroy();
   $owner = new Owner($con, 'get', array('id'=>$_SESSION['owner']['id']));
+  $ioStatus = "owner";
 }
 else
 {

@@ -26,7 +26,10 @@ class Accommodation extends Base
   private $description;
   // Array containing ratings, of the form [[$id1, $id2, $id3], [$rat1, $rat2, $rat3]]. String version $id1,$id2,$id3:$rat1,$rat2,$rat3
   private $ratingsArray;
-
+  // The db thingies
+  const TABLE_NAME = 'raccommodations';
+  const ID_COLUMN = 'accommodation_id';
+  const FOREIGN_KEY_COLUMN = 'accommodation_author';
   /**
   * Constructor
   *
@@ -222,7 +225,7 @@ class Accommodation extends Base
     try
     {
       // Get the name of the author
-      $author = new OtherUser($con, $authorId);
+      $author = new Owner($con, 'get', $authorId);
       $authorName = $author->getName();
 
       // get the reviews
