@@ -291,7 +291,7 @@ class Question extends Base
                 <span class='cr-text'>Very</span>
               </label>
             </div>
-            <input $disabled type='button' class='input-button' data-ajax-url='$webRoot/php/match.process.php?q_no={$id}' data-ajax-post='q_{$id} q_ans q_acc q_imp' data-ajax-hide='q_$id' value='Answer'>
+            <input $disabled type='button' class='input-button' data-ajax-url='../php/match.process.php?q_no={$id}' data-ajax-post='q_{$id} q_ans q_acc q_imp' data-ajax-hide='q_$id' value='Answer'>
             <input type='button' class='input-button cancel-button' data-toggle='q_$id' value='Cancel'>
           </form>
         </div>

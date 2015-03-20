@@ -1030,10 +1030,11 @@ void function (window, document, undefined) {
         console.log(message);
 
         var sent = info.userId == message["sender.id"];
-        var groupId = message['message.group']
-        var convId = ((sent && !groupId) || !!groupId) ? message["receiver.id"] : message["sender.id"];
+        var groupId = message['message.group'];
+        var convId = message['notif.convId'];
 
         var stdout = newMessages.template;
+        var stdout2 = newMessages.notifTemplate;
         var leRegex = /%\{([^\}]+)\}/;
         while(leRegex.test(stdout))stdout=stdout.replace(leRegex,function(a,b){return message[b]});
 
@@ -1051,13 +1052,17 @@ void function (window, document, undefined) {
         && activeElement.getAttribute("data-group-id") == groupId
         && !toRead.contains(convId, groupId) && toRead.array.push({convId:convId,groupId:groupId});
 
-        getMessageDropItemByConvId(convId, groupId).innerHTML =
-          "<a href='/messages/" + message['notif.username'] + "' class=' drop-item-link " + message['notif.class'] + " '>"
-        + "<span class=' drop-item-pic ' style='background-image: url(" + message['notif.image'] + ")'></span>"
-        + "<h3 class=' drop-item-header ' data-unread-count='" + conv.unread.received[convId+":"+groupId] + "'>" + message['notif.name'] + "</h3>"
-        + "<p class=' drop-item-text '>" + message['message.text'].split("<br>")[0].substring(0, 200) + "</p>"
-        + "<p class=' drop-item-footer ' title='" + message['notif.timestamp.title'] + "'>" + message['notif.timestamp.text'] + "</p>"
-        + "</a>";
+        while(leRegex.test(stdout2))stdout2=stdout2.replace(leRegex,function(a,b){return message[b]});
+        getMessageDropItemByConvId(convId, groupId).innerHTML = stdout2;
+        getMessageDropItemByConvId(convId, groupId).firstChild
+          .children[2].setAttribute("data-unread-count", conv.unread.received[convId+":"+groupId]);
+        // getMessageDropItemByConvId(convId, groupId).innerHTML =
+        //   "<a href='/messages/" + message['notif.username'] + "' class=' drop-item-link " + message['notif.class'] + " '>"
+        // + "<span class=' drop-item-pic ' style='background-image: url(" + message['notif.image'] + ")'></span>"
+        // + "<h3 class=' drop-item-header ' data-unread-count='" +  + "'>" + message['notif.name'] + "</h3>"
+        // + "<p class=' drop-item-text '>" + message['message.text'].split("<br>")[0].substring(0, 200) + "</p>"
+        // + "<p class=' drop-item-footer ' title='" + message['notif.timestamp.title'] + "'>" + message['notif.timestamp.text'] + "</p>"
+        // + "</a>";
       });
 
       toRead.array.forEach(function (temp) {

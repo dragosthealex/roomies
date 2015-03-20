@@ -154,7 +154,12 @@ try
                    ."<a class='message-name' href='/profile/%{sender.username}'>%{sender.name}</a>"
                    ."<p class='text'>%{message.text}</p>"
                    ."</li>",
-      'notifTemplate' => '',
+      'notifTemplate' => "<a href='/messages/%{notif.username}' class='drop-item-link %{notif.class}'>"
+      .     "<span class='drop-item-pic' style='background-image: url(%{notif.image}), url(../media/img/default.gif)'></span>"
+      .     "<h3 class='drop-item-header' data-unread-count='0'>%{notif.name}</h3>"
+      .     "<p class='drop-item-text'>%{notif.text}</p>"
+      .     "<p class='drop-item-footer' title='%{notif.timestamp.title}'>%{notif.timestamp.text}</p>"
+      .   "</a>",
       'content'  => array()
     ),
     'readMessage' => array(),
@@ -193,6 +198,7 @@ try
 
     $messageId = $message['message_id'];
     $messageText = nl2br($message['message_text'], false);
+    $notifText = substr(explode('<br>', $messageText)[0], 0, 200);
     $messageTimestamp = $message['message_timestamp'];
     $messageGroup = $message['message_group'];
 
@@ -216,6 +222,7 @@ try
         $otherName = $other->getName($user2->friendShipStatus($other));
         $otherUsername = $other->getCredential('username');
         $otherImage = $other->getCredential('image');
+        $otherId = $receiverId;
       }
       $senderName = $userName;
       $senderUsername = $userUsername;
@@ -224,6 +231,10 @@ try
     else
     {
       $other = new OtherUser($con, $senderId);
+      if (!$messageGroup)
+      {
+        $otherId = $senderId;
+      }
       $otherName = $other->getName($user2->friendShipStatus($other));
       $otherUsername = $other->getCredential('username');
       $otherImage = $other->getCredential('image');
@@ -234,6 +245,7 @@ try
 
     if ($messageGroup)
     {
+      $notifConvId = 0;
       $stmt2 = $con->prepare("SELECT group_name FROM rgroups WHERE group_id = '$messageGroup'");
       $stmt2->bindColumn(1, $notifName);
       $stmt2->execute();
@@ -243,6 +255,7 @@ try
     }
     else
     {
+      $notifConvId = $otherId;
       $notifName = $otherName;
       $notifUsername = $otherUsername;
       $notifImage = $otherImage;
@@ -292,15 +305,16 @@ try
         'message.timestamp'     => $messageTimestamp,
         'message.group'         => $messageGroup,
         'message.class'         => $messageClass,
-        'receiver.id'           => $receiverId,
         'sender.id'             => $senderId,
         'sender.name'           => $senderName,
         'sender.username'       => $senderUsername,
         'sender.image'          => $senderImage,
+        'notif.convId'          => $notifConvId,
         'notif.name'            => $notifName,
         'notif.username'        => $notifUsername,
         'notif.image'           => $notifImage,
         'notif.class'           => $notifClass,
+        'notif.text'            => $notifText,
         'notif.timestamp.title' => $notifTimestampTitle,
         'notif.timestamp.text'  => $notifTimestampText
       )

@@ -377,13 +377,13 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 				<div class="profile-box-inner">
 					<h2 class="h2 profile-name"><?=$nameOrUsername?></h2>
 					<div class="profile-links">
-						<a data-ajax-url='$webRoot/php/friends.process.php?a=1&id=<?=$otherUserId?>'
+						<a data-ajax-url='<?=$webRoot?>/php/friends.process.php?a=1&id=<?=$otherUserId?>'
 						   data-ajax-text='Sending...'
 						   data-ajax-hide='friend-button requestSent'
 						   class='link-button friend-button <?=$addFriendHide?>' id='addFriend'>Add Friend</a>
 
 						<span class='minidrop-container friend-button <?=$alreadyFriendsHide?>' id='alreadyFriends'>
-						<a data-ajax-url='$webRoot/php/friends.process.php?a=0&id=<?=$otherUserId?>'
+						<a data-ajax-url='<?=$webRoot?>/php/friends.process.php?a=0&id=<?=$otherUserId?>'
 						   data-ajax-text='Pending...'
 						   data-ajax-hide='friend-button addFriend'
 						   class='link-button'>Unfriend</a>
