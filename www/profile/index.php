@@ -42,7 +42,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					<h2 class="h2 profile-name"><?=$user2->getName()?></h2>
 					<div class="profile-links">
                         <a class='link-button edit-button' data-toggle='edit-profile' id='edit-profile' onclick="editProfile()">Edit Profile</a>
-                        <a class='link-button' data-toggle='edit-profile' onclick="editProfile()">Cancel</a>
+                        <a class='link-button' data-toggle='edit-profile' onclick="cancelEdit()">Cancel</a>
 						<!-- <a class='link-button edit-button' data-show='answered' data-hide='unanswered' id='edit-profile' data-toggle='edit-profile' onclick="editProfile()">Edit Profile</a>
                         <a class='link-button' data-toggle='edit-profile' data-show='unanswered' data-hide='answered' onclick="editProfile()">Cancel</a> -->
 					</div>
@@ -72,12 +72,12 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					}
 					?>
                     <div class="change-questions">
-                        <div class="profile-links" style="float:left;">
+                        <div class="profile-links" id="prevButton" style="float:left;">
                             <a class="link-button" onclick="prevQuestions()">
                                 Previous 
                             </a>
                         </div>
-                        <div class="profile-links" style="float:right;">
+                        <div class="profile-links" id="nextButton" style="float:right;">
                             <a class="link-button" onclick="nextQuestions()">
                                 Next
                             </a>
@@ -152,20 +152,21 @@ if ($_GET['u'] == $_SESSION['user']['username'])
     var detailsNewVal = document.getElementsByClassName('new-val');
     var questionsUnanswered = document.getElementsByClassName('unanswered');
     var questionsAnswered = document.getElementsByClassName('answered');
-    var answeredIndex = 0;
-    var unansweredIndex = 0;
+    var answeredIndex = 2;
+    var unansweredIndex = 2;
+    var prevButton = document.getElementById('prevButton');
+    var nextButton = document.getElementById('nextButton');
 
+    checkButtons();
     for(var count = 0; count < questionsAnswered.length; count ++)
     {
         questionsAnswered[count].className = questionsAnswered[count].className + ' hidden';
     };
 
-    // for(var count = 0; count < questionsUnanswered.length; count ++)
-    // {
-    //     questionsUnanswered[count].className = questionsUnanswered[count].className + ' hidden';
-    // };
-
-    // printQuestionsUnanswered();
+    for(var count = 2; count < questionsUnanswered.length; count ++)
+    {
+        questionsUnanswered[count].className = questionsUnanswered[count].className + ' hidden';
+    };
 
 
 
@@ -188,12 +189,40 @@ if ($_GET['u'] == $_SESSION['user']['username'])
         };
 
         for (var i = 0; i < questionsAnswered.length; i++) {
-            changeQuestionClass(questionsAnswered[i]);
+            questionsAnswered[i].className = ' question answered ';
+
         };
 
         for (var i = 0; i < questionsUnanswered.length; i++) {
-            changeQuestionClass(questionsUnanswered[i]);
+            questionsUnanswered[i].className = ' question unanswered hidden ';
+            
         };
+
+
+    }
+
+    function cancelEdit() {
+        for(var i = 0; i < detailsVal.length; i ++)
+        {
+            if(detailsVal[i].style.display == '')
+            {
+                detailsVal[i].style.display = 'none';
+                detailsNewVal[i].style.display = '';
+            }
+            else
+            {
+                detailsVal[i].style.display = '';
+                detailsNewVal[i].style.display = 'none';
+            }                      
+        };
+
+        for (var i = 0; i < questionsAnswered.length; i++) {
+            questionsAnswered[i].className = ' question answered hidden';
+
+        };
+
+        answeredIndex = 2;
+        printQuestionsUnanswered();
 
     }
 
@@ -217,28 +246,72 @@ if ($_GET['u'] == $_SESSION['user']['username'])
     }
 
     function printQuestionsUnanswered() {
-        window.alert("Hello" + answeredIndex);
-        for(var count = answeredIndex; count < answeredIndex + 2; count ++)
+        var limitB = answeredIndex - 2;
+        var limitT = answeredIndex;
+        for(var count = limitB; count < limitT; count ++)
         {
-            window.alert(questionsUnanswered[count].className);
-            changeQuestionClass(questionsUnanswered[count]);
+            if(count < questionsUnanswered.length)
+                changeQuestionClass(questionsUnanswered[count]);
         };
-        answeredIndex += 2;
-        window.alert(answeredIndex);
     }
 
     function printQuestionsAnswered() {
 
     }
+    var prevNext = true;
+    function removeQuestions() {
+        if(prevNext)
+        {
+            for (var i = 0; i < answeredIndex; i++) {
+                if(i < questionsUnanswered.length)
+                {
+                    questionsUnanswered[i].className = ' question unanswered hidden ';
+                }
+            };
+        }
+        else
+        {
+            for (var i = 0; i < answeredIndex; i ++) {
+                if(i < questionsUnanswered.length)
+                {
+                    questionsUnanswered[i].className = ' question unanswered hidden ';
+                }
+            };
+            answeredIndex -= 2;
+        }          
+    }
 
     function nextQuestions() {
+
+        prevNext = true;
         answeredIndex += 2;
-        window.alert(answeredIndex);
+        removeQuestions();
+        printQuestionsUnanswered();
+        checkButtons();
+    }
+
+    function checkButtons() {
+        if(answeredIndex == 2)
+        {
+            prevButton.style.display = 'none';
+        }
+        else
+        {
+            prevButton.style.display = 'block';
+        }
+
+        if(answeredIndex >= questionsUnanswered.length)
+            nextButton.style.display = 'none';
+        else
+            nextButton.style.display = 'block';
+
     }
 
     function prevQuestions() {
-        answeredIndex -= 2;
-        window.alert(answeredIndex);
+        prevNext = false;
+        removeQuestions();
+        printQuestionsUnanswered();
+        checkButtons();
     }
 </script>
 <?php
