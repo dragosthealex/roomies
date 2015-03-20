@@ -1,5 +1,5 @@
 <li class='li' style='overflow: hidden's>
-  <div class="accom-box-title">
+  <div class="accom-box-title" style="margin:0">
     <a style='margin: 5px;' href='<?=$webRoot?>/accommodation/?i=<?=$accId?>' class='link'>
       <?=$acc['name']?>
     </a>
@@ -17,6 +17,7 @@
       <input class="star-cr" type="radio" name="rating" id="rating1" value="1">
       <label class="star-label" for="rating5"><span class="star"></span></label>
     </div>
+    <span class="text" style="float:right; margin:0;"><?=$acc['rating']*5.0/100.0?>/5</span>
   </div>
   <div class='acc-pic short' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$acc['id']?>.jpg);'>
   </div>
