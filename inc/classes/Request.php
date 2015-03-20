@@ -16,11 +16,11 @@ class Request
     // $otherUsername
     '" style="background-image: url(',
     // $otherUserImage
-    '), url(../media/img/default.gif)"></a><h3 class="drop-item-header"><div class="drop-item-header-right"><a data-ajax-url="../php/friends.process.php?a=3&amp;id=',
+    '), url(../media/img/default.gif)"></a><h3 class="drop-item-header"><div class="drop-item-header-right"><a data-ajax-url="$webRoot/php/friends.process.php?a=3&amp;id=',
     // $otherUserId
     '" data-ajax-text="Accepting..." data-ajax-callback-1="deleteById drop-item-fr-',
     // $otherUserId
-    '" data-ajax-callback-2="updateNofifCount" class="link-button button2">Accept</a> <a data-ajax-url="../php/friends.process.php?a=0&amp;id=',
+    '" data-ajax-callback-2="updateNofifCount" class="link-button button2">Accept</a> <a data-ajax-url="$webRoot/php/friends.process.php?a=0&amp;id=',
     // $otherUserId
     '" data-ajax-text="Ignoring..." data-ajax-callback-1="deleteById drop-item-fr-',
     // $otherUserId

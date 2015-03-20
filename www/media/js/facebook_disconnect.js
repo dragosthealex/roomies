@@ -42,7 +42,7 @@ function statusChangeCallback(response) {
         }
       }
     }
-    xmlhttp.open("POST","../php/facebook_connect.php",true);
+    xmlhttp.open("POST","$webRoot/php/facebook_connect.php",true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send("id="+fbUserId+"&acc="+fbAccessToken+"&a="+action);
 
