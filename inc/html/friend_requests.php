@@ -29,12 +29,12 @@ while($stmt->fetch())
       <a class='drop-item-pic' href='/profile/?u=$otherUsername' style='background-image: url(".$otherUser->getIdentifier('image')."), url(../media/img/default.gif)'></a>
       <h3 class='drop-item-header'>
         <div class='drop-item-header-right'>
-          <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
+          <a data-ajax-url='$webRoot/php/friends.process.php?a=3&amp;id=$otherUserId'
              data-ajax-text='Accepting...'
              data-ajax-callback-1='deleteById drop-item-fr-$otherUserId'
              data-ajax-callback-2='updateNofifCount'
              class='link-button button2'>Accept</a>
-          <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
+          <a data-ajax-url='$webRoot/php/friends.process.php?a=0&amp;id=$otherUserId'
              data-ajax-text='Ignoring...'
              data-ajax-callback-1='deleteById drop-item-fr-$otherUserId'
              data-ajax-callback-2='updateNofifCount'

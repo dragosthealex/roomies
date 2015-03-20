@@ -40,11 +40,11 @@ abstract class Comment extends Post
     {
       // Get author name
       $author = new OtherUser($con, $authorId);
-      $authorName = $author->getName();
       if($author->getError())
       {
         throw new Exception("Error getting author with id $authorId. Strange sh*t goin' on: " . $author->getError(), 1); 
       }
+      $authorName = $author->getName();
 
       // Get the replies
       $replies = $this->getReplies();

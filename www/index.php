@@ -234,14 +234,14 @@ require_once __ROOT__.'/inc/html/header.owner.php';
 	<div class="column-2">
 		<div class="column-box">
 			<div class="box-padding">
-				fuck		
+				<? require_once __ROOT__.'/inc/html/my_accommodations.php';?>
 			</div>
 		</div>
 	</div>
 	<div class="column-2">
 		<div class="column-box">
 			<div class="box-padding">
-				shit
+				<? require_once __ROOT__.'/inc/html/add_accommodation.php';?>
 			</div>
 		</div>
 	</div>

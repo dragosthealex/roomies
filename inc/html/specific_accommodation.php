@@ -85,7 +85,7 @@ $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
   ><div class="star-background star-b0" style='width:<?=$accomInfo['rating'].'%'?>'></div>
   <?php
   $ajaxText = LOGGED_IN ? "star-b0'
-                           data-ajax-url='../php/reviews.process.php?a=5&pid=$accomId&ptype=&text=" : "data-null='";
+                           data-ajax-url='$webRoot/php/reviews.process.php?a=5&pid=$accomId&ptype=&text=" : "data-null='";
   ?>
   <input class="star-cr" type="radio" name="rating" id="rating5" value="5">
   <label class="star-label" for="rating5"><span class="star" data-hide='<?=$ajaxText?>5'></span></label>
@@ -116,6 +116,6 @@ $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
   <span class="cr-text">Press Enter to send</span>
 </label
 ><input type="submit" class="input-button block " value="Send"
-        data-ajax-url="../php/reviews.process.php?a=1&pid=<?=$accomId?>&ptype=acc"
+        data-ajax-url="$webRoot/php/reviews.process.php?a=1&pid=<?=$accomId?>&ptype=acc"
         data-ajax-post="text">
 </div>

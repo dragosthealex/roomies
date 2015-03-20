@@ -1,12 +1,11 @@
 <?php
   $title = "Disclaimer";
-  include '../init.php';
+  require_once '../../inc/init.php';
   require_once __ROOT__."/inc/html/head.php";
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 
 <div class="column-wrapper">
-  <div class="column-2">
     <div class="column-box">
       <div class="box-padding"> 
         <h2 class = "h2"> About </h2>
@@ -15,7 +14,8 @@
           university students in Manchester, more specifically those currently enrolled in the 
           University of Manchester. The website also offers reviews and ratings of
           current university and private accommodation all of which is provided by our users.
-
+        </p>
+        <p class="text">
           As part of our duty to find the most accurate and customized search results we do 
           require information about our users such as gender, age,  hobbies etc. However, this 
           information will be used for matching purposes only and we will
@@ -33,12 +33,12 @@
             <li>Primary language of use</li>
             <li>City (in which you want to be matched)</li>
           </ul>
-
+        </p>
+        <p class="text">
           If you have any questions or wish to provide feedback, please do not hesitate to 
           contact us at admin@findroomies.co.uk
         </p>
       </div>
     </div>
-  </div>
 </div>
 

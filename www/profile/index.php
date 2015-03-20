@@ -377,41 +377,41 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 				<div class="profile-box-inner">
 					<h2 class="h2 profile-name"><?=$nameOrUsername?></h2>
 					<div class="profile-links">
-						<a data-ajax-url='../php/friends.process.php?a=1&id=<?=$otherUserId?>'
+						<a data-ajax-url='$webRoot/php/friends.process.php?a=1&id=<?=$otherUserId?>'
 						   data-ajax-text='Sending...'
 						   data-ajax-hide='friend-button requestSent'
 						   class='link-button friend-button <?=$addFriendHide?>' id='addFriend'>Add Friend</a>
 
 						<span class='minidrop-container friend-button <?=$alreadyFriendsHide?>' id='alreadyFriends'>
-						<a data-ajax-url='../php/friends.process.php?a=0&id=<?=$otherUserId?>'
+						<a data-ajax-url='$webRoot/php/friends.process.php?a=0&id=<?=$otherUserId?>'
 						   data-ajax-text='Pending...'
 						   data-ajax-hide='friend-button addFriend'
 						   class='link-button'>Unfriend</a>
 						</span>
 
 						<span class='minidrop-container friend-button <?=$requestSentHide?>' id='requestSent'>
-						<a data-ajax-url='../php/friends.process.php?a=0&id=<?=$otherUserId?>'
+						<a data-ajax-url='$webRoot/php/friends.process.php?a=0&id=<?=$otherUserId?>'
 						   data-ajax-text='Canceling...'
 						   data-ajax-hide='friend-button addFriend'
 						   class='link-button'>Cancel</a>
 						</span>
 
 						<span class='minidrop-container friend-button <?=$requestReceivedHide?>' id='requestReceived'>
-						<a data-ajax-url='../php/friends.process.php?a=3&id=<?=$otherUserId?>'
+						<a data-ajax-url='$webRoot/php/friends.process.php?a=3&id=<?=$otherUserId?>'
 						   data-ajax-text='Accepting...'
 						   data-ajax-hide='friend-button alreadyFriends'
 						   class='link-button'>Accept</a>
-						<a data-ajax-url='../php/friends.process.php?a=0&id=<?=$otherUserId?>'
+						<a data-ajax-url='$webRoot/php/friends.process.php?a=0&id=<?=$otherUserId?>'
 						   data-ajax-text='Ignoring...'
 						   data-ajax-hide='friend-button addFriend'
 						   class='link-button'>Ignore</a>
 						</span>
 
-						<a data-ajax-url='../php/friends.process.php?a=4&id=<?=$otherUserId?>'
+						<a data-ajax-url='$webRoot/php/friends.process.php?a=4&id=<?=$otherUserId?>'
 						   data-ajax-text='Blocking...'
 						   data-ajax-hide='blockUnblock unblockButton'
 						   class='link-button blockUnblock <?=$blockButtonHide?>' id='blockButton'>Block</a>
-						<a data-ajax-url='../php/friends.process.php?a=5&id=<?=$otherUserId?>'
+						<a data-ajax-url='$webRoot/php/friends.process.php?a=5&id=<?=$otherUserId?>'
 						   data-ajax-text='Unblocking...'
 						   data-ajax-hide='blockUnblock blockButton'
 						   class='link-button blockUnblock <?=$unblockButtonHide?>' id='unblockButton'>Unblock</a>

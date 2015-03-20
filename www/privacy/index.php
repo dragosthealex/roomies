@@ -1,12 +1,12 @@
 <?php  $title = "Privacy & Cookie Use";
-  include '../init.php';
+  require_once '../../inc/init.php';
   require_once __ROOT__."/inc/html/head.php";
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
-?><div class="column-wrapper">
-  <div class="column-2">
+?>
+<div class="column-wrapper">
     <div class="column-box">
       <div class="box-padding"> 
-        <h2 class = "h2"> About </h2>
+        <h2 class = "h2"> Privacy & Cookies </h2>
           <h3 class="h3">What is this Privacy Policy for?</h3>
         <p class="text"></p>
         <p class="text">          
@@ -27,7 +27,7 @@
           visiting experience. This website comply's to all UK national laws and requirements
           for user privacy.
         </p>
-        <h3 class="h3">Use of Cookies</h3>
+        <h3 class="h3" id="Use_of_Cookies">Use of Cookies</h3>
         <p class="text"></p>
         <p class="text">          
           This website uses cookies to better the users experience while visiting the website.
@@ -153,10 +153,12 @@
               <li>Web Design Pembrokeshire</li>
               <li>Website Privacy Policy</li>
               <li>Project Planner Template</li>
-              v.2.0 April 2013 Edited & customised by: findRoomies
             </ul>
+            <p class="text"> 
+              v.2.0 April 2013 Edited & customised by: findRoomies
+            </p>
           </p>
       </div>
     </div>
-  </div>
 </div>
+

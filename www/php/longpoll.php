@@ -126,16 +126,39 @@ try
   // Longpoll
   for ($i = 0; $i < 30; $i++)
   {
-    if ($stmts['newMessages']->rowCount()) break;
-    if ($stmts['readMessage']->rowCount()) break;
-    if ($stmts['newRequests']->rowCount()) break;
-    if ($noOfRequests - $stmts['oldRequests']->rowCount()) break;
-    if ($stmts['friends']->rowCount()) break;
-    if ($noOfRequests - $stmts['oldFriends']->rowCount()) break;
+    if ($stmts['newMessages']->rowCount()) 
+    {
+      $response['error'] = '1';
+      break;
+    }
+    if ($stmts['readMessage']->rowCount()) 
+    {
+      $response['error'] = '2';
+      break;
+    }
+    if ($stmts['newRequests']->rowCount())
+    {
+      $response['error'] = '3';
+      break;
+    }
+    if ($noOfRequests - $stmts['oldRequests']->rowCount()) 
+    {
+      $response['error'] = '4';
+      break;
+    }
+    // if ($stmts['friends']->rowCount()) 
+    // {
+    //   $response['error'] = '5';
+    //   break;
+    // }
+    // if ($noOfRequests - $stmts['oldFriends']->rowCount()) 
+    // {
+    //   $response['error'] = '6';
+    //   break;
+    // }
     sleep(1);
     execute($stmts);
   }
-
   execute($stmts);
 
   $response = array(
@@ -155,7 +178,7 @@ try
       'offline' => array()
     )
   );
-
+  
   $nothingChanged = TRUE;
 
   $todayDateTime = new DateTime();
@@ -163,6 +186,7 @@ try
   // New messages
   while ($message = $stmts['newMessages']->fetch(PDO::FETCH_ASSOC))
   {
+
     $nothingChanged = FALSE;
     // Replace '\n' with '<br>'
     $message['message_text'] = nl2br($message['message_text'], false);
@@ -235,6 +259,7 @@ try
     );
   }
 
+
   // Read message
   while ($row = $stmts['readMessage']->fetch(PDO::FETCH_ASSOC))
   {
@@ -285,77 +310,78 @@ try
   }
 
   // Friends
-  while ($row = $stmts['friends']->fetch(PDO::FETCH_ASSOC))
-  {
-    $otherUserId = $row['user_id'];
-    $otherUser = new OtherUser($con, $otherUserId);
-    if ($otherUser->getError()) continue;
-    $nothingChanged = FALSE;
-    $otherUserName = $otherUser->getName(1);
-    $otherUserUsername = $otherUser->getCredential('username');
-    array_push($response['friends'][$otherUser->getOnlineStatus()],
-      array(
-        'id' => $otherUserId,
-        'name' => $otherUserName,
-        'username' => $otherUserUsername
-      )
-    );
-  }
+  // while ($row = $stmts['friends']->fetch(PDO::FETCH_ASSOC))
+  // {
+  //   $otherUserId = $row['user_id'];
+  //   $otherUser = new OtherUser($con, $otherUserId);
+  //   if ($otherUser->getError()) continue;
+  //   $nothingChanged = FALSE;
+  //   $otherUserName = $otherUser->getName(1);
+  //   $otherUserUsername = $otherUser->getCredential('username');
+  //   array_push($response['friends'][$otherUser->getOnlineStatus()],
+  //     array(
+  //       'id' => $otherUserId,
+  //       'name' => $otherUserName,
+  //       'username' => $otherUserUsername
+  //     )
+  //   );
+  // }
   // Push all the old ids into the array again
-  function not_in_arrays(&$friends, $id)
-  {
-    foreach ($friends as $friendList)
-      foreach ($friendList as $friend)
-        if ($friend['id'] == $id)
-          return FALSE;
-    return TRUE;
-  }
-  $usersFriendsArray = $user2->getFriends('id');
-  foreach ($friends as $onlineStatus => $friendIds)
-  {
-    foreach (explode(',', $friendIds) as $friendId)
-    {
-      $friend = new OtherUser($con, $friendId);
-      if (   !$friend->getError()
-          && not_in_arrays($response['friends'], $friendId)
-          && in_array($friendId, $usersFriendsArray))
-      {
-        $friendName = $friend->getName(1);
-        $friendUsername = $friend->getCredential('username');
-        array_push($response['friends'][$onlineStatus],
-          array(
-            'id' => $friendId,
-            'name' => $friendName,
-            'username' => $friendUsername
-          )
-        );
-      }
-    }
-  }
-  function quickSortFriendList($array)
-  {
-    if (count($array) < 2) return $array;
-    $left = $right = array();
-    reset($array);
-    $pivot_key = key($array);
-    $pivot = array_shift($array);
-    foreach($array as $k => $v)
-      if(strcmp($v['name'], $pivot['name']) < 0)
-        $left[$k] = $v;
-      else
-        $right[$k] = $v;
-    return array_merge(quickSortFriendList($left), array($pivot_key => $pivot), quickSortFriendList($right));
-  }
-  foreach ($response['friends'] as $onlineStatus => $friendIds)
-  {
-    $response['friends'][$onlineStatus] = quickSortFriendList($friendIds);
-  }
+  // function not_in_arrays(&$friends, $id)
+  // {
+  //   foreach ($friends as $friendList)
+  //     foreach ($friendList as $friend)
+  //       if ($friend['id'] == $id)
+  //         return FALSE;
+  //   return TRUE;
+  // }
+  // $usersFriendsArray = $user2->getFriends('id');
+  // foreach ($friends as $onlineStatus => $friendIds)
+  // {
+  //   foreach (explode(',', $friendIds) as $friendId)
+  //   {
+  //     $friend = new OtherUser($con, $friendId);
+  //     if (   !$friend->getError()
+  //         && not_in_arrays($response['friends'], $friendId)
+  //         && in_array($friendId, $usersFriendsArray))
+  //     {
+  //       $friendName = $friend->getName(1);
+  //       $friendUsername = $friend->getCredential('username');
+  //       array_push($response['friends'][$onlineStatus],
+  //         array(
+  //           'id' => $friendId,
+  //           'name' => $friendName,
+  //           'username' => $friendUsername
+  //         )
+  //       );
+  //     }
+  //   }
+  // }
 
-  if ($noOfFriends - $stmts['oldFriends']->rowCount())
-  {
-    $nothingChanged = FALSE;
-  }
+  // function quickSortFriendList($array)
+  // {
+  //   if (count($array) < 2) return $array;
+  //   $left = $right = array();
+  //   reset($array);
+  //   $pivot_key = key($array);
+  //   $pivot = array_shift($array);
+  //   foreach($array as $k => $v)
+  //     if(strcmp($v['name'], $pivot['name']) < 0)
+  //       $left[$k] = $v;
+  //     else
+  //       $right[$k] = $v;
+  //   return array_merge(quickSortFriendList($left), array($pivot_key => $pivot), quickSortFriendList($right));
+  // }
+  // foreach ($response['friends'] as $onlineStatus => $friendIds)
+  // {
+  //   $response['friends'][$onlineStatus] = quickSortFriendList($friendIds);
+  // }
 
+  // if ($noOfFriends - $stmts['oldFriends']->rowCount())
+  // {
+  //   $nothingChanged = FALSE;
+  // }
+  
   if ($nothingChanged)
   {
     $response = array('nothingChanged' => 1);

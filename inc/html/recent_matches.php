@@ -55,41 +55,41 @@ while($stmt->fetch())
           <div class='profile-percent' style='color:rgba(".(160-160*$percentage/100).",".(160*$percentage/100).",0,1);'>$percentage%</div>
           <div class='profile-links'>
 
-            <a data-ajax-url='../php/friends.process.php?a=1&amp;id=$otherUserId'
+            <a data-ajax-url='$webRoot/php/friends.process.php?a=1&amp;id=$otherUserId'
                data-ajax-text='Sending...'
                data-ajax-hide='frequest-rm-$otherUserId requestSent-rm-$otherUserId'
                class='link-button frequest-rm-$otherUserId $addFriendHide' id='addFriend-rm-$otherUserId'>Add Friend</a>
 
             <span class='minidrop-container frequest-rm-$otherUserId $alreadyFriendsHide' id='alreadyFriends-rm-$otherUserId'>
-            <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
+            <a data-ajax-url='$webRoot/php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Pending...'
                data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Unfriend</a>
             </span>
 
             <span class='minidrop-container frequest-rm-$otherUserId $requestSentHide' id='requestSent-rm-$otherUserId'>
-            <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
+            <a data-ajax-url='$webRoot/php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Canceling...'
                data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Cancel</a>
             </span>
 
             <span class='minidrop-container frequest-rm-$otherUserId $requestReceivedHide' id='requestReceived-rm-$otherUserId'>
-            <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
+            <a data-ajax-url='$webRoot/php/friends.process.php?a=3&amp;id=$otherUserId'
                data-ajax-text='Accepting...'
                data-ajax-hide='frequest-rm-$otherUserId alreadyFriends-rm-$otherUserId'
                class='link-button'>Accept</a>
-            <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
+            <a data-ajax-url='$webRoot/php/friends.process.php?a=0&amp;id=$otherUserId'
                data-ajax-text='Ignoring...'
                data-ajax-hide='frequest-rm-$otherUserId addFriend-rm-$otherUserId'
                class='link-button'>Ignore</a>
             </span>
 
-            <a data-ajax-url='../php/friends.process.php?a=4&amp;id=$otherUserId'
+            <a data-ajax-url='$webRoot/php/friends.process.php?a=4&amp;id=$otherUserId'
                data-ajax-text='Blocking...'
                data-ajax-hide='blockUnblock-rm-$otherUserId unblockButton-rm-$otherUserId'
                class='link-button blockUnblock-rm-$otherUserId $blockButtonHide' id='blockButton-rm-$otherUserId'>Block</a>
-            <a data-ajax-url='../php/friends.process.php?a=5&amp;id=$otherUserId'
+            <a data-ajax-url='$webRoot/php/friends.process.php?a=5&amp;id=$otherUserId'
                data-ajax-text='Unblocking...'
                data-ajax-hide='blockUnblock-rm-$otherUserId blockButton-rm-$otherUserId'
                class='link-button blockUnblock-rm-$otherUserId $unblockButtonHide' id='unblockButton-rm-$otherUserId'>Unblock</a>

@@ -1,33 +1,24 @@
 <?php
-  include '../init.php';
+  include '../../inc/init.php';
   $title = "Terms and Conditions";
   require_once __ROOT__."/inc/html/head.php";
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
 ?>
 <div class="column-wrapper">
-	<div class="column-2">
 		<div class="column-box">
 			<div class="box-padding">	
 				<h2 class = "h2"> Terms and Conditions </h2>
         <p class = "text">
-					The template for the Terms and Conditions for our website has been taken from 
-          freenetlaw.com
+					The template for the Terms and Conditions for our website has been taken from freenetlaw.com
         </p>
+        <h3><b>Credit</b></h3>
         <p class="text">
-					<b>Credit</b>
+          This document was created using a Contractology template available at http://www.freenetlaw.com.
         </p>
-        </p>
+        <h3><b>Introduction</b></h3>
         <p class="text">
-					This document was created using a Contractology template available at 
-          http://www.freenetlaw.com.
-        </p>
-        <p class="text">	
-          <b>Introduction</b>
-        </p>
-        <p class="text">
-					These terms and conditions govern your use of this website; by using this website, you 
-          accept these terms and conditions in full.   If you disagree with these terms and 
-          conditions or any part of these terms and conditions, you must not use this website. </p>
+          These terms and conditions govern your use of this website; by using this website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you must not use this website.
+        </p> 
         <p class="text">
           [You must be at least [18] years of age to use this website. By using this website
           [[and by agreeing to these terms and conditions] you warrant and represent that you
@@ -38,9 +29,7 @@
           [conditions, you consent to our <b>findRoomies</b>' use of cookies in accordance with
           [the terms of <b>findRoomies</b>' [privacy policy / cookies policy].]
         </p>
-        <p class="text">
-          <b>License to use website</b>
-        </p>
+        <h3><b>License to use website</b></h3>
         <p class="text">
           Unless otherwise stated, <b>findRoomies</b> and/or its licensors own the intellectual
           property rights in the website and material on the website. Subject to the license
@@ -48,46 +37,40 @@
         </p>
         <p class="text">
           You may view, download for caching purposes only, and print pages [or 
-          [OTHER CONTENT]]from the website for your own personal use, subject to the restrictions
-          set out below and elsewhere in these terms and conditions.
+          [OTHER CONTENT]]from the website for your own personal use, subject to the restrictions set out below and elsewhere in these terms and conditions.
+       </p>
+        <p class="text">
+                You must not:
         </p>
         <p class="text">
-          You must not:
           <ul>
-            <li>republish material from this website (including republication on another website);</li>
-            <li>sell, rent or sub-license material from the website; show any material from the</li>
-            <li>website in public; reproduce, duplicate, copy or otherwise exploit material on this</li>
-            <li>website for a commercial purpose; [edit or otherwise modify any material on the</li>
-            <li>website; or] [redistribute material from this website [except for content</li>
-            <li>specifically and expressly made available for redistribution].]</li>
+            <li> republish material from this website (including republication on another website);
+            <li> sell, rent or sub-license material from the website; show any material from the
+            <li> website in public; reproduce, duplicate, copy or otherwise exploit material on this
+            <li> website for a commercial purpose; [edit or otherwise modify any material on the
+            <li> website; or] [redistribute material from this website [except for content
+            <li> specifically and expressly made available for redistribution].]
           </ul>
         </p>
         <p class="text">
           [Where content is specifically made available for redistribution, it may only be
           [redistributed [within your organisation].]
         </p>
+        <h3><b>Acceptable Use</b></h3>
         <p class="text">
-          <b>Acceptable Use</b>
-        </p>
-        <p class="text">
-         
           You must not use this website in any way that causes, or may cause, damage to the
           website or impairment of the availability or accessibility of the website; or in any
           way which is unlawful, illegal, fraudulent or harmful, or in connection with any
           unlawful, illegal, fraudulent or harmful purpose or activity.
-          
         </p>
         <p class="text">
-          
           You must not use this website to copy, store, host, transmit, send, use, publish or
           distribute any material which consists of (or is linked to) any spyware, computer
           virus, Trojan horse, worm, keystroke logger, rootkit or other malicious computer
           software.
         </p>
         <p class="text">
-          You must not conduct any systematic or automated data collection activities (including 
-          without limitation scraping, data mining, data extraction and data harvesting) on or in 
-          relation to this website without <b>findRoomies</b>' express written consent.
+          You must not conduct any systematic or automated data collection activities (including without limitation scraping, data mining, data extraction and data harvesting) on or in relation to this website without <b>findRoomies</b>' express written consent.
         </p>
         <p class="text">
           [You must not use this website to transmit or send unsolicited commercial
@@ -96,7 +79,7 @@
         <p class="text">
           [You must not use this website for any purposes related to marketing without
           [<b>findRoomies</b>' express written consent.]
-        </p>
+         </p>
         <p class="text">
           [Restricted access
         </p>
@@ -106,9 +89,7 @@
           [website, at <b>findRoomies</b>' discretion.
         </p>
         <p class="text">
-          If <b>findRoomies</b> provides you with a user ID and password to enable you to access 
-          restricted areas of this website or other content or services, you must ensure that the 
-          user ID and password are kept confidential.
+          If <b>findRoomies</b> provides you with a user ID and password to enable you to access restricted areas of this website or other content or services, you must ensure that the user ID and password are kept confidential.
         </p>
         <p class="text">
           [<b>findRoomies</b> may disable your user ID and password in <b>findRoomies</b>' sole
@@ -139,21 +120,16 @@
           subject of any threatened or actual legal proceedings or other similar complaint.
         </p>
         <p class="text">
-          <b>findRoomies</b> reserves the right to edit or remove any material submitted to this 
-          website, or stored on <b>findRoomies</b>' servers, or hosted or published upon this 
-          website.
+          <b>findRoomies</b> reserves the right to edit or remove any material submitted to this website, or stored on <b>findRoomies</b>' servers, or hosted or published upon this website.
         </p>
         <p class="text">
           [Notwithstanding <b>findRoomies</b>' rights under these terms and conditions in
           [relation to user content, <b>findRoomies</b> does not undertake to monitor the
           [submission of such content to, or the publication of such content on, this website.]
         </p>
+        <h3><b>No warranties</b></h3>
         <p class="text">
-          <b>No warranties</b>
-        </p>
-        <p class="text">
-          This website is provided “as is” without any representations or warranties, express or 
-          implied.<b>findRoomies</b> makes no representations or warranties in relation to
+          This website is provided “as is” without any representations or warranties, express or implied.<b>findRoomies</b> makes no representations or warranties in relation to
           this website or the information and materials provided on this website.
         </p>
         <p class="text">
@@ -168,30 +144,24 @@
           Nothing on this website constitutes, or is meant to constitute, advice of any kind.
           [If you require advice in relation to any [legal, financial or medical] matter you
           should consult an appropriate professional.]
-        </p>
-        <p class="text">
-          <b>Limitations of liability</b>
-        </p>
+         </p>
+        <h3><b>Limitations of liability</b></h3>
         <p class="text">
           <b>findRoomies</b> will not be liable to you (whether under the law of contact, the
           law of torts or otherwise) in relation to the contents of, or use of, or otherwise in
           connection with, this website:
-        </p>
+         </p>
         <p class="text">
            [to the extent that the website is provided free-of-charge, for any direct loss;]
            for any indirect, special or consequential loss; or               
            for any business losses, loss
-          of revenue, income, profits or anticipated savings, loss of contracts or business 
-          relationships,loss of reputation or goodwill, or loss or corruption of information or 
-          data.
+          of revenue, income, profits or anticipated savings, loss of contracts or business relationships,loss of reputation or goodwill, or loss or corruption of information or data.
         </p>
         <p class="text">
           These limitations of liability apply even if <b>findRoomies</b> has been expressly
           advised of the potential loss.
         </p>
-        <p class="text">
-          <b>Exceptions</b>
-        </p>
+        <h3><b>Exceptions</b></h3>
         <p class="text">
           Nothing in this website disclaimer will exclude or limit any warranty implied by law
           that it would be unlawful to exclude or limit; and nothing in this website disclaimer
@@ -203,19 +173,15 @@
            would be illegal or unlawful for <b>findRoomies</b> to exclude or limit, or to
            attempt or purport to exclude or limit, its liability.
         </p>
+        <h3><b>Reasonableness</b></h3>
         <p class="text">
-          <b>Reasonableness</b>
-        </p>
-        <p class="text">
-          By using this website, you agree that the exclusions and limitations of liability set
+                By using this website, you agree that the exclusions and limitations of liability set
           out in this website disclaimer are reasonable.
-        </p>
+         </p>
         <p class="text">
           If you do not think they are reasonable, you must not use this website.
         </p>
-        <p class="text">
-          <b>Other parties</b>
-        </p>
+        <h3><b>Other parties</b></h3>
         <p class="text">
           [You accept that, as a limited liability entity, <b>findRoomies</b> has an interest in
           [limiting the personal liability of its officers and employees.  You agree that you
@@ -228,19 +194,17 @@
           [<b>findRoomies</b>' officers, employees, agents, subsidiaries, successors, assigns
           [and sub-contractors as well as <b>findRoomies</b>.
         </p>
-        <p class="text">
-          <b>Unenforceable provisions</b>
-        </p>
+        <h3><b>Unenforceable provisions</b></h3>
         <p class="text">
           If any provision of this website disclaimer is, or is found to be, unenforceable under
           applicable law, that will not affect the enforceability of the other provisions of
           this website disclaimer.
+         </p>
+        <p class="text">
+          <h3><b>Indemnity</b></h3>
         </p>
         <p class="text">
-          <b>Indemnity</b>
-        </p>
-        <p class="text">
-          You hereby indemnify <b>findRoomies</b> and undertake to keep <b>findRoomies</b>
+           You hereby indemnify <b>findRoomies</b> and undertake to keep <b>findRoomies</b>
           indemnified against any losses, damages, costs, liabilities and expenses (including
           without limitation legal expenses and any amounts paid by <b>findRoomies</b> to a
           third party in settlement of a claim or dispute on the advice of <b>findRoomies</b>'
@@ -248,9 +212,7 @@
           by you of any provision of these terms and conditions[, or arising out of any claim
           that you have breached any provision of these terms and conditions].
         </p>
-        <p class="text">
-          </b>Breaches of these terms and conditions</b>
-        </p>
+        </b></h3>Breaches of these terms and conditions</b></h3>
         <p class="text">
           Without prejudice to <b>findRoomies</b>' other rights under these terms and
           conditions, if you breach these terms and conditions in any way, <b>findRoomies</b>
@@ -261,7 +223,7 @@
           the website and/or bringing court proceedings against you.
         </p>
         <p class="text">
-          <b>Variation</b>
+          <h3><b>Variation</b></h3>
         </p>
         <p class="text">
           <b>findRoomies</b> may revise these terms and conditions from time-to-time. Revised
@@ -269,9 +231,7 @@
           publication of the revised terms and conditions on this website.  Please check this
           page regularly to ensure you are familiar with the current version.
         </p>
-        <p class="text">
-          <b>Assignment</b>
-        </p>
+        <h3><b>Assignment</b></h3>
         <p class="text">
           <b>findRoomies</b> may transfer, sub-contract or otherwise deal with
           <b>findRoomies</b>' rights and/or obligations under these terms and conditions
@@ -281,40 +241,28 @@
           You may not transfer, sub-contract or otherwise deal with your rights and/or
           obligations under these terms and conditions.
         </p>
-        <p class="text">
-          <b>Severability</b>
-        </p>
+        <h3><b>Severability</b></h3>
         <p class="text">
           If a provision of these terms and conditions is determined by any court or other
           competent authority to be unlawful and/or unenforceable, the other provisions will
           continue in effect.  If any unlawful and/or unenforceable provision would be lawful or
           enforceable if part of it were deleted, that part will be deemed to be deleted, and
           the rest of the provision will continue in effect.
-        </p>
-        <p class="text">
-					<b>Entire agreement</b>
-        </p>
-        <p class="text">
-					These terms and conditions [, together with Disclaimer and Privacy,] constitute the entire 
-          agreement between you and <b>findRoomies</b> in relation to your use of this website, and 
-          supersede all previous agreements in respect of your use of this 
+         </p>					
+        <h3><b>Entire agreement</b></h3>
+        <p class="text">					
+          These terms and conditions [, together with Disclaimer and Privacy,] constitute the entire agreement between you and <b>findRoomies</b> in relation to your use of this website, and supersede all previous agreements in respect of your use of this 
           website.
         </p>
+        <h3><b>Law and jurisdiction</b></h3>
         <p class="text">
-          <b>Law and jurisdiction</b>
+          These terms and conditions will be governed by and construed in accordance with United Kindgom laws, and any disputes relating to these terms and conditions will be subject to the [non-]exclusive jurisdiction of the courts of the United Kingdom.
         </p>
         <p class="text">
-          These terms and conditions will be governed by and construed in accordance with United 
-          Kindgom laws, and any disputes relating to these terms and conditions will be subject to 
-          the [non-]exclusive jurisdiction of the courts of the United Kingdom.
-        </p>
+           You can contact <b>findRoomies</b> by email to admin@findroomies.co.uk.
+         </p>
         <p class="text">
-          You can contact <b>findRoomies</b> by email to admin@findroomies.co.uk.
-        </p>
-        <p class="text">
-          You must retain the "Credit" section in this document. If you wish to use the document 
-          without the "Credit" section (e.g. to project a more professional image) then you can get 
-          a license to do so here:
+          You must retain the "Credit" section in this document. If you wish to use the document without the "Credit" section (e.g. to project a more professional image) then you can get a license to do so here:
         </p>
         <p class="text">
           http://www.contractology.com/precedents/freenetlaw-license-website-terms-and-
@@ -323,9 +271,8 @@
         <p class="text">
           It is an infringement of our copyright to use the document without the "Credit"
           section and without paying the license fee.             
-          </pre>           
-      </div>         
-    </div>
+        </p>           
+    </div>         
   </div>     
-</div>
+</div>  
 		

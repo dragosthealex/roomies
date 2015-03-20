@@ -18,7 +18,7 @@ class Owner extends GenericUser
   const PASSWORD_COLUMN = 'owner_password';
   const SALT_COLUMN = 'owner_salt';
   const SESSION_VAR = 'owner';
-
+  const FOREIGN_KEY_COLUMN = '';
 
   /**
   * Constructor 
@@ -186,7 +186,84 @@ class Owner extends GenericUser
   */
   public function getName($friendshipStatus=0)
   {
-    return $this->firstName . ' ' . $this->lastName;
+    return $this->details['first_name'] . ' ' . $this->details['last_name'];
   }
-}
+
+  // private function that gets accommodations for this owner from db
+  private function setAccommodations()
+  {
+    // Localise stuff
+    $con = $this->con;
+    $ownerId = $this->id;
+
+    // Get the accom id from db and create new accom objects
+    $stmt = $con->prepare("SELECT " . Accommodation::ID_COLUMN . " FROM " . Accommodation::TABLE_NAME . " WHERE " . Accommodation::FOREIGN_KEY_COLUMN . " = $ownerId ");
+    try
+    {
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting accommodations for owner $ownerId", 1);
+      }
+      $stmt->bindColumn(1, $accId);
+      $accommodations = array();
+      // Loop through every accommodation
+      while($stmt->fetch())
+      {
+        $acc = new Accommodation($con, 'get', array('id' => $accId));
+        if($acc->getError())
+        {
+          $this->errorMsg .= " Error with accommodation $accId: " . $acc->getError();
+          continue;
+        }
+        array_push($accommodations, $acc);
+      }
+      // Set accom
+      $this->accommodations = $accommodations;
+    }// try
+    catch(Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
+  }// function setAccommodations
+
+  /**
+  * Function getAccommodations($offset)
+  *
+  * Returns all accomodations as json
+  * @return - $accommodations(Json String), the accommodations
+  */
+  public function getAccommodations($offset=0)
+  {
+    if(!isset($this->accommodations[0]))
+    {
+      $this->setAccommodations();
+      if($this->getError())
+      {
+        $this->errorMsg = "Error setting accommodations for this owner: " . $this->getError();
+        return json_encode("{\"error\" : \"Error setting accommodations for this owner: " . $this->getError() . "\"}");
+      }
+    }
+    // Return the accommodations between $offset and $offset+10
+    $accommodationsJson = array();
+    for($index=$offset; $index<$offset+10, $index<count($this->accommodations); $index++)
+    {
+      $acc = $this->accommodations[$index];
+      $accJson = $acc->toJson();
+      if($acc->getError())
+      {
+        $this->errorMsg .= "Error with accommodation " . $acc->getId() . ": " . $acc->getError();
+        continue;
+      }
+      // Decode and push in array
+      $accJson = json_decode($accJson, 1);
+      array_push($accommodationsJson, $accJson);
+    }
+    // Encode
+    $accommodationsJson = json_encode($accommodationsJson);
+    return $accommodationsJson;
+  } // function getAccommodation()
+  
+
+
+}// class Owner
 ?>

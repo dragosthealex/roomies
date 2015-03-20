@@ -60,13 +60,13 @@ foreach ($reviews as $review)
     <div class='like-reply'>
       $postLikesNo 
       <span class='minidrop-container like-button like-button-review$postId' id='likeReview$postId' $likeHide>
-        <a data-ajax-url='../php/reviews.process.php?a=4&pid=$postId&ptype='
+        <a data-ajax-url='$webRoot/php/reviews.process.php?a=4&pid=$postId&ptype='
            data-ajax-text='Liking...'
            data-ajax-hide='like-button-review$postId dislikeReview$postId'
            class=''>Like</a>
       </span>
       <span class='minidrop-container like-button like-button-review$postId' id='dislikeReview$postId' $dislikeHide>
-        <a data-ajax-url='../php/reviews.process.php?a=3&pid=$postId&ptype=0'
+        <a data-ajax-url='$webRoot/php/reviews.process.php?a=3&pid=$postId&ptype=0'
            data-ajax-text='Dislinking...'
            data-ajax-hide='like-button-review$postId likeReview$postId'
            class=''>Dislike</a>

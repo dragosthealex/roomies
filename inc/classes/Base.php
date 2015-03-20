@@ -21,6 +21,16 @@ abstract class Base
   }
 
   /**
+  * Function getId()
+  *
+  * Returns this object's Id
+  * @return - $id(int), the id
+  */
+  protected function getId()
+  {
+    return $this->id;
+  }
+  /**
   * function getError()
   *
   * Returns the either false, if there is no error, or the error message

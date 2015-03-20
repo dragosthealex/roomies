@@ -538,11 +538,11 @@ private function getConv($offset)
           <a class='drop-item-pic' href='/profile/?u=$otherUsername' style='background-image: url(/media/img/anonymous.jpg)'></a>
           <h3 class='drop-item-header'>
             <div class='drop-item-header-right'>
-              <a data-ajax-url='../php/friends.process.php?a=3&amp;id=$otherUserId'
+              <a data-ajax-url='$webRoot/php/friends.process.php?a=3&amp;id=$otherUserId'
                  data-ajax-text='Accepting...'
                  data-ajax-callback='deleteById drop-item-fr-$otherUserId'
                  class='link-button button2'>Accept</a>
-              <a data-ajax-url='../php/friends.process.php?a=0&amp;id=$otherUserId'
+              <a data-ajax-url='$webRoot/php/friends.process.php?a=0&amp;id=$otherUserId'
                  data-ajax-text='Ignoring...'
                  data-ajax-callback='deleteById drop-item-fr-$otherUserId'
                  class='link-button button2'>Ignore</a>
@@ -565,9 +565,9 @@ private function getConv($offset)
     $requestsTemplate = array("<li class='drop-item' id='drop-item-fr-",
                               "'><div class='drop-item-box'><a class='drop-item-pic' href='/profile/?u=",
                               "' style='background-image: url(",
-                              ")'></a><h3 class='drop-item-header'><div class='drop-item-header-right'><a data-ajax-url='../php/friends.process.php?a=3&amp;id=",
+                              ")'></a><h3 class='drop-item-header'><div class='drop-item-header-right'><a data-ajax-url='$webRoot/php/friends.process.php?a=3&amp;id=",
                               "' data-ajax-text='Accepting...' data-ajax-callback-1='deleteById drop-item-fr-",
-                              "' class='link-button button2'>Accept</a><a data-ajax-url='../php/friends.process.php?a=0&amp;id=",
+                              "' class='link-button button2'>Accept</a><a data-ajax-url='$webRoot/php/friends.process.php?a=0&amp;id=",
                               "' data-ajax-text='Ignoring...' data-ajax-callback-1='deleteById drop-item-fr-",
                               "' class='link-button button2'>Ignore</a></div><a href='/profile/",
                               "' class='link'>",
