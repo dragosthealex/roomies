@@ -2,7 +2,7 @@
 /*
 This outputs the accommodations as LI elements, containing name, main photo and short desc
 */
-
+echo "</div>";
 echo "<div class='all-accommodations'><ul class='ul'>";
 $stmt = $con->prepare("SELECT " . Accommodation::ID_COLUMN . " FROM " . Accommodation::TABLE_NAME . " LIMIT 50");
 $stmt->execute();
@@ -23,5 +23,5 @@ while($stmt->fetch())
 
   include __ROOT__.'/inc/html/accommodation-box.php';
 }
-echo "</ul></div>";
+echo "</ul></div><div>";
 ?>

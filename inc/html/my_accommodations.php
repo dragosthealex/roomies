@@ -11,6 +11,7 @@ $errorMsg .= $owner->getError();
 <h2 class="h2">
   My Accommodations
 </h2>
+</div>
 <div class="all-accommodations">
   <ul class="ul">
     <?php
@@ -27,3 +28,4 @@ $errorMsg .= $owner->getError();
     ?>
   </ul>
 </div>
+<div>

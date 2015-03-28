@@ -1,3 +1,6 @@
+
+<div class="box">
+<div class="box-padding">
 <li class='li' style='overflow: hidden's>
   <div class="accom-box-title" style="margin:0">
     <a style='margin: 5px;' href='<?=$webRoot?>/accommodation/?i=<?=$accId?>' class='link'>
@@ -24,4 +27,9 @@
   <div class='acc-short-desc'>
     <?=$acc['description']?>
   </div>
+  <a style="float:right;" class="link" href="<?=$webRoot?>/accommodation/?i=<?=$accId?>#reviews">
+    <?=count($acc['reviews'])?> Review<?count($acc['reviews'])>1?'s':''?>
+  </a>
 </li>
+</div>
+</div>

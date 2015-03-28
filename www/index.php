@@ -178,48 +178,11 @@ else if(LOGGED_IN)
 			<div class="column-2">
 				<div class="column-box">
 					<div class="box-padding">
-						<p class="h2"> Popular Accommodation </p>
-						<ul class="ul">
-							<li class="box accommodation">
-								<div class="box-padding">
-									<p>
-										Whitworth Park
-									</p>
-									<img class="housepic" src="media/img/banana.jpeg">
-									<div class="house-description">
-										<p>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec nibh lectus. Nam convallis a eros in finibus. Suspendisse varius, turpis eget mollis consectetur, neque erat tincidunt diam, sed porttitor lorem nunc sed eros.
-										</p>
-									</div>
-								</div>
-							</li>
-							<li class="box accommodation">
-								<div class="box-padding">
-									<p>
-										Dalton-Ellis
-									</p>
-									<img class="housepic" src="media/img/banana.jpeg">
-									<div class="house-description">
-										<p>
-											Nulla facilisi. Donec eu ante auctor ipsum tempus consequat ut ut ante. Integer a laoreet tortor, at volutpat nibh. Aliquam erat volutpat. Vestibulum eget commodo justo. Quisque ipsum ipsum, ph
-										</p>
-									</div>
-								</div>
-							</li>
-							<li class="box accommodation">
-								<div class="box-padding">
-									<p>
-										Rusholme
-									</p>
-									<img class="housepic" src="media/img/banana.jpeg">
-									<div class="house-description">
-										<p>
-											Nunc cursus enim a vulputate
-										</p>
-									</div>
-								</div>
-							</li>
-						</ul>
+						<h2 class="h2"> Popular Accommodation </p>
+					</div>
+					<ul class="ul">
+						
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -240,7 +203,7 @@ require_once __ROOT__.'/inc/html/header.owner.php';
 	</div>
 	<div class="column-2">
 		<div class="column-box">
-			<div class="box-padding">
+			<div class="box-padding" style="overflow:hidden;">
 				<? require_once __ROOT__.'/inc/html/add_accommodation.php';?>
 			</div>
 		</div>

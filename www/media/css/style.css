@@ -576,7 +576,7 @@
 }
 
 .acc-short-desc {
-	height: 2em;
+	height: 3em;
 	overflow: hidden;
 	margin: 1em 0px 0px;
 }
@@ -699,6 +699,24 @@
 	color: #fff;
 	cursor: pointer;
 	text-decoration: none;
+}
+
+.file-upload {
+	position: relative;
+	overflow: hidden;
+	margin: 10px;	
+}
+
+.file-upload .upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity=0);
 }
 
 .edit-button + .link-button {

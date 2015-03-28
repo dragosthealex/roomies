@@ -5,7 +5,7 @@ $userId = LOGGED_IN ? $user2->getCredential('id') : '';
 include_once __ROOT__.'/inc/classes/Reply.php';
 include_once __ROOT__.'/inc/classes/Review.php';
 
-$output = ' <div class="review-header">Reviews</div>';
+$output = ' <div class="review-header"><a name="reviews">Reviews</a></div>';
 // Loop through reviews
 
 foreach ($reviews as $review) 
