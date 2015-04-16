@@ -1,11 +1,11 @@
 <?php
 $reviews = $accomInfo['reviews'];
 $userId = LOGGED_IN ? $user2->getCredential('id') : '';
-
+$userImage = LOGGED_IN ? $user2->getCredential('image') : '';
 include_once __ROOT__.'/inc/classes/Reply.php';
 include_once __ROOT__.'/inc/classes/Review.php';
 
-$output = ' <div class="review-header"><a name="reviews">Reviews</a></div>';
+$output = "<ul class='ul' id='reviews'><li class='li review-header'><a name='reviews'>Reviews</a></li>";
 // Loop through reviews
 
 foreach ($reviews as $review) 
@@ -20,12 +20,12 @@ foreach ($reviews as $review)
   $postText = $review['text'];
   $postLikesNo = $review['likesNo'];
   $postLikes = isset($review['likesArray'][0]) ? $review['likesArray'] : array();
-  $postReplies = isset($review['replies'][1]) ? $review['replies'] : array();
+  $postReplies = isset($review['replies'][0]) ? $review['replies'] : array();
   $postRepliesNo = count($postReplies);
   $postId = $review['id'];
 
-  $likeHide = in_array($userId, $postLikes) ? "style='display:none;'" : '';
-  $dislikeHide = !in_array($userId, $postLikes) ? "style='display:none;'" : '';
+  $likeHide = in_array($userId, $postLikes) ? "hidden" : '';
+  $dislikeHide = !in_array($userId, $postLikes) ? "hidden" : '';
 
 
   if($author->getError())
@@ -36,7 +36,7 @@ foreach ($reviews as $review)
 
   $output .= 
   "
-  <div class='review-box' id='review-$postId'>
+  <li class='li review-box' id='review-$postId'>
     <div class='author-details'>
         <div class='review-pic' style='background-image: url($authorImage); background-size:cover; background-position:center;'>
         </div>
@@ -57,21 +57,24 @@ foreach ($reviews as $review)
     {
       $output .=
     "
-    <div class='like-reply'>
-      $postLikesNo 
-      <span class='minidrop-container like-button like-button-review$postId' id='likeReview$postId' $likeHide>
+    <div class='like-buttons like-reply'>
+      <span class='minidrop-container like-button like-button-review$postId $likeHide' id='likeReview$postId'>
         <a data-ajax-url='$webRoot/php/reviews.process.php?a=4&pid=$postId&ptype='
            data-ajax-text='Liking...'
            data-ajax-hide='like-button-review$postId dislikeReview$postId'
-           class=''>Like</a>
+           data-generate-container='review-$postId-likesNo'
+           data-ajax-success='generate'
+           class='' style='cursor:pointer;'>Like</a>
       </span>
-      <span class='minidrop-container like-button like-button-review$postId' id='dislikeReview$postId' $dislikeHide>
+      <span class='minidrop-container like-button like-button-review$postId $dislikeHide' id='dislikeReview$postId'>
         <a data-ajax-url='$webRoot/php/reviews.process.php?a=3&pid=$postId&ptype=0'
            data-ajax-text='Dislinking...'
            data-ajax-hide='like-button-review$postId likeReview$postId'
-           class=''>Dislike</a>
+           data-generate-container='review-$postId-likesNo'
+           data-ajax-success='generate'
+           class='' style='cursor:pointer;'>Dislike</a>
       </span>
-      - $postRepliesNo Reply
+      - <a class='a' onclick=\"document.getElementById('reply-input-$postId').focus();\" href='#reply$postId' data-toggle='replies-container-$postId'>Reply</a> | <a id='review-$postId-likesNo'>$postLikesNo</a> Likes
     </div>
     ";
     }
@@ -80,12 +83,11 @@ foreach ($reviews as $review)
     $output .= 
     "
     <div class='review-header' style='border-top: 1px solid #d5d1d0; padding-top: 5px; text-align: right; padding-right: 10px;'>
-      <a class='click-me' onclick='toggleReply(this)'>Replies</a>
+      $postRepliesNo <a class='click-me' data-toggle='replies-container-$postId'>Replies</a>
     </div>
     ";
   }
-
-  $output .= "<div class='reply-box'>";
+  $output .= "<div id='replies-container-$postId' class='hidden'><ul id='reply-box-$postId' class='reply-box ul' style='padding-bottom:0.5em;'>";
   // Loop through replies
   foreach ($postReplies as $reply)
   {
@@ -101,29 +103,56 @@ foreach ($reviews as $review)
       continue;
     }
     $replyLikesNo = $reply['likesNo'];
-    $replyLikes =$reply['likesNo'] ? json_decode($reply['likes']) : array();
+    $replyLikes =$reply['likesNo'] ? $reply['likesArray'] : array();
     $replyText = $reply['text'];
     $replyDate = $reply['date'];
 
-    $likeDislike = in_array($userId, $replyLikes) ? 'Dislike' : 'Like';
+    $likeHide = in_array($userId, $replyLikes) ? "hidden" : '';
+    $dislikeHide = !in_array($userId, $replyLikes) ? "hidden" : '';
 
     $output .=
     "
-    <div class='reply' id='hide'>
-      <div class='author-details'>
-        <div class='reply-text'>
-          <div class='reply-pic' style='background-image: url($replyAuthorImage);background-size:cover; background-position:center;'>
-          </div>
-          <a class='link' href='$webRoot/profile/$replyAuthorId'>$replyAuthorName</a> - $replyText
-        </div>
+    <li class='li reply' id='hide'>
+      <div class='reply-pic' style='background-image: url($replyAuthorImage);background-size:cover; background-position:center;'>
       </div>
-    </div>
+      <div class='reply-text'>
+        <a class='link' href='$webRoot/profile/$replyAuthorId'>$replyAuthorName</a> - $replyText
+      </div>
+      <div class='like-buttons'>
+      <span class='minidrop-container like-button like-button-Reply$replyId $likeHide' id='likeReply$replyId'>
+        <a data-ajax-url='$webRoot/php/reviews.process.php?a=4&pid=$replyId&ptype=1'
+           data-ajax-text='Liking...'
+           data-ajax-hide='like-button-Reply$replyId dislikeReply$replyId'
+           data-ajax-success='generate'
+           data-generate-container='reply-$replyId-likesNo'
+           class='' style='cursor:pointer;'>Like</a>
+      </span>
+      <span class='minidrop-container like-button like-button-Reply$replyId $dislikeHide' id='dislikeReply$replyId'>
+        <a data-ajax-url='$webRoot/php/reviews.process.php?a=3&pid=$replyId&ptype=1'
+           data-ajax-text='Dislinking...'
+           data-ajax-hide='like-button-Reply$replyId likeReply$replyId'
+           data-ajax-success='generate'
+           data-generate-container='reply-$replyId-likesNo'
+           class='' style='cursor:pointer;'>Dislike</a>
+      </span>
+      | <a id='reply-$replyId-likesNo'>$replyLikesNo</a> Likes | On $replyDate
+    </li>
     ";
   }// foreach
-  $output .= "</div>";
 
-  $output .="</div>";
+  $hideIfLoggedOut = !LOGGED_IN ?'display:none;':'';
+
+  $output .= 
+  "
+  </ul><ul class='reply-box ul'>
+  <li class='li reply reply-$postId' style='$hideIfLoggedOut;'>
+    <div class='reply-pic' style='background-image: url($webRoot/$userImage);background-size:cover; background-position:center;width:1.7em;height:1.7em;'></div>
+    <textarea name='reply$postId' id='reply-input-$postId' class='input reply-input' type='text' placeholder='Write a reply...' oninput=\"this.style.height=((this.value.match(/\\n/g)||[]).length+2)*1.1+'em';return false;\" onkeydown=\"return event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.nextSibling}), false) : event.keyCode !== 13);\"></textarea><button class='hidden' data-ajax-url='$webRoot/php/reviews.process.php?ptype=1&a=1&pid=$postId' data-ajax-post='reply-input-$postId' data-generate-container='_reply-box-$postId' data-ajax-success='generate'>
+  </li></ul></div>
+  ";
+
 }// foreach
+$output .= "</ul>";
 echo $output;
 ?>
 
@@ -131,7 +160,7 @@ echo $output;
   var hideAll = document.getElementsByClassName('reply-box');
   for(i = 0; i < hideAll.length; i ++)
   {
-    hideAll[i].style.display = 'none';
+    //hideAll[i].style.display = 'none';
   }
 
   function toggleReply(param) {

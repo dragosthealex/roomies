@@ -5,6 +5,7 @@
 * Abstract class containing base methods and variables
 *
 */
+require_once __ROOT__.'/inc/init.php';
 abstract class Base
 {
   // The error message
@@ -26,7 +27,7 @@ abstract class Base
   * Returns this object's Id
   * @return - $id(int), the id
   */
-  protected function getId()
+  public function getId()
   {
     return $this->id;
   }

@@ -84,7 +84,7 @@ if(!LOGGED_IN && !OWNER_LOGGED_IN)
 							<input type="password" name="registerConfirmPassword" placeholder="Confirm Password" class="input block" required pattern=".{6,25}" title="6 to 25 characters">
               <input type="text" name="registerUsername" placeholder="Username" class="input block" required pattern=".{4,25}" title="4 to 25 characters">
 							<p class="small-text">By registering, you agree to our
-								<a href="#terms" class="link">Terms</a> and
+								<a href="javascript:void" onclick="window.open('./terms','_blank','scrollbars=yes,status=no,titlebar=no,menubar=no,resizable=yes,left=30,top=30,height=300,width=320')" class="link">Terms</a> and
 								<a href="#privacy" class="link">Privacy Policy</a>, including our
 								<a href="#cookies" class="link">Cookie Use</a>.
 							</p>
@@ -203,12 +203,13 @@ require_once __ROOT__.'/inc/html/header.owner.php';
 	</div>
 	<div class="column-2">
 		<div class="column-box">
-			<div class="box-padding" style="overflow:hidden;">
+			<div class="box-padding">
 				<? require_once __ROOT__.'/inc/html/add_accommodation.php';?>
 			</div>
 		</div>
 	</div>
 </div>
+<script src='media/js/upload_pic.js'></script>
 <?php
 }
 require_once __ROOT__."/inc/html/footer.php";

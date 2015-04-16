@@ -26,6 +26,12 @@ class Accommodation extends Base
   private $description;
   // Array containing ratings, of the form [[$id1, $id2, $id3], [$rat1, $rat2, $rat3]]. String version $id1,$id2,$id3:$rat1,$rat2,$rat3
   private $ratingsArray;
+  // The price (per week)
+  private $price;
+  // The address
+  private $address;
+  // The city
+  private $city;
   // The db thingies
   const TABLE_NAME = 'raccommodations';
   const ID_COLUMN = 'accommodation_id';
@@ -44,24 +50,29 @@ class Accommodation extends Base
         // Set the properties
         $name = isset($params['name'])?htmlentities($params['name']):'';
         $author = isset($params['author'])?htmlentities($params['author']):'';
-        $date = date('d-m-Y');
+        $date = date('Y-m-d');
         $noPhotos = isset($params['noPhotos'])?htmlentities($params['noPhotos']):0;
         $description = isset($params['description'])?htmlentities($params['description']):'';
-
+        $address = isset($params['address'])?htmlentities($params['address']):'';
+        $price = isset($params['price'])?htmlentities($params['price']):'';
+        $city = isset($params['city'])?htmlentities($params['city']):'';
         // Get the arrays, for upload method
-        $mainPhoto = array("$mainPhoto");
-        $photos = explode(':', $photos);
+        $mainPhotoInput = isset($params['main_photo'])?htmlentities($params['main_photo']):'';
+        $secPhotoInput = isset($params['sec_photos'])?htmlentities($params['sec_photos']):'';
+        $photoUploadLocation = '../media/img/acc/';
         // Get the number of total photos
 
         try
         {
-          if (!$name || !$author || !$mainPhoto)
+          if (!$name || !$author || !$mainPhotoInput)
           {
-            throw new Exception("Values for name, author and mainPhoto must not be null", 1);
+            //throw new Exception("Values for name, author and main photo must not be null", 1);
+            throw new Exception($name . " - " . $author . " - " . $mainPhotoInput, 1);
+            
           }
           $stmt = $con->prepare("INSERT INTO raccommodations (accommodation_name, accommodation_author, accommodation_date,
-                                  accommodation_no_photos, accommodation_description)
-                                 VALUES ('$name', '$author', '$date', '$noPhotos', '$description')");
+                                  accommodation_no_photos, accommodation_description, accommodation_address, accommodation_price, accommodation_city)
+                                 VALUES ('$name', '$author', '$date', '$noPhotos', '$description', '$address', '$price', '$city')");
           if(!$stmt->execute())
           {
             throw new Exception("Error Inserting into database", 1);
@@ -70,15 +81,20 @@ class Accommodation extends Base
           // Get the id
           $accId = $con->lastInsertId('accommodation_id');
 
-          // Upload the main photo (0 = upload in /media/img/accommodation, 'ac...' = name of input, $accId = base name of file)
-          if(!photoUpload(0, 'accommodation-main', $accId))
+          // Upload the main photo (first param = location, second param = input, third param = base name, fourth param = secondary/primary)
+          $uploadError = photoUpload($photoUploadLocation, $mainPhotoInput, $accId, true);
+          if($uploadError != 'ok')
           {
-            throw new Exception("Error Uploading the main photo", 1);
+            throw new Exception("Error Uploading the main photo: $uploadError", 1);
           }
           // Upload the rest of the photos
-          if(!photoUpload(0, 'accommodation-sec', $accId))
+          if($secPhotoInput && $_FILES[$secPhotoInput]["name"][0])
           {
-            throw new Exception("Error Uploading the rest of the photos", 1);
+            $uploadError = photoUpload($photoUploadLocation, $secPhotoInput, $accId, false);
+          }
+          if($secPhotoInput && $uploadError != 'ok' && $_FILES[$secPhotoInput]["name"][0])
+          {
+            throw new Exception("Error Uploading the rest of the photos: $uploadError", 1);
           }
 
           // Set the instance variables
@@ -89,6 +105,9 @@ class Accommodation extends Base
           $this->con = $con;
           $this->description = $description;
           $this->id = $accId;
+          $this->address = $address;
+          $this->price = $price;
+          $this->city = $city;
         }
         catch (Exception $e)
         {
@@ -123,6 +142,9 @@ class Accommodation extends Base
           $this->date = isset($result['accommodation_date'])?$result['accommodation_date']:'';
           $this->author = isset($result['accommodation_author'])?$result['accommodation_author']:'';
           $this->name = isset($result['accommodation_name'])?$result['accommodation_name']:'';
+          $this->address = isset($result['accommodation_address'])?$result['accommodation_address']:'';
+          $this->price = isset($result['accommodation_price'])?$result['accommodation_price']:'';
+          $this->city = isset($result['accommodation_city'])?$result['accommodation_city']:'';
           $this->con = $con;
           $this->description = isset($result['accommodation_description'])?preg_replace('/\r\n|\r|\n/', '<br>',$result['accommodation_description']):'';
           $this->rating = isset($result['accommodation_rating'])?$result['accommodation_rating']:'0';

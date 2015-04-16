@@ -713,6 +713,34 @@ void function (window, document, undefined) {
 
   // Object to store functions to be called by ajax upon success of a request
   successFunctions = {
+    // Generate some asyncronous html
+    "generate": function(response) {
+      var container = response.container,
+          containers = response.containers;
+      // Put the things in container/s
+      if(response.append)
+      {
+        var responseLi = document.createElement("LI");
+        responseLi.className = "li";
+        responseLi.innerHTML = response.generate;
+
+        if(container) container.appendChild(responseLi);
+        else {
+          for(var i=0; i<containers.length; i++) {
+            containers[i].appendChild(responseLi);
+          }
+        }
+      }
+      else
+      {
+        if(container) container.innerHTML = response.generate;
+        else {
+          for(var i=0; i<containers.length; i++) {
+            containers[i].innerHTML = response.generate;
+          }
+        }
+      }
+    }
   };
 
   /**
@@ -780,7 +808,32 @@ void function (window, document, undefined) {
       roomies.ajax({
         url: ajaxUrl,
         success: function (response) {
-          var successFunctionName = element.getAttribute("data-ajax-success");
+          var successFunctionName = element.getAttribute("data-ajax-success"),
+              container = element.getAttribute("data-generate-container"),
+              containers = element.getAttribute("data-generate-containers");
+
+          // Check if one or more containers for generate, and if append or replace
+          if(container && container.split('_')[1]) {
+            container = document.getElementById(container.split('_')[1].split(' ')[0]);
+            response.append = true;
+          }
+          else if(container) {
+            container = document.getElementById(container);
+            response.append = false;
+          }
+          else if(containers && container.split('_')[1]) {
+            containers = document.getElementsByClassName(containers.split('_')[1].split(' ')[0]);
+            response.append = true;
+          }
+          else
+          {
+            containers = document.getElementsByClassName(container);
+            response.append = false;
+          }
+
+          response.container = container ? container : '';
+          response.containers = containers ? containers : [''];
+
           successFunctionName && successFunctions[successFunctionName]
                               && successFunctions[successFunctionName](response);
 

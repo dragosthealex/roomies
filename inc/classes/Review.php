@@ -4,6 +4,7 @@
 *
 * Represents a kind of comment, specifically a direct review to an accommodation
 */
+//require_once '../init.php';
 require_once __ROOT__."/inc/classes/Comment.php";
 
 class Review extends Comment
@@ -91,7 +92,7 @@ class Review extends Comment
           $this->author = $result['post_author'];
           $this->parent = $result['post_parent_id'];
           $this->con = $con;
-          $this->text = $result['post_text'];
+          $this->text = nl2br($result['post_text']);
         }
         catch (Exception $e)
         {
@@ -103,6 +104,94 @@ class Review extends Comment
         break;
     }
   }// function __construct
+
+
+  /**
+  * Public function stringPost()
+  *
+  * Returns this reply imediately after it's created
+  * 
+  * @return - $reply(String) - this reply as string
+  */
+  public function stringPost($user2)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $text = nl2br($this->text);
+    $id = $this->id;
+    $likesNo = $this->likesNo;
+    $replyLikes = isset($this->likesArray[0])?$this->likesArray:array();
+    $date = $this->date;
+    $authorId = $this->author;
+    $author = new OtherUser($con, $authorId);
+    $hideIfLoggedOut = 'hidden';
+
+    if(LOGGED_IN)
+    {
+      $userImage = $user2->getCredential('image');
+      $hideIfLoggedOut = '';
+    } 
+
+    $webRoot = '..';
+    if($author->getError())
+    {
+      $this->errorMsg = "Error with the author for post $id: " . $author->getError();
+      return 0;
+    }
+    $authorName = $author->getName();
+    $authorImage = '../' . $author->getCredential('image');
+
+    $likeHide = in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
+    $dislikeHide = !in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
+    // Construct the reply
+    $review =
+    "
+    <li class='li review-box' id='review-$id'>
+      <div class='author-details'>
+          <div class='review-pic' style='background-image: url($authorImage); background-size:cover; background-position:center;'>
+          </div>
+          <div class='author-text'>
+            <div class='author-name'>
+              <a class='link' href='../profile/$authorId'>$authorName</a>
+            </div>
+            <div class='date-text'>
+              $date
+            </div>
+          </div>
+      </div>
+      <div class='review-text'>
+        $text
+      </div>
+      <div class='like-buttons like-reply'>
+        <span class='minidrop-container like-button like-button-review$id $likeHide' id='likeReview$id'>
+          <a data-ajax-url='../php/reviews.process.php?a=4&pid=$id&ptype='
+             data-ajax-text='Liking...'
+             data-ajax-hide='like-button-review$id dislikeReview$id'
+             data-generate-container='review-$id-likesNo'
+             data-ajax-success='generate'
+             class='' style='cursor:pointer;'>Like</a>
+        </span>
+        <span class='minidrop-container like-button like-button-review$id $dislikeHide' id='dislikeReview$id'>
+          <a data-ajax-url='../php/reviews.process.php?a=3&pid=$id&ptype=0'
+             data-ajax-text='Dislinking...'
+             data-ajax-hide='like-button-review$id likeReview$id'
+             data-generate-container='review-$id-likesNo'
+             data-ajax-success='generate'
+             class='' style='cursor:pointer;'>Dislike</a>
+        </span>
+        <a class='a' onclick=\"document.getElementById('reply-input-$id').focus()\" href='#reply$id' data-toggle='replies-container-$id'>Reply</a> | <a id='review-$id-likesNo'>$likesNo</a>  Likes
+      </div>
+      <div id='replies-container-$id' class='hidden'><ul id='reply-box-$id' class='reply-box ul' style='padding-bottom:0.5em;'>
+        </ul><ul class='reply-box ul'>
+          <li class='li reply reply-$id' style='$hideIfLoggedOut;'>
+            <div class='reply-pic' style='background-image: url($webRoot/$userImage);background-size:cover; background-position:center;width:1.7em;height:1.7em;'></div>
+            <textarea name='reply$id' id='reply-input-$id' class='input reply-input' type='text' placeholder='Write a reply...' oninput=\"this.style.height=((this.value.match(/\\n/g)||[]).length+2)*1.1+'em';return false;\" onkeydown=\"return event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.nextSibling}), false) : event.keyCode !== 13);\"></textarea><button class='hidden' data-ajax-url='$webRoot/php/reviews.process.php?ptype=1&a=1&pid=$id' data-ajax-post='reply-input-$id' data-generate-container='_reply-box-$id' data-ajax-success='generate'>
+          </li>
+        </ul>
+      </div>
+    ";
+    return $review;
+  }// function stringPost
 
   // Gets the replies for this review
   protected function getReplies()
@@ -192,6 +281,7 @@ class Review extends Comment
     {
       // Update the likes array in class
       $this->likesArray = $likes;
+      $this->likesNo = $this->likesNo + $liked;
       // Turn likes in string
       $likesArray= implode(":", $likes);
 

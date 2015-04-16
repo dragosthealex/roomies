@@ -1,4 +1,4 @@
-
+<?php $accId = $acc['id'];?>
 <div class="box">
 <div class="box-padding">
 <li class='li' style='overflow: hidden's>
@@ -9,16 +9,16 @@
 
     <div class="ratings-box accom-box-rating" style="margin-bottom:0px;"
       ><div class="star-background star-b0" style='width:<?=$acc['rating'].'%'?>'></div>
-      <input class="star-cr" type="radio" name="rating" id="rating5" value="5">
-      <label class="star-label" for="rating5"><span class="star"></span></label>
-      <input class="star-cr" type="radio" name="rating" id="rating4" value="4">
-      <label class="star-label" for="rating4"><span class="star"></span></label>
-      <input class="star-cr" type="radio" name="rating" id="rating3" value="3">
-      <label class="star-label" for="rating3"><span class="star"></span></label>
-      <input class="star-cr" type="radio" name="rating" id="rating2" value="2">
-      <label class="star-label" for="rating2"><span class="star"></span></label>
-      <input class="star-cr" type="radio" name="rating" id="rating1" value="1">
-      <label class="star-label" for="rating5"><span class="star"></span></label>
+      <input class="sh-star-cr" type="radio" name="rating" id="rating5-<?=$accId?>" value="5">
+      <label class="sh-star-label" for="rating5-<?=$accId?>"><span class="star"></span></label>
+      <input class="sh-star-cr" type="radio" name="rating" id="rating4-<?=$accId?>" value="4">
+      <label class="sh-star-label" for="rating4-<?=$accId?>"><span class="star"></span></label>
+      <input class="sh-star-cr" type="radio" name="rating" id="rating3-<?=$accId?>" value="3">
+      <label class="sh-star-label" for="rating3-<?=$accId?>"><span class="star"></span></label>
+      <input class="sh-star-cr" type="radio" name="rating" id="rating2-<?=$accId?>" value="2">
+      <label class="sh-star-label" for="rating2-<?=$accId?>"><span class="star"></span></label>
+      <input class="sh-star-cr" type="radio" name="rating" id="rating1-<?=$accId?>" value="1">
+      <label class="sh-star-label" for="rating5-<?=$accId?>"><span class="star"></span></label>
     </div>
     <span class="text" style="float:right; margin:0;"><?=$acc['rating']*5.0/100.0?>/5</span>
   </div>

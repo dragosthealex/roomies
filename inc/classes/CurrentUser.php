@@ -710,34 +710,65 @@ private function getConv($offset)
   }
 
   /**
-  * Function sendReview($accId, $reviewText)
+  * Function makePost($parentId, $text, $type)
   *
   * Sends a review to the accommodation with given id
   *
   * @param - $accId(int), the Id of the accommodation
-  *
+  * @param - $text(String), the text of the post
+  * @param - $type(int), the type of the post: 
+  *              -> 0, review
+  *              -> 1, reply
+  * @return - $post(String), the new post, to be appended
   */
-  public function sendReview($accId, $reviewText)
+  public function makePost($parentId, $text, $type)
   {
     // Localise stuff
     $con = $this->con;
     $userId = $this->id;
 
-    // Prepare for the review;
-    $params['author'] = $userId;
-    $params['text'] = $reviewText;
-    $params['accId'] = $accId;
-
     try
     {
-      if($this->hasReviewed($accId))
+      switch ($type) 
       {
-        throw new Exception("You already gave a review", 1);
-      }
-      $review = new Review($con, 'insert', $params);
-      if($review->getError())
-      {
-        throw new Exception("Error in submitting the review: " . $review->getError(), 1);
+        case Review::TYPE:
+          // send a review to an accommodation
+
+          // Prepare for the review;
+          $params['author'] = $userId;
+          $params['text'] = $text;
+          $params['accId'] = $parentId;
+          if($this->hasReviewed($parentId))
+          {
+            throw new Exception("You already gave a review", 1);
+          }
+          // Send the review
+          $review = new Review($con, 'insert', $params);
+          if($review->getError())
+          {
+            throw new Exception("Error in submitting the review: " . $review->getError(), 1);
+          }
+          return $review->stringPost($this);
+          break;
+
+        case Reply::TYPE:
+          // send a reply to a review
+
+          // Prepare for the reply
+          $params['author'] = $userId;
+          $params['text'] = $text;
+          $params['reviewId'] = $parentId;
+          // Send the reply
+          $reply= new Reply($con, 'insert', $params);
+          if($reply->getError())
+          {
+            throw new Exception("Error in submitting the reply: " . $reply->getError(), 1);
+          }
+          return $reply->stringPost($this);
+          break;
+        default:
+          throw new Exception("Error. Wrong type of post", 1);
+          break;
       }
     }
     catch (Exception $e)
@@ -818,7 +849,7 @@ private function getConv($offset)
     $userId = $this->id;
 
     try
-    {
+    {      
       switch ($postType) {
         case Review::TYPE:
           $params['id'] = $postId;
@@ -827,24 +858,27 @@ private function getConv($offset)
           {
             throw new Exception("Chthulu is coming. Error getting the review with id $postId when trying to like: " . $review->getError(), 1);
           }
-          $review->like($userId, $likeValue);
+          $likes = $review->like($userId, $likeValue);
           if($review->getError())
           {
             throw new Exception("OMFG. Error liking post $postId: " . $review->getError(), 1);
           }
+          return $likes;
           break;
         case Reply::TYPE:
-          $params['reply_id'] = $postId;
+          $params['id'] = $postId;
           $reply = new Reply($con, 'get', $params);
-          if($review->getError())
+          if($reply->getError())
           {
-            throw new Exception("Mneeah. Error getting the reply with id $postId when trying to like: " . $review->getError(), 1);
+            throw new Exception("Mneeah. Error getting the reply with id $postId when trying to like: " . $reply->getError(), 1);
           }
-          $reply->like($userId, $likeValue);
-          if($review->getError())
+          $likes = $reply->like($userId, $likeValue);
+          if($reply->getError())
           {
-            throw new Exception("meh. Error liking post $postId: " . $review->getError(), 1);
+            throw new Exception("meh. Error liking post $postId: " . $reply->getError(), 1);
           }
+          return $likes;
+          break;
         default:
           throw new Exception("You dun sumting wrung", 1);
           break;
@@ -1065,10 +1099,15 @@ private function getConv($offset)
       {
         throw new Exception("Error updating array of ratings: " . $accom->getError(), 1);
       }
+      // Construct the response
+      $newRating = ((double)$newRating * (double)5) / (double)100;
+      $response = "Rating: <a class='rating-text'>$newRating</a> My rating:<a class='rating-text'>$starRating</a>";
+      return $response;
     }// try
     catch (Exception $e)
     {
       $this->errorMsg = $e->getMessage();
+      return '';
     }
   }// function rateAccommodation
 

@@ -32,22 +32,23 @@ class Reply extends Comment
         $author = isset($params['author'])?htmlentities($params['author']):'';
         $reviewId = isset($params['reviewId'])?htmlentities($params['reviewId']):'';
         $text = isset($params['text'])?htmlentities($params['text']):'';
-        $date = date('d-m-Y');
+        $date = date('Y-m-d');
 
         try
         {
           // Check if all values are there
-          if(!$author || !$accId || !$text)
+          if(!$author || !$reviewId || !$text)
           {
             throw new Exception("All values are mandatory", 1);
           }
 
           // Insert into database
-          $stmt = $con->prepare("INSERT INTO rposts (post_author, post_id, post_text, post_date, post_type)
+          $stmt = $con->prepare("INSERT INTO rposts (post_author, post_parent_id, post_text, post_date, post_type)
                                  VALUES ('$author', '$reviewId', '$text', '$date', ". Reply::TYPE . ")");
           if(!$stmt->execute())
           {
-            throw new Exception("Error while inserting new review in database", 1);
+            throw new Exception("Error while inserting new reply in database", 1);
+            
           }
           // Get the id
           $id = $con->lastInsertId('post_id');
@@ -56,7 +57,7 @@ class Reply extends Comment
           $this->id = $id;
           $this->con = $con;
           $this->author = $author;
-          $this->parent = $accId;
+          $this->parent = $reviewId;
           $this->date = $date;
           $this->text = $text;
         }
@@ -76,7 +77,8 @@ class Reply extends Comment
           $stmt = $con->prepare("SELECT * FROM rposts WHERE post_id = $id AND post_type = " . Reply::TYPE . "");
           if(!$stmt->execute())
           {
-            throw new Exception("Error getting replies. fuck", 1);
+            //throw new Exception("Error getting replies. fuck", 1);
+            throw new Exception("SELECT * FROM rposts WHERE post_id = $id AND post_type = " . Reply::TYPE . "", 1);
           }
 
           // Something wrong if no accommodation with given id
@@ -94,7 +96,7 @@ class Reply extends Comment
           $this->author = $result['post_author'];
           $this->parent = $result['post_parent_id'];
           $this->con = $con;
-          $this->text = $result['post_text'];
+          $this->text = nl2br($result['post_text']);
 
         }
         catch (Exception $e)
@@ -113,6 +115,62 @@ class Reply extends Comment
     return "[\"\"]";   
   }
 
+  /**
+  * Public function stringPost()
+  *
+  * Returns this reply imediately after it's created
+  * 
+  * @return - $reply(String) - this reply as string
+  */
+  public function stringPost($user2)
+  {
+    // Localise stuff
+    $con = $this->con;
+    $text = nl2br($this->text);
+    $id = $this->id;
+    $likesNo = $this->likesNo;
+    $replyLikes = isset($this->likesArray[0]) ? $this->likesArray : array();
+    $date = $this->date;
+    $authorId = $this->author;
+    $author = new OtherUser($con, $authorId);
+    $authorName = $author->getName();
+    $authorImage = '../' . $author->getCredential('image');
+
+    $likeHide = in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
+    $dislikeHide = !in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
+    // Construct the reply
+    $reply = 
+    "
+    <li class='li reply' id='hide'>
+      <div class='reply-pic' style='background-image: url($authorImage);background-size:cover; background-position:center;'>
+      </div>
+      <div class='reply-text'>
+        <a class='link' href='../profile/$authorId'>$authorName</a> - $text
+      </div>
+      <div class='like-buttons'>
+      <span class='minidrop-container like-button like-button-Reply$id $likeHide' id='likeReply$id'>
+        <a data-ajax-url='../php/reviews.process.php?a=4&pid=$id&ptype=1'
+           data-ajax-text='Liking...'
+           data-ajax-hide='like-button-Reply$id dislikeReply$id'
+           data-ajax-success='generate'
+           data-generate-container='reply-$id-likesNo'
+           class='' style='cursor:pointer;'>Like</a>
+      </span>
+      <span class='minidrop-container like-button like-button-Reply$id $dislikeHide' id='dislikeReply$id'>
+        <a data-ajax-url='../php/reviews.process.php?a=3&pid=$id&ptype=1'
+           data-ajax-text='Dislinking...'
+           data-ajax-hide='like-button-Reply$id likeReply$id'
+           data-ajax-success='generate'
+           data-generate-container='reply-$id-likesNo'
+           class='' style='cursor:pointer;'>Dislike</a>
+      </span>
+      | <a id='reply-$id-likesNo'>$likesNo</a> Likes | On $date
+    </li>
+    ";
+
+    return $reply;
+  }// function stringPost
+
   protected function getLikes()
   {
     // Localise stuff
@@ -124,10 +182,10 @@ class Reply extends Comment
     try
     {
       // Get the likes array from db
-      $stmt = $con->prepare("SELECT post_likes, post_likes_no FROM rposts  WHERE post_id = $id AND post_type = " . TYPE . "");
+      $stmt = $con->prepare("SELECT post_likes, post_likes_no FROM rposts  WHERE post_id = $id AND post_type = " . Reply::TYPE . "");
       if(!$stmt->execute())
       {
-        throw new Exception("Error getting likes from table for post type " . TYPE . ", $id", 1);
+        throw new Exception("Error getting likes from table for post type " . Reply::TYPE . ", $id", 1);
       }
       $stmt->bindColumn(1, $likesArray);
       $stmt->bindColumn(2, $likesNo);
@@ -138,7 +196,7 @@ class Reply extends Comment
       // Return likes array and set the class var
       $this->likesArray = $likesArray;
       $this->likesNo = $likesNo;
-      return $likes;
+      return $likesArray;
     }
     catch (Exception $e)
     {
@@ -158,14 +216,15 @@ class Reply extends Comment
     {
       // Update the likes array in class
       $this->likesArray = $likes;
+      $this->likesNo = $this->likesNo + $liked;
       // Turn likes in string
       $likesArray= implode(":", $likes);
 
       // Update the table in db
-      $stmt = $con->prepare("UPDATE rposts SET post_likes = '$likesArray', post_likes_no = post_likes_no+$liked WHERE post_id = $id AND post_type = " . TYPE . "");
+      $stmt = $con->prepare("UPDATE rposts SET post_likes = '$likesArray', post_likes_no = post_likes_no+($liked) WHERE post_id = $id AND post_type = " . Reply::TYPE . "");
       if(!$stmt->execute())
       {
-        throw new Exception("Error updating likes for post type " . TYPE . ", $id", 1);
+        throw new Exception("Error updating likes for post type " . Reply::TYPE . ", $id", 1);
       }
     }
     catch (Exception $e)

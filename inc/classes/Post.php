@@ -62,6 +62,7 @@ abstract class Post extends Base
       $liked = $value ? 1 : -1;
       // Update the database with new array
       $this->setLikes($likesArray, $liked);
+      return $this->likesNo;
     }// try
     catch (Exception $e)
     {

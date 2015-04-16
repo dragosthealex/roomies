@@ -22,27 +22,43 @@ try
   switch ($_GET['a']) 
   {
     case 1:
-      // Send a review
-      $accId = htmlentities($_GET['pid']);
-      if(!isset($_POST['text']))
+      // Post some text somewhere (send a review/reply for now)
+      $parentId = htmlentities($_GET['pid']);
+      if(!isset($_POST['text']) && ($_GET['ptype']==1 && !isset($_POST['reply-input-'.$_GET['pid']])))
       {
-        throw new Exception("Review must not be empty", 1);
+        throw new Exception("Post must not be empty", 1);
       }
-      $text = htmlentities($_POST['text']);
-      if(!$accId || !is_numeric($accId))
+      if(!($_GET['pid'] && $_GET['ptype'] && is_numeric($_GET['pid'])))
       {
-        throw new Exception("The accommodation Id is invalid", 1);
+        throw new Exception('Some values are invlaid', 1);
       }
-      if(!$text)
+
+      if(isset($_POST['text']))
       {
-        throw new Exception("The review text is invalid", 1);
+        $text = $_POST['text'];
       }
-      $user2->sendReview($accId, $text);
+      else if($_GET['ptype']==1 && isset($_POST['reply-input-'.$_GET['pid']]))
+      {
+        $text = $_POST['reply-input-'.$_GET['pid']];
+      }
+
+      //$text = isset($_POST['text']) ? $_POST['text'] : ($_GET['ptype']==1 && isset($_POST['reply-input-'.$_GET['pid']])) ? $_POST['reply-input-'.$_GET['pid']] : '';
+      $type = htmlentities($_GET['ptype']);
+      $text = htmlentities($text);
+      // If some whitespace, don't do anything
+      if(!trim($text))
+      {
+        echo json_encode($response);
+        exit();
+      }
+
+      // make the post
+      $response['generate'] = $user2->makePost($parentId, $text, $type);
       if($user2->getError())
       {
-        throw new Exception("Error with sending review: " . $user2->getError(), 1);
+        throw new Exception("Error with posting: " . $user2->getError(), 1);
       }
-      $response['success'] = "Review sent";
+
       break;
     case 2:
       // Send a reply to a review
@@ -72,7 +88,7 @@ try
       {
         throw new Exception("The id of the post you want to like is invalid", 1);
       }
-      $user2->like($postId, $postType, $like);
+      $response['generate'] = $user2->like($postId, $postType, $like);
       if($user2->getError())
       {
         throw new Exception("Error liking post: " . $user2->getError(), 1);
@@ -86,7 +102,7 @@ try
       {
         throw new Exception("The accommodation Id or rate value is invalid", 1);
       }
-      $user2->rateAccommodation($accomId, $rating);
+      $response['generate'] = $user2->rateAccommodation($accomId, $rating);
       if($user2->getError())
       {
         throw new Exception("Error rating accommodation: " . $user2->getError(), 1);
@@ -126,6 +142,8 @@ try
 catch (Exception $e)
 {
   $response['error'] = "Error processing your request: " . $e->getMessage();
+  echo json_encode($response);
+  exit();
 }
 echo json_encode($response);
 ?>
