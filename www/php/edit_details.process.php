@@ -36,10 +36,11 @@ try
       throw new Exception("Something wrong with type", 1);
       break;
   }
+  echo json_encode($response);
 }
-
-
-
-
-
+catch (Exception $e)
+{
+  $response['error'] = "Something wrong with updates: " . $e->getMessage();
+  echo json_encode($response);
+}
 ?>

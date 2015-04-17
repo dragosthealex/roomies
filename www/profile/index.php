@@ -47,7 +47,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					<div class="profile-links">
             <a class='link-button edit-button' data-show="save-button" data-toggle='edit-profile' id='edit-profile' onclick="editProfile()">Edit Profile</a>
             <a class='link-button cancel-button' data-hide="save-button" data-toggle='edit-profile' onclick="cancelEdit()">Cancel</a>
-            <a class="link-button hidden save-button"  data-hide="save-button cancel-button" data-ajax-url="../php/edit_profile.process.php?t=2" onclick="saveEdit();" data-ajax-post="details-form <?php foreach($x as $y){echo $y.' ';}?>" >Save</a>
+            <a class="link-button hidden save-button"  data-hide="save-button cancel-button" data-ajax-url="../php/edit_details.process.php?t=2" onclick="saveEdit();" data-ajax-post="details-form <?php foreach($x as $y){echo $y.' ';}?>" >Save</a>
 						<!-- <a class='link-button edit-button' data-show='answered' data-hide='unanswered' id='edit-profile' data-toggle='edit-profile' onclick="editProfile()">Edit Profile</a>
             <a class='link-button' data-toggle='edit-profile' data-show='unanswered' data-hide='answered' onclick="editProfile()">Cancel</a> -->
 					</div>

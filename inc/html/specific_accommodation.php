@@ -22,65 +22,69 @@ else
     if(!$stmt->rowCount())
     {
       throw new PokeBall("No accommodations in db", 1);
-      
     }
   }
   catch (PokeBall $p)
   {
     echo $p->getMessage();
+    $accomId = 0;
   }
 }
 // Set teh params for getting accom
 $params['id'] = $accomId;
-$accom = new Accommodation($con, 'get', $params);
-if(!$accom->getError())
-{
-  $accomInfo = json_decode($accom->toJson(), 1);
-}
-else
-{
-  echo $accom->getError();
-}
 
-$ratingsArray = $accomInfo['ratingsArray'];
-// Check if I have rated this
-if (LOGGED_IN && in_array($user2->getCredential('id'), $ratingsArray[0]))
+if($accomId)
 {
-  foreach ($ratingsArray[0] as $key => $id)
+  $accom = new Accommodation($con, 'get', $params);
+  if(!$accom->getError())
   {
-    // If this is my rating
-    if($ratingsArray[0][$key] == $user2->getCredential('id'))
+    $accomInfo = json_decode($accom->toJson(), 1);
+  }
+  else
+  {
+    echo $accom->getError();
+  }
+
+  $ratingsArray = $accomInfo['ratingsArray'];
+  // Check if I have rated this
+  if (LOGGED_IN && in_array($user2->getCredential('id'), $ratingsArray[0]))
+  {
+    foreach ($ratingsArray[0] as $key => $id)
     {
-      $myRating = ($ratingsArray[1][$key]/100.0)*5.0;
-      break;
+      // If this is my rating
+      if($ratingsArray[0][$key] == $user2->getCredential('id'))
+      {
+        $myRating = ($ratingsArray[1][$key]/100.0)*5.0;
+        break;
+      }
     }
   }
-}
-else
-{
-  $myRating = '';
-}
-$rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
-// Get the optional pics
-$opt_pics = '';
-for($index=0; $index<$accomInfo['noOfPhotos']; $index++)
-{
-  $opt_pics .= 
-  "
-  <li class='li'>
-    <div onclick=\"document.getElementById('pic-main').style='background-image: url($webRoot/media/img/acc/$accomId-" . $index . ");'\" class='scroll-area-pic' style='background-image:url(../media/img/acc/" . $accomInfo['id'] . "-" . $index . ")'></div>
-  </li>
-  ";
-}
-if($opt_pics)
-{
-  $opt_pics .= 
-  "
-  <li class='li'>
-    <div onclick=\"document.getElementById('pic-main').style='background-image: url($webRoot/media/img/acc/$accomId);'\" class='scroll-area-pic' style='background-image:url(../media/img/acc/" . $accomInfo['id'] . ")'></div>
-  </li>
-  "; 
-}
+  else
+  {
+    $myRating = '';
+  }
+  $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
+  // Get the optional pics
+  $opt_pics = '';
+  for($index=0; $index<$accomInfo['noOfPhotos']; $index++)
+  {
+    $opt_pics .= 
+    "
+    <li class='li'>
+      <div onclick=\"document.getElementById('pic-main').style='background-image: url($webRoot/media/img/acc/$accomId-" . $index . ");'\" class='scroll-area-pic' style='background-image:url(../media/img/acc/" . $accomInfo['id'] . "-" . $index . ")'></div>
+    </li>
+    ";
+  }
+  if($opt_pics)
+  {
+    $opt_pics .= 
+    "
+    <li class='li'>
+      <div onclick=\"document.getElementById('pic-main').style='background-image: url($webRoot/media/img/acc/$accomId);'\" class='scroll-area-pic' style='background-image:url(../media/img/acc/" . $accomInfo['id'] . ")'></div>
+    </li>
+    "; 
+  }
+
 ?>
 <h2 class='h2'>
   <?=$accomInfo['name'];?>
@@ -146,3 +150,4 @@ if($opt_pics)
         data-ajax-success="generate"
         data-generate-container="_reviews ">
 </div>
+<?php }?>
