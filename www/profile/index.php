@@ -29,6 +29,10 @@ if ($_GET['u'] == $_SESSION['user']['username'])
   // Include head and header
   require_once __ROOT__."/inc/html/head.php";
   require_once __ROOT__."/inc/html/header.$ioStatus.php";
+  // retrieve details list from database
+  $details = $user2->getDetails();
+  $x = array_keys($details);
+
   // Page begins here, html and body tags are opened in head, closed in footer. Also, main div is closed in footer
 
 ?>
@@ -41,10 +45,11 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 				<div class="profile-box-inner">
 					<h2 class="h2 profile-name"><?=$user2->getName()?></h2>
 					<div class="profile-links">
-                        <a class='link-button edit-button' data-toggle='edit-profile' id='edit-profile' onclick="editProfile()">Edit Profile</a>
-                        <a class='link-button' data-toggle='edit-profile' onclick="cancelEdit()">Cancel</a>
+            <a class='link-button edit-button' data-show="save-button" data-toggle='edit-profile' id='edit-profile' onclick="editProfile()">Edit Profile</a>
+            <a class='link-button cancel-button' data-hide="save-button" data-toggle='edit-profile' onclick="cancelEdit()">Cancel</a>
+            <a class="link-button hidden save-button"  data-hide="save-button cancel-button" data-ajax-url="../php/edit_profile.process.php?t=2" onclick="saveEdit();" data-ajax-post="details-form <?php foreach($x as $y){echo $y.' ';}?>" >Save</a>
 						<!-- <a class='link-button edit-button' data-show='answered' data-hide='unanswered' id='edit-profile' data-toggle='edit-profile' onclick="editProfile()">Edit Profile</a>
-                        <a class='link-button' data-toggle='edit-profile' data-show='unanswered' data-hide='answered' onclick="editProfile()">Cancel</a> -->
+            <a class='link-button' data-toggle='edit-profile' data-show='unanswered' data-hide='answered' onclick="editProfile()">Cancel</a> -->
 					</div>
 				</div>
 			</div>
@@ -71,18 +76,18 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 						}
 					}
 					?>
-                    <div class="change-questions">
-                        <div class="profile-links" id="prevButton" style="float:left;">
-                            <a class="link-button" onclick="prevQuestions()">
-                                Previous 
-                            </a>
-                        </div>
-                        <div class="profile-links" id="nextButton" style="float:right;">
-                            <a class="link-button" onclick="nextQuestions()">
-                                Next
-                            </a>
-                        </div>  
-                    </div>
+          <div class="change-questions">
+              <div class="profile-links" id="prevButton" style="float:left;">
+                  <a class="link-button" onclick="prevQuestions()">
+                      Previous 
+                  </a>
+              </div>
+              <div class="profile-links" id="nextButton" style="float:right;">
+                  <a class="link-button" onclick="nextQuestions()">
+                      Next
+                  </a>
+              </div>  
+          </div>
 				</div>
 			</div>
 		</div>
@@ -91,56 +96,50 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 			<div class="column-box">
 				<div class="box-padding">
 					<h2 class="h2">My Details</h2>
-					<?php
-          				// retrieve list from database
-          				$details = $user2->getDetails();
-          				// echo $details['country'];
-          				$x = array_keys($details);
-          				foreach ($x as $y) {
-          					$z = ucwords($y);
-          					if($z == "Uni_city")
-          					{
-          						$z = "University City";
-          					}
+          <form id="details-form">
+					  <?php
+      				foreach ($x as $y) {
+      					$z = ucwords($y);
+      					if($z == "Uni_city")
+      					{
+      						$z = "University City";
+      					}
 
-          					echo "
+      					echo "
 
-          						<div class='details-wrapper'>
-          							<div class='details-key'>
-                                        $z      
-          							</div>
-          							<div class='details-value'>
-                                        $details[$y]
-          							</div>
-                                    <div class='new-val'>   
-                                        <select class='select-details' data-default='$details[$y]'>";
+      						<div class='details-wrapper'>
+      							<div class='details-key'>
+                                    $z      
+      							</div>
+      							<div class='details-value'>
+                                    $details[$y]
+      							</div>
+                                <div class='new-val'><select class='select-details' name='$y' data-default='$details[$y]'>";
 
-                            $thisKeyArr = array(
-                                    '-'
-                                );
-                            $stmt = $con->prepare("SELECT map_$y FROM rfiltersmap");
-                            $stmt->execute();
-                            while($result = $stmt->fetch(PDO::FETCH_ASSOC))
-                            {
-                                if (!$result['map_'.$y]) break;
-                                array_push($thisKeyArr, ucwords($result['map_'.$y]));
-                            }
-                            for ($i=0;$i<count($thisKeyArr);$i ++)
-                            {   
-                                if($details[$y] == $thisKeyArr[$i])
-                                    echo "<option value='$i' selected>$thisKeyArr[$i]</option>";
-                                else
-                                    echo "<option value='$i'>$thisKeyArr[$i]</option>";
-                            }
+                        $thisKeyArr = array(
+                                '-'
+                            );
+                        $stmt = $con->prepare("SELECT map_$y FROM rfiltersmap");
+                        $stmt->execute();
+                        while($result = $stmt->fetch(PDO::FETCH_ASSOC))
+                        {
+                            if (!$result['map_'.$y]) break;
+                            array_push($thisKeyArr, ucwords($result['map_'.$y]));
+                        }
+                        for ($i=0;$i<count($thisKeyArr);$i ++)
+                        {   
+                            if($details[$y] == $thisKeyArr[$i])
+                                echo "<option value='$i' selected>$thisKeyArr[$i]</option>";
+                            else
+                                echo "<option value='$i'>$thisKeyArr[$i]</option>";
+                        }
 
-                            echo       "</select>
-                                    </div>
-          						</div>";
-                                
-
-          					
-          				} ?>
-
+                        echo       "</select>
+                                </div>
+      						</div>";
+          			} 
+                ?>
+              </form>
 				    </div>
 
 			</div>
@@ -197,8 +196,13 @@ if ($_GET['u'] == $_SESSION['user']['username'])
             questionsUnanswered[i].className = ' question unanswered hidden ';
             
         };
+    }
 
-
+    function saveEdit() {
+      for(var i=0; i<detailsVal.length; i++) {
+        var element = detailsNewVal[i].firstChild;
+        detailsVal[i].innerHTML = element.options[element.selectedIndex].text;
+      }
     }
 
     function cancelEdit() {
@@ -423,6 +427,74 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
 			</div>
 		</div>
 	</div>
+
+  <div class="column-wrapper">
+    <!--About me-->
+    <div class="column-2">
+      <div class="column-box">
+        <div class="box-padding">
+          <h2 class="h2"><?=$otherUser->getName()?>'s Questionnaire</h2>
+          <!-- php to retrieve 'Questionnaire' from database should be here' -->
+          <?php
+          $questions = $otherUser->getQuestion();
+          $ok=false;
+          foreach($questions as $question)
+          {
+            if($question->getError())
+            {
+              echo $question->getError();
+            }
+            else
+            {
+              if($question->toString())
+              {
+                echo $question->toString();
+                $ok=true;
+              }
+            }
+          }
+          if(!$ok)
+          {
+            echo $otherUser->getName() . " has not completed any question yet.";
+          }
+          ?>
+        </div>
+      </div>
+    </div>
+    <!--filters-->
+    <div class="column-2">
+      <div class="column-box">
+        <div class="box-padding">
+          <h2 class="h2"><?=$otherUser->getName()?>'s Details</h2>
+          <?php
+            // retrieve list from database
+            $details = $otherUser->getDetails();
+            // echo $details['country'];
+            $x = array_keys($details);
+            foreach ($x as $y) {
+              $z = ucwords($y);
+              if($z == "Uni_city")
+              {
+                $z = "University City";
+              }
+
+              echo "
+
+                <div class='details-wrapper'>
+                  <div class='details-key'>
+                                  $z      
+                  </div>
+                  <div class='details-value'>
+                                  $details[$y]
+                  </div>
+                </div>";
+              } 
+            ?>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 	<div id="error">
 	</div>

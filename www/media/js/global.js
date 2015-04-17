@@ -621,9 +621,7 @@ void function (window, document, undefined) {
       var postValues = [];
       var addValueToPostValues = function (key, element, dontResetValue) {
         if (!element) return;
-
-        console.debug(element);
-
+        
         var value;
         if (element.type === "checkbox") {
           value = element.checked;

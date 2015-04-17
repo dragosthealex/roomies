@@ -177,6 +177,10 @@ class Question extends Base
 
     $answerClass = $answered ? 'answered' : 'unanswered';
 
+    if(!$answered && $this->userId != $_SESSION['user']['id'])
+    {
+      return '';
+    }
 
     $question =
     "
@@ -196,7 +200,7 @@ class Question extends Base
     ";
 
     
-    $disabled = $answered ? 'disabled' : '';
+    $disabled = ($answered || $this->userId != $_SESSION['user']['id']) ? 'disabled' : '';
     $answerForMe = $this->answerForMe;
     $answersForThem = $this->answersForThem;
     $importance = $this->importance;

@@ -36,7 +36,7 @@ function photoUpload($location, $inputName, $baseName, $primary)
           throw new Exception("File is not an image.", 1);
         }
         $mime = $check['mime'];
-        $extension = end((explode(".", $_FILES[$inputName]["name"])));
+        $extension = end((explode(".", $_FILES[$inputName]["name"][$key])));
 
         if(!($mime == 'image/jpg' || $mime == 'image/jpeg' || $mime == 'image/png' || $mime == 'image/gif'))
         {

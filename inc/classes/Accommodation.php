@@ -36,6 +36,7 @@ class Accommodation extends Base
   const TABLE_NAME = 'raccommodations';
   const ID_COLUMN = 'accommodation_id';
   const FOREIGN_KEY_COLUMN = 'accommodation_author';
+  const TYPE = 3;
   /**
   * Constructor
   *
@@ -202,7 +203,7 @@ class Accommodation extends Base
     try
     {
       // Update table
-      $stmt = $con->prepare("UPDATE raccommodations SET accommodation_rating_array='$ratingsArray', accommodation_rating='$rating'");
+      $stmt = $con->prepare("UPDATE raccommodations SET accommodation_rating_array='$ratingsArray', accommodation_rating='$rating' WHERE accommodation_id = $accId");
       if(!$stmt->execute())
       {
         throw new Exception("Error updating rating in database", 1);

@@ -119,6 +119,11 @@ foreach ($reviews as $review)
         <a class='link' href='$webRoot/profile/$replyAuthorId'>$replyAuthorName</a> - $replyText
       </div>
       <div class='like-buttons'>
+    ";
+    if(LOGGED_IN)
+    {
+      $output .=
+      "
       <span class='minidrop-container like-button like-button-Reply$replyId $likeHide' id='likeReply$replyId'>
         <a data-ajax-url='$webRoot/php/reviews.process.php?a=4&pid=$replyId&ptype=1'
            data-ajax-text='Liking...'
@@ -135,7 +140,12 @@ foreach ($reviews as $review)
            data-generate-container='reply-$replyId-likesNo'
            class='' style='cursor:pointer;'>Dislike</a>
       </span>
-      | <a id='reply-$replyId-likesNo'>$replyLikesNo</a> Likes | On $replyDate
+      | 
+      ";
+    }
+    $output .=
+    "
+      <a id='reply-$replyId-likesNo'>$replyLikesNo</a> Likes | On $replyDate
     </li>
     ";
   }// foreach

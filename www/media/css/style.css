@@ -1013,6 +1013,10 @@
 	margin-top: 0.1em;
 }
 
+.like-buttons {
+	padding-left: 3.2em;
+}
+
 .like-reply {
 	margin-left: 1.25em;
 }
@@ -1234,6 +1238,19 @@
 }*/
 
 /* End checkbox/radio styles */
+
+.scroll-area-pic {
+	margin: auto;
+	height: 8em;
+	width: 8em;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-color: #EFEFEF;
+	background-position: center center;
+	margin-bottom: 1em;
+	cursor: pointer;
+}
+
 .details-wrapper {
 	border-bottom: 1px solid #D5D1D0;
 	position: relative;

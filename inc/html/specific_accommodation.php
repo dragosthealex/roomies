@@ -61,18 +61,42 @@ else
   $myRating = '';
 }
 $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
+// Get the optional pics
+$opt_pics = '';
+for($index=0; $index<$accomInfo['noOfPhotos']; $index++)
+{
+  $opt_pics .= 
+  "
+  <li class='li'>
+    <div onclick=\"document.getElementById('pic-main').style='background-image: url($webRoot/media/img/acc/$accomId-" . $index . ");'\" class='scroll-area-pic' style='background-image:url(../media/img/acc/" . $accomInfo['id'] . "-" . $index . ")'></div>
+  </li>
+  ";
+}
+if($opt_pics)
+{
+  $opt_pics .= 
+  "
+  <li class='li'>
+    <div onclick=\"document.getElementById('pic-main').style='background-image: url($webRoot/media/img/acc/$accomId);'\" class='scroll-area-pic' style='background-image:url(../media/img/acc/" . $accomInfo['id'] . ")'></div>
+  </li>
+  "; 
+}
 ?>
 <h2 class='h2'>
   <?=$accomInfo['name'];?>
 </h2>
 <div class='pic-wrapper'>
-  <div class='pic-main' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpg)'>
+  <div id='pic-main' class='pic-main' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpg)'>
   </div>
-  <div class='scroll-wrapper pic-thumbs'>
-    <div class='scroll-area'>
+  <div class="scroll-wrapper pic-thumbs">
+    <div id="main-conversation-scroll" class='scroll-area'>
       <ul class='ul'>
-        <li class='ph ph-last ph-pic' data-placeholder='No pictures.'></li>
+        <?php if(!$accomInfo['noOfPhotos']){?><li class='ph ph-last ph-pic' data-placeholder='No pictures.'></li><?php }?>
+        <?=$opt_pics?>
       </ul>
+      <div class=" scroll-bar ">
+        <div class=" scroll-tracker "></div>
+      </div>
     </div>
   </div>
 </div>
@@ -85,17 +109,18 @@ $rating = $accomInfo['rating'] ? ($accomInfo['rating']/100.0)*5.0 : 'N/A';
   ><div class="star-background star-b0 star-main" style='width:<?=$accomInfo['rating'].'%'?>'></div>
   <?php
   $ajaxText = LOGGED_IN ? "star-main' data-ajax-success='generate' data-generate-container='rating-container' data-ajax-url='$webRoot/php/reviews.process.php?a=5&pid=$accomId&ptype=&text=" : "data-null='";
+  $sh = !LOGGED_IN ? "sh-" : '';
   ?>
-  <input class="star-cr" type="radio" name="rating" id="rating5" value="5"
-  ><label class="star-label" for="rating5"><span class="star" data-hide='<?=$ajaxText?>5'></span></label>
-  <input class="star-cr" type="radio" name="rating" id="rating4" value="4"
-  ><label class="star-label" for="rating4"><span class="star" data-hide='<?=$ajaxText?>4'></span></label>
-  <input class="star-cr" type="radio" name="rating" id="rating3" value="3"
-  ><label class="star-label" for="rating3"><span class="star" data-hide='<?=$ajaxText?>3'></span></label>
-  <input class="star-cr" type="radio" name="rating" id="rating2" value="2"
-  ><label class="star-label" for="rating2"><span class="star" data-hide='<?=$ajaxText?>2'></span></label>
-  <input class="star-cr" type="radio" name="rating" id="rating1" value="1"
-  ><label class="star-label" for="rating1"><span class="star" data-hide='<?=$ajaxText?>1'></span></label>
+  <input class="<?=$sh?>star-cr" type="radio" name="rating" id="rating5" value="5"
+  ><label class="<?=$sh?>star-label" for="rating5"><span class="star" data-hide='<?=$ajaxText?>5'></span></label>
+  <input class="<?=$sh?>star-cr" type="radio" name="rating" id="rating4" value="4"
+  ><label class="<?=$sh?>star-label" for="rating4"><span class="star" data-hide='<?=$ajaxText?>4'></span></label>
+  <input class="<?=$sh?>star-cr" type="radio" name="rating" id="rating3" value="3"
+  ><label class="<?=$sh?>star-label" for="rating3"><span class="star" data-hide='<?=$ajaxText?>3'></span></label>
+  <input class="<?=$sh?>star-cr" type="radio" name="rating" id="rating2" value="2"
+  ><label class="<?=$sh?>star-label" for="rating2"><span class="star" data-hide='<?=$ajaxText?>2'></span></label>
+  <input class="<?=$sh?>star-cr" type="radio" name="rating" id="rating1" value="1"
+  ><label class="<?=$sh?>star-label" for="rating1"><span class="star" data-hide='<?=$ajaxText?>1'></span></label>
 </div>
 <div class='acc-long-desc'>
   <?=$accomInfo['description'];?>

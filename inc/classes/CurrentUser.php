@@ -8,6 +8,9 @@ require_once __ROOT__.'/inc/classes/GeneralUser.php';
 require_once __ROOT__.'/inc/classes/Accommodation.php';
 class CurrentUser extends GeneralUser
 {
+  // Type constant, used in sum places
+  const TYPE = 2;
+
   /**
   * Constructor
   *
@@ -950,6 +953,7 @@ private function getConv($offset)
       $this->errorMsg = "Error with checking if this user is author of $postId: " . $e->getMessage();
     }
   }
+
   /**
   * Function updatePost($postId, $text)
   *
@@ -1168,6 +1172,43 @@ private function getConv($offset)
     }
 
     return $count;
+  }// functon getUnreadCount
+
+  /**
+  * Function updateDetails($params)
+  *
+  * Updates this user's filter details
+  *
+  * @param - $params(int array), the details as ['column'=>value]
+  */
+  public function updateDetails($params)
+  {
+    // Localise stuff
+    $id = $this->id;
+    $con = $this->con;
+    $query = '';
+
+    // Validate and construct query
+    foreach ($params as $key => $value) 
+    {
+      $params[$key] = htmlentities($params[$key]);
+      $query .= "$key=$value, ";
+    }
+    // Finish the query
+    $query .= key($params) . '=' . end($params);
+    try
+    {
+      // Execute the query
+      $stmt = $con->prepare("UPDATE rdetails SET $query");
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error updating profile details in db.", 1);
+      }
+    }
+    catch (Exception $e)
+    {
+      $this->errorMsg = $e->getMessage();
+    }
   }
 
 }// class CurrentUser
