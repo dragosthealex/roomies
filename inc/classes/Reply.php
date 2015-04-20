@@ -5,6 +5,8 @@
 * Represents a reply, to a user. Extends the post, because it hase the same things, the parent being a review (possbile extension for this)
 */
 require_once __ROOT__.'/inc/classes/Comment.php';
+include_once __ROOT__.'/inc/lib/banbuilder-master/src/CensorWords.php';
+use Snipe\BanBuilder\CensorWords;
 
 class Reply extends Comment
 {
@@ -41,6 +43,10 @@ class Reply extends Comment
           {
             throw new Exception("All values are mandatory", 1);
           }
+
+          $censor = new CensorWords();
+          $censor->setReplaceChar("*");
+          $text = $censor->censorString($text);
 
           // Insert into database
           $stmt = $con->prepare("INSERT INTO rposts (post_author, post_parent_id, post_text, post_date, post_type)

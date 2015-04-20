@@ -16,11 +16,11 @@ try
     throw new Exception('missing', 1);
   }
 
-  $params['name'] = trim(htmlentities($_POST['name']));
-  $params['price'] = trim(htmlentities($_POST['price']));
-  $params['address'] = trim(htmlentities($_POST['address']));
-  $params['description'] = trim(htmlentities($_POST['details']));
-  $params['city'] = trim(htmlentities($_POST['city']));
+  $params['name'] = trim($_POST['name']);
+  $params['price'] = trim($_POST['price']);
+  $params['address'] = trim($_POST['address');
+  $params['description'] = trim($_POST['details']);
+  $params['city'] = trim($_POST['city']);
   $params['author'] = $owner->getCredential('id');
   $params['noPhotos'] = isset($_FILES['opt_photos']['name']) && $_FILES['opt_photos']['name']?count($_FILES['opt_photos']['name']):0;
   $params['main_photo'] = 'main_photo';
