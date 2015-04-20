@@ -26,6 +26,8 @@ function insertThumbnail(evt) {
       return function(e) {
         var img;
         img = document.createElement('DIV');
+        img.style.background = 'url(' + e.target.result + ');';
+        img.style.backgroundSize = 'cover';
         img.style = 'background: url(' + e.target.result + '); background-size:cover;';
         img.className = 'acc-pic short';
         img.name = theFile.name;

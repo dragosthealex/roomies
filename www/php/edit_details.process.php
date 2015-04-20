@@ -5,7 +5,7 @@ $response = array();
 $response['error'] = '';
 
 // Check the type, and the logged in stuff
-if(!isset($_GET['t']) || !LOGGED_IN || !($_GET['t'] == Accommodation::TYPE && OWNER_LOGGED_IN))
+if(!isset($_GET['t']) || !LOGGED_IN || ($_GET['t'] == Accommodation::TYPE && !OWNER_LOGGED_IN))
 {
   include __ROOT__.'/inc/html/notfound.php';
   exit();
