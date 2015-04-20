@@ -170,15 +170,15 @@ else if(LOGGED_IN)
 				</div>
 			</div>
 			<div
-  class="fb-like"
-  data-share="true"
-  data-width="450"
-  data-show-faces="true">
-</div>
+			  class="fb-like"
+			  data-share="true"
+			  data-width="450"
+			  data-show-faces="true">
+			</div>
 			<div class="column-2">
 				<div class="column-box">
 					<div class="box-padding">
-						<h2 class="h2"> Popular Accommodation </p>
+						<h2 class="h2"> Popular Accommodation </h2>
 					</div>
 					<ul class="ul">
 						
@@ -186,7 +186,6 @@ else if(LOGGED_IN)
 				</div>
 			</div>
 		</div>
-	</div>
 <?php
 } else if(OWNER_LOGGED_IN)
 {

@@ -14,7 +14,8 @@ foreach ($reviews as $review)
   $authorId = $review['authorId'];
   $author = new OtherUser($con, $authorId);
   $authorName = $author->getName();
-  $authorImage = $author->getCredential('image');
+  $style = "background-size: cover;background-position: center center;";
+  $authorImage = $author->generateProfilePicture('review-pic', $style);
   if($authorImage[0]=='/')$authorImage=$webRoot.$authorImage;
   $postDate = $review['date'];
   $postText = $review['text'];
@@ -38,8 +39,7 @@ foreach ($reviews as $review)
   "
   <li class='li review-box' id='review-$postId'>
     <div class='author-details'>
-        <div class='review-pic' style='background-image: url($authorImage); background-size:cover; background-position:center;'>
-        </div>
+        $authorImage
         <div class='author-text'>
           <div class='author-name'>
             <a class='link' href='$webRoot/profile/$authorId'>$authorName</a>
@@ -95,7 +95,8 @@ foreach ($reviews as $review)
     $replyId = $reply['id'];
     $replyAuthorId = $reply['authorId'];
     $replyAuthor = new OtherUser($con, $replyAuthorId);
-    $replyAuthorImage = $replyAuthor->getCredential('image');
+    $style = 'background-size:cover; background-position:center;';
+    $replyAuthorImage = $replyAuthor->generateProfilePicture('reply-pic', $style);
     if($replyAuthorImage[0]=='/')$replyAuthorImage=$webRoot.$replyAuthorImage;
     $replyAuthorName = $replyAuthor->getName();
     if($replyAuthor->getError())
@@ -113,8 +114,7 @@ foreach ($reviews as $review)
     $output .=
     "
     <li class='li reply' id='hide'>
-      <div class='reply-pic' style='background-image: url($replyAuthorImage);background-size:cover; background-position:center;'>
-      </div>
+      $replyAuthorImage
       <div class='reply-text'>
         <a class='link' href='$webRoot/profile/$replyAuthorId'>$replyAuthorName</a> - $replyText
       </div>
@@ -151,12 +151,16 @@ foreach ($reviews as $review)
   }// foreach
 
   $hideIfLoggedOut = !LOGGED_IN ?'display:none;':'';
-
+  $style = "background-size: cover;
+background-position: center center;
+width: 1.7em;
+height: 1.7em;";
+  $userImage = $user2->generateProfilePicture('reply-pic', $style);
   $output .= 
   "
   </ul><ul class='reply-box ul'>
   <li class='li reply reply-$postId' style='$hideIfLoggedOut;'>
-    <div class='reply-pic' style='background-image: url($webRoot/$userImage);background-size:cover; background-position:center;width:1.7em;height:1.7em;'></div>
+    $userImage
     <textarea name='reply$postId' id='reply-input-$postId' class='input reply-input' type='text' placeholder='Write a reply...' oninput=\"this.style.height=((this.value.match(/\\n/g)||[]).length+2)*1.1+'em';return false;\" onkeydown=\"return event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.nextSibling}), false) : event.keyCode !== 13);\"></textarea><button class='hidden' data-ajax-url='$webRoot/php/reviews.process.php?ptype=1&a=1&pid=$postId' data-ajax-post='reply-input-$postId' data-generate-container='_reply-box-$postId' data-ajax-success='generate'>
   </li></ul></div>
   ";

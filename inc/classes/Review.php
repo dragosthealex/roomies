@@ -109,7 +109,7 @@ class Review extends Comment
   /**
   * Public function stringPost()
   *
-  * Returns this reply imediately after it's created
+  * Returns this review imediately after it's created
   * 
   * @return - $reply(String) - this reply as string
   */
@@ -128,9 +128,13 @@ class Review extends Comment
 
     if(LOGGED_IN)
     {
-      $userImage = $user2->getCredential('image');
+      $userImage = $user2->generateProfilePicture('reply-pic', 'background-size:cover; background-position:center;width:1.7em;height:1.7em;');
       $hideIfLoggedOut = '';
     } 
+    else
+    {
+      $userImage = '';
+    }
 
     $webRoot = '..';
     if($author->getError())
@@ -138,8 +142,9 @@ class Review extends Comment
       $this->errorMsg = "Error with the author for post $id: " . $author->getError();
       return 0;
     }
+    $style = 'background-size: cover;background-position: center center;';
     $authorName = $author->getName();
-    $authorImage = '../' . $author->getCredential('image');
+    $authorImage = $author->generateProfilePicture('review-pic', $style);
 
     $likeHide = in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
     $dislikeHide = !in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
@@ -148,8 +153,7 @@ class Review extends Comment
     "
     <li class='li review-box' id='review-$id'>
       <div class='author-details'>
-          <div class='review-pic' style='background-image: url($authorImage); background-size:cover; background-position:center;'>
-          </div>
+          $authorImage
           <div class='author-text'>
             <div class='author-name'>
               <a class='link' href='../profile/$authorId'>$authorName</a>
@@ -184,7 +188,7 @@ class Review extends Comment
       <div id='replies-container-$id' class='hidden'><ul id='reply-box-$id' class='reply-box ul' style='padding-bottom:0.5em;'>
         </ul><ul class='reply-box ul'>
           <li class='li reply reply-$id' style='$hideIfLoggedOut;'>
-            <div class='reply-pic' style='background-image: url($webRoot/$userImage);background-size:cover; background-position:center;width:1.7em;height:1.7em;'></div>
+            $userImage
             <textarea name='reply$id' id='reply-input-$id' class='input reply-input' type='text' placeholder='Write a reply...' oninput=\"this.style.height=((this.value.match(/\\n/g)||[]).length+2)*1.1+'em';return false;\" onkeydown=\"return event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.nextSibling}), false) : event.keyCode !== 13);\"></textarea><button class='hidden' data-ajax-url='$webRoot/php/reviews.process.php?ptype=1&a=1&pid=$id' data-ajax-post='reply-input-$id' data-generate-container='_reply-box-$id' data-ajax-success='generate'>
           </li>
         </ul>

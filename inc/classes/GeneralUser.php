@@ -58,6 +58,19 @@ abstract class GeneralUser extends GenericUser
   }
 
   /**
+  * Function generateProfilePicture($tagName, $className, $innerHTML)
+  *
+  * Returns an html $tagName with $className having background img the user's profile pic
+  *
+  */
+  public function generateProfilePicture($className='', $style='', $tagName='DIV', $innerHTML='')
+  {
+    $img = $this->image;
+    $id = $this->id;
+    return "<$tagName class='$className' style='background-image:url($img), url(../img/usr/$id.jpg), url(../img/usr/$id.png), url(../img/usr/$id.jpeg), url(/img/usr/$id), url(/img/usr/$id.jpg), url(/img/usr/$id.jpeg), url(../media/img/default.jpg), url(/media/img/default.jpg), url(media/img/default.jpg); $style'></$tagName>";
+  }
+
+  /**
   * Function getDetails()
   *
   * Gets the details of the current user, and returns them as an array.

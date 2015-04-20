@@ -134,7 +134,8 @@ class Reply extends Comment
     $authorId = $this->author;
     $author = new OtherUser($con, $authorId);
     $authorName = $author->getName();
-    $authorImage = '../' . $author->getCredential('image');
+    $style = 'background-size:cover; background-position:center;';
+    $authorImage = $author->generateProfilePicture('reply-pic', $style);
 
     $likeHide = in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
     $dislikeHide = !in_array($user2->getCredential('id'), $replyLikes) ? "hidden" : '';
@@ -142,8 +143,7 @@ class Reply extends Comment
     $reply = 
     "
     <li class='li reply' id='hide'>
-      <div class='reply-pic' style='background-image: url($authorImage);background-size:cover; background-position:center;'>
-      </div>
+      $authorImage
       <div class='reply-text'>
         <a class='link' href='../profile/$authorId'>$authorName</a> - $text
       </div>
