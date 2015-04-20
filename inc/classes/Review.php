@@ -6,6 +6,8 @@
 */
 //require_once '../init.php';
 require_once __ROOT__."/inc/classes/Comment.php";
+include_once __ROOT__.'/inc/lib/banbuilder-master/src/CensorWords.php';
+use Snipe\BanBuilder\CensorWords;
 
 class Review extends Comment
 {
@@ -39,6 +41,10 @@ class Review extends Comment
           {
             throw new Exception("Author, id and text values are mandatory", 1);
           }
+
+          $censor = new CensorWords();
+          $censor->setReplaceChar("*");
+          $text = $censor->censorString($text);
 
           // Insert into database
           $stmt = $con->prepare("INSERT INTO rposts (post_author, post_parent_id, post_text, post_date, post_type)
