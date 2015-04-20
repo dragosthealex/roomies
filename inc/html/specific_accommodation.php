@@ -92,15 +92,12 @@ if($accomId)
 <div class='pic-wrapper'>
   <div id='pic-main' class='pic-main' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpg)'>
   </div>
-  <div class="scroll-wrapper pic-thumbs">
-    <div id="main-conversation-scroll" class='scroll-area'>
+  <div class="scroll-wrapper">
+    <div id="main-conversation-scroll" class='scroll-area pic-thumbs'>
       <ul class='ul'>
         <?php if(!$accomInfo['noOfPhotos']){?><li class='ph ph-last ph-pic' data-placeholder='No pictures.'></li><?php }?>
         <?=$opt_pics?>
       </ul>
-      <div class=" scroll-bar ">
-        <div class=" scroll-tracker "></div>
-      </div>
     </div>
   </div>
 </div>

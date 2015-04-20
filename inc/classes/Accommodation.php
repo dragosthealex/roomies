@@ -52,7 +52,8 @@ class Accommodation extends Base
         $name = isset($params['name'])?htmlentities($params['name']):'';
         $author = isset($params['author'])?htmlentities($params['author']):'';
         $date = date('Y-m-d');
-        $noPhotos = isset($params['noPhotos'])?htmlentities($params['noPhotos']):0;
+        // $noPhotos = isset($params['noPhotos'])?htmlentities($params['noPhotos']):0;
+        $noPhotos = 0;
         $description = isset($params['description'])?htmlentities($params['description']):'';
         $address = isset($params['address'])?htmlentities($params['address']):'';
         $price = isset($params['price'])?htmlentities($params['price']):'';
@@ -88,15 +89,15 @@ class Accommodation extends Base
           {
             throw new Exception("Error Uploading the main photo: $uploadError", 1);
           }
-          // Upload the rest of the photos
-          if($secPhotoInput && $_FILES[$secPhotoInput]["name"][0])
-          {
-            $uploadError = photoUpload($photoUploadLocation, $secPhotoInput, $accId, false);
-          }
-          if($secPhotoInput && $uploadError != 'ok' && $_FILES[$secPhotoInput]["name"][0])
-          {
-            throw new Exception("Error Uploading the rest of the photos: $uploadError", 1);
-          }
+          // // Upload the rest of the photos
+          // if($secPhotoInput && $_FILES[$secPhotoInput]["name"][0])
+          // {
+          //   $uploadError = photoUpload($photoUploadLocation, $secPhotoInput, $accId, false);
+          // }
+          // if($secPhotoInput && $uploadError != 'ok' && $_FILES[$secPhotoInput]["name"][0])
+          // {
+          //   throw new Exception("Error Uploading the rest of the photos: $uploadError", 1);
+          // }
 
           // Set the instance variables
           $this->name = $name;

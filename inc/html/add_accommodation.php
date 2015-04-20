@@ -62,15 +62,17 @@ while($stmt->fetch())
       ><div class="acc-pic short" style="background-image:url(media/img/acc/default.gif);"></div
     ></div>
   </div>
-  <p class="text">
-    Optional Pictures (maximum 5)
-  </p>
-  <div style="overflow:hidden;">
-    <div class="file-upload link-button" style="float:left;">
-      <span>Browse</span>
-      <input id="opt_photos" class="upload photo-input" type="file" name="opt_photos[]" value="Main picture" data-files-limit='5' data-thumbnail-container='opt-pic-thumbs'>
-    </div>
-    <div id='opt-pic-thumbs' style="float:left;">
+  <div class="hidden">
+    <p class="text">
+      Optional Pictures (maximum 5)
+    </p>
+    <div style="overflow:hidden;">
+      <div class="file-upload link-button" style="float:left;">
+        <span>Browse</span>
+        <input id="opt_photos" class="upload photo-input" type="file" name="opt_photos[]" value="Main picture" data-files-limit='5' data-thumbnail-container='opt-pic-thumbs'>
+      </div>
+      <div id='opt-pic-thumbs' style="float:left;">
+      </div>
     </div>
   </div>
   <input type="submit" value="submit" name="add-accom-submit" class="input-button block">
