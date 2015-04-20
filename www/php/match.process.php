@@ -48,7 +48,7 @@ try
 
   // Make the question string to be inserted/updated
   $questionString = implode(":", array("$myAnswer", implode(",", $myAccepted), "$myImportance"));
-
+  
   // Check if row with this user id is existing in ruser_qa
   $stmt = $con->prepare("SELECT question$questionNo FROM ruser_qa WHERE EXISTS
                           (SELECT * FROM ruser_qa WHERE answer_user_id = $id) AND answer_user_id = $id;

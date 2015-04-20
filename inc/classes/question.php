@@ -95,6 +95,7 @@ class Question extends Base
       {
         $questionInfo = explode(":", $questionInfo);
         $this->answerForMe = $questionInfo[0];
+
         // Explode the accepted answers for them into an array;
         $this->answersForThem = explode(",", $questionInfo[1]);
         $this->importance = $questionInfo[2];
