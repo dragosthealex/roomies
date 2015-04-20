@@ -447,9 +447,10 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             }
             else
             {
-              if($question->toString())
+              $stringifiedQuestion = $question->toString($otherUser, $user2);
+              if($stringifiedQuestion)
               {
-                echo $question->toString();
+                echo $stringifiedQuestion;
                 $ok=true;
               }
             }
