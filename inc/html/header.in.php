@@ -4,6 +4,11 @@
     <?php require_once "header.php"; ?>
     <ul class="header-nav">
       <li class="header-item">
+        <a href="<?=$webRoot?>/profile/<?=$user->getIdentifier('username')?>" class="icon-holder user-icon-holder">
+          <span class="icon icon-user" style="background-image: url('<?=$user->getIdentifier("image")?>'), url(../media/img/default.gif)"></span>
+        </a>
+      </li>
+      <li class="header-item">
         <span class=hidden></span>
         <a href="<?=$webRoot?>" class="icon-holder" title="Home">
           <span class="icon icon-home">Home</span>
