@@ -46,7 +46,7 @@ define("LOGGED_IN", isset($_SESSION['user']));
 define("OWNER_LOGGED_IN", isset($_SESSION['owner']));
 
 // Define whether or not the user has just logged in, for later use.
-define("JUST_LOGGED_IN", isset($_SESSION['justLoggedIn']));
+define("JUST_LOGGED_IN", (isset($_SESSION['justLoggedIn']) && $_SESSION['tempUser']));
 if (JUST_LOGGED_IN)
 {
   // Don't display next time
@@ -81,12 +81,12 @@ $ioStatus = (LOGGED_IN ? "in" : "out");
 // If $_SESSION['tempUser'] is set, send to confirm
 if(isset($_SESSION['tempOwner']) && (!in_array('register-owner', explode('/', $_SERVER['REQUEST_URI']))))
 {
-  header('Location: $webRoot/register-owner');
-}
+  header("Location: $webRoot/register-owner");
+}/*
 if(isset($_SESSION['tempUser']) && (!in_array('confirm', explode('/', $_SERVER['REQUEST_URI']))))
 {
-  header('Location: $webRoot/confirm');
-}
+  header("Location: $webRoot/confirm");
+}*/
 
 // Inclusion of the db config file
 require_once __ROOT__.'/config.inc.php';
