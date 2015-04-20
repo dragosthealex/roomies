@@ -1186,16 +1186,14 @@ private function getConv($offset)
     // Localise stuff
     $id = $this->id;
     $con = $this->con;
-    $query = '';
 
     // Validate and construct query
+    $queries = array();
     foreach ($params as $key => $value) 
     {
-      $params[$key] = htmlentities($params[$key]);
-      $query .= "$key=$value, ";
+      array_push($queries, $key.'=\''.htmlentities($value).'\'');
     }
-    // Finish the query
-    $query .= key($params) . '=' . end($params);
+    $query = implode(',', $queries);
     try
     {
       // Execute the query
