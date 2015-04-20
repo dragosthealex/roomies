@@ -13,5 +13,9 @@ $stmt = $con->prepare("DELETE FROM rdetails");
 $stmt->execute();
 $stmt = $con->prepare("DELETE FROM rconexions");
 $stmt->execute();
+$stmt = $con->prepare("DELETE FROM raccommodations");
+$stmt->execute();
+$stmt = $con->prepare("DELETE FROM rowners");
+$stmt->execute();
 
 ?>
