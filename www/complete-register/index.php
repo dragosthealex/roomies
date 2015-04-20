@@ -62,7 +62,10 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
       }
       // Check if the ID exists. If not, it must be a problem
       $stmt = $con->prepare("SELECT user_id FROM rusers WHERE user_id = $id");
-      $stmt->execute();
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error with uid", 1);
+      }
       $stmt->bindColumn(1, $dbId);
       $stmt->fetch();
       if(!$stmt->rowCount())
@@ -101,7 +104,10 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
 
       // Get all the users in the same city
       $stmt = $con->prepare("SELECT profile_filter_id FROM rdetails WHERE uni_city=$mapCity");
-      $stmt->execute();
+      if(!$stmt->execute())
+      {
+        throw new Exception("Error getting city", 1);
+      }
       $usersInCity = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
       foreach ($usersInCity as $otherUserId)
@@ -111,13 +117,16 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
                                 VALUES ($otherUserId, $id, $mapCity)");
         if(!$stmt->execute())
         {
+          throw new Exception("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
+                                VALUES ($otherUserId, $id, $mapCity)", 1);
+          
           throw new Exception("Error initialising percentages", 1);
         }
       }
-
+      
       // Initialise the settings for this user
       $stmt = $con->prepare("INSERT INTO rusersettings (setting_user_id) VALUES ($id)");
-      if(!$stmt->execute)
+      if(!$stmt->execute())
       {
         throw new Exception("Error initialising settings", 1);
       }
@@ -135,6 +144,8 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
     catch(Exception $exception)
     {
       array_push($errors, $exception->getMessage());
+      var_dump($errors);
+      exit();
     }
 
     unset($_SESSION['notComplete']);

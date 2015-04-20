@@ -663,7 +663,7 @@ private function getConv($offset=0)
     $apparitionArray = array();
     // The array that remembers how many unread messages we have from a user
     $unreadArray = array();
-    $groups = $this->groups;
+    $groups = is_array($this->groups)?implode(',', $this->groups):$this->groups;
 
     $stmt = $con->prepare("SELECT message_user_id1, message_user_id2, messages_read, message_group
                              FROM rmessages

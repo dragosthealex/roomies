@@ -231,7 +231,11 @@ try
         // Make sure that neither is 0
         $id2Score = isset($id2Score) && $id2Score ? $id2Score : 0.01;
         $id1Score = isset($id1Score) && $id1Score ? $id1Score : 0.01;
-        $percentage = sqrt($id2Score * $id1Score)*100;
+
+        $percentage = (double)sqrt((double)$id2Score * (double)$id1Score)*100;
+
+        $response['error'] = "id1 - $id1Score | id2 - $id2Score | perc - $percentage";
+        
         
         $stmt2 = $con->prepare("UPDATE rpercentages SET id1_1='$match[id1_1]', id1_10='$match[id1_10]', percentage='$percentage',
                                 id1_50='$match[id1_50]', id2_1='$match[id2_1]', id2_10='$match[id2_10]', 
