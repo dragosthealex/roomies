@@ -179,12 +179,12 @@ else if(LOGGED_IN)
 				<div class="column-box">
 					<div class="box-padding">
 						<h2 class="h2"> Popular Accommodation </h2>
-					</div>
-					<ul class="ul">
-						
-					</ul>
-				</div>
+				
+					<?php include __ROOT__.'/inc/html/all_accommodations.php';?>
+				
 			</div>
+		</div>
+	</div>
 		</div>
 <?php
 } else if(OWNER_LOGGED_IN)

@@ -117,10 +117,6 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
                                 VALUES ($otherUserId, $id, $mapCity)");
         if(!$stmt->execute())
         {
-          throw new Exception("INSERT INTO rpercentages (percentage_user_id1, percentage_user_id2, percentage_city)
-                                VALUES ($otherUserId, $id, $mapCity)", 1);
-          
-          throw new Exception("Error initialising percentages", 1);
         }
       }
       
@@ -144,7 +140,6 @@ if((isset($_POST['first_name'],$_POST['last_name'],$_POST['b_year'],
     catch(Exception $exception)
     {
       array_push($errors, $exception->getMessage());
-      var_dump($errors);
       exit();
     }
 
