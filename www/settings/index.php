@@ -52,8 +52,6 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
       <button class="input-button" data-hide="settings" data-show="account-settings">Account Settings</button>
       <button class="input-button" data-hide="settings" data-show="notif-settings">Notifications</button>
       <button class="input-button" data-hide="settings" data-show="connected-settings">Connected accounts</button>
-      <button class="input-button" data-hide="settings" data-show="review-settings">My reviews</button>
-      <button class="input-button" data-hide="settings" data-show="SHITFUCK-settings">SHITFUCK</button>
     </div>
     <?php
     require_once __ROOT__.'/inc/html/account_settings.php';

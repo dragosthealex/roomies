@@ -46,8 +46,8 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 					<h2 class="h2 profile-name"><?=$user2->getName()?></h2>
 					<div class="profile-links">
             <a class='link-button edit-button' data-show="save-button" data-toggle='edit-profile' id='edit-profile' onclick="editProfile()">Edit Profile</a>
-            <a class='link-button cancel-button' data-hide="save-button" data-toggle='edit-profile' onclick="cancelEdit()">Cancel</a>
-            <a class="link-button hidden save-button"  data-hide="save-button cancel-button" data-ajax-url="../php/edit_details.process.php?t=2" onclick="saveEdit();" data-ajax-post="details-form <?php foreach($x as $y){echo $y.' ';}?>" >Save</a>
+            <a class='link-button cancel-button edited-buttons' data-hide="save-button" data-toggle='edit-profile' onclick="cancelEdit()">Cancel</a>
+            <a class="link-button hidden save-button edited-buttons" data-hide="edited-buttons" data-toggle='edit-profile' data-ajax-url="../php/edit_details.process.php?t=2" onclick="saveEdit();" data-ajax-post="details-form <?php foreach($x as $y){echo $y.' ';}?>" >Save</a>
 						<!-- <a class='link-button edit-button' data-show='answered' data-hide='unanswered' id='edit-profile' data-toggle='edit-profile' onclick="editProfile()">Edit Profile</a>
             <a class='link-button' data-toggle='edit-profile' data-show='unanswered' data-hide='answered' onclick="editProfile()">Cancel</a> -->
 					</div>
@@ -151,8 +151,8 @@ if ($_GET['u'] == $_SESSION['user']['username'])
     var detailsNewVal = document.getElementsByClassName('new-val');
     var questionsUnanswered = document.getElementsByClassName('unanswered');
     var questionsAnswered = document.getElementsByClassName('answered');
-    var answeredIndex = 2;
-    var unansweredIndex = 2;
+    var answeredIndex = 5;
+    var unansweredIndex = 5;
     var prevButton = document.getElementById('prevButton');
     var nextButton = document.getElementById('nextButton');
 
@@ -203,6 +203,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
         var element = detailsNewVal[i].firstChild;
         detailsVal[i].innerHTML = element.options[element.selectedIndex].text;
       }
+      cancelEdit();
     }
 
     function cancelEdit() {
@@ -225,7 +226,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 
         };
 
-        answeredIndex = 2;
+        answeredIndex = 5;
         printQuestionsUnanswered();
 
     }
@@ -250,7 +251,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
     }
 
     function printQuestionsUnanswered() {
-        var limitB = answeredIndex - 2;
+        var limitB = answeredIndex - 5;
         var limitT = answeredIndex;
         for(var count = limitB; count < limitT; count ++)
         {
@@ -281,21 +282,21 @@ if ($_GET['u'] == $_SESSION['user']['username'])
                     questionsUnanswered[i].className = ' question unanswered hidden ';
                 }
             };
-            answeredIndex -= 2;
+            answeredIndex -= 5;
         }          
     }
 
     function nextQuestions() {
 
         prevNext = true;
-        answeredIndex += 2;
+        answeredIndex += 5;
         removeQuestions();
         printQuestionsUnanswered();
         checkButtons();
     }
 
     function checkButtons() {
-        if(answeredIndex == 2)
+        if(answeredIndex == 5)
         {
             prevButton.style.display = 'none';
         }
@@ -446,9 +447,10 @@ require_once __ROOT__."/inc/html/header.$ioStatus.php";
             }
             else
             {
-              if($question->toString())
+              $stringifiedQuestion = $question->toString($otherUser, $user2);
+              if($stringifiedQuestion)
               {
-                echo $question->toString();
+                echo $stringifiedQuestion;
                 $ok=true;
               }
             }

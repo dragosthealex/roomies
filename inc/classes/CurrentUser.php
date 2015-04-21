@@ -6,6 +6,8 @@
 */
 require_once __ROOT__.'/inc/classes/GeneralUser.php';
 require_once __ROOT__.'/inc/classes/Accommodation.php';
+include_once __ROOT__.'/inc/lib/banbuilder-master/src/CensorWords.php';
+use Snipe\BanBuilder\CensorWords;
 class CurrentUser extends GeneralUser
 {
   // Type constant, used in sum places
@@ -741,7 +743,7 @@ private function getConv($offset)
           $params['author'] = $userId;
           $params['text'] = $text;
           $params['accId'] = $parentId;
-          if($this->hasReviewed($parentId))
+          if($this->hasPostedIn($parentId))
           {
             throw new Exception("You already gave a review", 1);
           }
@@ -781,21 +783,21 @@ private function getConv($offset)
   }
 
   /**
-  * Function hasReviewed($accId)
+  * Function hasPosted($accId)
   *
   * Returns true if user has reviewed this accommodation, false else
   *
   * @param - $accId(int), the id of the accom
   * @return - $value, true if this user has reviewed
   */
-  public function hasReviewed($accId)
+  public function hasPostedIn($postId)
   {
     // Localise stuff
     $con = $this->con;
     $userId = $this->id;
 
     // Check if user has reviewed
-    $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_parent_id = $accId AND post_author = $userId AND post_type = " . Review::TYPE);
+    $stmt = $con->prepare("SELECT post_id FROM rposts WHERE post_parent_id = $postId AND post_author = $userId");
     if(!$stmt->execute())
     {
       throw new Exception("Error in database query when trying to get reviews for $accId", 1);
@@ -912,7 +914,7 @@ private function getConv($offset)
       {
         throw new Exception("Sneaky. Trying to delete other users' posts and shit", 1);
       }
-      $stmt = $con->prepare("DELETE FROM rposts WHERE post_id = $postId");
+      $stmt = $con->prepare("DELETE FROM rposts WHERE post_id = $postId; DELETE FROM rposts WHERE post_parent_id = $postId");
       if(!$stmt->execute())
       {
         throw new Exception("Weirid sheet happening in the db. Meh", 1);
@@ -971,20 +973,27 @@ private function getConv($offset)
     try
     {
       // Check if user owns post
-      if(!isAuthorOf($postId))
+      if(!$this->isAuthorOf($postId))
       {
         throw new Exception("Stop trying to update others' posts", 1);
       }
+      // Censor stuff
+      $censor = new CensorWords();
+      $censor->setReplaceChar("*");
+      $text = $censor->censorString(htmlentities($text));
+
       // Update table
-      $stmt = $con->prepare("UPDATE rposts SET post_text = $text WHERE post_id = $postId");
+      $stmt = $con->prepare("UPDATE rposts SET post_text = '$text' WHERE post_id = $postId");
       if(!$stmt->execute())
       {
         throw new Exception("Something wron with updating your post", 1);
       }
+      return true;
     }
     catch (Exception $e)
     {
       $this->errorMsg = $e->getMessage();
+      return false;
     }
   }// function updatePost
 

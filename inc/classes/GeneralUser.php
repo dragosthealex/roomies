@@ -67,7 +67,7 @@ abstract class GeneralUser extends GenericUser
   {
     $img = $this->image;
     $id = $this->id;
-    return "<$tagName class='$className' style='background-image:url($img), url(../img/usr/$id.jpg), url(../img/usr/$id.png), url(../img/usr/$id.jpeg), url(/img/usr/$id), url(/img/usr/$id.jpg), url(/img/usr/$id.jpeg), url(../media/img/default.jpg), url(/media/img/default.jpg), url(media/img/default.jpg); $style'></$tagName>";
+    return "<$tagName class='$className' style='background-image:url($img), url(../media/img/usr/$id.jpg), url(../media/img/usr/$id.png), url(../media/img/usr/$id.jpeg), url(/media/img/usr/$id), url(/media/img/usr/$id.jpg), url(/media/img/usr/$id.jpeg), url(../media/img/usr/default.jpg), url(/media/img/usr/default.jpg), url(media/img/usr/default.jpg), url(media/img/usr/default.png), url(../media/img/usr/default.png); $style'></$tagName>";
   }
 
   /**

@@ -41,6 +41,43 @@ foreach ($reviews as $review)
     <div class='author-details'>
         $authorImage
         <div class='author-text'>
+        ";
+$pid = $postId;
+if($user2->isAuthorOf($postId))
+{
+  $output .= 
+      "
+          <a class='link' style='float: right' name='Delete'
+            data-ajax-url='../php/edit.general.php?pid=$pid"."&ptype=".Review::TYPE."&s=-1'
+            data-ajax-success='generate'
+            data-generate-container='review-$postId'
+            data-show='acc-review-box'
+            data-toggle='review-$postId'
+          >X</a>
+          <a style='float: right;'>|</a>
+          <a style='float: right;' class='link edit-review-button review-default-$pid'
+            data-ajax-url='../php/edit.general.php?pid=$pid"."&ptype=".Review::TYPE."&s=0'
+            data-ajax-post='review-current-$pid value'
+            data-hide='review-default-$pid'
+            data-show='review-edit-$pid'
+            data-ajax-success='generate'
+            data-generate-container='edit-review-box'
+          >Edit</a>
+          <a id='cancel-review-button' style='float:right' class='link hidden review-edit-$pid'
+            data-hide='review-edit-$pid'
+            data-show='review-default-$pid'
+            >Cancel</a>
+          <a id='save-review-button' style='float:right' class='link hidden review-edit-$pid'
+            data-hide='review-edit-$pid'
+            data-show='review-default-$pid'
+            data-ajax-url='../php/edit.general.php?pid=$pid"."&ptype=".Review::TYPE."&s=1'
+            data-ajax-post='edited-review-$pid value'
+            data-ajax-success='generate'
+            data-generate-container='old-review-$pid'
+            >Save</a>
+      ";
+}
+$output .="
           <div class='author-name'>
             <a class='link' href='$webRoot/profile/$authorId'>$authorName</a>
           </div>
@@ -49,9 +86,11 @@ foreach ($reviews as $review)
           </div>
         </div>
     </div>
-    <div class='review-text'>
+    <div id='edit-review-box' class='hidden review-edit-$postId textarea-holder' style='margin-left:1em'></div>
+    <div id='old-review-$pid' class='review-text review-default-$postId'>
       $postText
     </div>
+    <input type='hidden' id='review-current-$pid' name='value' value='$postText'>
     ";
     if(LOGGED_IN)
     {

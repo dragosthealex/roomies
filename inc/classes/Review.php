@@ -99,6 +99,14 @@ class Review extends Comment
           $this->parent = $result['post_parent_id'];
           $this->con = $con;
           $this->text = nl2br($result['post_text']);
+
+          // Censor stuff
+          $text = $this->text;
+          $censor = new CensorWords();
+          $censor->setReplaceChar("*");
+          $text = $censor->censorString($text);
+
+          $this->text = $text;
         }
         catch (Exception $e)
         {
@@ -161,17 +169,57 @@ class Review extends Comment
       <div class='author-details'>
           $authorImage
           <div class='author-text'>
-            <div class='author-name'>
+    ";
+    $postId = $id;
+    $pid = $postId;
+    if($user2->isAuthorOf($postId))
+    {
+      $review .= 
+      "
+          <a class='link' style='float: right' name='Delete'
+            data-ajax-url='../php/edit.general.php?pid=$pid"."&ptype=".Review::TYPE."&s=-1'
+            data-ajax-success='generate'
+            data-generate-container='review-$postId'
+            data-show='acc-review-box'
+            data-toggle='review-$postId'
+          >X</a>
+          <a style='float: right;'>|</a>
+          <a style='float: right;' class='link edit-review-button review-default-$pid'
+            data-ajax-url='../php/edit.general.php?pid=$pid"."&ptype=".Review::TYPE."&s=0'
+            data-ajax-post='review-current-$pid value'
+            data-hide='review-default-$pid'
+            data-show='review-edit-$pid'
+            data-ajax-success='generate'
+            data-generate-container='edit-review-box'
+          >Edit</a>
+          <a id='cancel-review-button' style='float:right' class='link hidden review-edit-$pid'
+            data-hide='review-edit-$pid'
+            data-show='review-default-$pid'
+            >Cancel</a>
+          <a id='save-review-button' style='float:right' class='link hidden review-edit-$pid'
+            data-hide='review-edit-$pid'
+            data-show='review-default-$pid'
+            data-ajax-url='../php/edit.general.php?pid=$pid"."&ptype=".Review::TYPE."&s=1'
+            data-ajax-post='edited-review-$pid value'
+            data-ajax-success='generate'
+            data-generate-container='old-review-$pid'
+            >Save</a>
+      ";
+    }
+    $review .= "
+            <div class='author-name review-default-$id'>
               <a class='link' href='../profile/$authorId'>$authorName</a>
             </div>
-            <div class='date-text'>
+            <div class='date-text review-default-$id'>
               $date
             </div>
           </div>
       </div>
-      <div class='review-text'>
+    <div id='edit-review-box' class='hidden review-edit-$postId textarea-holder' style='margin-left:1em'></div>
+    <div id='old-review-$pid' class='review-text review-default-$postId'>
         $text
-      </div>
+    </div>
+    <input type='hidden' id='review-current-$pid' name='value' value='$text'>
       <div class='like-buttons like-reply'>
         <span class='minidrop-container like-button like-button-review$id $likeHide' id='likeReview$id'>
           <a data-ajax-url='../php/reviews.process.php?a=4&pid=$id&ptype='
@@ -193,7 +241,7 @@ class Review extends Comment
       </div>
       <div id='replies-container-$id' class='hidden'><ul id='reply-box-$id' class='reply-box ul' style='padding-bottom:0.5em;'>
         </ul><ul class='reply-box ul'>
-          <li class='li reply reply-$id' style='$hideIfLoggedOut;'>
+          <li id='reply-box-$id' class='li reply reply-$id' style='$hideIfLoggedOut;'>
             $userImage
             <textarea name='reply$id' id='reply-input-$id' class='input reply-input' type='text' placeholder='Write a reply...' oninput=\"this.style.height=((this.value.match(/\\n/g)||[]).length+2)*1.1+'em';return false;\" onkeydown=\"return event.shiftKey || ((event.keyCode === 13 && this.value.trim()) ? (window.onclick({button:1,target:this.nextSibling}), false) : event.keyCode !== 13);\"></textarea><button class='hidden' data-ajax-url='$webRoot/php/reviews.process.php?ptype=1&a=1&pid=$id' data-ajax-post='reply-input-$id' data-generate-container='_reply-box-$id' data-ajax-success='generate'>
           </li>

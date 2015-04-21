@@ -792,6 +792,8 @@ void function (window, document, undefined) {
     (target) && roomies.toggle(target);
     // If a target needs deleting, delete it
     (target = document.getElementById(element.getAttribute("data-delete"))) && roomies["delete"](target);
+    // If a target needs copying shit somwhere, copy shit somewhere
+    (source = document.getElementById(element.getAttribute("data-copy-source"))) && (target = document.getElementById(element.getAttribute("data-copy-target"))) && (target.innerHTML = source.innerHTML);
 
     // Configure selectors
     forEach.call(body.getElementsByClassName('selector-content'), function (selector) {
@@ -806,7 +808,7 @@ void function (window, document, undefined) {
       roomies.ajax({
         url: ajaxUrl,
         success: function (response) {
-          var successFunctionName = element.getAttribute("data-ajax-success"),
+          var successFunctionNames = element.getAttribute("data-ajax-success").split(" "),
               container = element.getAttribute("data-generate-container"),
               containers = element.getAttribute("data-generate-containers");
 
@@ -832,8 +834,9 @@ void function (window, document, undefined) {
           response.container = container ? container : '';
           response.containers = containers ? containers : [''];
 
-          successFunctionName && successFunctions[successFunctionName]
-                              && successFunctions[successFunctionName](response);
+          for (var i = successFunctionNames.length - 1; i >= 0; i--) {
+            (successFunctions[successFunctionNames[i]]||function(){})(response);
+          }
 
           var hideText = (element.getAttribute("data-ajax-hide")||"").split(" ");
           if (hideText.length >= 2) {
