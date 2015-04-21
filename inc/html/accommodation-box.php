@@ -22,7 +22,7 @@
     </div>
     <span class="text" style="float:right; margin:0;"><?=$acc['rating']*5.0/100.0?>/5</span>
   </div>
-  <div class='acc-pic short' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$acc['id']?>.jpg);'>
+  <div class='acc-pic short' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpg), url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.png), url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpeg)'>
   </div>
   <div class='acc-short-desc'>
     <?=$acc['description']?>

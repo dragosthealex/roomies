@@ -90,7 +90,7 @@ if($accomId)
   <?=$accomInfo['name'];?>
 </h2>
 <div class='pic-wrapper'>
-  <div id='pic-main' class='pic-main' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpg)'>
+  <div id='pic-main' class='pic-main' style='background-image: url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpg), url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.png), url(<?=$webRoot?>/media/img/acc/<?=$accomId?>.jpeg)'>
   </div>
   <div class="scroll-wrapper">
     <div id="main-conversation-scroll" class='scroll-area pic-thumbs'>
