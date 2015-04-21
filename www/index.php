@@ -138,7 +138,7 @@ else if(LOGGED_IN)
 	{
 		if (JUST_LOGGED_IN)
 		{
-			include __ROOT__."/inc/html/optionalDetails.php";
+			//include __ROOT__."/inc/html/optionalDetails.php";
 		}
 		include __ROOT__."/inc/html/notifications.php";
 	}

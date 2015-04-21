@@ -332,12 +332,19 @@ class Question extends Base
       $yourQuestion = new Question($con, $id, $currentUser->getCredential('id'));
       $yourAnswer = new Answer($con, $yourQuestion->getQuestionInfo()[0]);
       $yourAnswerText = $yourAnswer->getText();
+      $yourImportance = $yourQuestion->getQuestionInfo()[2];
+      $theirImportance = $this->getQuestionInfo()[2];
+      $yourImportance = ($yourImportance==1)?"A little":($yourImportance==10)?"Somewhat":($yourImportance==50)?"Very Important":"Irrelevant";
+      $theirImportance = ($theirImportance==1)?"A little":($theirImportance==10)?"Somewhat":($theirImportance==50)?" Very Important":"Irrelevant";
+
+
       $question = "
       <div class='question answered'>
         <div class='box-padding'>
           <h3 class='h3'>$text</h3>
-          <p class='text'>They answered: $theirAnswerText</p>
-          <p class='text'>You answered: $yourAnswerText</p>
+          <p class='text'>They answered: $theirAnswerText | $theirImportance</p>
+          <p class='text'>You answered: $yourAnswerText | $yourImportance</p>
+
         </div>
       </div>";
     }
