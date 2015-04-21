@@ -70,7 +70,7 @@ try
                             OR  (percentage_user_id2 = ANY (SELECT profile_filter_id FROM rdetails 
                                                         WHERE $condition)
                                 AND percentage_user_id1 = $id)
-                          ORDER BY percentage");
+                          ORDER BY percentage DESC");
 
   if(!$stmt->execute())
   {
