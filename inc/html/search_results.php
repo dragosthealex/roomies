@@ -99,7 +99,7 @@ try
 
   $otherUserId = $leOtherUser->getCredential('id');
   $otherUsername = $leOtherUser->getCredential('username');
-  $nameOrUsername = $user2->getName($user2->friendshipStatus($leOtherUser));
+  $nameOrUsername = $leOtherUser->getName($user2->friendshipStatus($leOtherUser));
 
 echo "<li class='profile-box-item'>
       <div class='profile-box'>
