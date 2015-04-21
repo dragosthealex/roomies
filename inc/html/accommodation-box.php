@@ -1,4 +1,4 @@
-<?php $accId = $acc['id'];?>
+<?php $accId = $acc['id']; $accomId = $accId?>
 <div class="box">
 <div class="box-padding">
 <li class='li' style='overflow: hidden's>
