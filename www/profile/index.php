@@ -151,8 +151,8 @@ if ($_GET['u'] == $_SESSION['user']['username'])
     var detailsNewVal = document.getElementsByClassName('new-val');
     var questionsUnanswered = document.getElementsByClassName('unanswered');
     var questionsAnswered = document.getElementsByClassName('answered');
-    var answeredIndex = 2;
-    var unansweredIndex = 2;
+    var answeredIndex = 5;
+    var unansweredIndex = 5;
     var prevButton = document.getElementById('prevButton');
     var nextButton = document.getElementById('nextButton');
 
@@ -226,7 +226,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
 
         };
 
-        answeredIndex = 2;
+        answeredIndex = 5;
         printQuestionsUnanswered();
 
     }
@@ -251,7 +251,7 @@ if ($_GET['u'] == $_SESSION['user']['username'])
     }
 
     function printQuestionsUnanswered() {
-        var limitB = answeredIndex - 2;
+        var limitB = answeredIndex - 5;
         var limitT = answeredIndex;
         for(var count = limitB; count < limitT; count ++)
         {
@@ -282,21 +282,21 @@ if ($_GET['u'] == $_SESSION['user']['username'])
                     questionsUnanswered[i].className = ' question unanswered hidden ';
                 }
             };
-            answeredIndex -= 2;
+            answeredIndex -= 5;
         }          
     }
 
     function nextQuestions() {
 
         prevNext = true;
-        answeredIndex += 2;
+        answeredIndex += 5;
         removeQuestions();
         printQuestionsUnanswered();
         checkButtons();
     }
 
     function checkButtons() {
-        if(answeredIndex == 2)
+        if(answeredIndex == 5)
         {
             prevButton.style.display = 'none';
         }
