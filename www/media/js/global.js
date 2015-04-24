@@ -808,7 +808,7 @@ void function (window, document, undefined) {
       roomies.ajax({
         url: ajaxUrl,
         success: function (response) {
-          var successFunctionNames = element.getAttribute("data-ajax-success").split(" "),
+          var successFunctionNames = element.getAttribute("data-ajax-success")?element.getAttribute("data-ajax-success").split(" "):'',
               container = element.getAttribute("data-generate-container"),
               containers = element.getAttribute("data-generate-containers");
 
