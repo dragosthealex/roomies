@@ -1206,7 +1206,7 @@ private function getConv($offset)
     try
     {
       // Execute the query
-      $stmt = $con->prepare("UPDATE rdetails SET $query");
+      $stmt = $con->prepare("UPDATE rdetails SET $query WHERE profile_filter_id = $id");
       if(!$stmt->execute())
       {
         throw new Exception("Error updating profile details in db.", 1);
